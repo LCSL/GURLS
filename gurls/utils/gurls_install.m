@@ -1,6 +1,7 @@
 function path = gurls_install()
 
 basePath = gurls_root();
+addpath(basePath							);
 addpath(fullfile(basePath,'kernels'		)	);
 addpath(fullfile(basePath,'optimizers'	)	);
 addpath(fullfile(basePath,'paramsel'	)	);
