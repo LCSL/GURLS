@@ -6,15 +6,11 @@ function path = biggurls_install()
 		run(fullfile(basePath,'utils/adm_install'				));
 
 		addpath(basePath										 );
-		addpath(fullfile(basePath,'kernels'						));
 		addpath(fullfile(basePath,'optimizers'					));
 		addpath(fullfile(basePath,'paramsel'					));
 		addpath(fullfile(basePath,'pred'						));
 		addpath(fullfile(basePath,'perf'						));
-		addpath(fullfile(basePath,'norm'						));
 		addpath(fullfile(basePath,'utils'						));
-		addpath(fullfile(basePath,'summary'						));
-		addpath(fullfile(basePath,'confidence'					));
 		addpath(fullfile(basePath,'demo'						));
 		addpath(fullfile(basePath,'distributed'					));
 		addpath(fullfile(basePath,'demo/code'					));
