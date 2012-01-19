@@ -1,0 +1,43 @@
+--------=====--------------------------------------------------------------
+---------- bGURLS - (big) Grand Unified Regularized Least Squares ---------
+---------------------------------------------------------------------------
+
+
+Table of Contents
+=================
+
+- Introduction
+- Installation
+- Documentation
+
+Introduction
+===========
+
+bGURLS - ((big) Grand Unified Regularized Least Squares) is a MATLAB software package
+for training linear multiclass classifiers based on the Regularized Least Squares
+(RLS) loss function, it uses a home brewed memory mapped file system and a simple
+distributed task manager to allow for training from very large datasets.
+
+- Automatic parameter selection.
+- Handle massive datasets.
+- Great modularity, each method can be used independently.
+
+Installation
+============
+
+Open MATLAB and execute:
+
+>> run('PACKAGE_ROOT/biggurls/utils/biggurls_install.m');
+
+where PACKAGEROOT is where you unzipped the GURLS package.
+This will compile all the mex files involved and add all the important
+directories to your path. Run 'savepath' if you want the installation to be
+permanent.
+
+Documentation
+=============
+
+Have a look, and run bigdemo.m in the 'demo' subdirectory, and refer to
+single the documentation of single functions for further reference.  The most
+popular learning pipelines are outlined here, with example code:
+https://github.com/CBCL/GURLS/wiki/User-Manual
