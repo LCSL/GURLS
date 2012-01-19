@@ -1,33 +1,3 @@
-%> @file gurls.m
-%> @brief GURLS - Grand Unified Regularized Leas Squares.
-%=======================================================================
-%> @mainpage GURLS 
-%>
-%> @section Abstract
-%> @b GURLS - (Grand Unified Regularized Least Squares) is a software package for
-%> training multiclass classifiers based on the Regularized Least Squares (RLS)
-%> loss function. It is implemented in MATLAB and encodes ideas and
-%> experience from classical and more recent developments in theory and
-%> practice of multicategory classification.  The package includes
-%> efficient methods to automatically select good model parameters, to use
-%> a variety of output coding schemes and an easy interface for experiment
-%> management and results visualization.  The software package includes a
-%> number of routines especially designed to deal with massive datasets,
-%> furthermore, it is instrinsically modular and each method can be used
-%> independently.
-%>
-%> @section Function Description
-%> @param X Contains an n-by-d matrix where the datapoints are stored.
-%> @param y Contains a matrix with encoded output values, the first dimension is n,
-%> the second depends on the encoding. If one-versus-all is used y is an n-by-T matrix
-%>
-%> @param opt is a generic datastructure that contain all the options needed by the various stages of the pipeline.
-%> @param jobid is an integer that indexes the @b opt.process cell-array. This array contains a sequence of codes that
-%> identify which actions need to be taken for each element of the pipeline contained in @b opt.seq.
-
-
-
-
 % The GURLS Package
 % Copyright (c) 2011, P. Mallapragada, A. Tacchetti
 % All rights reserved.
