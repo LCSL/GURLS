@@ -1,4 +1,4 @@
-load('./data/yeast_data.mat');
+load(fullfile(gurls_root,'demo/data/yeast_data.mat'));
 
 % This executes 5 times four different pipelines on the same dataset.
 % it then uses the summary routines to visualize precision and accuracy
