@@ -19,6 +19,7 @@ function [m,s] = ba_meanstd(B, prep_func)
 		numX = zeros(size(X,1),1);
 		sumXSQ = zeros(size(X,1),1);
 		for i = 1:size(X,1)
+			values = X(i,:);
 			sumX(i) = sum(values);
 			sumXSQ(i) = sum(values.^2);
 			numX(i) = numel(values);
