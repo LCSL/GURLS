@@ -47,7 +47,7 @@ for i = 1:opt.nsigma
 	opt.paramsel.sigma = sigmas(i);
 	opt.kernel = kernel_rbf(X,y,opt);
 	paramsel = paramsel_loocvdual(X,y,opt);
-	LOOSQE(i,:,:) = paramsel.loosqe;
+	LOOSQE(i,:,:) = paramsel.looe{1};
 	guesses(i,:) = paramsel.guesses;
 end
 % The lambda axis is redefined each time but
@@ -60,7 +60,7 @@ end
 
 M = sum(LOOSQE,3); % sum over classes
 
-[dummy,i] = min(M(:));
+[dummy,i] = max(M(:));
 [m,n] = ind2sub(size(M),i);
 
 % opt sigma

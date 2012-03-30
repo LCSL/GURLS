@@ -24,7 +24,7 @@ opt.tmpdir = opt.name;
 %% Output options
 opt.savekernel = 1;
 opt.saveanalysis = 1;
-opt.hoperf = @perf_precrec;
+opt.hoperf = @perf_macroavg;
 opt.ploteval = 'acc';
 opt.perfeval = {'acc'};
 

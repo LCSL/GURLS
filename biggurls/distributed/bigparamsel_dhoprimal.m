@@ -45,9 +45,11 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 	
 	tot = opt.nlambda;
 	[Q,L] = eig(K);
+	clear XtX;
 	Q = double(Q);
 	L = double(diag(L));
 	QtXtY = Q'*Xty;
+	clear Xty;
 	
 	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
 	

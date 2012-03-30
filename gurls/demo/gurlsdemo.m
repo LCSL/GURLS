@@ -12,8 +12,8 @@ for i = 1:5
 	opt.seq = {'paramsel:loocvprimal','rls:primal','pred:primal','perf:precrec','perf:macroavg'};
 	opt.process{1} = [2,2,0,0,0];
 	opt.process{2} = [3,3,2,2,2];
-	gurls (Xtr, ytr, opt,1)
-	gurls (Xte, yte, opt,2)
+	gurls (Xtr, ytr, opt,1);
+	gurls (Xte, yte, opt,2);
 	
 	% Gaussian kernel, (dual formulation), Leave One Out cross validation to select lambda and the Kernel width sigma	
 	name = ['rbfloo_' num2str(i)];
@@ -21,8 +21,8 @@ for i = 1:5
 	opt.seq = {'paramsel:siglam', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
 	opt.process{1} = [2,2,2,0,0,0,0];
 	opt.process{2} = [3,3,3,2,2,2,2];
-	gurls (Xtr, ytr, opt,1)
-	gurls (Xte, yte, opt,2)
+	gurls (Xtr, ytr, opt,1);
+	gurls (Xte, yte, opt,2);
 	
 	
 	% Linear kernel, primal formulation, Hold Out cross validation to select lambda
@@ -31,8 +31,8 @@ for i = 1:5
 	opt.seq = {'split:ho','paramsel:hoprimal','rls:primal','pred:primal','perf:macroavg','perf:precrec'};
 	opt.process{1} = [2,2,2,0,0,0];
 	opt.process{2} = [3,3,3,2,2,2];
-	gurls (Xtr, ytr, opt,1)
-	gurls (Xte, yte, opt,2)
+	gurls (Xtr, ytr, opt,1);
+	gurls (Xte, yte, opt,2);
 	
 	
 	% Gaussian kernel, (dual formulation), Hold Out cross validation to select lambda and the Kernel width sigma	
@@ -41,8 +41,8 @@ for i = 1:5
 	opt.seq = {'split:ho', 'paramsel:siglamho', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
 	opt.process{1} = [2,2,2,2,0,0,0,0];
 	opt.process{2} = [3,3,3,3,2,2,2,2];
-	gurls (Xtr, ytr, opt,1)
-	gurls (Xte, yte, opt,2)
+	gurls (Xtr, ytr, opt,1);
+	gurls (Xte, yte, opt,2);
 
 end
 

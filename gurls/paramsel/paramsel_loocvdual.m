@@ -10,8 +10,6 @@ function vout = paramsel_loocvdual(X,y,opt)
 %		- opt.nlambda
 
 % Decide what you want to dump
-%savevars = {'LOOSQE','guesses'};
-savevars = [];
 
 [n,T]  = size(y);
 tot = opt.nlambda;
@@ -30,18 +28,18 @@ for i = 1:tot
 	%C = rls_dual(K,y,guesses(i));
 	C = rls_eigen(Q,L,Qty,guesses(i),n);
 	Z = GInverseDiagonal(Q,L,guesses(i));
-	Le = zeros(n,T);
+	opt.pred = zeros(n,T);
 	for t = 1:T
-		Le(:,t) = C(:,t)./Z;
+		opt.pred(:,t) = y(:,t) - (C(:,t)./Z);
 	end
-	LOOSQE(i,:) = sum(Le.*Le);
+	opt.perf = opt.hoperf([],y,opt);
+	for t = 1:T
+		ap(i,t) = opt.perf.forho(t);
+	end	
+
 end	
-[dummy,bL] = min(LOOSQE);
-vout.lambdas = 	guesses(bL);
-vout.loosqe  = 	LOOSQE;
+
+[dummy,idx] = max(ap,[],1);	
+vout.lambdas = 	guesses(idx);
+vout.looe{1} = 	ap;
 vout.guesses = 	guesses;
-% This is awesome
-if numel(savevars) > 0
-	[ST,I] = dbstack();
-	save(ST(1).name,savevars{:});
-end	
