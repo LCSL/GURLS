@@ -1,16 +1,35 @@
 function [vout] = paramsel_hodual(X, y, opt)
-
-%	paramsel_hodual(X,y,opt)
-%	Performs parameter selection when the dual formulation of RLS is used.
-%	The performance measure specified by opt.hoperf is maximized.
+% paramsel_hopdual(X,Y,OPT)
+% Performs parameter selection when the dual formulation of RLS is used.
+% The hold-out approach is used. 
+% The performance measure specified by opt.hoperf is maximized.
 %
-%	NEEDS:	
-%		- opt.split
-%		- opt.nholdouts
-%		- opt.kernel.type
-%		- opt.kernel.K
-%		- opt.nlambda
-%		- opt.hoperf
+% INPUTS:
+% -X: input data matrix
+% -Y: labels matrix
+% -OPT: struct of options with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- split (set by the split_* routine)
+%		- kernel.K (set by the kernel_* routines)
+%   fields with default values set through the defopt function:
+%		- nlambda
+%		- smallnumber
+%		- hoperf
+%       - nholdouts
+%		- kernel.type
+%
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUTS: structure with the following fields:
+% -lambdas_round: cell array (opt.nholdoutsX1). For each split a cell contains the 
+%       values of the regularization parameter lambda minimizing the 
+%       validation error for each class.
+% -forho: cell array (opt.nholdoutsX1). For each split a cell contains a matrix 
+%       with the validation error for each lambda guess and for each class
+% -guesses: cell array (opt.nholdoutsX1). For each split a cell contains an 
+%       array of guesses for the regularization parameter lambda
+% -lambdas: mean of the optimal lambdas across splits
 
 
 for nh = 1:opt.nholdouts

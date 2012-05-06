@@ -1,16 +1,25 @@
 function [fk] = predkernel_traintest(X,y,opt)
+% predkernel_traintest(X,Y,OPT)
+% Computes the kernel matrix between the training points and the
+% test points. It can be used by pred_dual.
+%
+% INPUTS:
+% -X: input data matrix
+% -Y: not used 
+% -OPT: structure with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- rls.X (only if opt.kernel.type is 'rbf' or 'chisquared' )
+%		- testkernel (only if opt.kernel.type is 'load')
+%       - paramsel.sigma (set by the paramsel_siglam* routines, is
+%         required, only if opt.kernel.type is 'rbf')
+%   fields with default values set through the defopt function:
+%       - kernel.type
+% 
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUT: ntestxntr matrix
 
-% 	predkernel_traintest(X,y,opt)
-%	Computes the kernel matrix between the training points and the
-%	test points. It can be used by pred_dual.
-%
-%	It needs opt.kernel.type to be set (this is done automatically) by
-%	the kernel_* functions.
-%
-%	NEEDS:	
-%		- opt.kernel.type
-%		- opt.rls.X (rbf)
-%		- opt.testkernel (load)
 
 switch opt.kernel.type
 	case {'rbf'}

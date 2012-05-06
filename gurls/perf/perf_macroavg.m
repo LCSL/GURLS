@@ -1,10 +1,19 @@
 function [p] = perf_macroavg(X, y, opt)
-
-%	perf_macroavg(X,y,opt)
-% 	Computes the average classification accuracy per class.
+% perf_macroavg(X,y,opt)
+% Computes the average classification accuracy per class.
 %
-%	NEEDS:
-%		- opt.pred
+% INPUTS:
+% -X: input data matrix
+% -y: labels matrix
+% -OPT: structure of options with the following fields (and subfields):
+%   fields that need to be set through previous gurls tasks:
+%       -pred (set by the pred_* routines)
+% 
+% OUTPUT: struct with the following fields:
+% -acc: array of prediction accuracy for each class
+% -forho: ""
+% -forplot: ""
+
 
 if isfield (opt,'perf')
 	p = opt.perf; % lets not overwrite existing performance measures.

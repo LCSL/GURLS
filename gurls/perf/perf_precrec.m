@@ -1,12 +1,19 @@
 function [p] =  perf_precrec(X, y, opt)
-
-%	perf_precrec(X,y,opt)
-% 	Computes the average precision per class
-%	NEEDS:
-%		- opt.pred
+% perf_precrec(X,y,opt)
+% Computes the average precision per class
 %
-
-
+% INPUTS:
+% -X: input data matrix
+% -y: labels matrix
+% -OPT: structure of options with the following fields (and subfields):
+%   fields that need to be set through previous gurls tasks:
+%       -pred (set by the pred_* routines)
+% 
+% OUTPUT: struct with the following fields:
+% -acc: array of prediction accuracy for each class
+% -forho: ""
+% -forplot: ""
+% 
 % Code adapted from PASCAL VOC 2007 code
 
 if isfield (opt,'perf')

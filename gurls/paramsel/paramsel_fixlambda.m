@@ -1,6 +1,13 @@
 function [param] = paramsel_fixlambda(X, y, opt)
-
-%	paramsel_fixlambda(X,y,opt)
-%	Simply fixes a value for lambda.
+% paramsel_fixlambda(X,Y,OPT)
+% Set the regularization parameter to the value set in OPT
+% 
+% INPUTS:
+% -X: not used
+% -Y: not used
+% -OPT: not used
+% 
+% OUTPUT: struct with the following field:
+% -lambdas: fixed value for the regularization parameter
 
 param.lambdas = 1.0;

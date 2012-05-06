@@ -1,13 +1,26 @@
 function vout = paramsel_loocvprimal(X,y,opt)
-
-%	paramsel_loocvprimal(X,y,opt)
-%	Performs parameter selection when the primal formulation of RLS is used.
-%	The leave-one-out approach is used.
+% paramsel_loocvprimal(X,Y,OPT)
+% Performs parameter selection when the primal formulation of RLS is used.
+% The leave-one-out approach is used.
 %
-%	NEEDS:	
-%		- opt.nlambda
+% INPUTS:
+% -X: input data matrix
+% -Y: labels matrix
+% -OPT: structure of options with the following fields with default values
+% set through the defopt function:
+%		- nlambda
+%		- smallnumber
+%
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUTS: structURE with the following fields:
+% -lambdas: array of values of the regularization parameter lambda
+%           minimizing the validation error for each class
+% -looe: loo{1} is a matrix with the validation error for each lambda guess 
+%        and for each class
+% -guesses: array of guesses for the regularization parameter lambda 
 
-% Decide what you want to dump
 
 K = X'*X;
 [n,T]  = size(y);

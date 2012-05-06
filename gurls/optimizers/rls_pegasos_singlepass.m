@@ -1,4 +1,33 @@
 function [cfr] = rls_pegasos_driver(X, bY, opt)
+% rls_pegasos_singlepass(X,BY,OPT)
+% utility function called by rls_pegasos
+% computes a single pass for pegasos algorithm, performing the stochastic
+% gradient descent over all training samples once.
+%
+% INPUTS:
+% -X: input data matrix
+% -BY: binary coded labels matrix
+% -OPT: structure of options with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- paramsel.lambdas (set by the paramsel_* routines)
+%       - epochs
+%   fields that need to be added by hand
+%       -Xte
+%       -yte
+%   fields with default values set through the defopt function:
+%		- singlelambda
+% 
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUT: structure with the following fields:
+% -W: matrix of coefficient vectors of rls estimator for each class
+% -W_sum: sum of the classifiers across iterations
+% -t0: stepsize parameter 
+% -count: number of iterations
+% -acc_last: accuracy of the solution computed in the last iteration
+% -acc_avg: average accuracy across iterations
+
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 %% Inputs

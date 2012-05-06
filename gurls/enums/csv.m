@@ -1,4 +1,6 @@
 function [val] = csv()
-% Return the value for 'COMPUTE AND SAVE' instruction to girls.
-	val = 2;
+% csv()
+% Returns the instruction code for 'COMPUTE AND SAVE' in a GURLS process sequence
+
+val = 2;
 end

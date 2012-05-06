@@ -2,8 +2,17 @@ function [kernel] = kernel_rbf(X,y,opt)
 
 % 	kernel_rbf(X,y,opt)
 %	Computes the kernel matrix for a Gaussian kernel.
-%	opt.paramsel.sigma is needed, It is set automatically by
-% 	paramsel_sig* routines.
+%	INPUTS:
+%		-X: input data matrix
+%		-y: not used 
+%		-OPT: struct with the following options:
+%			- paramsel : struct containing the following fields (computed by paramsel_*).
+%				- sigma : width of the gaussian kernel.
+%	
+%	OUTPUT: struct with the following fields:
+%		-type: 'rbf'
+%		-K: kernel matrix
+
 
 if ~isfield(opt,'kernel')
 	opt.kernel.type = 'rbf';

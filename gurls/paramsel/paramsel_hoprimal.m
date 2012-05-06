@@ -1,14 +1,34 @@
 function [vout] = paramsel_hoprimal(X,y,opt)
-
-%	paramsel_hoprimal(X,y,opt)
-%	Performs parameter selection when the primal formulation of RLS is used.
-%	The performance measure specified by opt.hoperf is maximized.
+% paramsel_hoprimal(X,Y,OPT)
+% Performs parameter selection when the primal formulation of RLS is used.
+% The hold-out approach is used. 
+% The performance measure specified by opt.hoperf is maximized.
 %
-%	NEEDS:	
-%		- opt.split
-%		- opt.nholdouts
-%		- opt.nlambda
-%		- opt.hoperf
+% INPUTS:
+% -X: input data matrix
+% -Y: labels matrix
+% -OPT: struct of options with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- split (set by the split_* routine)
+%   fields with default values set through the defopt function:
+%		- nlambda
+%		- smallnumber
+%		- hoperf
+%       - nholdouts
+%
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUTS: structure with the following fields:
+% -lambdas_round: cell array (opt.nholdoutsX1). For each split a cell contains the 
+%       values of the regularization parameter lambda minimizing the 
+%       validation error for each class.
+% -forho: cell array (opt.nholdoutsX1). For each split a cell contains a matrix 
+%       with the validation error for each lambda guess and for each class
+% -guesses: cell array (opt.nholdoutsX1). For each split a cell contains an 
+%       array of guesses for the regularization parameter lambda
+% -lambdas: mean of the optimal lambdas across splits
+
 
 savevars = [];
 

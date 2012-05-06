@@ -1,9 +1,24 @@
 function [guesses] = paramsel_lambdaguesses(eigvals, r, n, opt)
-% Internal function; 
-% Not to be called from gurls;
-
-% eigvals = a vector containing the eigenvalues of X'X or XX'
-% r = rank; usually send min(n,d)
+% paramsel_lambdaguesses(EIGVALS, R, N, OPT)
+% Builds array of possible values for the regularization parameter, 
+% generating a geometric series from the values in EIGVALS 
+% Internal function, not to be called from gurls
+% 
+% INPUTS:
+% -EIGVALS: a vector containing the eigenvalues of X'X or XX' where X is
+% the input data matrix
+% -R: rank; usually send min(n,d)
+% -N: number of samples
+% -OPT: structure of options with the following fields with default values
+%       set through the defopt function:
+%		- nlambda
+%		- smallnumber
+%
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUTS: 
+% -GUESSES: opt.nlambdaX1 array of values for the regularization parameter
 
 % ensuring eigenvalues are sorted
 eigvals = sort(eigvals,'descend');

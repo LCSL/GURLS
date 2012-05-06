@@ -1,4 +1,6 @@
 function [val] = del()
-% Return the value for 'DELETE FIELD' instruction to girls.
+% del()
+% Returns the instruction code for 'DELETE' in a GURLS process sequence
+
 	val = 4;
 end

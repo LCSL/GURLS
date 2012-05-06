@@ -1,15 +1,29 @@
 function vout = paramsel_loocvdual(X,y,opt)
-
-%	paramsel_loocvdual(X,y,opt)
-%	Performs parameter selection when the dual formulation of RLS is used.
-%	The leave-one-out approach is used.
+% paramsel_loocvdual(X,Y,OPT)
+% Performs parameter selection when the dual formulation of RLS is used.
+% The leave-one-out approach is used.
 %
-%	NEEDS:	
-%		- opt.kernel.type
-%		- opt.kernel.K
-%		- opt.nlambda
+% INPUTS:
+% -X: input data matrix
+% -Y: labels matrix
+% -OPT: structure of options with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- kernel.K (set by the kernel_* routines)
+%   fields with default values set through the defopt function:
+%		- kernel.type
+%		- nlambda
+%       - hoperf
+%
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUT: struct with the following fields:
+% -lambdas: array of values of the regularization parameter lambda
+%           minimizing the validation error for each class
+% -looe: loo{1} is a matrix with the validation error for each lambda guess 
+%        and for each class
+% -guesses: array of guesses for the regularization parameter lambda 
 
-% Decide what you want to dump
 
 [n,T]  = size(y);
 tot = opt.nlambda;

@@ -1,4 +1,6 @@
 function [val] = ldf()
-% Return the GURLS instruction code for "LOAD FROM FILE".
+% ldf()
+% Returns the instruction code for 'LOAD FROM FILE' in a GURLS process sequence
+
 	val = 3;
 end

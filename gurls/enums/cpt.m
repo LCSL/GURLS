@@ -1,4 +1,4 @@
 function [val] = cpt()
-% Return the value for 'COMPUTE' instruction to girls.
+% Return the instruction code for 'COMPUTE' in a GURLS process sequence
 	val = 1;
 end

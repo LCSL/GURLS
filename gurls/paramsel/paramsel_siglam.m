@@ -1,15 +1,28 @@
 function vout = paramsel_siglam(X,y,opt)
-
-%	paramsel_siglam(X,y,opt)
-%	Performs parameter selection when the dual formulation of RLS is used.
-%	The leave-one-out approach is used.
-%	It selects both the regularization parameter lambda and the kernel parameter sigma.
+% paramsel_siglam(X,Y,OPT)
+% Performs parameter selection when the dual formulation of RLS is used.
+% The leave-one-out approach is used.
+% It selects both the regularization parameter lambda and the kernel parameter sigma.
 %
-%	NEEDS:	
-%		- opt.kernel.type
-%		- opt.kernel.K
-%		- opt.nsigma
-%	
+% INPUTS:
+% -X: input data matrix
+% -Y: labels matrix
+% -OPT: struct of options with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- kernel.K (set by the kernel_* routines)
+%   fields with default values set through the defopt function:
+%		- kernel.type
+%		- nlambda
+%       - hoperf
+%
+%   For more information on standard OPT fields
+%   see also defopt
+% 
+% OUTPUT: structure with the following fields:
+% -lambdas: value of the regularization parameter lambda
+%           minimizing the validation error, replicated in a TX1 array 
+%           where T is the number of classes
+% -sigma: value of the kernel parameter minimizing the validation error
 
 %savevars = {'LOOSQE','M','sigmas','guesses'};
 savevars = [];
