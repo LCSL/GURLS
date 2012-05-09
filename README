@@ -1,0 +1,64 @@
+----------------------------------------------------------
+-------- Grand Unified Regularized Least Squares ---------
+----------------------------------------------------------
+
+
+Table of Contents
+=================
+
+- Introduction
+- Documentation
+- Quick and dirty
+
+Introduction
+===========
+
+The GRAND UNIFIED LEAST SQUARES toolbox comprises three software packages.
+
+- GURLS, a MATLAB software package for training multiclass classifiers based on the
+reguarised least squares algorithm. Datasets that fit into your computer's memory
+should be handled with this package.
+
+-bGURLS (b is for big) a MATLAB software package
+for training linear multiclass classifiers based on the Regularized Least Squares
+(RLS) loss function, it uses a home brewed memory mapped file system and a simple
+distributed task manager to allow for training from very large datasets.
+
+- gurls++ a C++ standalone implementation of GURLS. This package is
+under active development but it's not very well documented as of right now.
+The linear case is mostly covered and has been succesfully tested.
+
+Documentation
+=============
+
+- User's Guide:
+	A User's Guide with help files for each available method is available
+	in the gurls-documentation.pdf file.
+
+- Developer's Guide
+	A simple developer's guide is available in the gurls-documentation.pdf file.
+	GURLS is designed for easy expansion. Give it a try!
+
+- Demos
+	Both GURLS and bGURLS have exstensively commented demos in the "demo"
+	subdirectory of each package. We feel this is the best way to learn how
+	to use these packages.
+
+- Further Documentation
+	* Have a look at the README files of each individual package.
+
+	* A collection of the most useful and common pipelines can be found here:
+	  https://github.com/CBCL/GURLS/wiki/User-Manual
+
+Quick and Dirty
+===============
+
+
+While we have put a considerable effort in making the GURLS
+package versatile and yet self contained, we do understand that sometimes
+you just want to run it!
+
+Have a look at the README file inside the "gurls" directory for quick intructions on
+how to install and run the package for a default case.
+
+

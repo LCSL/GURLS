@@ -41,3 +41,22 @@ single the documentation of single functions for further reference.  The most
 popular learning pipelines are outlined here, with example code:
 https://github.com/CBCL/GURLS/wiki/User-Manual
 
+Quick and Dirty
+===============
+
+Put your training data in a n-by-d matrix X with each row being a data sample.
+Put the training labels in a y n-by-one vector. Let the labels go from 1 to T with T 
+being the number of classes.
+
+Run:
+
+>> opt = gurls_train(X,y);
+
+Put your test data in a n-by-d matrix Xte like above and your test labels in 
+a n-by-one vector yte. Let the labels go from 1 to T with T being the number of classes.
+
+Run: 
+
+>> [yhat, acc] = gurls_test(Xte,yte,opt)
+
+This will train a linear model in the dual space using leave-one-out cross validation.
