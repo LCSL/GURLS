@@ -63,157 +63,158 @@ namespace gurls {
 class GurlsOptionsList: public GurlsOption
 {
 private:
-	std::string name;
-	std::map<std::string, GurlsOption* > table;
+    std::string name;
+    std::map<std::string, GurlsOption* > table;
 
 public:
-	GurlsOptionsList(std::string ExpName, bool usedefopt = false);
-	bool addOpt(std::string key, GurlsOption* value);
-	bool addOpt(std::string key, std::string value);
-	GurlsOption* getOpt(std::string key);
-	std::string getOptAsString(std::string key);
-	std::string getName() const {return this->name;}
-	void setName(std::string);
-	double getOptAsNumber(std::string key);
-	void printAll();
-	bool hasOpt(std::string key) {return table.count(key)>0;}
+    GurlsOptionsList(std::string ExpName, bool usedefopt = false);
+    bool addOpt(std::string key, GurlsOption* value);
+    bool addOpt(std::string key, std::string value);
+    GurlsOption* getOpt(std::string key);
+    std::string getOptAsString(std::string key);
+    std::string getName() const {return this->name;}
+    void setName(std::string);
+    double getOptAsNumber(std::string key);
+    void printAll();
+    bool hasOpt(std::string key) {return table.count(key)>0;}
+    void removeOpt(std::string key, bool deleteMembers = true);
 
 
-	virtual bool isA(int id) { return (id == OptListOption); }
+    virtual bool isA(int id) { return (id == OptListOption); }
 
-	static GurlsOptionsList* dynacast(GurlsOption* opt) {
-		if (opt->isA(OptListOption) ){
-			return static_cast<GurlsOptionsList*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
-	int size() const {return table.size();}
+    static GurlsOptionsList* dynacast(GurlsOption* opt) {
+        if (opt->isA(OptListOption) ){
+            return static_cast<GurlsOptionsList*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+    int size() const {return table.size();}
 
-	GurlsOption* operator[] (int idx){
+    GurlsOption* operator[] (int idx){
 
-		if ( idx > this->size() ) {
-			throw gException(gurls::Exception_Index_Out_of_Bound);
-		}
+        if ( idx > this->size() ) {
+            throw gException(gurls::Exception_Index_Out_of_Bound);
+        }
 
-		std::map<std::string, GurlsOption* >::iterator itr = table.begin();
-		std::map<std::string, GurlsOption* >::iterator end = table.end();
-		for (int i = 0; i<=idx, itr!=end; i++, itr++){
-			/* Do nothing else then following the iterator */
-		}
-		return itr->second;
-	}
+        std::map<std::string, GurlsOption* >::iterator itr = table.begin();
+        std::map<std::string, GurlsOption* >::iterator end = table.end();
+        for (int i = 0; i<=idx, itr!=end; i++, itr++){
+            /* Do nothing else then following the iterator */
+        }
+        return itr->second;
+    }
 
-	friend std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
+    friend std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
 
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		ar & this->name;
-		int n = table.size();
-		int type = -1;
-		ar & n;
-		std::map<std::string, GurlsOption* >::const_iterator itr = table.begin();
-		std::map<std::string, GurlsOption* >::const_iterator end = table.end();
-		for (int i = 0; i<n, itr!=end; i++, itr++){
-			std::string s = itr->first;
-			ar & s;
-			GurlsOption* opt0 = itr->second;
-			type = opt0->getType();
-			ar & type;
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        ar & this->name;
+        int n = table.size();
+        int type = -1;
+        ar & n;
+        std::map<std::string, GurlsOption* >::const_iterator itr = table.begin();
+        std::map<std::string, GurlsOption* >::const_iterator end = table.end();
+        for (int i = 0; i<n, itr!=end; i++, itr++){
+            std::string s = itr->first;
+            ar & s;
+            GurlsOption* opt0 = itr->second;
+            type = opt0->getType();
+            ar & type;
 //			std::cout << " ° " << s << ": " << type << std::endl;
-			if (type == StringOption){
-				OptString* opt = static_cast<OptString*>(opt0);
-				ar & (*opt);
-			} else if (type == StringListOption){
-				OptStringList* opt = static_cast<OptStringList*>(opt0);
-				ar & (*opt);
-			} else if (type == NumberOption){
-				OptNumber* opt = static_cast<OptNumber*>(opt0);
-				ar & (*opt);
-			} else if (type == NumberListOption){
-				OptNumberList* opt = static_cast<OptNumberList*>(opt0);
-				ar & (*opt);
-			} else if (type == FunctionOption){
-				OptFunction* opt = static_cast<OptFunction*>(opt0);
-				ar & (*opt);
-			} else if (type == MatrixOption) {
-				OptMatrix<gMat2D<float> >* opt = static_cast<OptMatrix<gMat2D<float> >*>(opt0);
-				ar & (*opt);
-			} else if (type == TaskSequenceOption) {
-				OptTaskSequence* opt = static_cast<OptTaskSequence*>(opt0);
-				ar & (*opt);
-			} else if (type == OptListOption){
-				GurlsOptionsList* opt = static_cast<GurlsOptionsList*>(opt0);
-				ar & (*opt);
-			} else {
-				// AN EXCEPTION SHOULD BE RAISED
-			}
+            if (type == StringOption){
+                OptString* opt = static_cast<OptString*>(opt0);
+                ar & (*opt);
+            } else if (type == StringListOption){
+                OptStringList* opt = static_cast<OptStringList*>(opt0);
+                ar & (*opt);
+            } else if (type == NumberOption){
+                OptNumber* opt = static_cast<OptNumber*>(opt0);
+                ar & (*opt);
+            } else if (type == NumberListOption){
+                OptNumberList* opt = static_cast<OptNumberList*>(opt0);
+                ar & (*opt);
+            } else if (type == FunctionOption){
+                OptFunction* opt = static_cast<OptFunction*>(opt0);
+                ar & (*opt);
+            } else if (type == MatrixOption) {
+                OptMatrix<gMat2D<float> >* opt = static_cast<OptMatrix<gMat2D<float> >*>(opt0);
+                ar & (*opt);
+            } else if (type == TaskSequenceOption) {
+                OptTaskSequence* opt = static_cast<OptTaskSequence*>(opt0);
+                ar & (*opt);
+            } else if (type == OptListOption){
+                GurlsOptionsList* opt = static_cast<GurlsOptionsList*>(opt0);
+                ar & (*opt);
+            } else {
+                // AN EXCEPTION SHOULD BE RAISED
+            }
 
 
-			//ar & (*opt);
+            //ar & (*opt);
 //			std::cout << " done." << std::endl;
-		}
-	}
+        }
+    }
 
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		ar & this->name;
-		this->setName(this->name);
-		int n = 0;
-		int type = -1;
-		ar & n;
-		//GurlsOption* opt;
-		for (int i = 0; i<n; i++){
-			//GurlsOption* opt;
-			std::string s;
-			ar & s;
-			ar & type;
-			if (type == StringOption){
-				OptString* opt = new OptString();
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == StringListOption){
-				OptStringList* opt = new OptStringList();
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == NumberOption){
-				OptNumber* opt = new OptNumber();
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == NumberListOption){
-				OptNumberList* opt = new OptNumberList();
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == FunctionOption){
-				OptFunction* opt = new OptFunction("");
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == MatrixOption) {
-				OptMatrix<gMat2D<float> >* opt = new OptMatrix<gMat2D<float> >();
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == TaskSequenceOption) {
-				OptTaskSequence* opt = new OptTaskSequence();
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else if (type == OptListOption){
-				GurlsOptionsList* opt = new GurlsOptionsList("tmp", false);
-				ar & (*opt);
-				this->addOpt(s, opt);
-			} else {
-				// AN EXCEPTION SHOULD BE RAISED
-			}
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        ar & this->name;
+        this->setName(this->name);
+        int n = 0;
+        int type = -1;
+        ar & n;
+        //GurlsOption* opt;
+        for (int i = 0; i<n; i++){
+            //GurlsOption* opt;
+            std::string s;
+            ar & s;
+            ar & type;
+            if (type == StringOption){
+                OptString* opt = new OptString();
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == StringListOption){
+                OptStringList* opt = new OptStringList();
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == NumberOption){
+                OptNumber* opt = new OptNumber();
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == NumberListOption){
+                OptNumberList* opt = new OptNumberList();
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == FunctionOption){
+                OptFunction* opt = new OptFunction("");
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == MatrixOption) {
+                OptMatrix<gMat2D<float> >* opt = new OptMatrix<gMat2D<float> >();
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == TaskSequenceOption) {
+                OptTaskSequence* opt = new OptTaskSequence();
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else if (type == OptListOption){
+                GurlsOptionsList* opt = new GurlsOptionsList("tmp", false);
+                ar & (*opt);
+                this->addOpt(s, opt);
+            } else {
+                // AN EXCEPTION SHOULD BE RAISED
+            }
 
-			//ar & (*opt);
-			//this->addOpt(s, opt);
-		}
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+            //ar & (*opt);
+            //this->addOpt(s, opt);
+        }
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 
 };

@@ -1,12 +1,12 @@
-/*
+ /*
   * The GURLS Package in C++
   *
   * Copyright (C) 2011, IIT@MIT Lab
   * All rights reserved.
   *
- * author:  M. Santoro
- * email:   msantoro@mit.edu
- * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
+  * authors:  P.K. Mallapragada, M. Santoro and A. Tacchetti
+  * email:   {pavan_m / msantoro / atacchet}@mit.edu
+  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
@@ -40,58 +40,54 @@
   */
 
 
-#ifndef _GURLS_PARAMSEL_H_
-#define _GURLS_PARAMSEL_H_
+#ifndef _GURLS_PRIMAL_H
+#define _GURLS_PRIMAL_H
 
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include <stdexcept>
 
+#include "gmath.h"
 #include "options.h"
 #include "optlist.h"
-#include "gmat2d.h"
-#include "gvec.h"
-#include "gmath.h"
+
+#include "pred.h"
+
+using namespace std;
 
 namespace gurls {
 
 template <typename T>
-class LoocvPrimal;
+class PredPrimal: public Prediction<T > {
 
-template <typename T>
-class LoocvDual;
-
-template <typename T>
-class FixLambda;
-
-template <typename T>
-class ParamSelection
-{
 public:
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
-
-    class BadParamSelectionCreation : public std::logic_error {
-    public:
-      BadParamSelectionCreation(std::string type)
-      : logic_error("Cannot create type " + type) {}
-    };
-    static ParamSelection<T>*
-    factory(const std::string& id) throw(BadParamSelectionCreation) {
-      if(id == "loocvprimal"){
-        return new LoocvPrimal<T>;
-      }
-      else if(id == "loocvdual")
-        return new LoocvDual<T>;
-      else if(id == "fixlambda")
-        return new FixLambda<T>;
-      else
-        throw BadParamSelectionCreation(id);
-    }
+   void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
+
+template <typename T>
+void PredPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/,
+                                   GurlsOptionsList &opt){
+   if (opt.hasOpt("W"))
+   {
+       GurlsOption *g = opt.getOpt("W");
+       gMat2D<T>& W = OptMatrix< gMat2D<T> >::dynacast(g)->getValue();
+       gMat2D<T>* Z = new gMat2D<T>(X.rows(), W.cols());
+       *Z = 0;
+       dot(X, W, *Z);
+
+       if(opt.hasOpt("pred"))
+           opt.removeOpt("pred");
+
+        opt.addOpt("pred", new OptMatrix<gMat2D<T> >(*Z));
+
+   }else {
+       throw gException(gurls::Exception_Required_Parameter_Missing);
+   }
+}
+
 
 }
 
-#endif // _GURLS_PARAMSEL_H_
+#endif // _GURLS_PRIMAL_H

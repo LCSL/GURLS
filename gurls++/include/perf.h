@@ -4,9 +4,9 @@
   * Copyright (C) 2011, IIT@MIT Lab
   * All rights reserved.
   *
- * author:  M. Santoro
- * email:   msantoro@mit.edu
- * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
+  * author:  M. Santoro
+  * email:   msantoro@mit.edu
+  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
@@ -40,58 +40,59 @@
   */
 
 
-#ifndef _GURLS_PARAMSEL_H_
-#define _GURLS_PARAMSEL_H_
+#ifndef _GURLS_PERF_H_
+#define _GURLS_PERF_H_
 
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <exception>
 #include <stdexcept>
 
+#include "gmath.h"
 #include "options.h"
 #include "optlist.h"
-#include "gmat2d.h"
-#include "gvec.h"
-#include "gmath.h"
+
+using namespace std;
 
 namespace gurls {
 
 template <typename T>
-class LoocvPrimal;
+class MacroAvg;
 
 template <typename T>
-class LoocvDual;
+class PrecisionRecall;
 
-template <typename T>
-class FixLambda;
 
+//template <typename Matrix>
 template <typename T>
-class ParamSelection
+class Performance
 {
 public:
+//	virtual Matrix& execute( const Matrix& X, const Matrix& Y, GurlsOptionsList& opt) = 0;
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
-    class BadParamSelectionCreation : public std::logic_error {
+    class BadPerformanceCreation : public std::logic_error {
     public:
-      BadParamSelectionCreation(std::string type)
-      : logic_error("Cannot create type " + type) {}
+        BadPerformanceCreation(std::string type)
+            : logic_error("Cannot create type " + type) {}
     };
-    static ParamSelection<T>*
-    factory(const std::string& id) throw(BadParamSelectionCreation) {
-      if(id == "loocvprimal"){
-        return new LoocvPrimal<T>;
-      }
-      else if(id == "loocvdual")
-        return new LoocvDual<T>;
-      else if(id == "fixlambda")
-        return new FixLambda<T>;
-      else
-        throw BadParamSelectionCreation(id);
+//    static Performance<Matrix>*
+    static Performance<T>*
+    factory(const std::string& id) throw(BadPerformanceCreation)
+    {
+        if(id == "precrec")
+            return new PrecisionRecall<T>;
+        else if(id == "macroavg")
+            return new MacroAvg<T>;
+        else
+            throw BadPerformanceCreation(id);
     }
+
 };
 
 }
 
-#endif // _GURLS_PARAMSEL_H_
+#endif // _GURLS_PERF_H

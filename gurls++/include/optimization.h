@@ -58,31 +58,41 @@
 #include "gmath.h"
 #include "exceptions.h"
 
-
 namespace gurls {
 
 template <typename T>
 class RLSPrimal;
 
 template <typename T>
+class RLSDual;
+
+template <typename T>
+class RLSPegasos;
+
+template <typename T>
 class Optimizer
 {
 public:
-	virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
-	~Optimizer(){}
+    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+    ~Optimizer(){}
 
-	class BadOptimizerCreation : public std::logic_error {
-	public:
-	  BadOptimizerCreation(std::string type)
-	  : logic_error("Cannot create type " + type) {}
-	};
-	static Optimizer<T>*
-	factory(const std::string& id) throw(BadOptimizerCreation) {
-	  if(id == "rlsprimal"){
-		return new RLSPrimal<T>;
-	  }	else
-		throw BadOptimizerCreation(id);
-	}
+    class BadOptimizerCreation : public std::logic_error {
+    public:
+      BadOptimizerCreation(std::string type)
+      : logic_error("Cannot create type " + type) {}
+    };
+    static Optimizer<T>*
+    factory(const std::string& id) throw(BadOptimizerCreation) {
+
+      if(id == "rlsprimal")
+        return new RLSPrimal<T>;
+      else if(id == "rlsdual")
+            return new RLSDual<T>;
+      else if(id == "rlspegasos")
+            return new RLSPegasos<T>;
+      else
+        throw BadOptimizerCreation(id);
+    }
 };
 
 }

@@ -1,12 +1,11 @@
 /*
  * The GURLS Package in C++
  *
- * Copyright (C) 2011, IIT@MIT Lab
+ * Copyright (C) 2012, Matteo Santoro
  * All rights reserved.
  *
  * author:  M. Santoro
- * email:   msantoro@mit.edu
- * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
+ * email:   matteo.santoro@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,89 +38,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _GURLS_KERNEL_H_
-#define _GURLS_KERNEL_H_
+#include "primal.h"
 
-//#include <cstdio>
-//#include <algorithm>
-#include <cstdlib>
-//#include <string>
-//#include <vector>
-
-//#include "gvec.h"
-//#include "gmat2d.h"
-
-#include <stdexcept>
-using namespace std;
-
-#include "optlist.h"
 
 namespace gurls {
 
-//class Kernel
-//{
-//private:
-//	string name;
-//	vector<string> parNames;
-//	vector<double> parValues;
-
-//public:
-//	Kernel(string n = "") : name(n) { }
-//	template <typename T>
-//	void evaluate( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z) {
-//		/* Empty method. The method should have been pure virtual	but templates may not be virtual. */
-//	} ;
-
-//	virtual string getName() {
-//		return this->name;
-//	}
-
-//	virtual void setName(string n) {
-//		this->name = n;
-//	}
-
-//};
-
-template<typename T>
-class LinearKernel;
-
-template<typename T>
-class Kernel
-{
-public:
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
-
-    class BadKernelCreation : public std::logic_error
-    {
-    public:
-        BadKernelCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-
-    static Kernel<T> *factory(const std::string& id) throw(BadKernelCreation)
-    {
-        if(id == "linear")
-            return new LinearKernel<T>;
-        else
-            throw BadKernelCreation(id);
-    }
-};
-
-
-//class LinearKernel : public Kernel
-//{
-//private:
-//	LinearKernel(string n = "") { };
-//	template <typename T>
-//	void evaluate ( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z ){
-//		gMat2D< T >
-//		dot(X1, X2, Z);
-//	}
-
-//};
-
 
 }
-
-#endif // _GURLS_KERNEL_H_
-

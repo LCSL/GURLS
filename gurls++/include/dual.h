@@ -1,12 +1,11 @@
 /*
  * The GURLS Package in C++
  *
- * Copyright (C) 2011, IIT@MIT Lab
+ * Copyright (C) 2011, Matteo Santoro
  * All rights reserved.
  *
  * author:  M. Santoro
- * email:   msantoro@mit.edu
- * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
+ * email:   matteo.santoro@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,89 +38,83 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _GURLS_KERNEL_H_
-#define _GURLS_KERNEL_H_
 
-//#include <cstdio>
-//#include <algorithm>
-#include <cstdlib>
-//#include <string>
-//#include <vector>
+#ifndef _GURLS_DUAL_H
+#define _GURLS_DUAL_H
 
-//#include "gvec.h"
-//#include "gmat2d.h"
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <cmath>
+#include <algorithm>
 
-#include <stdexcept>
+#include "gmath.h"
+#include "options.h"
+#include "optlist.h"
+
+#include "pred.h"
+#include "primal.h"
+
 using namespace std;
 
-#include "optlist.h"
+
 
 namespace gurls {
 
-//class Kernel
-//{
-//private:
-//	string name;
-//	vector<string> parNames;
-//	vector<double> parValues;
+template <typename T>
+class PredDual: public Prediction<T> {
 
-//public:
-//	Kernel(string n = "") : name(n) { }
-//	template <typename T>
-//	void evaluate( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z) {
-//		/* Empty method. The method should have been pure virtual	but templates may not be virtual. */
-//	} ;
-
-//	virtual string getName() {
-//		return this->name;
-//	}
-
-//	virtual void setName(string n) {
-//		this->name = n;
-//	}
-
-//};
-
-template<typename T>
-class LinearKernel;
-
-template<typename T>
-class Kernel
-{
 public:
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
-
-    class BadKernelCreation : public std::logic_error
-    {
-    public:
-        BadKernelCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-
-    static Kernel<T> *factory(const std::string& id) throw(BadKernelCreation)
-    {
-        if(id == "linear")
-            return new LinearKernel<T>;
-        else
-            throw BadKernelCreation(id);
-    }
+    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
+template <typename T>
+void PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+{
+    try
+    {
 
-//class LinearKernel : public Kernel
-//{
-//private:
-//	LinearKernel(string n = "") { };
-//	template <typename T>
-//	void evaluate ( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z ){
-//		gMat2D< T >
-//		dot(X1, X2, Z);
-//	}
+        GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
 
-//};
+        if(kernel->getOptAsString("type") == "linear")
+        {
+            PredPrimal<T> pred;
+            return pred.execute(X, Y, opt);
+        }
+        else
+        {
+            GurlsOptionsList* predkernel = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
+            GurlsOption *K_opt = predkernel->getOpt("K");
+            gMat2D<T> *K = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
 
+
+            GurlsOptionsList* rls = static_cast<GurlsOptionsList*>(opt.getOpt("rls"));
+            GurlsOption *C_opt = rls->getOpt("C");
+            gMat2D<T> *C = &(OptMatrix<gMat2D<T> >::dynacast(C_opt))->getValue();
+
+
+            gMat2D<T>* Z = new gMat2D<T>(K->rows(), C->cols());
+            set(Z->getData(), (T)0.0, Z->getSize());
+
+
+            dot(K->getData(), C->getData(), Z->getData(), K->rows(), K->cols(), C->rows(), C->cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasRowMajor);
+
+
+            if(opt.hasOpt("pred"))
+                opt.removeOpt("pred");
+
+             opt.addOpt("pred", new OptMatrix<gMat2D<T> >(*Z));
+        }
+    }
+    catch (gException& ex)
+    {
+        throw ex;
+    }
 
 }
 
-#endif // _GURLS_KERNEL_H_
+}
 
+
+
+#endif // _GURLS_DUAL_H

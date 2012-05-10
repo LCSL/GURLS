@@ -53,139 +53,142 @@ using namespace std;
 namespace gurls{
 
 std::ostream& operator<<(std::ostream& os, GurlsOption& opt) {
-	opt.operator <<(os);
-	return os;
+    opt.operator <<(os);
+    return os;
 }
 
 
 
 /*
 std::ostream& operator<<(std::ostream& os, OptString& opt) {
-	return os << opt.getValue();
+    return os << opt.getValue();
 }
 
 std::ostream& operator<<(std::ostream& os, OptNumber& opt) {
-	return os << static_cast<double>(opt.getValue());
+    return os << static_cast<double>(opt.getValue());
 }
 
 std::ostream& operator<<(std::ostream& os, OptStringList& opt){
-	std::vector<std::string> V = opt.getValue();
-	std::vector<std::string>::iterator it = V.begin();
-	std::vector<std::string>::iterator end = V.end();
-	os << "(" << (*it++);
-	while( it != end){
-		os << ", " << (*it++);
-	}
-	os << ")";
-	return os;
+    std::vector<std::string> V = opt.getValue();
+    std::vector<std::string>::iterator it = V.begin();
+    std::vector<std::string>::iterator end = V.end();
+    os << "(" << (*it++);
+    while( it != end){
+        os << ", " << (*it++);
+    }
+    os << ")";
+    return os;
 }
 
 std::ostream& operator<<(std::ostream& os, OptNumberList& opt){
-	std::vector<double> V = opt.getValue();
-	std::vector<double>::iterator it = V.begin();
-	std::vector<double>::iterator end = V.end();
-	os << "(" << (*it++);
-	while( it != end){
-		os << ", " << (*it++);
-	}
-	os << ")";
-	return os;
+    std::vector<double> V = opt.getValue();
+    std::vector<double>::iterator it = V.begin();
+    std::vector<double>::iterator end = V.end();
+    os << "(" << (*it++);
+    while( it != end){
+        os << ", " << (*it++);
+    }
+    os << ")";
+    return os;
 }
 
 std::ostream& operator<<(std::ostream& os, OptFunction& opt){
-	os << "Pointer to the function " << opt.getName() << " whose signature is: double (*func)(double*, int)" ;
-	return os;
+    os << "Pointer to the function " << opt.getName() << " whose signature is: double (*func)(double*, int)" ;
+    return os;
 }
 */
 
 
 std::ostream& OptString::operator<<(std::ostream& os){
-	return os << this->getValue();
+    return os << this->getValue();
 }
 
 std::ostream& OptNumber::operator<<(std::ostream& os) {
-	return os << this->getValue();
+    return os << this->getValue();
 }
 
 std::ostream& OptStringList::operator<<(std::ostream& os){
-	std::vector<std::string> V = this->getValue();
-	std::vector<std::string>::iterator it = V.begin();
-	std::vector<std::string>::iterator end = V.end();
-	os << "(" << (*it++);
-	while( it != end){
-		os << ", " << (*it++);
-	}
-	os << ")";
-	return os;
+    std::vector<std::string> V = this->getValue();
+    std::vector<std::string>::iterator it = V.begin();
+    std::vector<std::string>::iterator end = V.end();
+    os << "(" << (*it++);
+    while( it != end){
+        os << ", " << (*it++);
+    }
+    os << ")";
+    return os;
 }
 
 std::ostream& OptNumberList::operator<<(std::ostream& os){
-	std::vector<double> V = this->getValue();
-	std::vector<double>::iterator it = V.begin();
-	std::vector<double>::iterator end = V.end();
-	os << "(" << (*it++);
-	while( it != end){
-		os << ", " << (*it++);
-	}
-	os << ")";
-	return os;
+    std::vector<double> V = this->getValue();
+    std::vector<double>::iterator it = V.begin();
+    std::vector<double>::iterator end = V.end();
+    os << "(" << (*it++);
+    while( it != end){
+        os << ", " << (*it++);
+    }
+    os << ")";
+    return os;
 }
 
 std::ostream& OptFunction::operator<<(std::ostream& os){
-	os << "Pointer to the function <" << this->getName()
-	   << "> whose signature is: double (*func)(double*, int)" ;
-	return os;
+    os << "Pointer to the function <" << this->getName()
+       << "> whose signature is: double (*func)(double*, int)" ;
+    return os;
 }
 
 std::ostream& OptTaskSequence::operator<<(std::ostream& os){
-	std::vector<std::string> V = this->tasks;
-	std::vector<std::string>::iterator it = V.begin();
-	std::vector<std::string>::iterator end = V.end();
-	os << "(" << (*it++);
-	while( it != end){
-		os << ", " << (*it++);
-	}
-	os << ")";
-	return os;
+    std::vector<std::string> V = this->tasks;
+    std::vector<std::string>::iterator it = V.begin();
+    std::vector<std::string>::iterator end = V.end();
+    os << "(" << (*it++);
+    while( it != end){
+        os << ", " << (*it++);
+    }
+    os << ")";
+    return os;
 }
 
 
 double mean(double* v, int n) {
-	double m = 0.0;
-	for (int i = 0; i < n; i++){
-		m+=*v++;
-	}
-	return m/n;
+    double m = 0.0;
+    for (int i = 0; i < n; i++){
+        m+=*v++;
+    }
+    return m/n;
 }
 
 double min(double* v, int n){
-	double* m = std::min_element(v,v+n);
-	return *m;
+    double* m = std::min_element(v,v+n);
+    return *m;
 }
 
 double max(double* v, int n){
-	double* m = std::max_element(v,v+n);
-	return *m;
+    double* m = std::max_element(v,v+n);
+    return *m;
 }
 
 double median(double* v, int n){
-	std::vector<double> vd(v, v+n);
-	sort(vd.begin(), vd.end());
-	return *(vd.begin()+vd.size()/2);
+    std::vector<double> vd(v, v+n);
+    sort(vd.begin(), vd.end());
+    if(n%2)
+        return *(vd.begin()+vd.size()/2);
+    else
+        return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
 }
 
 
 bool OptTaskSequence::isValid(const std::string & str, std::string& type, std::string& name) {
-	size_t found = str.find(gurls::TASKDESC_SEPARATOR);
-	if (found==std::string::npos){
-		return false;
-	}
-	type = str.substr(0, found);
-	name = str.substr(found+1);
-	if (name.find(gurls::TASKDESC_SEPARATOR)!=std::string::npos){
-		return false;
-	}
-	return true;
+    size_t found = str.find(gurls::TASKDESC_SEPARATOR);
+    if (found==std::string::npos){
+        return false;
+    }
+    type = str.substr(0, found);
+    name = str.substr(found+1);
+    if (name.find(gurls::TASKDESC_SEPARATOR)!=std::string::npos){
+        return false;
+    }
+    return true;
 }
 
 

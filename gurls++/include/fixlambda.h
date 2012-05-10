@@ -4,7 +4,7 @@
  * Copyright (C) 2011, IIT@MIT Lab
  * All rights reserved.
  *
- * author:  M. Santoro
+ * authors:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,89 +39,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _GURLS_KERNEL_H_
-#define _GURLS_KERNEL_H_
 
-//#include <cstdio>
-//#include <algorithm>
-#include <cstdlib>
-//#include <string>
-//#include <vector>
+#ifndef _GURLS_FIXLAMBDA_H_
+#define _GURLS_FIXLAMBDA_H_
 
-//#include "gvec.h"
-//#include "gmat2d.h"
 
-#include <stdexcept>
-using namespace std;
-
+#include "options.h"
 #include "optlist.h"
+#include "gmat2d.h"
+
+#include "paramsel.h"
+
 
 namespace gurls {
 
-//class Kernel
-//{
-//private:
-//	string name;
-//	vector<string> parNames;
-//	vector<double> parValues;
-
-//public:
-//	Kernel(string n = "") : name(n) { }
-//	template <typename T>
-//	void evaluate( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z) {
-//		/* Empty method. The method should have been pure virtual	but templates may not be virtual. */
-//	} ;
-
-//	virtual string getName() {
-//		return this->name;
-//	}
-
-//	virtual void setName(string n) {
-//		this->name = n;
-//	}
-
-//};
-
-template<typename T>
-class LinearKernel;
-
-template<typename T>
-class Kernel
+template <typename T>
+class FixLambda: public ParamSelection<T>
 {
 public:
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
-
-    class BadKernelCreation : public std::logic_error
-    {
-    public:
-        BadKernelCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-
-    static Kernel<T> *factory(const std::string& id) throw(BadKernelCreation)
-    {
-        if(id == "linear")
-            return new LinearKernel<T>;
-        else
-            throw BadKernelCreation(id);
-    }
+    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
-
-//class LinearKernel : public Kernel
-//{
-//private:
-//	LinearKernel(string n = "") { };
-//	template <typename T>
-//	void evaluate ( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z ){
-//		gMat2D< T >
-//		dot(X1, X2, Z);
-//	}
-
-//};
-
+template <typename T>
+void FixLambda<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+{
+    OptNumberList* lambda = new OptNumberList();
+    lambda->add(1.0);
+    opt.addOpt("lambdas", lambda);
+}
 
 }
 
-#endif // _GURLS_KERNEL_H_
-
+#endif //_GURLS_FIXLAMBDA_H_
