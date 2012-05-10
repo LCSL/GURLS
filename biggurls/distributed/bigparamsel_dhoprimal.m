@@ -1,20 +1,35 @@
 function [vout] = paramsel_hoprimal(X,y,opt)
 
 %	bigparamsel_dhoprimal(X,y,opt)
-%	Performs parameter selection when the primal formulation of RLS is used.
+%	Performs parameter selection when the primal formulation of RLS is used 
+%	This function uses a hold-out set to perform parameter selection.
 %	This specific implementation assumes XtXm, Xty, XvayXva and Xvatyva
 %	have already been computed using gdm and are available in files.
 %	The performance measure specified by opt.hoperf is maximized.
 %
-%	NEEDS:	
-%		- opt.nlambda
-%		- opt.hoperf
-%		- opt.files.Xva_filename
-%		- opt.files.yva_filename
-%		- opt.files.XtX_filename
-%		- opt.files.Xty_filename
-%		- opt.files.XvatXva_filename
-%		- opt.files.Xvatyva_filename
+%	INPUT:
+%		- X : input data bigarray
+%		- Y : labels bigarray
+%		- opt : struct witht he following fields:
+%			- Fields set through the bigdefopt function:
+%				* nlambdaa
+%				* hoperf
+%			- Fields that need to be set by hand:
+%
+%				* opt.files.Xva_filename 	: Validation data bigarray
+%				* opt.files.yva_filename 	: Validation labels bigarray
+%				* opt.files.XtX_filename 	: Training data covariance matrix file
+%				* opt.files.Xty_filename 	: Training data times labels matrix file
+%				* opt.files.XvatXva_filename 	: Validation data covariance matrix file
+%				* opt.files.Xvatyva_filename	: Validation data times validation labels matrix file.
+%
+%	OUTPUT: structure with the following fields:
+%		- lambdas 	: values of the regulariazation parameter maximizing the
+%			    	  validation performance (one for each class).	
+%		- forho		: matrix with validation performance for each class and for each value of the paramter.
+%		- guesses	: contains the values tried for the lambda paramter.
+
+
 
 	X.Transpose(true);
 	y.Transpose(true);

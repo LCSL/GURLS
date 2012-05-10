@@ -6,18 +6,21 @@ function [cfr] = rls_pegasos(X, bY, opt)
 %	The regularization parameter is set to the one found in opt.paramsel (set by the bigparamsel_* routines).
 %	In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
-%	NEEDS:
-%		- opt.singlelamda
-%		- opt.paramsel.lambdas
-%		- opt.epochs
-%		- opt.Xte
-%		- opt.yte
+%	INPUT:
+%		- X : input data bigarray
+%		- Y : labels bigarray
+%		- opt : struct witht he following fields:
+%			- Fields set by other biggruls tasks:
+%				* paramsel.lambdas (set by the bigparamsel_*) routines.
+%			- Fields set through the bigdefopt function:
+%				* singlelambda
+%
+%	OUTPUT: structure with the following fields:
+%		- W : matrix of coefficient vectors of rls estimator for each class
+%		- C : empty matrix
+%		- X : empty matrix
+				* epochs
 
-% Pegasos-type algorithm for RLS
-% Solves RLS in the primal
-% X : n x d matrix data
-% bY = binary coded Y
-% opt = options
 
 
 	n = X.NumItems();

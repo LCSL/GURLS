@@ -14,7 +14,7 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 %		- nlambda
 %		- smallnumber
 %		- hoperf
-%       - nholdouts
+%       	- nholdouts
 %
 %   For more information on standard OPT fields
 %   see also defopt

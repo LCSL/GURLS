@@ -39,16 +39,16 @@ while iter < n,
     W_sum = W_sum + W;
     count = count + 1;
 
-    %% Testing
-    if(mod(count,n) == 1)
-	
-    	fprintf('\n\tObjective : %f',obj_primal(W, X, bY, lambda));
-    	cfr.acc_last(end+1) = test_classifier (W,opt);
-    	fprintf('\n\tLast Acc: %f', cfr.acc_last(end));
-    	cfr.acc_avg(end+1) = test_classifier (W_sum/count,opt);
-    	fprintf('\n\tAvg Acc: %f\n', cfr.acc_avg(end));
-
-    end
+%    %% Testing
+%    if(mod(count,n) == 1)
+%	
+%    	fprintf('\n\tObjective : %f',obj_primal(W, X, bY, lambda));
+%    	cfr.acc_last(end+1) = test_classifier (W,opt);
+%    	fprintf('\n\tLast Acc: %f', cfr.acc_last(end));
+%    	cfr.acc_avg(end+1) = test_classifier (W_sum/count,opt);
+%    	fprintf('\n\tAvg Acc: %f\n', cfr.acc_avg(end));
+%
+%    end
  
     fprintf('%d\r',iter);
 end

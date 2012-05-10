@@ -19,8 +19,6 @@ function [params] = paramsel_calibratesgd(X, y, opt)
 % - W: rls coefficient vector
 %
 
-%% Subsample a set of 6000 examples;  We can change this later
-%% Do 10 subsamples and ten estimates.
 
 n_estimates = 1;
 [n,d] = size(X);

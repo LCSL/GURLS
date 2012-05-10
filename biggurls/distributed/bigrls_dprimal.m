@@ -6,11 +6,23 @@ function [cfr] = bigrls_dprimal(bX, bY, opt)
 %	In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %	This particular implementation assumes XtX and Xty have already been computed using gdm.
 %
-%	NEEDS:
-%		- opt.singlelamda
-%		- opt.paramsel.lambdas
-%		- opt.files.XtX_filename
-%		- opt.files.Xty_filename
+%	INPUT:
+%		- X : input data bigarray
+%		- Y : labels bigarray
+%		- opt : struct witht he following fields:
+%			- Fields set by other biggruls tasks:
+%				* paramsel.lambdas (set by the bigparamsel_*) routines.
+%			- Fields set through the bigdefopt function:
+%				* singlelambda
+%			- Fields that need to be set by hand:
+%				* opt.files.XtX_filename 	: Training data covariance matrix file
+%				* opt.files.Xty_filename 	: Training data times labels matrix file
+%
+%	OUTPUT: structure with the following fields:
+%		- W : matrix of coefficient vectors of rls estimator for each class
+%		- C : empty matrix
+%		- X : empty matrix
+
 
 	t = load(opt.files.XtX_filename);	XtX = t.data;
 	t = load(opt.files.Xty_filename);	Xty = t.data;

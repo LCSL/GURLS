@@ -1,17 +1,29 @@
 function [vout] = bigparamsel_hoprimal(X,y,opt)
 
 %	bigparamsel_hoprimal(X,y,opt)
-%	Performs parameter selection when the primal formulation of RLS is used.
-%	The performance measure specified by opt.hoperf is maximized on the
-%	validation set contained in the bigarrays pointed but opt.files.Xva_filename and opt.files.yva_filename.
+%	Performs parameter selection when the primal formulation of RLS is used 
+%	This function uses a hold-out set to perform parameter selection.
+%	The performance measure specified by opt.hoperf is maximized.
 %
-%	NEEDS:	
-%		- opt.split
-%		- opt.nholdouts
-%		- opt.nlambda
-%		- opt.hoperf
-%		- opt.files.Xva_filename
-%		- opt.files.yva_filename
+%	INPUT:
+%		- X : input data bigarray
+%		- Y : labels bigarray
+%		- opt : struct witht he following fields:
+%			- Fields set through the bigdefopt function:
+%				* nlambdaa
+%				* hoperf
+%			- Fields that need to be set by hand:
+%
+%				* opt.files.Xva_filename 	: Validation data bigarray
+%				* opt.files.yva_filename 	: Validation labels bigarray
+%
+%	OUTPUT: structure with the following fields:
+%		- lambdas 	: values of the regulariazation parameter maximizing the
+%			    	  validation performance (one for each class).	
+%		- forho		: matrix with validation performance for each class and for each value of the paramter.
+%		- guesses	: contains the values tried for the lambda paramter.
+
+
 
 	X.Transpose(true);
 	y.Transpose(true);
