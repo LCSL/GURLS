@@ -69,7 +69,6 @@ set(gurls_sources
         ${SRCDIR}dual.cpp
         ${SRCDIR}perf.cpp)
 
-include ( ../FindBoost.cmake )
 set(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
