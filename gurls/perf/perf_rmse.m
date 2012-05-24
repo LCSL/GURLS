@@ -13,7 +13,7 @@ if isfield (opt,'perf')
 end
 
 T 			= size(y,2);
-n 			= size(X,1);
+n 			= size(y,1);
 diff 		= opt.pred - y;
 p.rmse 		= norm(diff,'fro') / sqrt(n);
 p.forho 	= -p.rmse;
