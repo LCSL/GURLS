@@ -27,6 +27,12 @@ function vout = paramsel_siglamho(X,y,opt)
 
 
 %savevars = {'forho','M'};
+
+
+if isfield (opt,'paramsel')
+	vout = opt.paramsel; % lets not overwrite existing parameters.
+			      		 % unless they have the same name
+end
 savevars = [];
 
 [n,T]  = size(y);

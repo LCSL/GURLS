@@ -19,6 +19,10 @@ function [params] = paramsel_calibratesgd(X, y, opt)
 % - W: rls coefficient vector
 %
 
+if isfield (opt,'paramsel')
+	vout = opt.paramsel; % lets not overwrite existing parameters.
+			      		 % unless they have the same name
+end
 
 n_estimates = 1;
 [n,d] = size(X);

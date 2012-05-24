@@ -25,6 +25,12 @@ function vout = paramsel_siglam(X,y,opt)
 % -sigma: value of the kernel parameter minimizing the validation error
 
 %savevars = {'LOOSQE','M','sigmas','guesses'};
+
+
+if isfield (opt,'paramsel')
+	vout = opt.paramsel; % lets not overwrite existing parameters.
+			      		 % unless they have the same name
+end
 savevars = [];
 [n,T]  = size(y);
 if ~isfield(opt,'kernel')

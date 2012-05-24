@@ -24,6 +24,10 @@ function vout = paramsel_loocvdual(X,y,opt)
 %        and for each class
 % -guesses: array of guesses for the regularization parameter lambda 
 
+if isfield (opt,'paramsel')
+	vout = opt.paramsel; % lets not overwrite existing parameters.
+			      		 % unless they have the same name
+end
 
 [n,T]  = size(y);
 tot = opt.nlambda;
