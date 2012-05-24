@@ -12,7 +12,9 @@ if isfield (opt,'perf')
 		      % unless they have the same name
 end
 
-T 		= size(y,2);
-n 		= size(X,1);
-diff 	= opt.pred - y;
-p.rmse 	= norm(diff,'fro') / sqrt(n);
+T 			= size(y,2);
+n 			= size(X,1);
+diff 		= opt.pred - y;
+p.rmse 		= norm(diff,'fro') / sqrt(n);
+p.forho 	= -p.rmse;
+p.forplot 	= p.rmse;
