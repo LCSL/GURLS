@@ -22,28 +22,17 @@ n = size(opt.kernel.K,1);
 T = size(y,2);
 
 % Initialize
-c = zeros(n,T);
+opt.gd.c = zeros(n,T);
 if (opt.gd.method == 1)
-  alpha1 = zeros(n,T);
-  nu = opt.gd.nu;
+  opt.gd.alpha1 = zeros(n,T);
 end
-
 % Iterate
 for i=1:iter
-  if (opt.gd.method == 0)
-    c = c + opt.paramsel.eta*(y - opt.kernel.K*c);
-  elseif (opt.gd.method == 1)
-    u=((i-1)*(2*i-3)*(2*i+2*nu-1))/((i+2*nu-1)*(2*i+4*nu-1)*(2*i+2*nu-3));
-    w=4*(((2*i+2*nu-1)*(i+nu-1)) /((i+2*nu-1)*(2*i+4*nu-1)) );
-    alpha2 = alpha1;
-    alpha1 = c;
-    c = alpha1 + u*(alpha1 - alpha2) +(w*opt.paramsel.eta)*(y - opt.kernel.K*alpha1);
-  else
-    error('invalid opt.gd.method')
-  end
+	opt.gd.iter = iter;
+	opt.gd = rls_dualgd_driver(X,y,opt);
 end
 
-cfr.C = c;
+cfr.C = opt.gd.c;
 cfr.X = X;
 
 if strcmp(opt.kernel.type, 'linear')

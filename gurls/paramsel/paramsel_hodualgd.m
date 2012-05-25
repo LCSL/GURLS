@@ -40,38 +40,32 @@ end
 vout.eta = eta;
 
 vout.ho_iter = zeros(1,opt.nholdouts);
+K = opt.kernel.K;
 for j=1:opt.nholdouts
 	tr = opt.split{j}.tr;
 	va = opt.split{j}.va;
+
 	  
+	opt.kernel.K = K(tr,tr);
+	opt.predkernel.K = K(va,tr);
+
 	% Initialize
 	coeffs = zeros(length(tr),T);
 	if (opt.gd.method == 1)
-		alpha1 = zeros(length(tr),T);
+		opt.gd.alpha1 = zeros(length(tr),T);
 	end
+	opt.gd.c = coeffs;
+	opt.paramsel.eta = eta;
 	
 	ap = zeros(opt.gd.maxiter,T);
 	
 	% Iterate
 	for i = 1:opt.gd.maxiter
-	  % Update coefficients
-	  	if (opt.gd.method == 0)
-	   		coeffs = coeffs + eta*(y(tr,:) - opt.kernel.K(tr,tr)*coeffs);
-	  	elseif (opt.gd.method == 1)
-	    	u=((i-1)*(2*i-3)*(2*i+2*nu-1))/((i+2*nu-1)*(2*i+4*nu-1)*(2*i+2*nu-3));
-	    	w=4*(((2*i+2*nu-1)*(i+nu-1)) /((i+2*nu-1)*(2*i+4*nu-1)) );
-	    	alpha2 = alpha1;
-	    	alpha1 = coeffs;
-	    	coeffs = alpha1 + u*(alpha1 - alpha2) +(w*eta)*(y(tr,:)- opt.kernel.K(tr,tr)*alpha1);
-	  	else
-	    	error('invalid opt.gd.method')
-	  	end
-	  
-	  	% Make predictions
-	  	opt.pred = opt.kernel.K(va,tr)*coeffs;
-	  
-	  	% Get accuracy
-	  	opt.perf = opt.hoperf([],y(va,:),opt);
+		opt.gd.iter = i;
+		opt.gd = rls_dualgd_driver([],y(tr,:),opt);
+		opt.rls.C = opt.gd.c;
+		opt.pred = pred_dual([],[],opt);
+		opt.perf = opt.hoperf([],y(va,:),opt);
 	  	ap(i,:) = opt.perf.acc;
 	  
 	  	 % To do: Add early termination condition

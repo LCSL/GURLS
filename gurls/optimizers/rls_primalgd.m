@@ -19,32 +19,20 @@ iter = round(opt.gd.singleiter(opt.paramsel.iter));
 [n,d] = size(X);
 T = size(y,2);
 
-XtX = X'*X; % d x d matrix.
-Xty = X'*y; % d x T matrix.
 
 % Initialize
-W = zeros(d,T);
+opt.gd.W = zeros(d,T);
 if (opt.gd.method == 1)
-  alpha1 = zeros(d,T);
-  nu = opt.gd.nu;
+  opt.gd.alpha1 = zeros(d,T);
 end
 
 % Iterate
 for i=1:iter
-  if (opt.gd.method == 0)
-    W = W + opt.paramsel.eta*(Xty - XtX*W);
-  elseif (opt.gd.method == 1)
-    u=((i-1)*(2*i-3)*(2*i+2*nu-1))/((i+2*nu-1)*(2*i+4*nu-1)*(2*i+2*nu-3));
-    w=4*(((2*i+2*nu-1)*(i+nu-1)) /((i+2*nu-1)*(2*i+4*nu-1)) );
-    alpha2 = alpha1;
-    alpha1 = W;
-    W = alpha1 + u*(alpha1 - alpha2) +(w*opt.paramsel.eta)*(Xty - XtX*alpha1);
-  else
-    error('invalid opt.gd.method')
-  end
+	opt.gd.iter = iter;
+	opt.gd = rls_primalgd_driver(X,y,opt);
 end
 
-cfr.W = W;
+cfr.W = opt.gd.W;
 cfr.C = [];
 cfr.X = [];
 

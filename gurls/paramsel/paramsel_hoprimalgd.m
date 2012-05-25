@@ -9,9 +9,9 @@ function [vout] = paramsel_hoprimalgd(X, y, opt)
 %   - opt.gd.method (0 for standard gd, 1 for accelerated)
 %   - opt.gd.maxiter
 %   - opt.gd.eta_numerator
-%		- opt.split
-%		- opt.nholdouts
-%		- opt.hoperf
+%	- opt.split
+%	- opt.nholdouts
+%	- opt.hoperf
 
 if (isfield(opt, 'paramsel'))
 	vout = opt.paramsel;
@@ -31,6 +31,7 @@ end
 max_eig = eigs(double(X'*X),1);
 eta = opt.gd.eta_numerator/max_eig;
 vout.eta = eta;
+opt.paramsel.eta = eta;
 if (opt.gd.method == 1)
   	nu = opt.gd.nu;
 end
@@ -39,35 +40,21 @@ vout.ho_iter = zeros(1,opt.nholdouts);
 for j=1:opt.nholdouts
   	tr = opt.split{j}.tr;
   	va = opt.split{j}.va;
-  
-  	XtX = X(tr,:)'*X(tr,:); % d x d matrix.
-  	Xty = X(tr,:)'*y(tr,:); % d x T matrix.
 
-  	% Initialize
-  	W = zeros(d,T);
+	opt.gd.W = zeros(d,T);
   	if (opt.gd.method == 1)
-    	alpha1 = zeros(d,T);
+    	opt.gd.alpha1 = zeros(d,T);
   	end
-  
   	ap = zeros(opt.gd.maxiter,T);
 
   	% Iterate
   	for i = 1:opt.gd.maxiter
-    	% Update coefficients
-    	if (opt.gd.method == 0)
-      		W = W + eta*(Xty - XtX*W);
-    	elseif (opt.gd.method == 1)
-      		u=((i-1)*(2*i-3)*(2*i+2*nu-1))/((i+2*nu-1)*(2*i+4*nu-1)*(2*i+2*nu-3));
-      		w=4*(((2*i+2*nu-1)*(i+nu-1)) /((i+2*nu-1)*(2*i+4*nu-1)) );
-      		alpha2 = alpha1;
-      		alpha1 = W;
-      		W = alpha1 + u*(alpha1 - alpha2) +(w*eta)*(Xty - XtX*alpha1);
-    	else
-      		error('invalid opt.gd.method')
-    	end
-    
+		opt.gd.iter = i;
+		opt.gd = rls_primalgd_driver(X(tr,:),y(tr,:),opt);
+		opt.rls.W = opt.gd.W;
     	% Make predictions
-    	opt.pred = X(va,:)*W;
+    	opt.pred = pred_primal(X(va,:),[],opt);
+
     
     	% Get accuracy
     	opt.perf = opt.hoperf([],y(va,:),opt);

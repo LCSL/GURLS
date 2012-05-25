@@ -25,6 +25,10 @@ opt.gd.singleiter = @median;
 opt.gd.eta_numerator = 1;
 opt.gd.nu = 1;
 
+%% CG Options
+opt.cg.maxiter = 1000;
+opt.cg.singleiter = @median;
+
 %% Directory options
 opt.tmpdir = opt.name;
 

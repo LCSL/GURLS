@@ -40,10 +40,10 @@ end
 
 [n,T] = size(y);
 
+K = opt.kernel.K;
 for nh = 1:opt.nholdouts
 	% This is memory inefficient but I do not know
 	% how to make it better. Maybe, MATLAB has a copy on write policy
-	K = opt.kernel.K;
 
 	if strcmp(class(opt.split),'cell')
 		tr = opt.split{nh}.tr;
@@ -53,7 +53,7 @@ for nh = 1:opt.nholdouts
 		va = opt.split.va;
 	end	
 	opt.kernel.K = K(tr,tr);
-	opt.predkernel.K = K(tr,va);
+	opt.predkernel.K = K(va,tr);
 
 	for i = 1:numel(opt.paramsel.guesses)
 		opt.paramsel.lambdas = opt.paramsel.guesses(i);
@@ -67,7 +67,6 @@ for nh = 1:opt.nholdouts
 	[dummy,idx] = max(ap,[],1);	
 	vout.lambdas_round{nh} = opt.paramsel.guesses(idx);
 	vout.forho{nh} = ap;
-	opt.kernek.K = K;
 
 end
 if numel(vout.lambdas_round) > 1
