@@ -44,7 +44,7 @@ opt.cfr.acc_avg = [];
 for i = 1:opt.epochs,
 	if opt.cfr.count == 0
 		opt.cfr.t0 = ceil(norm(X(1,:))/sqrt(opt.singlelambda(opt.paramsel.lambdas)));
-		fprintf('\n\tt0 is set to : %f\n', opt.cfr.t0);
+		%fprintf('\n\tt0 is set to : %f\n', opt.cfr.t0);
 	end
 	opt.cfr = rls_pegasos_singlepass(X, bY, opt);
 end	

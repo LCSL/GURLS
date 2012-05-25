@@ -15,7 +15,7 @@ function [vout] = paramsel_hodual(X, y, opt)
 %		- nlambda
 %		- smallnumber
 %		- hoperf
-%       - nholdouts
+%               - nholdouts
 %		- kernel.type
 %
 %   For more information on standard OPT fields

@@ -16,7 +16,7 @@ function [cfr] = rls_dualgd(X, y, opt)
 
 iter = round(opt.gd.singleiter(opt.paramsel.iter));
 
-fprintf('\tSolving dual by gradient descent...\n');
+%fprintf('\tSolving dual by gradient descent...\n');
 
 n = size(opt.kernel.K,1);
 T = size(y,2);

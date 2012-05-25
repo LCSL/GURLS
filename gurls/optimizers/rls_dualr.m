@@ -36,7 +36,7 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 n = size(opt.kernel.K,1);
 T = size(y,2);
 
-fprintf('\tSolving dual RLS...(n = %d, % = %d)', n, T);
+%fprintf('\tSolving dual RLS...(n = %d, % = %d)', n, T);
 
 K = opt.kernel.K + (n*lambda)*eye(n);
 
