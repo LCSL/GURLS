@@ -14,7 +14,7 @@ function [cfr] = rls_primalgd(X, y, opt)
 
 iter = round(opt.gd.singleiter(opt.paramsel.iter));
 
-fprintf('\tSolving primal by gradient descent...\n');
+%fprintf('\tSolving primal by gradient descent...\n');
 
 [n,d] = size(X);
 T = size(y,2);

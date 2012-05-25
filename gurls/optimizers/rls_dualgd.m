@@ -10,7 +10,7 @@ function [cfr] = rls_dualgd(X, y, opt)
 %   - opt.gd.method (0 for standard gd, 1 for accelerated)
 %		- opt.gd.singleiter
 %		- opt.paramsel.iter
-%   - opt.paramsel.eta
+%   	- opt.paramsel.eta
 %		- opt.kernel.K
 %		- opt.kernel.type
 

@@ -42,7 +42,7 @@ end
 
 for nh = 1:opt.nholdouts
 	% This is memory inefficient but I do not know
-	% how to make it better.
+	% how to make it better. Maybe, MATLAB has a copy on write policy
 	K = opt.kernel.K;
 
 	if strcmp(class(opt.split),'cell')
