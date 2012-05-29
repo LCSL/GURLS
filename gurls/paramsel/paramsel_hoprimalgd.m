@@ -29,7 +29,8 @@ end
 
 % Get step size
 max_eig = eigs(double(X'*X),1);
-eta = opt.gd.eta_numerator/max_eig;
+%eta = opt.gd.eta_numerator/max_eig;
+eta = 1/(max_eig * n);
 vout.eta = eta;
 opt.paramsel.eta = eta;
 if (opt.gd.method == 1)
