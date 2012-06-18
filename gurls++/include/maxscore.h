@@ -40,55 +40,69 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_CONFMAXSCORE_H_
+#define _GURLS_CONFMAXSCORE_H_
 
 
-#include "kernel.h"
+#include "confidence.h"
 #include "gmath.h"
 
 namespace gurls {
 
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief ConfMaxScore is the sub-class of Confidence that computes a confidence estimation for the predicted class (i.e. highest scoring class).
      */
 
 template <typename T>
-class LinearKernel: public Kernel<T>
+class ConfMaxScore: public Confidence<T>
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
+     * Computes a confidence estimation for the predicted class (i.e. highest scoring class).
+     * The difference between the highest scoring class and the second highest scoring class is considered.
+     * \param not used
+     * \param not used
+     * \param opt options with the following:
+     *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt not udes
-     *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \return adds the following fields to opt:
+     *  - confidence = array containing the confidence score for each row of the field pred of opt.
      */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void ConfMaxScore<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y_OMR*/, GurlsOptionsList& opt) throw(gException)
 {
+//   out = struct;
+//   [n,k] = size(opt.pred);
+     GurlsOption *pred_opt = opt.getOpt("pred");
+     gMat2D<T> *pred_mat = &(OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
+     int n = pred_mat->rows();
+     int t = pred_mat->cols();
+     gMat2D<T> y_pred(t, n);
+     pred_mat->transpose(y_pred);
+     T* expscoresTranspose = new T[t*n];
+     copy< T >(expscoresTranspose,y_pred.getData(),t*n,1,1);
 
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
+//     out = struct;
+//     [out.confidence, out.labels] = max(opt.pred,[],2);
+     T* confidence = new T[n];
+     T* rowT = new T[t];
+     for(int i=0;i<n;i++)
+     {
+       getRow< T >(expscoresTranspose,n,t,i,rowT);
+       std::sort(rowT,rowT+t);
+       confidence[i] =  rowT[t-1];       
+     }
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
-
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
-
-    dot(X, Xt, *K);
-
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
+     gVec< T > conf(confidence, n, false);
+     opt.addOpt("confidence", new OptMatrix<gMat2D<T> >(conf.asMatrix()));
+     delete [] expscoresTranspose;
+     delete [] confidence;
+     delete [] rowT;
 }
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif //_GURLS_CONFMAXSCORE_H_

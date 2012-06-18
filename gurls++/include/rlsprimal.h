@@ -49,115 +49,44 @@
 
 namespace gurls {
 
+    /**
+     * \brief RLSPrimal is the sub-class of Optimizer that implements RLS with the primal formulation
+     */
+
 template <typename T>
 class RLSPrimal: public Optimizer<T>{
 
 public:
+    /**
+     * Computes a classifier for the primal formulation of RLS.
+     * The regularization parameter is set to the one found in the field paramsel of opt.
+     * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
+     *
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - singlelambda (default)
+     *  - paramsel (settable with the class ParamSelection and its subclasses)
+sses)
+     *
+     * \return adds to opt the field optimizer which is a list containing the following fields:
+     *  - W = matrix of coefficient vectors of rls estimator for each class
+     *  - C = empty matrix
+     *  - X = empty matrix
+     */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
-    void executeLB(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
 
 template <typename T>
-void RLSPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt){
-
-    executeLB(X, Y, opt);
-    return;
-
-    //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-    std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
-    double* lld  = new double[ll.size()];
-    memcpy( lld, &ll[0], sizeof( double) * ll.size() );
-    double lambda = (OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(lld, ll.size());
-
-    //	fprintf('\tSolving primal RLS...\n');
-    std::cout << "Solving primal RLS... ";
-    //	[n,d] = size(X);
-    T n = X.rows();
-    T d = X.cols();
-
-    //	===================================== Primal K
-    //	K = X'*X;
-    gMat2D<T>* K = new gMat2D<T>(X.cols(), X.cols());
-    gMat2D<T>* Xt = new gMat2D<T>(X.cols(), X.rows());
-    X.transpose(*Xt);
-    dot(*Xt, X, *K);
-
-    try{ // Try solving it with cholesky first.
-
-        //		K = K + (n*lambda)*eye(d);
-        *K += (n*static_cast<T>(lambda))*gMat2D<T>::eye(d);
-
-
-        //		R = chol(K);
-        gMat2D<T>* R = new gMat2D<T>(K->rows(), K->cols());
-        cholesky(*K, *R);
-        gMat2D<T>* Rt = new gMat2D<T>(R->cols(), R->rows());
-        R->transpose(*Rt);
-        //		cfr.dcomptime = toc;
-
-        //		Xty = X'*y;
-        gMat2D<T>* Xty = new gMat2D<T>(Xt->rows(), Y.cols());
-        dot(*Xt, Y, *Xty);
-
-        // if isfield(opt,'W0')
-        if (opt.hasOpt("W0")){
-            //			Xty = Xty + opt.W0;
-            GurlsOption *g = opt.getOpt("W0");
-            // check if the stored W0 has a compatible data type
-            if (g->getDataID() == typeid(T)){
-                //gMat2D<T> *W0 = &(OptMatrix<T>::dynacast(g))->getValue();
-                gMat2D<T> *W0 = &(OptMatrix<gMat2D<T> >::dynacast(g))->getValue();
-                *Xty += *W0;
-            }
-        }
-        //		cfr.W = R\(R'\Xty);
-
-        gMat2D<T>* R_inv = new gMat2D<T>(R->cols(), R->rows());
-        pinv(*R, *R_inv);
-
-        gMat2D<T>* Rt_inv = new gMat2D<T>(Rt->cols(), Rt->rows());
-        pinv(*Rt, *Rt_inv);
-
-        gMat2D<T>* Wtmp = new gMat2D<T>(Rt_inv->rows(), Xty->cols());
-        dot(*Rt_inv, *Xty, *Wtmp);
-        gMat2D<T>* W = new gMat2D<T>(R_inv->rows(), Wtmp->cols());
-        dot(*R_inv, *Wtmp, *W);
-
-        //opt.addOpt("W", new OptMatrixTMP<gMat2D<T> >(*W));
-        opt.addOpt("W", new OptMatrix< gMat2D<T> > (*W));
-        std::cout << "W = " << std::endl << *W << std::endl;
-    } catch (gException& gex) {
-
-        // AT PRESENT; THIS SECOND OPTION HAS NOT BEEN IMPEMENTED YET
-        throw gex;
-        //	catch
-        //	%% If it fails, then solve it using svd and rls_eigen.
-        //		[Q,L,V] = svd(K);
-        //		Q = double(Q);
-        //		L = double(diag(L));
-
-        //		QtXtY = Q'*(X'*y);
-
-        //		% regularization is done inside rls_eigen
-        //		cfr.W = rls_eigen(Q, L, QtXtY, lambda, n);
-        //	end
-
-    }
-
-    // WHAT SHALL WE DO WITH THE FOLLOWING TWO STATEMENTS?
-    //	cfr.C = [];
-    //	cfr.X = [];
-
-}
-
-template <typename T>
-void RLSPrimal<T>::executeLB(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+void RLSPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
 {
     //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-    std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
-    T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(ll.data(), ll.size()));
-
+//     std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
+    GurlsOptionsList* paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+    std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
+    T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
+	
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
 
@@ -239,30 +168,12 @@ void RLSPrimal<T>::executeLB(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gur
 
 
     }
-    catch (gException& gex)
+    catch (gException& /*gex*/)
     {
 
         for(typename std::set<T*>::iterator it = garbage.begin(); it != garbage.end(); ++it)
             delete[] (*it);
 
-        // AT PRESENT; THIS SECOND OPTION HAS NOT BEEN IMPEMENTED YET
-//        throw gex;
-        //	catch
-        //	%% If it fails, then solve it using svd and rls_eigen.
-        //		[Q,L,V] = svd(K);
-        //		Q = double(Q);
-        //		L = double(diag(L));
-
-        //		QtXtY = Q'*(X'*y);
-
-        //		% regularization is done inside rls_eigen
-        //		cfr.W = rls_eigen(Q, L, QtXtY, lambda, n);
-        //	end
-
-
-//        [Q,L,V] = svd(XtX);
-//        Q = double(Q);
-//        L = double(diag(L));
 
         T *Q, *L, *Vt;
         int Q_rows, Q_cols;
@@ -297,24 +208,22 @@ void RLSPrimal<T>::executeLB(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gur
     tmp.transpose(*out);
 
     delete[] W;
-
-    opt.addOpt("W", new OptMatrix<gMat2D<T> >(*out));
+    GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
+//     opt.addOpt("W", new OptMatrix<gMat2D<T> >(*out));
+    optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*out));
 
     delete[] K;
     delete[] Xty;
 
-
-    // WHAT SHALL WE DO WITH THE FOLLOWING TWO STATEMENTS?
-    //	cfr.C = [];
-    opt.removeOpt("C");
     gMat2D<T>* emptyC = new gMat2D<T>();
-    opt.addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
+    optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
 
     //	cfr.X = [];
-    opt.removeOpt("X");
     gMat2D<T>* emptyX = new gMat2D<T>();
-    opt.addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+    optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
 
+    opt.removeOpt("optimizer", false);
+    opt.addOpt("optimizer",optimizer);
 }
 
 

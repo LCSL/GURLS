@@ -4,7 +4,7 @@
   * Copyright (C) 2011, IIT@MIT Lab
   * All rights reserved.
   *
-  * author:  M. Santoro
+  * authors:  M. Santoro
   * email:   msantoro@mit.edu
   * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
@@ -40,76 +40,65 @@
   */
 
 
-#ifndef _GURLS_PERF_H_
-#define _GURLS_PERF_H_
+#ifndef _GURLS_RLSAUTO_H_
+#define _GURLS_RLSAUTO_H_
 
-#include <cstdio>
-#include <cstring>
-#include <iostream>
-#include <cmath>
-#include <algorithm>
-#include <exception>
-#include <stdexcept>
-
-#include "gmath.h"
-#include "options.h"
-#include "optlist.h"
+#include "optimization.h"
 
 
 namespace gurls {
 
-template <typename T>
-class MacroAvg;
+/**
+    * \brief RLSAuto is the sub-class of Optimizer that implements automatic selection of primal/dual procedure.
+    */
 
 template <typename T>
-class PrecisionRecall;
+class RLSAuto: public Optimizer<T>{
 
-template <typename T>
-class Rmse;
-
-    /**
-     * \brief Performance is the class that evaluates prediction performance
-     */
-
-//template <typename Matrix>
-template <typename T>
-class Performance
-{
 public:
     /**
-     * Evaluates prediction performance
-     * 
-     * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt options with the different required fields based on the sub-class
-     *
-     * \return adds the field perf to opt:
-     */
-
-//	virtual Matrix& execute( const Matrix& X, const Matrix& Y, GurlsOptionsList& opt) = 0;
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
-
-    class BadPerformanceCreation : public std::logic_error {
-    public:
-        BadPerformanceCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-//    static Performance<Matrix>*
-    static Performance<T>*
-    factory(const std::string& id) throw(BadPerformanceCreation)
-    {
-        if(id == "precrec")
-            return new PrecisionRecall<T>;
-        else if(id == "macroavg")
-            return new MacroAvg<T>;
-	else if(id == "rmse")
-            return new Rmse<T>;
-        else
-            throw BadPerformanceCreation(id);
-    }
-
+      * computes a RLS classifier, with automatic selection of primal/dual procedure.
+      * The regularization parameter is set to the one found in the field paramsel of opt
+     * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
+      *
+      * \param X input data matrix
+      * \param Y labels matrix
+      * \param opt options with the following:
+      *  - singlelambda (default)
+      *  - paramsel (settable with the class ParamSelection and its subclasses)
+      *  - kernel (list with the filed type set to 'linear', settable with the class Kernel and its KernelLinear)
+      *
+     * \return adds to opt the field optimizer, which is a list containing the following fields:
+      *  - W = matrix of coefficient vectors of rls estimator for each class
+      *  - C = empty matrix
+      *  - X = empty matrix
+      */
+    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
+template <typename T>
+void RLSAuto<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+{
+    //[n,d] = size(X);
+    const unsigned long n = X_OMR.rows();
+    const unsigned long d = X_OMR.cols();
+
+//     if (n > d) % Do primal
+    if(n > d)
+    {
+        //    cfr = rls_primal(X, y, opt);
+        RLSPrimal<T> rlsprimal;
+        rlsprimal.execute(X_OMR, Y_OMR, opt);
+    }
+//  else % Do dual
+    else
+    {
+        //      cfr = rls_dual(X, y, opt);
+        RLSDual<T> rlsdual;
+        rlsdual.execute(X_OMR, Y_OMR, opt);
+    }
 }
 
-#endif // _GURLS_PERF_H
+}
+#endif // _GURLS_RLSAUTO_H_
+

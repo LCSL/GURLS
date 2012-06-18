@@ -43,6 +43,7 @@
 #ifndef _GURLS_EXCEPTIONS_H_
 #define _GURLS_EXCEPTIONS_H_
 
+#include "exports.h"
 #include <iostream>
 #include <string>
 #include <map>
@@ -109,6 +110,8 @@ Exception_Invalid_TaskSequence(Exception_Incipit+"Invalid task name specificatio
 static std::string
 Exception_Unknown_Function(Exception_Incipit+"Unknown function.");
 
+static std::string
+Exception_Unsupported_MatrixType(Exception_Incipit+"Matrix type actually unsupported.");
 
 
 /*
@@ -119,13 +122,14 @@ Exception_Unknown_Function(Exception_Incipit+"Unknown function.");
   defined within the name space in order to identify typical and frequent
   exceptions (see above in this file).
   */
-class gException: public std::exception {
+class GURLS_EXPORT gException: public std::exception {
 private:
-	std::string msg;
+    std::string msg;
 public:
-	gException( std::string message ) : msg(message) { };
-	virtual ~gException() throw () { };
-	inline std::string getMessage() { return std::string("[")+this->what()+"]: " + msg; };
+    gException( std::string message ) : msg(message) { }
+    virtual ~gException() throw () { }
+    inline std::string getMessage() const { return std::string("[")+std::exception::what()+"]: " + msg; }
+    inline const char* what() const throw (){ return getMessage().c_str(); }
 };
 
 }

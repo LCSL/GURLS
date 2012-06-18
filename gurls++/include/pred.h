@@ -55,7 +55,6 @@
 #include "options.h"
 #include "optlist.h"
 
-using namespace std;
 
 namespace gurls {
 
@@ -65,10 +64,22 @@ class PredPrimal;
 template <typename T>
 class PredDual;
 
+   /**
+     * \brief Prediction is the class that computes predictions
+     */
+
 template <typename T>
 class Prediction
 {
 public:
+    /**
+     * Computes predictions of the classifier stored in the field rls of opt on the samples passed in the X matrix.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the different required fields based on the sub-class
+     *
+     * \return adds the field pred to opt
+     */
     virtual void execute( const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
     class BadPredictionCreation : public std::logic_error {
@@ -79,9 +90,9 @@ public:
 
     static Prediction<T>*
     factory(const std::string& id) throw(BadPredictionCreation) {
-        if(id == "rlsprimal"){
+        if(id == "primal"){
             return new PredPrimal<T>;
-        }	else if(id == "rlsdual"){
+        }	else if(id == "dual"){
             return new PredDual<T>;
         } else
             throw BadPredictionCreation(id);

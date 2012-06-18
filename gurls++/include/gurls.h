@@ -49,34 +49,78 @@
 #include <exception>
 #include <ctime>
 
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include "exports.h"
 #include "exceptions.h"
 #include "gmat2d.h"
 #include "optlist.h"
 #include "options.h"
 
 #include "linearkernel.h"
+#include "rbfkernel.h"
+#include "chisquaredkernel.h"
+
+#include "predkerneltraintest.h"
 
 #include "precisionrecall.h"
 #include "macroavg.h"
+#include "rmse.h"
 
+#include "rlsauto.h"
 #include "rlsprimal.h"
 #include "rlsdual.h"
 #include "rlspegasos.h"
+
 #include "loocvprimal.h"
 #include "loocvdual.h"
 #include "fixlambda.h"
+#include "fixsiglam.h"
+#include "siglam.h"
+#include "siglamho.h"
+#include "hoprimal.h"
+#include "hodual.h"
+
 #include "pred.h"
 #include "primal.h"
 #include "dual.h"
 
+#include "norml2.h"
+#include "normtestzscore.h"
+#include "normzscore.h"
+
+#include "splitho.h"
+#include "splithomulti.h"
+
+#include "boltzman.h"
+#include "boltzmangap.h"
+#include "gap.h"
+#include "maxscore.h"
+
 namespace gurls {
 
-class GURLS {
+    /**
+     * \brief GURLS is the class that implements a GURLS process
+     */
+
+	class GURLS_EXPORT GURLS {
 
 public:
-    enum {ignore, compute, computeNsave, load, remove};
+    /**
+     * set the execution option for a GURLS tasks:
+     */
 
+    enum Action {ignore, compute, computeNsave, load, remove};
+
+    /**
+     * Implements a GURLS process and stores results of each GULRS task in opt.
+     *
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt initial GURLS options
+     * \param processid a job-id number
+     *
+     */
     template <typename T>
     void run(const gMat2D<T>& , const gMat2D<T>&,
              GurlsOptionsList&, std::string );
@@ -88,30 +132,46 @@ template <typename T>
 void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 GurlsOptionsList& opt, std::string processid){
 
-//    time_t start_time,end_time;
-    clock_t start_time,end_time;
+    boost::posix_time::ptime begin, end;
+    boost::posix_time::time_duration diff;
 
     Optimizer<T> *taskOpt;
     ParamSelection<T> *taskParSel;
     Prediction<T> *taskPrediction;
     Performance<T> *taskPerformance;
     Kernel<T> *taskKernel;
+    Norm<T> *taskNorm;
+    Split<T> *taskSplit;
+    PredKernel<T> *taskPredKernel;
+    Confidence<T> *taskConfidence;
 
-    try{
+//    try{
 
         OptTaskSequence* seq = OptTaskSequence::dynacast(opt.getOpt("seq"));
-        GurlsOptionsList& processes =
-                *GurlsOptionsList::dynacast(opt.getOpt("processes"));
+        GurlsOptionsList& processes = *GurlsOptionsList::dynacast(opt.getOpt("processes"));
 
-        if (!processes.hasOpt(processid)){
+        if (!processes.hasOpt(processid))
             throw gException(Exception_Gurls_Invalid_ProcessID);
-        }
-        std::vector<double> process =
-                OptNumberList::dynacast( processes.getOpt(processid) )->getValue();
 
-        if (process.size() !=seq->size()){
+        std::vector<double> process = OptNumberList::dynacast( processes.getOpt(processid) )->getValue();
+
+        if ((long)process.size() != seq->size())
             throw gException(gurls::Exception_Gurls_Inconsistent_Processes_Number);
+
+        const std::string saveFile = opt.getOptAsString("savefile");
+
+        GurlsOptionsList* loadOpt = new GurlsOptionsList("load");
+        try
+        {
+            loadOpt->load(saveFile);
         }
+        catch(gException &)
+        {
+            delete loadOpt;
+            loadOpt = NULL;
+        }
+
+        GurlsOption* tmpOpt;
 
         //% Load and copy
 
@@ -134,14 +194,14 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
         GurlsOptionsList *timelist;
 
-        if (opt.hasOpt("time")){
+        if (opt.hasOpt("time"))
             timelist = GurlsOptionsList::dynacast(opt.getOpt("time"));
-        }else {
+        else
+        {
             timelist = new GurlsOptionsList("elapsedtime");
             opt.addOpt("time", timelist);
         }
-//        std::vector <double> process_time;
-        //process_time.reserve(seq->size());
+
 
         std::vector <double> process_time(seq->size(), 0.0);
 
@@ -156,17 +216,18 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                   <<"####### New task sequence... "
                   << std::endl;
 
-        for (int i = 0; i < seq->size(); i++){
-
+        for (int i = 0; i < seq->size(); ++i)
+        {
             seq->getTaskAt(i, reg1, reg2);
+
             std::cout << "\t" << "[Task " << i << ": "
                       << reg1 << "]: " << reg2 << "... ";
-            cout.flush();
+	    std::cout.flush();
+
 
             switch ( static_cast<int>(process[i]) ) {
 
             case GURLS::ignore:
-//                process_time.assign(i, 0.0);
                 std::cout << " ignored." << std::endl;
                 break;
 
@@ -177,8 +238,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 // field reg{1} already exists in opt.
                 //	case {CPT, CSV, ~isfield(opt,reg{1})}
 
-//                time(&start_time);
-                start_time = clock();
+                begin = boost::posix_time::microsec_clock::local_time();
+
                 if (!reg1.compare("optimizer")) {
                     taskOpt = Optimizer<T>::factory(reg2);
                     taskOpt->execute(X, y, opt);
@@ -194,15 +255,31 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 }else if (!reg1.compare("kernel")) {
                     taskKernel = Kernel<T>::factory(reg2);
                     taskKernel->execute(X, y, opt);
+                }else if (!reg1.compare("norm")) {
+                    taskNorm = Norm<T>::factory(reg2);
+                    gMat2D<T>* X1 = taskNorm->execute(X, y, opt);
+                    delete X1;
+                    throw gException("Unused return value");
+                }else if (!reg1.compare("split")) {
+                    taskSplit = Split<T>::factory(reg2);
+                    taskSplit->execute(X, y, opt);
+                }else if (!reg1.compare("predkernel")) {
+                    taskPredKernel = PredKernel<T>::factory(reg2);
+                    taskPredKernel->execute(X, y, opt);
+                }else if (!reg1.compare("confidence")) {
+                    taskConfidence = Confidence<T>::factory(reg2);
+                    taskConfidence->execute(X, y, opt);
                 }
+
                 fun = reg1;
                 fun+="_";
                 fun+=reg2;
                 opt.addOpt(reg1, new OptString(fun));
-//                time (&end_time);
-                end_time = clock();
-                //process_time.assign(i, difftime (end_time,start_time));
-                process_time[i] = ((float)end_time - start_time) /((float)CLOCKS_PER_SEC);
+
+                end = boost::posix_time::microsec_clock::local_time();
+                diff = end-begin;
+
+                process_time[i] = ((double)diff.total_milliseconds())/1000.0;
 
                 //		fName = [reg{1} '_' reg{2}];
                 //		fun = str2func(fName);
@@ -221,14 +298,31 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 //		else
                 //			fprintf('\tcopy failed\n');
                 //		end
-                std::cout << " skipped." << std::endl;
+//                std::cout << " skipped." << std::endl;
+
+                if(loadOpt == NULL)
+                    throw gException("Opt savefile not found");
+                if(!loadOpt->hasOpt(reg1))
+                {
+		  std::string s = "Task " + reg1 + " not found in opt savefile";
+		  gException e(s);
+		  throw e;
+                }
+
+                opt.removeOpt(reg1);
+                tmpOpt = loadOpt->getOpt(reg1);
+                loadOpt->removeOpt(reg1, false);
+                opt.addOpt(reg1, tmpOpt);
+                std::cout << " copied" << std::endl;
+
                 break;
             default:
-                std::cout << " WARNING: unknown task assignment."
-                          << std::endl;
+                throw gException("Unknown task assignment");
             }
 
         }
+
+        timelist->addOpt(processid, new OptNumberList(process_time));
 
         //fprintf('\nSave cycle...\n');
         //% Delete whats not necessary
@@ -250,12 +344,44 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         //save(opt.savefile, 'opt', '-v7.3');
         //fprintf('Saving opt in %s\n', opt.savefile);
 
-        timelist->addOpt(processid, new OptNumberList(process_time));
+        bool save = false;
 
-    }catch (gException& gex) {
+	std::cout << std::endl << "Save cycle..." << std::endl;
+        for (int i = 0; i < seq->size(); ++i)
+        {
+            seq->getTaskAt(i, reg1, reg2);
+            std::cout << "\t" << "[Task " << i << ": " << reg1 << "]: " << reg2 << "... ";
+	    std::cout.flush();
 
-        throw gex;
-    }
+            switch ( static_cast<int>(process[i]) )
+            {
+            case GURLS::ignore:
+            case GURLS::compute:
+            case GURLS::load:
+            case GURLS::remove:
+	        std::cout << "not saved" << std::endl;
+                opt.removeOpt(reg1);
+                break;
+            case GURLS::computeNsave:
+	        std::cout << " saving" << std::endl;
+                save = true;
+                break;
+            }
+        }
+
+        if(save)
+        {
+	    std::cout << std::endl << "Saving opt in " << saveFile << std::endl;
+            opt.save(saveFile);
+        }
+
+        delete loadOpt;
+
+//    }
+//    catch (gException& gex)
+//    {
+//        throw gex;
+//    }
 
 }
 
@@ -263,5 +389,6 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 }
 
 #include "gurls.hpp"
+#include "calibratesgd.h"
 
 #endif // _GURLS_GURLS_H_

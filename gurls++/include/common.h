@@ -50,20 +50,19 @@
 supervised mult-class learning problems using a regularized least
 square approach.
 
-<p>GURLS++ can be considered the C++ implementation of the Matlab
-toolbox GURLS, which name stands for Grand Unified Regularized Least
-Squares, and can be downloaded from (http://bratwurst.mit.edu/).
+<p>GURLS++ is the C++ implementation of the Matlab toolbox GURLS 
+(http://cbcl.mit.edu/gurls/).
 
 <p>The ultimate goal of the authors and contributors to GURLS++ has
 been to develop a comprehensive library to solve easily classication
-and regression problems both in the setting of bath and online
+and regression problems both in the setting of batch and online
 learning from examples.
 
 <p>Both GURLS and GURLS++ allows for training multiclass classifiers
 based on the Regularized Least Squares (RLS) loss function.
-It is implemented in MATLAB and encodes ideas and experience from
+The libraries encode ideas and experience from
 classical and more recent developments in theory and practice of
-multicategory classification. The package includes efficient methods
+multicategory classification. The software package includes efficient methods
 to automatically select good model parameters, to use a variety of
 output coding schemes and an easy interface for experiment management
 and results visualization. The software package includes a number of
@@ -109,19 +108,16 @@ or tables.
 
 <p><strong>Current Development Status</strong></p>
 
-The current version of this C++ library implements only a small subset
-of all the functionalities available in GURLS. A major upgrade and
-revision will be available soon.
-Check out the Matblab toolbox and all the updates on the website
-
-
-https://cbcl.mit.edu/neo2/index.php/GURLS_package
-
+The current version of this C++ library implements all the core 
+functionalities available in GURLS but still miss the functionalities
+required to handle large scale machine learning. A major upgrade and
+revision will be available soon. Check out the main GURLS repository 
+at (https://github.com/CBCL/GURLS) and keep updated for futher developments.
 
 
 <p><strong>Author</strong>:</p>
 
-<p><em>Matteo Santoro</em>. (<em>Contacts:</em> msantoro@mit.edu / matteo.santoro@gmail.com)</p>
+<p><em>Matteo Santoro</em>. (<em>Contacts:</em> matteo.santoro@gmail.com)</p>
 
 
 <p><strong>Copyright Notice</strong>:</p>
@@ -172,7 +168,11 @@ GURLS++ is released under the following licence:
 
 <ol>
 
-<li> Version 1.0.00, released October 7th. GURLS++ 1.0.00 is an initial
+
+<li> Version 1.0.00, released 2012 June 1th. GURLS++ 1.0.00 is the first
+complete release.
+
+<li> Version 0.1.00, released 2011 October 7th. GURLS++ 1.0.00 is an initial
 release and should be used with caution. The library has already been
 in use, but not every function/method has been thoroughly tested.
 Only a limited subset of GURLS is interfaced. Commens, bugfixes,
@@ -192,7 +192,6 @@ enhancements, suggestions are wellcome.
 \brief Contains common constants, typedes, classes and methods used within the library.
 
 */
-
 
 /**
 \defgroup Optimization
@@ -217,13 +216,11 @@ enhancements, suggestions are wellcome.
 /**
 \defgroup Settings
 \brief Contains classes and methods useful to define a set of parameters used by any learning algorith.
-
 */
 
 /**
 \defgroup Tutorials
 \brief Contains example files that show how to use the GURLS++ API to build simple machine learning applications.
-
 */
 
 

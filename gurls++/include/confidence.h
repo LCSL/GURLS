@@ -4,7 +4,7 @@
  * Copyright (C) 2011, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
+ * author:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,56 +39,71 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _GURLS_CONFIDENCE_H_
+#define _GURLS_CONFIDENCE_H_
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
 
-
-#include "kernel.h"
-#include "gmath.h"
+#include <stdexcept>
+#include "optlist.h"
 
 namespace gurls {
 
+template<typename T>
+class ConfBoltzman;
+
+template<typename T>
+class ConfBoltzmanGap;
+
+template<typename T>
+class ConfGap;
+
+template<typename T>
+class ConfMaxScore;
+
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief Confidence is the class that computes a confidence score for the predicted labels
      */
 
-template <typename T>
-class LinearKernel: public Kernel<T>
+template<typename T>
+class Confidence
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
+     * Computes a confidence score for the predicted labels specified in the field pred of opt
+     * \param X not used
+     * \param Y not used
+     * \param opt options with the following:
+     *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt not udes
-     *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \return adds the fields confidence to opt
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+
+    class BadSplitCreation : public std::logic_error
+    {
+    public:
+        BadSplitCreation(std::string type)
+            : logic_error("Cannot create type " + type) {}
+    };
+
+    static Confidence<T> *factory(const std::string& id) throw(BadSplitCreation)
+    {
+        if(id == "boltzman")
+            return new ConfBoltzman<T>;
+        else if(id == "boltzmangap")
+            return new ConfBoltzmanGap<T>;
+	else if(id == "gap")
+            return new ConfGap<T>;
+	else if(id == "maxscore")
+            return new ConfMaxScore<T>;
+
+        else
+            throw BadSplitCreation(id);
+    }
 };
 
-template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
-{
-
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
-
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
-
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
-
-    dot(X, Xt, *K);
-
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
-}
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif // _GURLS_CONFIDENCE_H_
+

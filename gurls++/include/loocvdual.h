@@ -61,10 +61,30 @@
 
 namespace gurls {
 
+    /**
+     * \brief LoocvDual is the sub-class of ParamSelection that implements LOO cross-validation with the dual formulation
+     */
+
 template <typename T>
 class LoocvDual: public ParamSelection<T>{
 
 public:
+    /**
+     * Performs parameter selection when the dual formulation of RLS is used.
+     * The leave-one-out approach is used.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - nlambda (default)
+     *  - hoperf (default)
+     *  - smallnumber (default)
+     *  - kernel (settable with the class Kernel and its subclasses)
+     *
+     * \return adds the following fields to opt:
+     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
+     *  - guesses = array of guesses for the regularization parameter lambda
+     *  - acc = matrix of validation accuracies for each lambda guess and for each class
+     */
    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
@@ -74,16 +94,17 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
 //    [n,T]  = size(y);
     const int n = Y_OMR.rows();
     const int t = Y_OMR.cols();
+    const int d = X_OMR.cols();
 
-    gMat2D<float> X(X_OMR.cols(), X_OMR.rows());
+    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
 
-    gMat2D<float> Y(Y_OMR.cols(), Y_OMR.rows());
+    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
     Y_OMR.transpose(Y);
 
 
 //    tot = opt.nlambda;
-    int tot = std::ceil( static_cast<OptNumber*>(opt.getOpt("nlambda"))->getValue() );
+    int tot = static_cast<int>(std::ceil( static_cast<OptNumber*>(opt.getOpt("nlambda"))->getValue() ));
 
 
 //    [Q,L] = eig(opt.kernel.K);
@@ -92,8 +113,6 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
     GurlsOption *K_opt = kernel->getOpt("K");
 
-//    if (K_opt->getDataID() != typeid(T))
-//        return;
 
     gMat2D<T> *K_mat = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
     gMat2D<T> K(K_mat->cols(), K_mat->rows());
@@ -108,9 +127,13 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
 
     eig_sm(Q, L, qrows, qcols);
 
+    int r = n;
     if(kernel->getOptAsString("type") == "linear")
-        //set(L+X_OMR.cols(), (T) 1.0e-12, l_length-X_OMR.cols());
+    {
+      //set(L+X_OMR.cols(), (T) 1.0e-12, l_length-X_OMR.cols());
         set(L, (T) 1.0e-12, l_length-X_OMR.cols());
+        r = std::min(n,d);
+    }
 
 
 //    Qty = Q'*y;
@@ -118,34 +141,11 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     T* Qty = new T[qcols*t];
     dot(Q, Y.getData(), Qty, qrows, qcols, n, t, qcols, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
-    // WARNING ============================== -> SEE LAMBDAGUESSES
-    //	filtered = L(L > 200*eps^0.5);
-    // WARNING: using an approximate version of the eps Matlab variable
-    //gVec<T> filtered = (L.asMatrix()).where(L.asMatrix() > 2.9802e-6f);
-//    T* filtered = L;
-
-    //	lmin = min(filtered)/n;
-    //	lmax = max(filtered)/n;
-//    const T lmin = (*std::min_element(L, L+qrows))/ n;
-//    const T lmax = (*std::max_element(L, L+qrows))/ n;
-
-    //	q = (lmax/lmin)^(1/tot);
-//    const T q = pow((lmax/lmin), ( static_cast<T>(1.0) / tot));
-
-
-//    guesses = zeros(1,tot);
-//    T* guesses = new T[tot];
-//    set(guesses, 0.f, tot);
-
-    //T* guesses = lambdaguesses(L, n, n, n, tot, (T)(opt.getOptAsNumber("smallnumber")));
-    T* guesses = lambdaguesses(L, n, n, n, tot, (T)1.0e8);
-
-//    LOOSQE = zeros(tot,T);
-    T* LOOSQE = new T[tot*t];
-    set(LOOSQE, 0.f, tot*t);
+    T* guesses = lambdaguesses(L, n, r, n, tot, (T)(opt.getOptAsNumber("smallnumber")));
 
 
     GurlsOption* pred_old = NULL;
+    GurlsOption* perf_old = NULL;
 
     if(opt.hasOpt("pred"))
     {
@@ -157,16 +157,18 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     OptMatrix<gMat2D<T> >* pred_opt = new OptMatrix<gMat2D<T> >(*pred);
     opt.addOpt("pred", pred_opt);
 
+    if(opt.hasOpt("perf"))
+    {
+        perf_old = opt.getOpt("perf");
+        opt.removeOpt("perf", false);
+    }
+
     GurlsOptionsList* perf = new GurlsOptionsList("perf");
     opt.addOpt("perf", perf);
 
-//    if (pred_opt->getDataID() != typeid(T))
-//        return;
 
     gMat2D<T> tmp_pred(pred->cols(), pred->rows());
 
-    //const int pred_size = pred->getSize();
-    //T* tmp_pred = new T[pred_size];
 
     Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
 
@@ -175,24 +177,11 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     T* C = new T[qrows*qcols];
     T* Z = new T[qrows];
 
-//    for i = 1:tot
     for(int i = 0; i < tot; ++i)
     {
-//        guesses(i) = lmin*(q^i);
-//        guesses[i] = lmin*std::pow(q,i);
-
-//        C = rls_eigen(Q,L,Qty,guesses(i),n);
-        //C.size() == qrowsXqcols
         rls_eigen(Q, L, Qty, C, guesses[i], n, qrows, qcols, l_length, qcols, t);
-
-//        Z = GInverseDiagonal(Q,L,guesses(i));
-        //Z.size() == qrowsX1
         GInverseDiagonal(Q, L, guesses+i, Z, qrows, qcols, l_length, 1);
 
-//        opt.pred = zeros(n,T);
-        //set(tmp_pred.getData(), (T)0.0, pred_size);
-
-//        for t = 1:T
         for(int j = 0; j< t; ++j)
         {
             rdivide(C + (qrows*j), Z, C_div_Z, qrows);
@@ -222,10 +211,10 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     delete[] L;
     //delete[] Q;
 
-    //[dummy,idx] = max(ap,[],1);
-    const unsigned int* idx = indicesOfMax(ap, tot, t, 1);
+    unsigned long* idx = new unsigned long[t];
+    T* work = NULL;
+    indicesOfMax(ap, tot, t, idx, work, 1);
 
-    //vout.lambdas = 	guesses(idx);
     T* lambdas = copyLocations(idx, guesses, t, tot);
 
     delete[] idx;
@@ -236,7 +225,10 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
 
     delete[] lambdas;
 
-    opt.addOpt("lambdas", LAMBDA);
+    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+
+//     opt.addOpt("lambdas", LAMBDA);
+    paramsel->addOpt("lambdas", LAMBDA);
 
     //vout.looe{1} = 	ap;
 
@@ -248,18 +240,24 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
 
     delete[] tmp;
 
-    opt.addOpt("looe", new OptMatrix<gMat2D<T> >(*looe_mat));
+    paramsel->addOpt("acc", new OptMatrix<gMat2D<T> >(*looe_mat));
 
 
     //vout.guesses = 	guesses;
     gVec<T> guessesVector(guesses, tot, false);
-    opt.addOpt("guesses", new OptMatrix<gMat2D<T> >(guessesVector.asMatrix()));
+    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(guessesVector.asMatrix()));
 
     delete[] guesses;
+
+   opt.addOpt("paramsel", paramsel);
 
     opt.removeOpt("pred");
     if(pred_old != NULL)
         opt.addOpt("pred", pred_old);
+
+    opt.removeOpt("perf");
+    if(perf_old != NULL)
+        opt.addOpt("perf", perf_old);
 }
 
 

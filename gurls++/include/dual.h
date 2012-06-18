@@ -55,25 +55,38 @@
 #include "pred.h"
 #include "primal.h"
 
-using namespace std;
-
-
 
 namespace gurls {
+
+    /**
+     * \brief PredDual is the sub-class of Prediction that computes the predictions of a linear classifier in the dual formulation
+     */
 
 template <typename T>
 class PredDual: public Prediction<T> {
 
 public:
+    /**
+     * computes the predictions of the linear classifier stored in opt.W and computed using the primal formulation, on the samples passed in the X matrix.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - Kernel (default)
+     *  - C, X, W (settable with the class Optimizers and its subclasses RLSDual)
+     *  - predkernel (required only if the subfield type of Kernel is different than "linear", and settable with the class PredKernel and its subclasses PredKernelTrainTest)
+     *
+     * \return adds the following field to opt:
+     *  - pred = matrix of predicted labels
+     */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
 template <typename T>
 void PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
 {
-    try
-    {
 
+    if(opt.hasOpt("kernel"))
+    {
         GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
 
         if(kernel->getOptAsString("type") == "linear")
@@ -81,40 +94,32 @@ void PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsLi
             PredPrimal<T> pred;
             return pred.execute(X, Y, opt);
         }
-        else
-        {
-            GurlsOptionsList* predkernel = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
-            GurlsOption *K_opt = predkernel->getOpt("K");
-            gMat2D<T> *K = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
-
-
-            GurlsOptionsList* rls = static_cast<GurlsOptionsList*>(opt.getOpt("rls"));
-            GurlsOption *C_opt = rls->getOpt("C");
-            gMat2D<T> *C = &(OptMatrix<gMat2D<T> >::dynacast(C_opt))->getValue();
-
-
-            gMat2D<T>* Z = new gMat2D<T>(K->rows(), C->cols());
-            set(Z->getData(), (T)0.0, Z->getSize());
-
-
-            dot(K->getData(), C->getData(), Z->getData(), K->rows(), K->cols(), C->rows(), C->cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasRowMajor);
-
-
-            if(opt.hasOpt("pred"))
-                opt.removeOpt("pred");
-
-             opt.addOpt("pred", new OptMatrix<gMat2D<T> >(*Z));
-        }
     }
-    catch (gException& ex)
-    {
-        throw ex;
-    }
+
+
+    GurlsOptionsList* predkernel = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
+    GurlsOption *K_opt = predkernel->getOpt("K");
+    gMat2D<T> *K = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
+
+
+    GurlsOptionsList* rls = static_cast<GurlsOptionsList*>(opt.getOpt("optimizer"));
+    GurlsOption *C_opt = rls->getOpt("C");
+    gMat2D<T> *C = &(OptMatrix<gMat2D<T> >::dynacast(C_opt))->getValue();
+
+
+    gMat2D<T>* Z = new gMat2D<T>(K->rows(), C->cols());
+    //set(Z->getData(), (T)0.0, Z->getSize());
+
+
+    dot(K->getData(), C->getData(), Z->getData(), K->rows(), K->cols(), C->rows(), C->cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasRowMajor);
+
+    if(opt.hasOpt("pred"))
+        opt.removeOpt("pred");
+
+     opt.addOpt("pred", new OptMatrix<gMat2D<T> >(*Z));
 
 }
 
 }
-
-
 
 #endif // _GURLS_DUAL_H

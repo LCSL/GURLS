@@ -4,7 +4,7 @@
  * Copyright (C) 2011, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
+ * author:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,56 +39,60 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _GURLS_SPLIT_H_
+#define _GURLS_SPLIT_H_
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
 
-
-#include "kernel.h"
-#include "gmath.h"
+#include <stdexcept>
+#include "optlist.h"
 
 namespace gurls {
 
-    /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+template<typename T>
+class SplitHo;
+
+template<typename T>
+class SplitHoMulti;
+
+   /**
+     * \brief Split is the class that splits data into pair(s) of training and test samples
      */
 
-template <typename T>
-class LinearKernel: public Kernel<T>
+template<typename T>
+class Split
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
-     *
-     * \param X input data matrix
+     * Splits data into pair(s) of training and test samples, to be used for cross-validation
+     * \param X not used
      * \param Y labels matrix
-     * \param opt not udes
+     * \param opt options with the different required fields based on the sub-class
      *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \return adds the field split to opt
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+
+    class BadSplitCreation : public std::logic_error
+    {
+    public:
+        BadSplitCreation(std::string type)
+            : logic_error("Cannot create type " + type) {}
+    };
+
+    static Split<T> *factory(const std::string& id) throw(BadSplitCreation)
+    {
+        if(id == "ho")
+            return new SplitHo<T>;
+        else if(id == "homulti")
+            return new SplitHoMulti<T>;
+
+        else
+            throw BadSplitCreation(id);
+    }
 };
 
-template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
-{
-
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
-
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
-
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
-
-    dot(X, Xt, *K);
-
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
-}
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif // _GURLS_SPLIT_H_
+

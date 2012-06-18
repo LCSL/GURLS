@@ -40,55 +40,55 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_FIXSIGLAM_H_
+#define _GURLS_FIXSIGLAM_H_
 
 
-#include "kernel.h"
-#include "gmath.h"
+#include "options.h"
+#include "optlist.h"
+#include "gmat2d.h"
+
+#include "paramsel.h"
+
 
 namespace gurls {
 
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief FixSigLam is the sub-class of ParamSelection that sets the regularization parameters to constants
      */
 
 template <typename T>
-class LinearKernel: public Kernel<T>
+class FixSigLam: public ParamSelection<T>
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
+     * Sets the regularization parameter lambda  and sigma to the constant 1.
+     * \param X not used
+     * \param Y not used
+     * \param opt not used
      *
-     * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt not udes
-     *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \return adds the following fields to opt:
+     *  - lambdas(=1.0) 
+     *  - sigma(=1.0) 
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
-template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+template <typename T>
+void FixSigLam<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
 {
+    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+    OptNumberList* lambda = new OptNumberList();
+    lambda->add(1.0);
+    paramsel->addOpt("lambdas", lambda);
+    double sigma = 1.0;
+    paramsel->addOpt("sigma", new OptNumber( sigma ));
 
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
+    opt.addOpt("paramsel", paramsel);
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
-
-    dot(X, Xt, *K);
-
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
 }
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif //_GURLS_FIXSIGLAM_H_

@@ -68,9 +68,39 @@ template <typename T>
 class FixLambda;
 
 template <typename T>
+class FixSigLam;
+
+template <typename T>
+class CalibrateSGD;
+
+template <typename T>
+class Siglam;
+
+template <typename T>
+class SiglamHo;
+
+template <typename T>
+class HoPrimal;
+
+template <typename T>
+class HoDual;
+
+    /**
+     * \brief ParamSelection is the class that implements parameter selection
+     */
+
+template <typename T>
 class ParamSelection
 {
 public:
+    /**
+     * Implements the selection of the regularization parameter(s)
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the different required fields based on the sub-class
+     * \return adds to opt the field paramsel 
+     */
+
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
     class BadParamSelectionCreation : public std::logic_error {
@@ -79,14 +109,26 @@ public:
       : logic_error("Cannot create type " + type) {}
     };
     static ParamSelection<T>*
-    factory(const std::string& id) throw(BadParamSelectionCreation) {
-      if(id == "loocvprimal"){
+    factory(const std::string& id) throw(BadParamSelectionCreation)
+    {
+      if(id == "loocvprimal")
         return new LoocvPrimal<T>;
-      }
       else if(id == "loocvdual")
         return new LoocvDual<T>;
       else if(id == "fixlambda")
         return new FixLambda<T>;
+      else if(id == "calibratesgd")
+        return new CalibrateSGD<T>;
+      else if(id == "siglam")
+        return new Siglam<T>;
+      else if(id == "siglamho")
+        return new SiglamHo<T>;
+      else if(id == "hodual")
+        return new HoDual<T>;
+      else if(id == "hoprimal")
+        return new HoPrimal<T>;
+      else if(id == "fixsiglam")
+        return new FixSigLam<T>;
       else
         throw BadParamSelectionCreation(id);
     }

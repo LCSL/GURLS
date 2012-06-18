@@ -40,55 +40,77 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_NORMTESTZSCORE_H_
+#define _GURLS_NORMTESTZSCORE_H_
 
 
-#include "kernel.h"
+#include "norm.h"
 #include "gmath.h"
 
 namespace gurls {
 
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmoputed on the training set.
      */
-
 template <typename T>
-class LinearKernel: public Kernel<T>
+class NormTestZScore: public Norm<T>
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
-     *
+     * Spheriphies test data using the same mean and std deviation computed for the training set, previously computed and stored in the file with name root specified in the field name of opt by the NormZScore sub-class of the class Norm.
      * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt not udes
+     * \param Y not used
+     * \param opt option list with the following field:
+     *  - name (settable with the NormZScore sub-class of the class Norm)
      *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \return spheriphied input data matrix
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+gMat2D<T>* NormTestZScore<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
+    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
+    X_OMR.transpose(X);
 
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
+//    [n,d] = size(X);
+    const int n = X_OMR.rows();
+    const int d = X_OMR.cols();
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
+    std::string name = opt.getOptAsString("name");
 
-    dot(X, Xt, *K);
+    gMat2D<T> v_meanX;
+    gMat2D<T> v_stdX;
 
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
+    std::string fileName;
+
+    fileName = name + "_norm_zscore_meanX.txt";
+    v_meanX.load(fileName);
+
+    fileName = name + "_norm_zscore_stdX.txt";
+    v_stdX.load(fileName);
+
+    T* meanX = v_meanX.getData();
+    T* stdX = v_stdX.getData();
+
+//    X = X - repmat(meanX, n, 1);
+//    X = X./repmat(stdX, n, 1);
+    for(int i=0; i< d; ++i)
+    {
+        T* column = X.getData()+(n*i);
+        axpy(n, (T)-1.0, meanX+i, 0, column, 1);
+        scal(n, (T)1.0/stdX[i], column, 1);
+    }
+
+
+    gMat2D<T>* ret = new gMat2D<T>(X_OMR.rows(), X_OMR.cols());
+    X.transpose(*ret);
+
+    return ret;
 }
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif //_GURLS_NORMTESTZSCORE_H_

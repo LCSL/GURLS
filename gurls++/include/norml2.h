@@ -40,55 +40,59 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_NORML2_H_
+#define _GURLS_NORML2_H_
 
 
-#include "kernel.h"
+#include "norm.h"
 #include "gmath.h"
+
+#include <limits>
 
 namespace gurls {
 
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.
      */
-
 template <typename T>
-class LinearKernel: public Kernel<T>
+class NormL2: public Norm<T>
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
-     *
+     * Spheriphies the data according to the l2 norm.
      * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt not udes
-     *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \param Y not used
+     * \param opt not used
+     * \return spheriphied input data matrix
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+gMat2D<T>* NormL2<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& /*opt*/) throw(gException)
 {
+    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
+    X_OMR.transpose(X);
 
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
+    const int m = X_OMR.rows();
+    const int n = X_OMR.cols();
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
+    T norm;
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
+//    for j = 1:size(X,1)
+    for(int j=0; j<m; ++j)
+    {
+//        X(j,:) = X(j,:)/(norm(X(j,:)) + eps);
+        norm = nrm2(n, X.getData()+j, m) + std::numeric_limits<T>::epsilon();
+        scal(n, (T)1.0/norm, X.getData()+j, m);
+    }
 
-    dot(X, Xt, *K);
+    gMat2D<T>* ret = new gMat2D<T>(X_OMR.rows(), X_OMR.cols());
+    X.transpose(*ret);
 
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
+    return ret;
 }
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif //_GURLS_NORML2_H_

@@ -49,6 +49,7 @@
 #include <algorithm>
 #include <typeinfo>
 
+#include "exports.h"
 #include "gmat2d.h"
 #include "gvec.h"
 #include "options.h"
@@ -60,14 +61,17 @@
 
 namespace gurls {
 
-class GurlsOptionsList: public GurlsOption
+class GURLS_EXPORT GurlsOptionsList: public GurlsOption
 {
 private:
     std::string name;
-    std::map<std::string, GurlsOption* > table;
+    std::map<std::string, GurlsOption* >* table;
 
 public:
     GurlsOptionsList(std::string ExpName, bool usedefopt = false);
+
+    ~GurlsOptionsList();
+
     bool addOpt(std::string key, GurlsOption* value);
     bool addOpt(std::string key, std::string value);
     GurlsOption* getOpt(std::string key);
@@ -76,11 +80,11 @@ public:
     void setName(std::string);
     double getOptAsNumber(std::string key);
     void printAll();
-    bool hasOpt(std::string key) {return table.count(key)>0;}
+    bool hasOpt(std::string key) {return table->count(key)>0;}
     void removeOpt(std::string key, bool deleteMembers = true);
 
 
-    virtual bool isA(int id) { return (id == OptListOption); }
+    virtual bool isA(OptTypes id) { return (id == OptListOption); }
 
     static GurlsOptionsList* dynacast(GurlsOption* opt) {
         if (opt->isA(OptListOption) ){
@@ -89,7 +93,7 @@ public:
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
     }
-    int size() const {return table.size();}
+    int size() const {return table->size();}
 
     GurlsOption* operator[] (int idx){
 
@@ -97,29 +101,31 @@ public:
             throw gException(gurls::Exception_Index_Out_of_Bound);
         }
 
-        std::map<std::string, GurlsOption* >::iterator itr = table.begin();
-        std::map<std::string, GurlsOption* >::iterator end = table.end();
-        for (int i = 0; i<=idx, itr!=end; i++, itr++){
+        std::map<std::string, GurlsOption* >::iterator itr = table->begin();
+        std::map<std::string, GurlsOption* >::iterator end = table->end();
+        for (int i = 0; itr!=end; ++i, ++itr){
             /* Do nothing else then following the iterator */
         }
         return itr->second;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt);
+    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt);
     virtual std::ostream& operator<<(std::ostream& os);
 
+    void save(const std::string& fileName) const;
+    void load(const std::string& fileName);
 
     friend class boost::serialization::access;
     template<class Archive>
     void save(Archive & ar, const unsigned int /* file_version */) const{
         ar & this->type;
         ar & this->name;
-        int n = table.size();
+        int n = table->size();
         int type = -1;
         ar & n;
-        std::map<std::string, GurlsOption* >::const_iterator itr = table.begin();
-        std::map<std::string, GurlsOption* >::const_iterator end = table.end();
-        for (int i = 0; i<n, itr!=end; i++, itr++){
+        std::map<std::string, GurlsOption* >::const_iterator itr = table->begin();
+        std::map<std::string, GurlsOption* >::const_iterator end = table->end();
+        for (int i = 0; itr!=end; ++i, ++itr){
             std::string s = itr->first;
             ar & s;
             GurlsOption* opt0 = itr->second;
@@ -142,8 +148,27 @@ public:
                 OptFunction* opt = static_cast<OptFunction*>(opt0);
                 ar & (*opt);
             } else if (type == MatrixOption) {
-                OptMatrix<gMat2D<float> >* opt = static_cast<OptMatrix<gMat2D<float> >*>(opt0);
-                ar & (*opt);
+
+                OptMatrixBase* optM = static_cast<OptMatrixBase*>(opt0);
+                OptMatrixBase::MatrixType matType = optM->getMatrixType();
+
+                ar & matType;
+
+                switch(matType)
+                {
+                    case OptMatrixBase::FLOAT:
+                        ar & *(static_cast<OptMatrix<gMat2D<float> >*>(optM));
+                        break;
+                    case OptMatrixBase::DOUBLE:
+                        ar & *(static_cast<OptMatrix<gMat2D<double> >*>(optM));
+                        break;
+                    case OptMatrixBase::ULONG:
+                        ar & *(static_cast<OptMatrix<gMat2D<unsigned long> >*>(optM));
+                        break;
+                    default:
+                        throw gException(Exception_Unsupported_MatrixType);
+                }
+
             } else if (type == TaskSequenceOption) {
                 OptTaskSequence* opt = static_cast<OptTaskSequence*>(opt0);
                 ar & (*opt);
@@ -169,7 +194,7 @@ public:
         int type = -1;
         ar & n;
         //GurlsOption* opt;
-        for (int i = 0; i<n; i++){
+        for (int i = 0; i<n; ++i){
             //GurlsOption* opt;
             std::string s;
             ar & s;
@@ -195,9 +220,32 @@ public:
                 ar & (*opt);
                 this->addOpt(s, opt);
             } else if (type == MatrixOption) {
-                OptMatrix<gMat2D<float> >* opt = new OptMatrix<gMat2D<float> >();
-                ar & (*opt);
+
+                OptMatrixBase::MatrixType matType;
+                ar & matType;
+
+                OptMatrixBase* opt;
+
+                switch(matType)
+                {
+                    case OptMatrixBase::FLOAT:
+                        opt = new OptMatrix<gMat2D<float> >();
+                        ar & *(static_cast<OptMatrix<gMat2D<float> >*>(opt));
+                        break;
+                    case OptMatrixBase::DOUBLE:
+                        opt = new OptMatrix<gMat2D<double> >();
+                        ar & *(static_cast<OptMatrix<gMat2D<double> >*>(opt));
+                        break;
+                    case OptMatrixBase::ULONG:
+                        opt = new OptMatrix<gMat2D<unsigned long> >();
+                        ar & *(static_cast<OptMatrix<gMat2D<unsigned long> >*>(opt));
+                        break;
+                    default:
+                        throw gException(Exception_Unsupported_MatrixType);
+                }
+
                 this->addOpt(s, opt);
+
             } else if (type == TaskSequenceOption) {
                 OptTaskSequence* opt = new OptTaskSequence();
                 ar & (*opt);

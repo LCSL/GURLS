@@ -43,87 +43,87 @@ namespace gurls {
 
 
 template <typename T>
-gVec<T>::gVec(ulong n) {
-	this->alloc(n);
+gVec<T>::gVec(unsigned long n) {
+    this->alloc(n);
 }
 
 template <typename T>
-gVec<T>::gVec(T* buf, ulong n, bool owner) {
-	if (owner) {
-		this->alloc(n);
-		this->set(buf, n);
-	} else {
-		this->isowner = owner;
-		this->size = n;
-		this->data = buf;
-	};
+gVec<T>::gVec(T* buf, unsigned long n, bool owner) {
+    if (owner) {
+        this->alloc(n);
+        this->set(buf, n);
+    } else {
+        this->isowner = owner;
+        this->size = n;
+        this->data = buf;
+    };
 }
 
 template <typename T>
 gVec<T>::gVec(const gVec<T>& other) {
-	this->alloc(other.size);
-	*this = other;
+    this->alloc(other.size);
+    *this = other;
 }
 
 template <typename T>
 gVec<T>& gVec<T>::operator=(const gVec<T>& other) {
-	if (this == &other) {
-		return *this;
-	} else {
-		this->set(other.data, other.size);
-	}
+
+    if (this != &other)
+        this->set(other.data, other.size);
+
+    return *this;
 }
 
 template <typename T>
-gVec<T> gVec<T>::zeros(ulong n) {
-	gVec<T> v(n);
-	memset(v.data, 0, n*sizeof(T));
-	return v;
+gVec<T> gVec<T>::zeros(unsigned long n) {
+    gVec<T> v(n);
+    memset(v.data, 0, n*sizeof(T));
+    return v;
 }
 
 template <typename T>
-gVec<T> gVec<T>::rand(ulong n) {
-	gVec<T> v(n);
-	T* d = v.data;
-	for (unsigned long i = 0; i < n; i++) {
-		*d++ = (T)std::rand()/RAND_MAX;
-	}
-	return v;
+gVec<T> gVec<T>::rand(unsigned long n) {
+    gVec<T> v(n);
+    T* d = v.data;
+    for (unsigned long i = 0; i < n; i++) {
+        *d++ = (T)std::rand()/RAND_MAX;
+    }
+    return v;
 }
 
 template <typename T>
 gVec<unsigned long> gVec<T>::nonzeros() const
 {
-	std::queue<unsigned> que;
+    std::queue<unsigned> que;
 
-	for(unsigned i=0;i<this->size();i++)
-	{
-		if(this->at(i)!=0) que.push(i);
-	}
-	gVec<unsigned> indexes(que.size());
-	unsigned dim=0;
-	while(!que.empty())
-	{
-		indexes[dim++]=que.front();
-		que.pop();
-	}
+    for(unsigned i=0;i<this->size();i++)
+    {
+        if(this->at(i)!=0) que.push(i);
+    }
+    gVec<unsigned> indexes(que.size());
+    unsigned dim=0;
+    while(!que.empty())
+    {
+        indexes[dim++]=que.front();
+        que.pop();
+    }
 
-	return indexes;
+    return indexes;
 };
 
 
 template <typename T>
 void gVec<T>::isequal(const T& value, std::vector<int>& indices) {
-	const T* p = this->data;
-	for (unsigned int i = 0; i < this->size; ++i, ++p) {
-		if (*p == value)
-			indices.push_back(i);
-	}
+    const T* p = this->data;
+    for (unsigned int i = 0; i < this->size; ++i, ++p) {
+        if (*p == value)
+            indices.push_back(i);
+    }
 }
 
 /*
 template <typename T>
-void gVec<T>::resize(ulong n) {
+void gVec<T>::resize(unsigned long n) {
   if (! this->m_owner) {
  assert(false);
   }
@@ -139,31 +139,31 @@ void gVec<T>::resize(ulong n) {
 
 template <typename T>
 gVec<T> gVec<T>::subvec(unsigned int len, unsigned int start) const {
-	gVec<T> v(len);
-	v.set(&(this->data()[start]), len);
-	return v;
+    gVec<T> v(len);
+    v.set(&(this->data()[start]), len);
+    return v;
 }
 
 
 template <typename T>
 gVec<T> gVec<T>::operator+(T val) const {
-	gVec<T> w(*this);
-	w += val;
-	return w;
+    gVec<T> w(*this);
+    w += val;
+    return w;
 }
 
 template <typename T>
 gVec<T> operator+(T val, const gVec<T>& v) {
-	gVec<T> w(v);
-	w += val;
-	return w;
+    gVec<T> w(v);
+    w += val;
+    return w;
 }
 
 template <typename T>
 gVec<T> operator-(T val, const gVec<T>& v) {
-	gVec<T> w(-v);
-	w += val;
-	return w;
+    gVec<T> w(-v);
+    w += val;
+    return w;
 }
 
 // ------------ MULT SCALAR -------------------------------------------
@@ -181,16 +181,16 @@ gVec<T>& gVec<T>::operator*=(T val) {
 
 template <typename T>
 gVec<T> gVec<T>::operator*(T val) const {
-	gVec<T> w(*this);
-	w *= val;
-	return w;
+    gVec<T> w(*this);
+    w *= val;
+    return w;
 }
 
 template <typename T>
 gVec<T> operator*(T val, const gVec<T>& v) {
-	gVec<T> w(v);
-	w *= val;
-	return w;
+    gVec<T> w(v);
+    w *= val;
+    return w;
 }
 
 /*
@@ -207,9 +207,9 @@ gVec<T>& gVec<T>::operator/=(T val) {
 
 template <typename T>
 gVec<T> operator/(T val, const gVec<T>& v) {
-	gVec<T> w(v);
-	w *= (static_cast<T>(1)/val);
-	return w;
+    gVec<T> w(v);
+    w *= (static_cast<T>(1)/val);
+    return w;
 }
 
 // ----------------- SUM OF VECTORS --------------------------
@@ -227,77 +227,77 @@ gVec<T>& gVec<T>::operator+=(const gVec<T>& v) {
 
 template <typename T>
 gVec<T>& gVec<T>::operator+=(const gVec<T>& v) {
-	return static_cast<gVec<T>&>(BaseArray<T>::add(v));
+    return static_cast<gVec<T>&>(BaseArray<T>::add(v));
 }
 
 template <typename T>
 gVec<T> gVec<T>::operator+(const gVec<T>& v) const {
-	gVec<T> w(v);
-	w += *this;
-	return w;
+    gVec<T> w(v);
+    w += *this;
+    return w;
 }
 
 // ----------------- SUBTRACTION OF VECTORS --------------------------
 
 template <typename T>
 gVec<T>& gVec<T>::operator-=(const gVec<T>& v) {
-	/*
+    /*
   T *ptr = this->data, *ptr_v = v.data;
   for (int i = 0; i < this->size; ++i, ++ptr, ++ptr_v) {
  *ptr -= *ptr_v;
   }
   return *this;
   */
-	return static_cast<gVec<T>&>(BaseArray<T>::subtract(v));
+    return static_cast<gVec<T>&>(BaseArray<T>::subtract(v));
 }
 
 template <typename T>
 gVec<T> gVec<T>::operator-(const gVec<T>& v) const {
-	gVec<T> w(*this);
-	w -= v;
-	return w;
+    gVec<T> w(*this);
+    w -= v;
+    return w;
 }
 
 // ------------------- MULT TWO VECTORS ------------------------------------
 
 template <typename T>
 gVec<T>& gVec<T>::operator*=(const gVec<T>& v) {
-	/*
+    /*
   T *ptr = this->data, *ptr_v = v.data;
   for (int i = 0; i < this->size; ++i, ++ptr, ++ptr_v) {
  *ptr *= *ptr_v;
   }
   return *this;
   */
-	return static_cast<gVec<T>&>(BaseArray<T>::multiply(v));
+    return static_cast<gVec<T>&>(BaseArray<T>::multiply(v));
 }
 
 template <typename T>
 gVec<T> gVec<T>::operator*(const gVec<T>& v) const {
-	gVec<T> w(v);
-	w *= *this;
-	return w;
+    gVec<T> w(v);
+    w *= *this;
+    return w;
 }
 
 // ------------------- DIVIDE TWO VECTORS ------------------------------------
 
 template <typename T>
 gVec<T>& gVec<T>::operator/=(const gVec<T>& v) {
-	/*
+    /*
   T *ptr = this->data, *ptr_v = v.data;
   for (int i = 0; i < this->size; ++i, ++ptr, ++ptr_v) {
  *ptr /= *ptr_v;
   }
   return *this;
   */
-	return static_cast<gVec<T>&>(BaseArray<T>::divide(v));
+    return static_cast<gVec<T>&>(BaseArray<T>::divide(v));
 }
 
 template <typename T>
 gVec<T> gVec<T>::operator/(const gVec<T>& v) const {
-	gVec<T> w(v);
-	w /= *this;
-	return w;
+    gVec<T> w(v);
+    w /= *this;
+    return w;
 }
 
 
@@ -305,13 +305,13 @@ gVec<T> gVec<T>::operator/(const gVec<T>& v) const {
 
 template <typename U>
 bool operator== (const gVec<U>& v, const U& val) {
-	U *ptr = v.data;
-	for (int i = 0; i < v.size; ++i, ++ptr) {
-		if (*ptr != val){
-			return false;
-		}
-	}
-	return true;
+    U *ptr = v.data;
+    for (int i = 0; i < v.size; ++i, ++ptr) {
+        if (*ptr != val){
+            return false;
+        }
+    }
+    return true;
 }
 
 
@@ -319,53 +319,53 @@ bool operator== (const gVec<U>& v, const U& val) {
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const gVec<T>& v) {
-	if (v.getSize() >= gurls::MAX_PRINTABLE_SIZE){
-		os << v.what() << std::endl;
-		return os;
-	}
-	os << "[" << v.data[0];
-	for (int i = 1; i < v.size; ++i) {
-		os << " " << v.data[i];
-	}
-	os << "]" << std::endl;
-	return os;
+    if (v.getSize() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE){
+        os << v.what() << std::endl;
+        return os;
+    }
+    os << "[" << v.data[0];
+    for (unsigned long i = 1; i < v.size; ++i) {
+        os << " " << v.data[i];
+    }
+    os << "]" << std::endl;
+    return os;
 }
 
 template <typename T>
 gVec<T>& gVec<T>::reciprocal() const {
-	gVec<T> *w = new gVec(*this);
-	w->setReciprocal();
-	return *w;
+    gVec<T> *w = new gVec(*this);
+    w->setReciprocal();
+    return *w;
 }
 
 
 template <typename T>
 T gVec<T>::argmin() const {
-	const T* val = std::min_element(this->data, this->data+this->size);
-	return val-this->data;
+    const T* val = std::min_element(this->data, this->data+this->size);
+    return static_cast<T>(val-this->data);
 }
 
 template <typename T>
 T gVec<T>::argmax() const {
-	const T* val = std::max_element(this->data, this->data+this->size);
-	return val-this->data;
+    const T* val = std::max_element(this->data, this->data+this->size);
+    return static_cast<T>(val-this->data);
 }
 
 template <typename T>
 gVec<T>& gVec<T>::copyLocations(const gVec<T> locs){
 
-	gVec<T>* v = new gVec<T>(locs.getSize());
-	const T* ptr_locs = locs.getData();
-	T* ptr_v = v->data;
-	unsigned long val;
-	for (unsigned long i = 0; i < locs.getSize(); i++) {
-		val = static_cast<int>(*(ptr_locs+i));
-		if ( (val < 0) || (val > this->size) ){
-			throw gException(gurls::Exception_Index_Out_of_Bound);
-		}
-		*(ptr_v+i) = *(this->data+val);
-	}
-	return *v;
+    gVec<T>* v = new gVec<T>(locs.getSize());
+    const T* ptr_locs = locs.getData();
+    T* ptr_v = v->data;
+    unsigned long val;
+    for (unsigned long i = 0; i < locs.getSize(); i++) {
+        val = static_cast<int>(*(ptr_locs+i));
+        if ( (val < 0) || (val > this->size) ){
+            throw gException(gurls::Exception_Index_Out_of_Bound);
+        }
+        *(ptr_v+i) = *(this->data+val);
+    }
+    return *v;
 }
 
 //template <typename T>

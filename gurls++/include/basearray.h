@@ -55,7 +55,7 @@
 
 #include "exceptions.h"
 
-using namespace boost;
+//using namespace boost;
 
 namespace gurls {
 
@@ -66,67 +66,67 @@ class BaseArray {
 
 protected:
 
-	T* data;
-	unsigned long size;
-	bool isowner;
+    T* data;
+    unsigned long size;
+    bool isowner;
 
-	void alloc(unsigned long n);
+    void alloc(unsigned long n);
 
 public:
 
-	BaseArray() : data(0), size(0), isowner(false) { /* TO BE DISCUSSED*/};
-	BaseArray(unsigned long n) {this->alloc(n);}
-	BaseArray(const BaseArray& other);
+    BaseArray() : data(0), size(0), isowner(false) { /* TO BE DISCUSSED*/}
+    BaseArray(unsigned long n) {this->alloc(n);}
+    BaseArray(const BaseArray& other);
 
-	BaseArray<T>& operator=(const BaseArray& other);
-	BaseArray<T>& operator=(const T& val);
+    BaseArray<T>& operator=(const BaseArray& other);
+    BaseArray<T>& operator=(const T& val);
 
-	~BaseArray(){ if (this->isowner) { delete[] this->data; } };
+    ~BaseArray(){ if (this->isowner) { delete[] this->data; } }
 
-	void set(const T * v, unsigned long n, unsigned long start = 0);
-	void resize(unsigned long n);
-	void asarray(T * v, unsigned long n) const;
-	void randomize();
+    void set(const T * v, unsigned long n, unsigned long start = 0);
+    void resize(unsigned long n);
+    void asarray(T * v, unsigned long n) const;
+    void randomize();
 
-	unsigned long getSize() const { return this->size; }
-	const T* getData() const { return this->data; }
-	T* getData() { return this->data; }
+    unsigned long getSize() const { return this->size; }
+    const T* getData() const { return this->data; }
+    T* getData() { return this->data; }
 
-	const T* begin() const { return this->data(); }
-	T* begin() { return this->data(); }
-	const T* end() const { return (this->data() + this->size); }
-	T* end() { return (this->data() + this->size); }
+    const T* begin() const { return this->data(); }
+    T* begin() { return this->data(); }
+    const T* end() const { return (this->data() + this->size); }
+    T* end() { return (this->data() + this->size); }
 
-	const T& max() const;
-	const T& min() const;
-	const double& sum() const;
+    const T& max() const;
+    const T& min() const;
+    const double& sum() const;
 
-	BaseArray<T>& operator+=(T);
-	BaseArray<T>& operator-=(T);
-	BaseArray<T>& operator*=(T);
-	BaseArray<T>& operator/=(T);
+    BaseArray<T>& operator+=(T);
+    BaseArray<T>& operator-=(T);
+    BaseArray<T>& operator*=(T);
+    BaseArray<T>& operator/=(T);
 
-	// The following methods implements in-place arithmetic operations between arrays
-	BaseArray<T>& add(const BaseArray<T>&);
-	BaseArray<T>& subtract(const BaseArray<T>&);
-	BaseArray<T>& multiply(const BaseArray<T>&);
-	BaseArray<T>& divide(const BaseArray<T>&);
+    // The following methods implements in-place arithmetic operations between arrays
+    BaseArray<T>& add(const BaseArray<T>&);
+    BaseArray<T>& subtract(const BaseArray<T>&);
+    BaseArray<T>& multiply(const BaseArray<T>&);
+    BaseArray<T>& divide(const BaseArray<T>&);
 
-	// In-place multiplicative inverse of each element
-	BaseArray<T>& setReciprocal();
+    // In-place multiplicative inverse of each element
+    BaseArray<T>& setReciprocal();
 
-	template <typename U>
-	friend bool operator== (const BaseArray<U>&, const U&);
-	bool closeTo(const BaseArray<T>&, T tolerance) const;
+    template <typename U>
+    friend bool operator== (const BaseArray<U>&, const U&);
+    bool closeTo(const BaseArray<T>&, T tolerance) const;
 
-	virtual std::string what() const = 0 ;
+    virtual std::string what() const = 0 ;
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & , const unsigned int) const;
-	template<class Archive>
-	void load(Archive & , const unsigned int);
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & , const unsigned int) const;
+    template<class Archive>
+    void load(Archive & , const unsigned int);
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 }

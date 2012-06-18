@@ -40,8 +40,8 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_CHISQUAREDKERNEL_H_
+#define _GURLS_CHISQUAREDKERNEL_H_
 
 
 #include "kernel.h"
@@ -50,45 +50,71 @@
 namespace gurls {
 
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief ChisquaredKernel is the sub-class of Kernel that builds the kernel matrix for a chi-squared model
      */
 
 template <typename T>
-class LinearKernel: public Kernel<T>
+class ChisquaredKernel: public Kernel<T>
 {
 public:
-    /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
+    /** 
+     * Builds the symmetric kernel matrix of matrix X for a chi-squared model.
      *
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt not udes
      *
      * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
+     *  - type = "chisquared"
      *  - K = the kernel matrix
      */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void ChisquaredKernel<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
+    gMat2D<T> Xt(X_OMR.cols(), X_OMR.rows());
+    X_OMR.transpose(Xt);
 
+    const int n = X_OMR.rows();
+    const int t = X_OMR.cols();
+
+    T* X = Xt.getData();
+
+    gMat2D<T>* K_m = new gMat2D<T>(n, n);
+    T* K = K_m->getData();
+
+    const T epsilon = std::numeric_limits<T>::epsilon();
+
+    set(K, (T)0.0, n*n); //diagonal
+
+    for(int i=0; i<n; ++i)
+    {
+        for(int j=0; j<i; ++j)
+        {
+            T sum = 0;
+            for(int k=0; k< t; ++k)
+            {
+                const T X_ik = X[i+(n*k)];
+                const T X_jk = X[j+(n*k)];
+
+                sum += pow(X_ik - X_jk, 2) / static_cast<T>(((0.5*(X_ik + X_jk)) + epsilon));
+            }
+
+            K[i+(n*j)] = K[j+(n*i)] = sum;
+        }
+    }
+
+    //  kernel.type = 'chisquared';
     GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
+    kernel->addOpt("type", "chisquared");
+    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K_m));
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
-
-    dot(X, Xt, *K);
-
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
     opt.addOpt("kernel", kernel);
 }
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif //_GURLS_CHISQUAREDKERNEL_H_

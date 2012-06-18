@@ -49,6 +49,7 @@
 #include <algorithm>
 #include <typeinfo>
 
+#include "exports.h"
 #include "gmat2d.h"
 #include "gvec.h"
 #include "exceptions.h"
@@ -59,10 +60,10 @@
 
 namespace gurls {
 
-enum OptTypes	{GenericOption, StringOption, NumberOption,
-				 StringListOption, NumberListOption, FunctionOption,
-				 MatrixOption, VectorOption,
-				OptListOption, TaskSequenceOption, TaskIDOption};
+enum GURLS_EXPORT OptTypes	{GenericOption, StringOption, NumberOption,
+                 StringListOption, NumberListOption, FunctionOption,
+                 MatrixOption, VectorOption,
+                OptListOption, TaskSequenceOption, TaskIDOption};
 
 
 /*
@@ -70,41 +71,41 @@ enum OptTypes	{GenericOption, StringOption, NumberOption,
  * among different regularization parameters or multiple numeric
  * options.
  */
-double mean(double* v, int n);
-double min(double* v, int n);
-double max(double* v, int n);
-double median(double* v, int n);
+GURLS_EXPORT double mean(double* v, int n);
+GURLS_EXPORT double min(double* v, int n);
+GURLS_EXPORT double max(double* v, int n);
+GURLS_EXPORT double median(double* v, int n);
 
 
 /*
-	GURLSOPTION is an abstraction of a generic `option', which is
-	widely used within the GURLS++ package to store either numeric
-	parameters necessary to configure specific algorigms or sequences
-	of strings holding the names of the specific procedures that
-	have to be performed.
+    GURLSOPTION is an abstraction of a generic `option', which is
+    widely used within the GURLS++ package to store either numeric
+    parameters necessary to configure specific algorigms or sequences
+    of strings holding the names of the specific procedures that
+    have to be performed.
 
-	The instances of the GURLSOPTION class hold information about
-	the type (one of the elements in the OptTypes enumeration),
-	while the value related to each specific option is stored using
-	the attributes of the subclasses of GURLSOPTION.
+    The instances of the GURLSOPTION class hold information about
+    the type (one of the elements in the OptTypes enumeration),
+    while the value related to each specific option is stored using
+    the attributes of the subclasses of GURLSOPTION.
 
   */
-class GurlsOption
+class GURLS_EXPORT GurlsOption
 {
 protected:
-	int type;
+    OptTypes type;
 
 public:
-	GurlsOption(int t): type(t) {};
-	const int getType() const {return type;}
-	virtual ~GurlsOption(){};
-	virtual bool isA(int id) { return (id == GenericOption); }
-	const virtual std::type_info& getDataID(){
-		return typeid(GurlsOption);
-	}
+    GurlsOption(OptTypes t):type(t) {}
+    const OptTypes getType() const {return type;}
+    virtual ~GurlsOption(){}
+    virtual bool isA(OptTypes id) { return (id == GenericOption); }
+    const virtual std::type_info& getDataID(){
+        return typeid(GurlsOption);
+    }
 
-	friend std::ostream& operator<<(std::ostream& os, GurlsOption& opt);
-	virtual std::ostream& operator<<(std::ostream& os){return os;}
+    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOption& opt);
+    virtual std::ostream& operator<<(std::ostream& os){return os;}
 
 //	friend class boost::serialization::access;
 //	template<class Archive>
@@ -115,433 +116,494 @@ public:
 
 };
 
-class OptString: public GurlsOption
+class GURLS_EXPORT OptString: public GurlsOption
 {
 private:
-	std::string value;
+    std::string value;
 
 public:
-	OptString(): GurlsOption(StringOption), value(""){};
-	OptString(const char* str): GurlsOption(StringOption),value(str){}
-	OptString(std::string& str): GurlsOption(StringOption),value(str){}
-	OptString& operator=(const OptString& other);
+    OptString(): GurlsOption(StringOption), value(""){}
+    OptString(const char* str): GurlsOption(StringOption),value(str){}
+    OptString(std::string& str): GurlsOption(StringOption),value(str){}
+    OptString& operator=(const OptString& other);
 
-	virtual ~OptString(){ value.clear();}
+    ~OptString(){value.clear();}
 
+    OptString& operator=(const std::string& other){
+        this->type = StringOption;
+        this->value = other;
+        return *this;
+    }
 
-	OptString& operator=(const std::string& other){
-		this->type = StringOption;
-		this->value = other;
-		return *this;
-	}
+    void setValue(const std::string& newvalue) {value = newvalue;}
+    std::string& getValue() { return value;}
 
-	void setValue(const std::string newvalue) {value = newvalue;}
-	std::string& getValue() { return value;}
+    virtual bool isA(OptTypes id) { return (id == StringOption); }
+    static OptString* dynacast(GurlsOption* opt) {
+        if (opt->isA(StringOption) ){
+            return static_cast<OptString*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
 
-	virtual bool isA(int id) { return (id == StringOption); }
-	static OptString* dynacast(GurlsOption* opt) {
-		if (opt->isA(StringOption) ){
-			return static_cast<OptString*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
+    virtual std::ostream& operator<<(std::ostream& os);
 
-	virtual std::ostream& operator<<(std::ostream& os);
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        ar & this->value;
+    }
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		ar & this->value;
-	}
-
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		ar & this->value;
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        ar & this->value;
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 
-class OptStringList: public GurlsOption
+class GURLS_EXPORT OptStringList: public GurlsOption
 {
 private:
-	std::vector<std::string> value;
+    std::vector<std::string>* value;
 
 public:
-	OptStringList(): GurlsOption(StringListOption), value(){};
-	OptStringList(std::vector<std::string>& vec):
-		GurlsOption(StringListOption), value(vec) {}
-	OptStringList(std::string& str): GurlsOption(StringListOption),
-		value(){ value.push_back(str); }
-	OptStringList& operator=(const OptStringList& other);
+    OptStringList(): GurlsOption(StringListOption){
+        value = new std::vector<std::string>();
+    }
+    OptStringList(std::vector<std::string>& vec): GurlsOption(StringListOption){
+        value = new std::vector<std::string>(vec.begin(), vec.end());
+    }
+    OptStringList(std::string& str): GurlsOption(StringListOption){
+        value = new std::vector<std::string>();
+        value->push_back(str);
+    }
+    OptStringList& operator=(const OptStringList& other);
 
-	virtual ~OptStringList(){
-		value.clear();
-	}
+    ~OptStringList(){
+        value->clear();
+        delete value;
+    }
 
-	void setValue(const std::vector<std::string> newvalue) {
-		value = newvalue;
-	}
-	void add(const std::string str){
-		value.push_back(str);
-	}
+    void setValue(const std::vector<std::string> newvalue) {
+        delete value;
+        value = new std::vector<std::string>(newvalue.begin(), newvalue.end());
+    }
+    void add(const std::string str){
+        value->push_back(str);
+    }
 
-	std::vector<std::string>& getValue() { return value;}
+    std::vector<std::string>& getValue() { return *value;}
 
-	virtual bool isA(int id) { return (id == StringListOption); }
-	static OptStringList* dynacast(GurlsOption* opt) {
-		if (opt->isA(StringListOption) ){
-			return static_cast<OptStringList*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
-	//friend std::ostream& operator<<(std::ostream& os, OptStringList& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
+    virtual bool isA(OptTypes id) { return (id == StringListOption); }
+    static OptStringList* dynacast(GurlsOption* opt) {
+        if (opt->isA(StringListOption) ){
+            return static_cast<OptStringList*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+    //friend std::ostream& operator<<(std::ostream& os, OptStringList& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		int n = this->value.size();
-		ar & n;
-		for (int i = 0; i < n; i++){
-			ar & this->value.at(i);
-		}
-	}
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        int n = this->value->size();
+        ar & n;
+        for (int i = 0; i < n; i++){
+            ar & this->value->at(i);
+        }
+    }
 
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		int n = 0;
-		ar & n;
-		value.clear();
-		for(int i = 0; i < n; i++){
-			std::string s("");
-			ar & s;
-			this->value.push_back(s);
-		}
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-};
-
-
-
-class OptNumber: public GurlsOption
-{
-private:
-	double value;
-
-public:
-	OptNumber(): GurlsOption(NumberOption), value(0) {}
-	OptNumber(double v): GurlsOption(NumberOption), value(v) {}
-	OptNumber& operator=(const OptNumber& other);
-
-	virtual ~OptNumber(){};
-
-	OptNumber& operator=(double other){
-		this->type = NumberOption;
-		this->value = other;
-		return *this;
-	}
-
-	void setValue(double newvalue) {value = newvalue;}
-	double& getValue() {return value;}
-
-	virtual bool isA(int id) { return (id == NumberOption); }
-	static OptNumber* dynacast(GurlsOption* opt) {
-		if (opt->isA(NumberOption) ){
-			return static_cast<OptNumber*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
-	// friend std::ostream& operator<<(std::ostream& os, OptNumber& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
-
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		ar & this->value;
-	}
-
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		ar & this->value;
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-};
-
-class OptNumberList: public GurlsOption
-{
-private:
-	std::vector<double> value;
-
-public:
-	OptNumberList(): GurlsOption(NumberListOption), value(){};
-	OptNumberList(std::vector<double>& vec):
-		GurlsOption(NumberListOption), value(vec) {}
-	OptNumberList(double v):
-		GurlsOption(NumberListOption), value(){ value.push_back(v);}
-	OptNumberList(double *v, int n):
-		GurlsOption(NumberListOption), value(){
-		int i = 0;
-		while (i++<n){
-			value.push_back(*v++);
-		}
-	}
-
-	OptNumberList& operator=(const OptNumberList& other);
-
-	virtual ~OptNumberList(){}
-
-	void setValue(const std::vector<double> newvalue) {
-		value = newvalue;
-	}
-	void add(const double d){
-		value.push_back(d);
-	}
-
-	std::vector<double>& getValue() { return value;}
-
-	virtual bool isA(int id) { return (id == NumberListOption); }
-	static OptNumberList* dynacast(GurlsOption* opt) {
-		if (opt->isA(NumberListOption) ){
-			return static_cast<OptNumberList*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
-	// friend std::ostream& operator<<(std::ostream& os, OptNumberList& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
-
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		int n = this->value.size();
-		ar & n;
-		for (int i = 0; i < n; i++){
-			ar & this->value.at(i);
-		}
-	}
-
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		int n = 0;
-		ar & n;
-		value.clear();
-		for(int i = 0; i < n; i++){
-			double s;
-			ar & s;
-			this->value.push_back(s);
-		}
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        int n = 0;
+        ar & n;
+        value->clear();
+        for(int i = 0; i < n; i++){
+            std::string s("");
+            ar & s;
+            this->value->push_back(s);
+        }
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 };
 
 
-class OptFunction: public GurlsOption
+
+class GURLS_EXPORT OptNumber: public GurlsOption
 {
 private:
-	//double (*value)(double*, int);
-	std::string name;
+    double value;
 
 public:
-	OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name) {}
-	//OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name), value(0) {}
-	//OptFunction(std::string func_name, double (*v)(double*, int)): GurlsOption(FunctionOption), name(func_name), value(v) {}
-	OptFunction& operator=(const OptFunction& other);
+    OptNumber(): GurlsOption(NumberOption), value(0) {}
+    OptNumber(double v): GurlsOption(NumberOption), value(v) {}
+    OptNumber& operator=(const OptNumber& other);
 
-	virtual ~OptFunction(){};
+//    ~OptNumber(){}
+
+    OptNumber& operator=(double other){
+        this->type = NumberOption;
+        this->value = other;
+        return *this;
+    }
+
+    void setValue(double newvalue) {value = newvalue;}
+    double& getValue() {return value;}
+
+    virtual bool isA(OptTypes id) { return (id == NumberOption); }
+    static OptNumber* dynacast(GurlsOption* opt) {
+        if (opt->isA(NumberOption) ){
+            return static_cast<OptNumber*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+    // friend std::ostream& operator<<(std::ostream& os, OptNumber& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        ar & this->value;
+    }
+
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        ar & this->value;
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+};
+
+class GURLS_EXPORT OptNumberList: public GurlsOption
+{
+private:
+    std::vector<double>* value;
+
+public:
+    OptNumberList(): GurlsOption(NumberListOption){
+        value = new std::vector<double>();
+    }
+    OptNumberList(std::vector<double>& vec): GurlsOption(NumberListOption){
+        value = new std::vector<double>(vec.begin(), vec.end());
+    }
+    OptNumberList(double v): GurlsOption(NumberListOption){
+        value = new std::vector<double>();
+        value->push_back(v);
+    }
+    OptNumberList(double *v, int n):GurlsOption(NumberListOption), value(){
+        value = new std::vector<double>(v, v+n);
+    }
+
+    OptNumberList& operator=(const OptNumberList& other);
+
+//    ~OptNumberList(){}
+
+    void setValue(const std::vector<double> newvalue) {
+        value = new std::vector<double>(newvalue.begin(), newvalue.end());
+    }
+    void add(const double d){
+        value->push_back(d);
+    }
+
+    std::vector<double>& getValue() { return *value;}
+
+    virtual bool isA(OptTypes id) { return (id == NumberListOption); }
+    static OptNumberList* dynacast(GurlsOption* opt) {
+        if (opt->isA(NumberListOption) ){
+            return static_cast<OptNumberList*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+    // friend std::ostream& operator<<(std::ostream& os, OptNumberList& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        int n = value->size();
+        ar & n;
+        for (int i = 0; i < n; i++){
+            ar & value->at(i);
+        }
+    }
+
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        int n = 0;
+        ar & n;
+        value->clear();
+        for(int i = 0; i < n; i++){
+            double s;
+            ar & s;
+            value->push_back(s);
+        }
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+};
+
+
+class GURLS_EXPORT OptFunction: public GurlsOption
+{
+private:
+    //double (*value)(double*, int);
+    std::string name;
+
+public:
+    OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name) {}
+    //OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name), value(0) {}
+    //OptFunction(std::string func_name, double (*v)(double*, int)): GurlsOption(FunctionOption), name(func_name), value(v) {}
+    OptFunction& operator=(const OptFunction& other);
+
+//    ~OptFunction(){}
 
 //	void setValue(std::string func_name, double (*newvalue)(double*, int)) {
 //		name = func_name;
 //		value = newvalue;
 //	}
-	void setValue(std::string func_name) {
-		name = func_name;
-	}
-	std::string getName() const {return name;}
+    void setValue(std::string func_name) {
+        name = func_name;
+    }
+    std::string getName() const {return name;}
 
-	double& getValue(double* array, int n) {
-		double *v = new double[1];
-		//*v = (*value)(array,n);
-		if (!name.compare("mean")){
-			*v = mean(array, n);
-		} else if(!name.compare("min")){
-			*v = min(array, n);
-		} else if(!name.compare("max")){
-			*v = max(array, n);
-		} else if(!name.compare("median")){
-			*v = median(array, n);
-		} else {
-			*v = std::numeric_limits<double>::signaling_NaN();
-			throw gException(gurls::Exception_Unknown_Function);
-		}
-		return *(v);
-	}
+    double getValue(double* array, int n) {
+        double v;
+        //*v = (*value)(array,n);
+        if (!name.compare("mean")){
+            v = mean(array, n);
+        } else if(!name.compare("min")){
+            v = min(array, n);
+        } else if(!name.compare("max")){
+            v = max(array, n);
+        } else if(!name.compare("median")){
+            v = median(array, n);
+        } else {
+            v = std::numeric_limits<double>::signaling_NaN();
+            throw gException(gurls::Exception_Unknown_Function);
+        }
+        return v;
+    }
 
-	virtual bool isA(int id) { return (id == FunctionOption); }
-	static OptFunction* dynacast(GurlsOption* opt) {
-		if (opt->isA(FunctionOption) ){
-			return static_cast<OptFunction*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
-	// friend std::ostream& operator<<(std::ostream& os, OptFunction& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
+    virtual bool isA(OptTypes id) { return (id == FunctionOption); }
+    static OptFunction* dynacast(GurlsOption* opt) {
+        if (opt->isA(FunctionOption) ){
+            return static_cast<OptFunction*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+    // friend std::ostream& operator<<(std::ostream& os, OptFunction& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		ar & this->name;
-	}
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        ar & this->name;
+    }
 
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		ar & this->name;
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        ar & this->name;
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
+
+class GURLS_EXPORT OptMatrixBase: public GurlsOption
+{
+public:
+    OptMatrixBase(): GurlsOption(MatrixOption){}
+    enum MatrixType{FLOAT, DOUBLE, ULONG};
+
+    MatrixType getMatrixType()
+    {
+        return matType;
+    }
+
+protected:
+    MatrixType matType;
+};
 
 template <typename Matrix>
-//class OptMatrixTMP: public GurlsOption
-class OptMatrix: public GurlsOption
+class OptMatrix: public OptMatrixBase
 {
 private:
-	Matrix& value;
+    Matrix& value;
 
 public:
-	OptMatrix(): GurlsOption(MatrixOption) , value (*(new Matrix(2,2))){}
-	OptMatrix(Matrix& m): GurlsOption(MatrixOption), value(m) {}
-	OptMatrix<Matrix>& operator=(const OptMatrix<Matrix>& other);
 
-	virtual ~OptMatrix(){}
+    typedef typename Matrix::CellType CellType;
+//    OptMatrix(): GurlsOption(MatrixOption) , value (*(new Matrix(2,2))){}
+//    OptMatrix(Matrix& m): GurlsOption(MatrixOption), value(m) {}
+    OptMatrix(): OptMatrixBase () , value (*(new Matrix(2,2)))
+    {
+        throw gException(Exception_Unsupported_MatrixType);
+    }
+    OptMatrix(Matrix& m): OptMatrixBase(), value(m)
+    {
+        throw gException(Exception_Unsupported_MatrixType);
+    }
+    OptMatrix<Matrix>& operator=(const OptMatrix<Matrix>& other);
 
-	OptMatrix& operator=(const Matrix& other){
-		this->type = MatrixOption;
-		this->value = other;
-		return *this;
-	}
+    ~OptMatrix()
+    {
+        delete &value;
+    }
 
-	void setValue(const Matrix& newvalue) {value = newvalue;}
-	Matrix& getValue() { return value;}
+    OptMatrix& operator=(const Matrix& other){
+        this->type = MatrixOption;
+        this->value = other;
+        return *this;
+    }
 
-	virtual bool isA(int id) { return (id == MatrixOption); }
-	static OptMatrix* dynacast(GurlsOption* opt) {
-		if (opt->isA(MatrixOption) ){
-			return static_cast<OptMatrix*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
+    void setValue(const Matrix& newvalue) {value = newvalue;}
+    Matrix& getValue() { return value;}
 
-	//template <typename U>
-	//friend std::ostream& operator<<(std::ostream& os, OptMatrixTMP<U>& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
+    virtual bool isA(OptTypes id) { return (id == MatrixOption); }
+    static OptMatrix* dynacast(GurlsOption* opt) {
+        if (opt->isA(MatrixOption) ){
+            return static_cast<OptMatrix*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    //template <typename U>
+    //friend std::ostream& operator<<(std::ostream& os, OptMatrixTMP<U>& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
 
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		ar & this->value;
-	}
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+//        ar & boost::serialization::base_object<OptMatrixBase>(*this);
+        ar & this->type;
+        ar & this->value;
+    }
 
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		ar & this->value;
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+//        ar & boost::serialization::base_object<OptMatrixBase>(*this);
+        ar & this->type;
+        ar & this->value;
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 };
+
+template <>
+OptMatrix <gMat2D<float> >::OptMatrix();
+
+template <>
+OptMatrix <gMat2D<float> >::OptMatrix(gMat2D<float>& m);
+
+template <>
+OptMatrix <gMat2D<double> >::OptMatrix();
+
+template <>
+OptMatrix <gMat2D<double> >::OptMatrix(gMat2D<double>& m);
+
+template <>
+OptMatrix <gMat2D<unsigned long> >::OptMatrix();
+
+template <>
+OptMatrix <gMat2D<unsigned long> >::OptMatrix(gMat2D<unsigned long>& m);
 
 static const std::string TASKDESC_SEPARATOR(":");
 
-class OptTaskSequence: public GurlsOption
+class GURLS_EXPORT OptTaskSequence: public GurlsOption
 {
 private:
-	std::vector<std::string> tasks;
-	bool isValid(const std::string & str, std::string& type, std::string& name);
+    std::vector<std::string>* tasks;
+    bool isValid(const std::string & str, std::string& type, std::string& name);
 
 public:
-	OptTaskSequence(): GurlsOption(TaskSequenceOption) {};
-	OptTaskSequence(const char* str): GurlsOption(TaskSequenceOption){
-		tasks.push_back(str);
-	}
+    OptTaskSequence(): GurlsOption(TaskSequenceOption){
+        tasks = new std::vector<std::string>();
+    }
+    OptTaskSequence(const char* str): GurlsOption(TaskSequenceOption){
+        tasks = new std::vector<std::string>();
+        tasks->push_back(str);
+    }
 
-	OptTaskSequence(std::string& str): GurlsOption(TaskSequenceOption){
-		tasks.push_back(str);
-	}
+    OptTaskSequence(std::string& str): GurlsOption(TaskSequenceOption){
+        tasks = new std::vector<std::string>();
+        tasks->push_back(str);
+    }
 
-	OptTaskSequence& operator=(const OptTaskSequence& other);
+    OptTaskSequence& operator=(const OptTaskSequence& other);
 
-	virtual ~OptTaskSequence(){ tasks.clear();}
+    virtual ~OptTaskSequence(){
+        tasks->clear();
+        delete tasks;
+    }
 
-	void addTask(const std::string newtask) {tasks.push_back(newtask);}
-	std::vector<std::string>& getValue() {
-		return tasks;
-	}
+    void addTask(const std::string newtask) {tasks->push_back(newtask);}
+    std::vector<std::string>& getValue() {
+        return *tasks;
+    }
 
-	virtual bool isA(int id) { return (id == TaskSequenceOption); }
-	static OptTaskSequence* dynacast(GurlsOption* opt) {
-		if (opt->isA(TaskSequenceOption) ){
-			return static_cast<OptTaskSequence*>(opt);
-		} else {
-			throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-		}
-	}
-	void getTaskAt(int index, std::string& taskdesc, std::string& taskname) {
-		if (!isValid(tasks[index], taskdesc, taskname)){
-			throw new gException(gurls::Exception_Invalid_TaskSequence);
-		}
-	}
-	long int size(){
-		return this->tasks.size();
-	}
+    virtual bool isA(OptTypes id) { return (id == TaskSequenceOption); }
+    static OptTaskSequence* dynacast(GurlsOption* opt) {
+        if (opt->isA(TaskSequenceOption) ){
+            return static_cast<OptTaskSequence*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+    void getTaskAt(int index, std::string& taskdesc, std::string& taskname) {
+        if (!isValid((*tasks)[index], taskdesc, taskname)){
+            throw new gException(gurls::Exception_Invalid_TaskSequence);
+        }
+    }
+    long int size(){
+        return tasks->size();
+    }
 
-	//friend std::ostream& operator<<(std::ostream& os, OptString& opt);
-	virtual std::ostream& operator<<(std::ostream& os);
+    //friend std::ostream& operator<<(std::ostream& os, OptString& opt);
+    virtual std::ostream& operator<<(std::ostream& os);
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & ar, const unsigned int /* file_version */) const{
-		ar & this->type;
-		int n = this->tasks.size();
-		ar & n;
-		for (int i = 0; i < n; i++){
-			ar & this->tasks.at(i);
-		}
-	}
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & ar, const unsigned int /* file_version */) const{
+        ar & this->type;
+        int n = this->tasks->size();
+        ar & n;
+        for (int i = 0; i < n; i++){
+            ar & tasks->at(i);
+        }
+    }
 
-	template<class Archive>
-	void load(Archive & ar, const unsigned int /* file_version */){
-		ar & this->type;
-		int n = 0;
-		ar & n;
-		tasks.clear();
-		for(int i = 0; i < n; i++){
-			std::string s("");
-			ar & s;
-			this->tasks.push_back(s);
-		}
-	}
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    template<class Archive>
+    void load(Archive & ar, const unsigned int /* file_version */){
+        ar & this->type;
+        int n = 0;
+        ar & n;
+        tasks->clear();
+        for(int i = 0; i < n; i++){
+            std::string s("");
+            ar & s;
+            this->tasks->push_back(s);
+        }
+    }
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 
 };
@@ -549,7 +611,7 @@ public:
 /*
 template <typename T>
 std::ostream& operator<<(std::ostream& os, OptMatrix<T>& opt){
-	return os << opt.getValue();
+    return os << opt.getValue();
 }*/
 
 //template <typename T>
@@ -559,84 +621,8 @@ std::ostream& operator<<(std::ostream& os, OptMatrix<T>& opt){
 
 template <typename T>
 std::ostream& OptMatrix<T>::operator << (std::ostream& os){
-	return os << std::endl << this->getValue();
+    return os << std::endl << this->getValue();
 }
-
-//template<class Archive>
-//void GurlsOption::save(Archive & ar, const unsigned int v) const {
-
-//	int type = this->getType();
-//	//ar & type;
-
-//	switch (type) {
-
-//	case StringOption:
-//		OptString::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case StringListOption:
-//		OptStringList::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case NumberOption:
-//		OptNumber::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case NumberListOption:
-//		OptNumberList::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case FunctionOption:
-//		OptFunction::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case MatrixOption:
-//		OptMatrix<gMat2D<float> >::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case TaskSequenceOption:
-//		OptTaskSequence::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	case OptListOption:
-//		GurlsOptionsList::dynacast(const_cast<GurlsOption*>(this))->save(ar, v);
-//		break;
-//	default:
-//		break;
-//	}
-
-//}
-//template<class Archive>
-//void GurlsOption::load(Archive & ar, const unsigned int v){
-//	int type = this->getType();
-//	//ar & type;
-
-//	switch (type)
-//	{
-
-//	case StringOption:
-//		OptString::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case StringListOption:
-//		OptStringList::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case NumberOption:
-//		OptNumber::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case NumberListOption:
-//		OptNumberList::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case FunctionOption:
-//		OptFunction::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case MatrixOption:
-//		OptMatrix<gMat2D<float> >::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case TaskSequenceOption:
-//		OptTaskSequence::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	case OptListOption:
-//		GurlsOptionsList::dynacast(const_cast<GurlsOption*>(this))->load(ar, v);
-//		break;
-//	default:
-//		break;
-//	}
-//}
-
-
 
 }
 

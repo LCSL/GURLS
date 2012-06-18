@@ -55,15 +55,29 @@ or 3 and Lapack functionalities.
 #include <cmath>
 #include <cfloat>
 
+#include "exports.h"
 #include "gmat2d.h"
 #include "gvec.h"
 #include "exceptions.h"
 
+#ifdef _WIN32
+#pragma warning(disable : 4290)
+#endif
+
+#ifdef _ACML
+#include <acml.h>
+enum CBLAS_ORDER     {CblasRowMajor=101, CblasColMajor=102};
+enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113, CblasConjNoTrans=114};
+enum CBLAS_UPLO      {CblasUpper=121, CblasLower=122};
+enum CBLAS_DIAG      {CblasNonUnit=131, CblasUnit=132};
+enum CBLAS_SIDE      {CblasLeft=141, CblasRight=142};
+#elif defined _MKL
+#include <mkl_cblas.h>
+#else
 extern "C" {
 #include <cblas.h>
 }
-
-//#include <mkl_cblas.h>
+#endif
 
 namespace gurls	{
 
@@ -112,7 +126,7 @@ T dot(const gVec<T>& x, const gVec<T>& y);
 
 
 // =========================================================
-// ================= TO BE DISCUSSED =======================
+// ================= TODO: TO BE DISCUSSED =======================
 // =========================================================
 /* Replicate a vector n times along the columns (or along the rows if transpose==true)
    If x is a vector of length N, then the output is an N-by-N matrix whose columns (or rows) are copies of x.
@@ -122,7 +136,7 @@ gMat2D<T> repmat(const gVec<T>& x, unsigned long n, bool transpose = false){
 
     T dataA[n*x.size()];
     const T* datax = x.getData();
-    ulong rows, cols;
+    unsigned long rows, cols;
 
     if(transpose){
         rows = n;
@@ -220,18 +234,79 @@ template <typename T>
 void  cholesky(const gMat2D<T>& A, gMat2D<T>& L, bool upper = true);
 
 
-
 template<typename T>
 void set(T* buffer, const T value, const int size, const int incr);
 
 template<typename T>
-void set(T* buffer, const T value, const int size);
+void set(T* buffer, const T value, const int size)
+{
+    for(T *it = buffer, *end = buffer+size; it != end; ++it)
+        *it = value;
+}
+
+template<>
+void GURLS_EXPORT set(float* buffer, const float value, const int size);
+
+template<>
+void GURLS_EXPORT set(double* buffer, const double value, const int size);
+
 
 template<typename T>
-void copy(T* dst, const T* src, const int size, const int dstIncr, const int srcIncr);
+void copy(T* dst, const T* src, const int size)
+{
+    memcpy(dst, src, size*sizeof(T));
+}
+
+template<>
+GURLS_EXPORT void copy(float* dst, const float* src, const int size);
+
+template<>
+GURLS_EXPORT void copy(double* dst, const double* src, const int size);
 
 template<typename T>
-void copy(T* dst, const T* src, const int size);
+void copy(T* dst, const T* src, const int size, const int dstIncr, const int srcIncr)
+{
+    if(dstIncr == 1 && srcIncr == 1)
+        copy(dst, src, size);
+
+    else
+    {
+        const T* s_it = src;
+
+        for(T *d_it = dst, *end = dst+(size*dstIncr); d_it != end; d_it += dstIncr, src+=srcIncr)
+            *d_it = *s_it;
+    }
+}
+
+template<>
+GURLS_EXPORT void copy(float* dst, const float* src, const int size, const int dstIncr, const int srcIncr);
+
+template<>
+GURLS_EXPORT void copy(double* dst, const double* src, const int size, const int dstIncr, const int srcIncr);
+
+//TODO optimize
+template<typename T>
+void copy_submatrix(T* dst, const T* src, const int src_Rows, const int sizeRows, const int sizeCols, unsigned long *indices_rows, unsigned long *indices_cols)
+{
+  int t=0;
+  for (int j = 0; j < sizeCols; j++)
+    for (int i = 0; i < sizeRows; i++)
+    {
+      dst[t] = src[ indices_rows[i] + indices_cols[j]*src_Rows ] ;
+      ++t;
+    }
+}
+
+template<typename T>
+void subMatrixFromRows(const T* matrix, const int m_Rows, const int m_Cols, const unsigned long* rowsIndices, const int nIndices, T* submat, T* work)
+{
+    for(const unsigned long *it = rowsIndices, *end = rowsIndices+nIndices; it != end; ++it)
+    {
+        getRow(matrix, m_Rows, m_Cols, *it, work);
+
+        copy(submat + (it-rowsIndices), work, m_Cols, nIndices, 1);
+    }
+}
 
 template <typename T>
 void clearLowerTriangular(T* matrix, int rows, int cols)
@@ -288,16 +363,92 @@ T* transpose_cm(const T* matrix, int rows, int cols)
 }
 
 template <typename T>
+void transpose(const T* matrix, const int rows, const int cols, T* transposed)
+{
+    T* d1 = transposed;
+    const T* d0 = matrix;
+    const int N = rows;
+
+    for (int r = 0; r < rows; ++r)
+        for (int c = 0; c < cols; ++c)
+            *d1++=*(d0+c*N+r);
+}
+
+template <typename T>
 void dot(const T* A, const T* B, T* C,
          int A_rows, int A_cols,
          int B_rows, int B_cols,
          int C_rows, int C_cols,
          const /*enum*/ CBLAS_TRANSPOSE TransA,
          const /*enum*/ CBLAS_TRANSPOSE TransB,
-         const /*enum*/ CBLAS_ORDER Order);
+         const /*enum*/ CBLAS_ORDER Order)
+{
+
+    bool transposeA = (TransA == CblasTrans || TransA == CblasConjTrans);
+    bool transposeB = (TransB == CblasTrans || TransB == CblasConjTrans);
+
+    if(transposeA)
+        std::swap(A_rows, A_cols);
+
+    if(transposeB)
+        std::swap(B_rows, B_cols);
+
+    if ((C_rows != A_rows) || (C_cols != B_cols))
+        throw gException(gurls::Exception_Inconsistent_Size);
+
+    const T alpha = 1.0;
+    const T beta = 0.0;
+
+    int lda, ldb, ldc;
+    switch(Order)
+    {
+    case CblasColMajor:
+        lda = transposeA? A_cols: A_rows;
+        ldb = transposeB? B_cols: B_rows;
+        ldc = C_rows;
+        break;
+    case CblasRowMajor:
+        lda = transposeA? A_rows: A_cols;
+        ldb = transposeB? B_rows: B_cols;
+        ldc = C_cols;
+        break;
+    default:
+        lda = ldb = ldc = 0;
+        assert(0);
+    }
+
+    // C = alpha*A*B + beta*C
+    gemm(Order, TransA, TransB, C_rows, C_cols, A_cols, alpha, A, lda, B, ldb, beta, C, ldc);
+
+}
 
 template<typename T>
-T* cholesky(const T* matrix, const int rows, const int cols, bool upper = true);
+T* cholesky(const T* matrix, const int rows, const int cols, bool upper = true)
+{
+    T* ret = new T[rows*cols];
+    copy(ret, matrix, rows*cols);
+
+    int LDA = rows;
+    int nc = cols;
+    char UPLO = upper? 'U':'L';
+    int info;
+
+    potrf_(&UPLO, &nc, ret, &LDA, &info);
+
+    if(info != 0)
+    {
+        std::stringstream str;
+        str << "Cholesky factorization failed, error code " << info << ";" << std::endl;
+        throw gException(str.str());
+    }
+
+    clearLowerTriangular(ret, rows, cols);
+
+    return ret;
+}
+
+template<typename T>
+int potrf_(char *UPLO, int *n, T *a, int *lda , int *info);
 
 template <typename T>
 void eig(const T* A, T* &V, T* &Wr, T* &Wi, int A_rows, int A_cols) throw (gException);
@@ -365,6 +516,9 @@ bool eq(T val1, T val2)
     return val1 == val2;
 }
 
+template<typename T>
+bool gt(T a, T b);
+
 template <typename T>
 void binOperation(const T* A, const T* B, T* result, const int len, T(*op)(T,T))
 {
@@ -385,19 +539,13 @@ void binOperation(const T* A, const T* B, T* result, const int len, T(*op)(T,T))
 template <typename T>
 void mult(const T* A, const T* B, T* result, const int len)
 {
-    binOperation(A, B, result, len, &mul1);
+    binOperation<T>(A, B, result, len, &mul1);
 }
 
 template <typename T>
 void rdivide(const T* A, const T* B, T* result, const int len)
 {
-    binOperation(A, B, result, len, &div);
-}
-
-template <typename T>
-void minus(const T* A, const T* B, T* result, const int len)
-{
-    binOperation(A, B, result, len, &diff);
+    binOperation<T>(A, B, result, len, &div);
 }
 
 template <typename T>
@@ -425,6 +573,16 @@ void sum(const T* A, T* result, const int A_rows, const int A_cols, const int re
 }
 
 template <typename T>
+T sumv(const T* V, const int len, T* work) throw (gException)
+{
+    set(work, (T)1.0, len);
+
+    gemv(CblasColMajor, CblasNoTrans, 1, len, (T)1.0, work, 1, V, 1, (T)0.0, work+len, 1);
+
+    return work[len];
+}
+
+template <typename T>
 void mean(const T* A, T* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
 {
     sum(A, result, A_rows, A_cols, res_length);
@@ -435,25 +593,25 @@ void mean(const T* A, T* result, const int A_rows, const int A_cols, const int r
 
 //min along rows
 template <typename T>
-void argmin(const T* A, unsigned int* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
+void argmin(const T* A, unsigned long* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
 {
     if(A_cols != res_length)
         throw gException("Sum: vector lengths mismatch");
 
     const T *a_it = A;
 
-    for(unsigned int *r_it = result, *r_end = result+A_cols; r_it != r_end; ++r_it, a_it += A_rows)
+    for(unsigned long *r_it = result, *r_end = result+A_cols; r_it != r_end; ++r_it, a_it += A_rows)
         *r_it = (std::min_element(a_it, a_it+A_rows) - a_it);
 }
 
 template <typename T>
-T* copyLocations(const unsigned int* locs, const T* src, const int locs_len, const int src_len)
+T* copyLocations(const unsigned long* locs, const T* src, const int locs_len, const int src_len)
 {
     T* v = new T[locs_len];
     T* ptr_v = v;
 
     int val;
-    for(const unsigned int* l_it = locs, *l_end=locs+locs_len; l_it != l_end; ++l_it, ++ptr_v)
+    for(const unsigned long* l_it = locs, *l_end=locs+locs_len; l_it != l_end; ++l_it, ++ptr_v)
     {
         val = *l_it;
         if((val < 0) || (val > src_len))
@@ -515,7 +673,7 @@ void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const
 
 
 template<typename T>
-T* GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
+void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
                     const int Q_rows, const int Q_cols,
                     const int L_length, const int lambda_length)
 {
@@ -551,7 +709,6 @@ T* GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
 
     delete[] d;
     delete[] D;
-
 }
 
 
@@ -568,7 +725,7 @@ T* sign(const T* vector, const int size)
 
     while(v_it != v_end)
     {
-        *r_it = (eq(*v_it, zero)? 0.0 : ((*v_it > 0.0)? 1.0 : -1.0));
+        *r_it = static_cast<T>((eq(*v_it, zero)? 0.0 : ((*v_it > 0.0)? 1.0 : -1.0)));
 
         ++v_it;
         ++r_it;
@@ -587,7 +744,7 @@ T* compare(const T* vector1, const T* vector2, const int size, bool(*pred)(T,T))
 
     for(const T *v1_it = vector1, *v2_it = vector2; v1_it != v1_end; ++v1_it, ++v2_it, ++r_it)
     {
-        *r_it = (*pred)(*v1_it, *v2_it)? 1.0: 0.0;
+        *r_it = static_cast<T>((*pred)(*v1_it, *v2_it)? 1.0: 0.0);
     }
 
     return ret;
@@ -603,34 +760,29 @@ T* compare(const T* vector1, const T val, const int size, bool(*pred)(T,T))
 
     for(const T *v1_it = vector1; v1_it != v1_end; ++v1_it, ++r_it)
     {
-        *r_it = (*pred)(*v1_it, val)? 1.0: 0.0;
+        *r_it = (*pred)(*v1_it, val)? (T)1.0: (T)0.0;
     }
 
     return ret;
 }
 
 template<typename T>
-unsigned int* indicesOfMax(const T* A, const int A_rows, const int A_cols, const int dimension) throw (gException)
+void indicesOfMax(const T* A, const int A_rows, const int A_cols, unsigned long* ind, T* work, const int dimension) throw (gException)
 {
-    unsigned int * ret;
-    T* matrix;
-
+    const T *m_it;
     int m_rows;
     int m_cols;
 
     switch(dimension)
     {
     case 1:
-        ret = new unsigned int[A_cols];
-//        matrix = (T*) A;
-        matrix = new T[A_rows*A_cols];
-        copy(matrix, A, A_rows*A_cols);
+        m_it = A;
         m_rows = A_rows;
         m_cols = A_cols;
         break;
     case 2:
-        ret = new unsigned int[A_rows];
-        matrix = transpose_cm(A, A_rows, A_cols);
+        transpose(A, A_rows, A_cols, work);
+        m_it = work;
         m_rows = A_cols;
         m_cols = A_rows;
         break;
@@ -638,15 +790,9 @@ unsigned int* indicesOfMax(const T* A, const int A_rows, const int A_cols, const
         throw gException(gurls::Exception_Illegat_Argument_Value);
     }
 
-    const T *m_it = matrix;
-
-    for(unsigned int *r_it = ret, *r_end = ret+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
+    for(unsigned long *r_it = ind, *r_end = ind+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
         *r_it = (std::max_element(m_it, m_it+m_rows) - m_it);
 
-    //if(dimension == 2)
-        delete [] matrix;
-
-    return ret;
 }
 
 template<typename T>
@@ -660,16 +806,17 @@ T* lambdaguesses(const T* eigvals, const int len, const int r, const int n, cons
     std::sort(tmp, tmp+len);
 
     /*const*/ T lmin = tmp[len-r];
-    const T lmax = tmp[r-1];
+    const T lmax = tmp[len-1];
 
     delete[] tmp;
 
-    T thr1 = std::min(lmin, minl);
-    T thr2 = (T)200*sqrt(DBL_EPSILON);
+    T thr1 = std::min(lmin, minl*lmax);
+    T thr2 = 200*static_cast<T>(sqrt(DBL_EPSILON));
+
     lmin = std::max(thr1, thr2);
 
     const T base = (lmax/lmin);
-    const T den = nlambda-1.0;
+    const T den = nlambda-static_cast<T>(1.0);
     const T nT = (T)n;
 
     for(int i=0; i< nlambda; ++i)
@@ -725,10 +872,64 @@ void svd(const T* A, T*& U, T*& W, T*& Vt,
          const int A_rows, const int A_cols,
          int& U_rows, int& U_cols,
          int& W_len,
-         int& Vt_rows, int& Vt_cols) throw(gException);
+         int& Vt_rows, int& Vt_cols) throw(gException)
+{
+    // A = U*S*Vt
 
+    char jobu = 'S', jobvt = 'S';
+    int m = A_rows;
+    int n = A_cols;
+    int k = std::min<int>(m, n);
 
-void randperm(const unsigned int n, unsigned int* seq);
+    W = new T[k];
+    U = new T[m*k];
+    Vt = new T[k*n];
+
+    U_rows = m;
+    U_cols = k;
+
+    W_len = k;
+
+    Vt_rows = k;
+    Vt_cols = n;
+//MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))
+    int lda = A_cols;
+    int ldu = k;
+    int ldvt = n;
+    int info, lwork = std::max<int>(3*k+std::max<int>(m,n), 5*k);
+    T* work = new T[lwork];
+    T* cpy = new T[m*n];
+    copy(cpy, A, A_rows*A_cols);
+
+    gesvd_(&jobu, &jobvt, &n, &m, cpy, &lda, W, U, &ldu, Vt, &ldvt, work, &lwork, &info);
+
+    delete[] work;
+    delete[] cpy;
+
+    if(info != 0)
+    {
+        std::stringstream str;
+        str << "SVD failed, error code " << info << std::endl;
+        throw gException(str.str());
+    }
+}
+
+template<typename T>
+int gesvd_(char *jobu, char *jobvt, int *m, int *n, T *a, int *lda, T *s, T *u, int *ldu, T *vt, int *ldvt, T *work, int *lwork, int *info);
+
+template<typename T>
+void randperm(const unsigned long n, T* seq, bool generate = true, unsigned long start = 1)
+{
+    if(generate)
+    {
+        unsigned long val = start;
+        for(T *it = seq, *end= seq+n; it != end; ++it)
+            *it = val++;
+    }
+
+    for(unsigned long i=0; i<n; ++i)
+        std::swap(seq[rand()%n], seq[rand()%n]);
+}
 
 template<typename T>
 void getRow(const T* M, const int rows, const int cols, const int row_index , T* row)
@@ -752,6 +953,12 @@ template<typename T>
 void syev( char* jobz, char* uplo, int* n, T* a, int* lda, T* w, T* work, int* lwork, int* info);
 
 template<typename T>
+void gemm(const CBLAS_ORDER Order, const CBLAS_TRANSPOSE TransA, const CBLAS_TRANSPOSE TransB,
+          const int M, const int N, const int K, const T alpha, const T *A, const int lda,
+          const T *B, const int ldb,
+          const T beta, T *C, const int ldc);
+
+template<typename T>
 void eig_sm(T* A, T* L, int A_rows, int A_cols) throw (gException)
 {
     if (A_cols != A_rows)
@@ -773,6 +980,120 @@ void eig_sm(T* A, T* L, int A_rows, int A_cols) throw (gException)
         str << "Eigenvalues/eigenVectors computation failed, error code " << info << ";" << std::endl;
         throw gException(str.str());
     }
+}
+
+template<typename T>
+void exp(T* v, const int length)
+{
+    for(T *it = v, *end = v+length; it != end; ++it)
+        *it = (T) std::exp(*it);
+}
+
+template<typename T>
+T eucl_dist(const T* A, const T* B, const int len, T* work)
+{
+    copy(work, A, len);
+    axpy(len, (T)-1.0, B, 1, work, 1);
+    return nrm2(len, work, 1);
+
+}
+
+// Y = PDIST(X) returns a vector Y containing the Euclidean distances
+// between each pair of observations in the N-by-P data matrix X.  Rows of
+// X correspond to observations, columns correspond to variables.  Y is a
+// 1-by-(N*(N-1)/2) row vector, corresponding to the N*(N-1)/2 pairs of
+// observations in X.
+// D allocated
+template<typename T>
+void pdist(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D)
+{
+//    int d_len = N*(N-1)/2;
+    T* work = new T[P];
+    T* rowN = new T[P];
+    T* rowNPlusOne = new T[P];
+    //D = new T[d_len];
+    int cont = 0;
+    for(int i=0;i<N;i++)
+    {
+        copy< T >(rowN,A + i,P,1,N);
+        //    getRow< T >(A,N,P,i,rowN);
+        for(int j=i+1;j<N;j++)
+        {
+            copy< T >(rowNPlusOne,A + j,P,1,N);
+            //      getRow< T >(A,N,P,j,rowNPlusOne);
+            D[cont] = eucl_dist<T>(rowN,rowNPlusOne,P, work);
+            cont++;
+        }
+    }
+    delete [] work;
+    delete [] rowN;
+    delete [] rowNPlusOne;
+}
+
+//  SQUAREFORM Reformat a distance matrix between upper triangular and square form.
+//     Z = SQUAREFORM(Y), if Y is a vector as created by the PDIST function,
+//     converts Y into a symmetric, square format, so that Z(i,j) denotes the
+//     distance between the i and j objects in the original data.
+//   Y = SQUAREFORM(Z), if Z is a symmetric, square matrix with zeros along
+//     the diagonal, creates a vector Y containing the Z elements below the
+//     diagonal.  Y has the same format as the output from the PDIST function.
+template<typename T>
+void squareform(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D, const int d_cols)
+{
+    if(d_cols!=1)
+    {
+        //D = new T[N*N];
+        T* work = new T[P];
+        T* rowN = new T[P];
+        T* rowNPlusOne = new T[P];
+        for(int i=0;i<N;i++)
+        {
+            copy< T >(rowN,A + i,P,1,N);
+            for(int j=0;j<=N;j++)
+            {
+                if(i!=j)
+                {
+                    copy< T >(rowNPlusOne,A + j,P,1,N);
+                    D[j + i*N] = eucl_dist< T >(rowN,rowNPlusOne,P, work);
+                }
+                else
+                    D[j + i*N]=0;
+            }
+        }
+        delete [] work;
+        delete [] rowN;
+        delete [] rowNPlusOne;
+    }
+    else
+    {
+        //   D = new T[N*(N-1)/2];
+        pdist<T>(A, N, P, D);
+    }
+}
+
+template<typename T>
+void indicesOfEqualsTo(const T* V, const int len, const T value, unsigned long* ind, int& ind_length)
+{
+    unsigned long* r_it = ind;
+    for(const T *it = V, *end = V+len; it != end; ++it)
+    {
+        if(eq(*it, value))
+        {
+            *r_it = it-V;
+            ++r_it;
+        }
+    }
+
+    ind_length = r_it - ind;
+}
+
+template<typename T>
+int round(const T value)
+{
+    if(eq(value, (T)0.0))
+        return 0;
+
+    return gt(value,(T)0.0)? ((int)(value+0.5)): ((int)(value-0.5));
 }
 
 }

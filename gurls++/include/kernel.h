@@ -52,7 +52,6 @@
 //#include "gmat2d.h"
 
 #include <stdexcept>
-using namespace std;
 
 #include "optlist.h"
 
@@ -86,9 +85,27 @@ template<typename T>
 class LinearKernel;
 
 template<typename T>
+class RBFKernel;
+
+template<typename T>
+class ChisquaredKernel;
+
+    /**
+     * \brief Kernel is the class that computes the kernel matrix
+     */
+
+template<typename T>
 class Kernel
 {
 public:
+    /**
+     * Computes (or loads) the kernel matrix for the data matrix passed in the X matrix
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the different required fields based on the sub-class
+     *
+     * \return adds the field kernel to opt
+     */
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
     class BadKernelCreation : public std::logic_error
@@ -102,6 +119,10 @@ public:
     {
         if(id == "linear")
             return new LinearKernel<T>;
+        if(id == "rbf")
+            return new RBFKernel<T>;
+        if(id == "chisquared")
+            return new ChisquaredKernel<T>;
         else
             throw BadKernelCreation(id);
     }

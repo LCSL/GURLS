@@ -1,4 +1,23 @@
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
+#include <boost/serialization/base_object.hpp>
+
+
+#ifdef  USE_BINARY_ARCHIVES
+typedef boost::archive::binary_iarchive iarchive;
+typedef boost::archive::binary_oarchive oarchive;
+#else
+typedef boost::archive::text_iarchive iarchive;
+typedef boost::archive::text_oarchive oarchive;
+#endif
+
+#include <fstream>
+#include <string>
+
 namespace gurls {
 
 template < typename T>
@@ -70,10 +89,10 @@ void gMat2D<T>::transpose(gMat2D <T>& transposed) const {
     }
     T* d1 = transposed.getData();
     T* d0 = this->data;
-    int N = this->cols();;
+    int N = this->cols();
 
-    for (int c = 0; c < this->cols(); c++) {
-        for (int r = 0; r < this->rows(); r++){
+    for (unsigned long c = 0; c < this->cols(); ++c) {
+        for (unsigned long r = 0; r < this->rows(); ++r){
             *d1++=*(d0+r*N+c);
         }
     }
@@ -348,7 +367,7 @@ gVec<T>& gMat2D<T>::where(const gMat2D<bool>& comparison) const {
 
     // WARNING: add a check on the size of the input boolean matrix
 
-    unsigned long n0 = comparison.sum(), n1 = 0;
+    unsigned long n0 = static_cast<unsigned long>(comparison.sum()), n1 = 0;
     //T* buf = new T[this->size];
     T* buf = new T[n0];
     const T* ptr = this->data;
@@ -371,10 +390,10 @@ gVec<T>& gMat2D<T>::where(const gMat2D<bool>& comparison) const {
 template <typename T>
 bool gMat2D<T>::allEqualsTo(const T& val)  const {
     const T *ptr = this->data;
-    for (int i = 0; i < this->numrows* this->numcols; ++i, ++ptr) {
-        if (*ptr != val){
+    const unsigned long size = this->numrows* this->numcols;
+    for (unsigned long i = 0; i < size; ++i, ++ptr){
+        if (*ptr != val)
             return false;
-        }
     }
     return true;
 }
@@ -383,13 +402,13 @@ bool gMat2D<T>::allEqualsTo(const T& val)  const {
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const gMat2D<T>& v) {
-//    if (v.rows() >= gurls::MAX_PRINTABLE_SIZE || v.cols() >= gurls::MAX_PRINTABLE_SIZE){
-//        os << v.what() << std::endl;
-//        return os;
-//    }
+   if (v.rows() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE || v.cols() >= (unsigned long) gurls::MAX_PRINTABLE_SIZE){
+       os << v.what() << std::endl;
+       return os;
+   }
     os << "[";
-    for (int i = 0; i < v.numrows; i++){
-        for (int j = 0; j < v.numcols; j++) {
+    for (unsigned long i = 0; i < v.numrows; ++i){
+        for (unsigned long j = 0; j < v.numcols; ++j) {
             os << " " << v.data[i*v.numcols+j];
         }
         if( i == (v.numrows-1) )
@@ -452,13 +471,13 @@ gVec<T>& gMat2D<T>::sum(int order) {
         v = new gVec<T>(n);
         *v = 0;
         for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator ()(i)).sum();
+            v->at(i) = static_cast<T>((this->operator ()(i)).sum());
         }
     }else if (order == gurls::ROWWISE){
         n = this->rows();
         v = new gVec<T>(n);
         for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator [](i)).sum();
+            v->at(i) = static_cast<T>((this->operator [](i)).sum());
         }
     } else {
         throw gException(gurls::Exception_Illegat_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
@@ -589,6 +608,34 @@ void gMat2D<T>::load(Archive & ar, const unsigned int /* file_version */){
     while (ptr!=ptr_end){
         ar & *ptr++;
     }
+}
+
+template <typename T>
+void gMat2D<T>::load(const std::string& fileName)
+{
+    std::ifstream instream(fileName.c_str());
+
+    if(!instream.is_open())
+        throw gException("Could not open file " + fileName);
+
+    iarchive inar(instream);
+    inar >> *this;
+
+    instream.close();
+}
+
+template <typename T>
+void gMat2D<T>::save(const std::string& fileName) const
+{
+    std::ofstream outstream(fileName.c_str());
+
+    if(!outstream.is_open())
+        throw gException("Could not open file " + fileName);
+
+    oarchive outar(outstream);
+    outar << *this;
+
+    outstream.close();
 }
 
 

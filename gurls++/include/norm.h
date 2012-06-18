@@ -42,6 +42,7 @@
 #ifndef _GURLS_NORM_H_
 #define _GURLS_NORM_H_
 
+#include <stdexcept>
 #include <cstring>
 #include <cmath>
 
@@ -49,6 +50,7 @@
 #include "gmat2d.h"
 #include "exceptions.h"
 
+#include "optlist.h"
 
 namespace gurls	{
 
@@ -59,42 +61,85 @@ static const std::string LInfnorm = "inf";
 
 template<typename T>
 T norm(const gVec<T>& x, std::string type = "l2"){
-	T nrm = 0;
-	const T* ptr = x.getData();
+    T nrm = 0;
+    const T* ptr = x.getData();
 
-	if (type.compare(L0norm) == 0){
-		for(int i =0;i < x.getSize();i++){
-			if (*ptr++ != 0)
-				nrm++;
-		}
-		return nrm;
-	}else if (type.compare(L1norm) == 0) {
-		for(int i =0;i < x.getSize();i++){
-			nrm+= static_cast<T>(std::abs(*ptr++));
-		}
-		return nrm;
-	}else if (type.compare(L2norm) == 0) {
-		for(int i =0;i < x.getSize();i++){
-			nrm+= (*ptr)*(*ptr++);
-		}
-		return static_cast<T>(std::sqrt(nrm));
-	}else if (type.compare(LInfnorm) == 0 ) {
-		throw gException("Sorry. You required the computation of LInfnorm but this functionality has not been implemented yet!");
-	}else {
-		throw gException("Unknown norm type.");
-	}
+    if (type.compare(L0norm) == 0){
+        for(unsigned long i =0;i < x.getSize(); ++i){
+            if (*ptr++ != 0)
+                nrm++;
+        }
+        return nrm;
+    }else if (type.compare(L1norm) == 0) {
+        for(unsigned long i =0; i < x.getSize(); ++i){
+            nrm+= static_cast<T>(std::abs(*ptr++));
+        }
+        return nrm;
+    }else if (type.compare(L2norm) == 0) {
+        for(unsigned long i =0; i < x.getSize(); ++i, ++ptr){
+            nrm+= std::pow(*ptr, 2);
+        }
+        return static_cast<T>(std::sqrt(nrm));
+    }else if (type.compare(LInfnorm) == 0 ) {
+        throw gException("Sorry. You required the computation of LInfnorm but this functionality has not been implemented yet!");
+    }else {
+        throw gException("Unknown norm type.");
+    }
 
-	return nrm;
+    return nrm;
 }
-
-
 
 template<typename T>
 T norm(const gMat2D<T>& A, std::string type = "l2"){
 
-	throw gException("Sorry. You required to compute the norm of a matrix but this functionality has not been implemented yet!");
+    throw gException("Sorry. You required to compute the norm of a matrix but this functionality has not been implemented yet!");
 }
 
+template<typename T>
+class NormL2;
+
+template<typename T>
+class NormZScore;
+
+template<typename T>
+class NormTestZScore;
+
+    /**
+     * \brief Norm is a class that spheriphies the data
+     */
+
+template<typename T>
+class Norm
+{
+public:
+    /**
+     * Spheriphies the data
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the different required fields based on the sub-class
+     * \return spheriphied input data matrix
+     */
+    virtual gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+
+    class BadNormCreation : public std::logic_error
+    {
+    public:
+        BadNormCreation(const std::string& type)
+            : logic_error("Cannot create type " + type) {}
+    };
+
+    static Norm<T> *factory(const std::string& id) throw(BadNormCreation)
+    {
+        if(id == "l2")
+            return new NormL2<T>;
+        else if(id == "zscore")
+            return new NormZScore<T>;
+        else if(id == "testzscore")
+            return new NormTestZScore<T>;
+        else
+            throw BadNormCreation(id);
+    }
+};
 
 }
 

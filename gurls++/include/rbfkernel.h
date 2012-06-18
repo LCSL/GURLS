@@ -40,55 +40,99 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_RBFKERNEL_H_
+#define _GURLS_RBFKERNEL_H_
 
 
 #include "kernel.h"
 #include "gmath.h"
+#include "utils.h"
 
 namespace gurls {
 
     /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+     * \brief RBFKernel is the sub-class of Kernel that builds the Gaussian kernel matrix
      */
 
 template <typename T>
-class LinearKernel: public Kernel<T>
+class RBFKernel: public Kernel<T>
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
+     * Builds the symmetric kernel matrix of matrix X for a gaussian model.
      *
      * \param X input data matrix
      * \param Y labels matrix
-     * \param opt not udes
+     * \param opt options with the following fields:
+     *  - paramsel (list with the required field sigma, settable with the class ParamSelection and its subclasses Siglam and SiglamHo)
      *
      * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
+     *  - type = "rbf"
      *  - K = the kernel matrix
      */
+
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void RBFKernel<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
+    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
+    X_OMR.transpose(X);
 
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
+    const int xr = X_OMR.rows();
+    const int xc = X_OMR.cols();
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
+    if(!opt.hasOpt("kernel"))
+        opt.addOpt("kernel", new GurlsOptionsList("kernel"));
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
+//    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
+    GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
 
-    dot(X, Xt, *K);
 
+//    if ~isfield(opt.kernel,'distance')
+//        opt.kernel.distance = distance(X',X');
+//        kernel.distance = opt.kernel.distance;
+//    end
+
+    gMat2D<T> *dist;
+
+    if(!kernel->hasOpt("distance"))
+    {
+        dist = new gMat2D<T>(xr, xr);
+
+        T* Xt = new T[xc*xr];
+        transpose(X.getData(), xr, xc, Xt);
+
+        distance(Xt, Xt, xc, xr, xr, dist->getData());
+
+        delete[] Xt;
+
+        kernel->addOpt("distance", new OptMatrix<gMat2D<T> >(*dist));
+    }
+
+    dist = &(static_cast<OptMatrix<gMat2D<T> >* >( kernel->getOpt("distance"))->getValue());
+
+    GurlsOptionsList* paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+    double sigma = paramsel->getOptAsNumber("sigma");
+
+    const int len = xr*xr;
+    gMat2D<T> *K = new gMat2D<T>(dist->getData(), xr, xr, true);
+
+//    D = -(opt.kernel.distance);
+//    K = exp(D/(opt.paramsel.sigma^2));
+    scal(len, (T)(-1.0/pow(sigma, 2)),  K->getData(), 1);
+    exp(K->getData(), len);
+
+//    kernel.type = 'rbf';
+    kernel->removeOpt("type");
+    kernel->addOpt("type", "rbf");
+
+    kernel->removeOpt("K");
     kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
-}
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+}
+
+#endif //_GURLS_RBFKERNEL_H_

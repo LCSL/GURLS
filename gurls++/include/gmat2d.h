@@ -74,206 +74,211 @@ class gMat2D : public BaseArray<T> {
 
 protected:
 
-	unsigned long numcols;
-	unsigned long numrows;
+    unsigned long numcols;
+    unsigned long numrows;
 
 
 public:
 
-	gMat2D(unsigned long r = 0, unsigned long c = 0);
-	gMat2D(T* buf, unsigned long r, unsigned long c, bool owner);
-	gMat2D(const gMat2D& other);
-	gMat2D<T>& operator=(const gMat2D& other);
+    typedef T CellType;
 
-	static gMat2D<T> zeros(unsigned long r = 0, unsigned long c = 0);
+    gMat2D(unsigned long r = 0, unsigned long c = 0);
+    gMat2D(T* buf, unsigned long r, unsigned long c, bool owner);
+    gMat2D(const gMat2D& other);
+    gMat2D<T>& operator=(const gMat2D& other);
 
-	static gMat2D<T> rand(unsigned long r = 0, unsigned long c = 0);
+    static gMat2D<T> zeros(unsigned long r = 0, unsigned long c = 0);
 
-	static gMat2D<T> diag(gVec<T> diagonal);
+    static gMat2D<T> rand(unsigned long r = 0, unsigned long c = 0);
 
-	static gMat2D<T> eye(unsigned long n = 0);
+    static gMat2D<T> diag(gVec<T> diagonal);
 
-	void resize(unsigned long r, unsigned long c);
-	void reshape(unsigned long r, unsigned long c);
+    static gMat2D<T> eye(unsigned long n = 0);
 
-	unsigned long cols() const {return numcols; }
+    void resize(unsigned long r, unsigned long c);
+    void reshape(unsigned long r, unsigned long c);
 
-	unsigned long rows() const {return numrows; }
+    unsigned long cols() const {return numcols; }
 
-	// The current implementation Uses the LU decomposition
-	T det();
+    unsigned long rows() const {return numrows; }
 
-	gMat2D<T>& operator=(const T& val) {
-		return static_cast<gMat2D<T>&>(this->BaseArray<T>::operator=(val));
-	}
+    // The current implementation Uses the LU decomposition
+    T det();
 
-	void submatrix(const gMat2D<T>& other, unsigned long r, unsigned long c);
+    gMat2D<T>& operator=(const T& val) {
+        return static_cast<gMat2D<T>&>(this->BaseArray<T>::operator=(val));
+    }
 
-	// The input argument ``transposed'' is supposed to be already initialized
-	// with a number of rows and columns equal to the number of columns and rows,
-	// respectively, of this matrix.
-	void transpose(gMat2D <T>& transposed) const;
+    void submatrix(const gMat2D<T>& other, unsigned long r, unsigned long c);
 
-	gVec<T> asvector() const {
-		return gVec<T>(this->data, this->size, true);
-	};
+    // The input argument ``transposed'' is supposed to be already initialized
+    // with a number of rows and columns equal to the number of columns and rows,
+    // respectively, of this matrix.
+    void transpose(gMat2D <T>& transposed) const;
 
-	gVec<T> operator[](unsigned long i) const {
-		return gVec<T>(this->data+i*this->numcols, this->numcols, true);
-	};
+    gVec<T> asvector() const {
+        return gVec<T>(this->data, this->size, true);
+    };
 
-	gVec<T> operator[](unsigned long i) {
-		return gVec<T>(this->data+i*this->numcols, this->numcols, false);
-	};
+    gVec<T> operator[](unsigned long i) const {
+        return gVec<T>(this->data+i*this->numcols, this->numcols, true);
+    };
 
-	//-------------------------------------------------------------------------
-	// provides access to the elements of the matrix in a Matlab style: M(r,c)
-	T& operator() (unsigned long row, unsigned long col)
-	{
-		return this->data[this->cols()*row + col];
-	}
+    gVec<T> operator[](unsigned long i) {
+        return gVec<T>(this->data+i*this->numcols, this->numcols, false);
+    };
 
-	// provides access to the i-th column of the matrix
-	gVec<T> operator() (unsigned long col)
-	{
-		gVec<T> v(this->numrows);
-		for(int j=0;j<this->numrows;j++)
-		{
-			v[j]=this->data[this->cols()*j+col];
-		}
-		return v;
-	}
+    //-------------------------------------------------------------------------
+    // provides access to the elements of the matrix in a Matlab style: M(r,c)
+    T& operator() (unsigned long row, unsigned long col)
+    {
+        return this->data[this->cols()*row + col];
+    }
 
-	void setRow(gVec<T>& vec, unsigned long row){
-		T* ptr = this->data+this->numcols*row;
-		T* ptr_end = this->data+this->numcols*(row+1);
-		T* v_ptr = vec.getData();
-		while (ptr != ptr_end){
-			*ptr++ = *v_ptr++;
-		}
-		return;
-	}
+    // provides access to the i-th column of the matrix
+    gVec<T> operator() (unsigned long col)
+    {
+        gVec<T> v(this->numrows);
+        for(unsigned long j=0;j<this->numrows;j++)
+        {
+            v[j]=this->data[this->cols()*j+col];
+        }
+        return v;
+    }
 
-	void setColumn(gVec<T>& vec, unsigned long col){
-		for(int j=0;j<this->numrows;j++)
-		{
-			this->data[this->cols()*j+col]=vec[j];
-		}
-	}
+    void setRow(gVec<T>& vec, unsigned long row){
+        T* ptr = this->data+this->numcols*row;
+        T* ptr_end = this->data+this->numcols*(row+1);
+        T* v_ptr = vec.getData();
+        while (ptr != ptr_end){
+            *ptr++ = *v_ptr++;
+        }
+        return;
+    }
 
-	void setDiag(gVec<T>& vec){
-		unsigned long int k = std::min(this->numcols, this->numrows);
-		if (vec.getSize() < k) {
-			throw gException("The lenght of the vector must be at least equal to the minimum dimension of the matrix");
-		}
-		T* ptr = this->data;
-		T* ptrVec = vec.getData();
+    void setColumn(gVec<T>& vec, unsigned long col){
+        for(int j=0;j<this->numrows;j++)
+        {
+            this->data[this->cols()*j+col]=vec[j];
+        }
+    }
 
-		for(unsigned long int j = 0; j < k; j++, ptrVec++, ptr+=(this->numcols+1)){
-			*ptr = *ptrVec;
-		}
-	}
+    void setDiag(gVec<T>& vec){
+        unsigned long int k = std::min(this->numcols, this->numrows);
+        if (vec.getSize() < k) {
+            throw gException("The lenght of the vector must be at least equal to the minimum dimension of the matrix");
+        }
+        T* ptr = this->data;
+        T* ptrVec = vec.getData();
 
-	gMat2D<T> operator-() const { return static_cast<T>(-1)*(*this); }
+        for(unsigned long int j = 0; j < k; j++, ptrVec++, ptr+=(this->numcols+1)){
+            *ptr = *ptrVec;
+        }
+    }
 
-	//gMat2D<T>& operator+=(T );
-	using BaseArray<T>::operator+=;
-	gMat2D<T> operator+(T) const;
-	template <typename U>
-	friend gMat2D<U> operator+(U val, const gMat2D<U>& v);
+    gMat2D<T> operator-() const { return static_cast<T>(-1)*(*this); }
 
-	//gMat2D<T>& operator-=(T val) { return *this += (-val); }
-	using BaseArray<T>::operator-=;
-	gMat2D<T> operator-(T val) const { return *this + (-val); }
-	template <typename U>
-	friend gMat2D<U> operator-(U val, const gMat2D<U>& v);
+    //gMat2D<T>& operator+=(T );
+    using BaseArray<T>::operator+=;
+    gMat2D<T> operator+(T) const;
+    template <typename U>
+    friend gMat2D<U> operator+(U val, const gMat2D<U>& v);
 
-	//gMat2D<T>& operator*=(T );
-	using BaseArray<T>::operator*=;
-	gMat2D<T> operator*(T) const;
-	template <typename U>
-	friend gMat2D<U> operator*(U val, const gMat2D<U>& v);
+    //gMat2D<T>& operator-=(T val) { return *this += (-val); }
+    using BaseArray<T>::operator-=;
+    gMat2D<T> operator-(T val) const { return *this + (-val); }
+    template <typename U>
+    friend gMat2D<U> operator-(U val, const gMat2D<U>& v);
 
-	//gMat2D<T>& operator/=(T val);
-	using BaseArray<T>::operator/=;
-	gMat2D<T> operator/(T val) const { return *this * (static_cast<T>(1)/val); }
-	template <typename U>
-	friend gMat2D<U> operator/(U val, const gMat2D<U>& v);
+    //gMat2D<T>& operator*=(T );
+    using BaseArray<T>::operator*=;
+    gMat2D<T> operator*(T) const;
+    template <typename U>
+    friend gMat2D<U> operator*(U val, const gMat2D<U>& v);
 
-	gMat2D<T>& operator+=(const gMat2D<T>&);
-	gMat2D<T> operator+(const gMat2D<T>&) const;
+    //gMat2D<T>& operator/=(T val);
+    using BaseArray<T>::operator/=;
+    gMat2D<T> operator/(T val) const { return *this * (static_cast<T>(1)/val); }
+    template <typename U>
+    friend gMat2D<U> operator/(U val, const gMat2D<U>& v);
 
-	gMat2D<T>& operator-=(const gMat2D<T>& v);
-	gMat2D<T> operator-(const gMat2D<T>& v) const;
+    gMat2D<T>& operator+=(const gMat2D<T>&);
+    gMat2D<T> operator+(const gMat2D<T>&) const;
 
-	gMat2D<T>& operator*=(const gMat2D<T>&);
-	gMat2D<T> operator*(const gMat2D<T>&) const;
+    gMat2D<T>& operator-=(const gMat2D<T>& v);
+    gMat2D<T> operator-(const gMat2D<T>& v) const;
 
-	gMat2D<T>& operator/=(const gMat2D<T>&);
-	gMat2D<T> operator/(const gMat2D<T>&) const;
+    gMat2D<T>& operator*=(const gMat2D<T>&);
+    gMat2D<T> operator*(const gMat2D<T>&) const;
 
-	bool allEqualsTo(const T& val)  const;
+    gMat2D<T>& operator/=(const gMat2D<T>&);
+    gMat2D<T> operator/(const gMat2D<T>&) const;
 
-	template <typename U>
-	friend std::ostream& operator<<(std::ostream&, const gMat2D<U>&);
+    bool allEqualsTo(const T& val)  const;
 
-	template <typename U>
-	friend void dot(const gMat2D<U>&, const gMat2D<U>&, gMat2D<U>&);
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream&, const gMat2D<U>&);
 
-	template <typename U>
-	friend void dot(const gMat2D<U>&, const gVec<U>&, gVec<U>&);
+    template <typename U>
+    friend void dot(const gMat2D<U>&, const gMat2D<U>&, gMat2D<U>&);
 
-	// ================= TO BE DISCUSSED =======================
-	template <typename U>
-	gMat2D<U> repmat(const gVec<U>&, unsigned long, bool);
-	// =========================================================
+    template <typename U>
+    friend void dot(const gMat2D<U>&, const gVec<U>&, gVec<U>&);
 
-	void uppertriangular(gMat2D<T>& up) const ;
-	void lowertriangular(gMat2D<T>& lo) const ;
+    // ================= TO BE DISCUSSED =======================
+    template <typename U>
+    gMat2D<U> repmat(const gVec<U>&, unsigned long, bool);
+    // =========================================================
 
-	static const std::string Less;
-	static const std::string Greater;
-	static const std::string LessEq;
-	static const std::string GreaterEq;
-	static const std::string Equal;
+    void uppertriangular(gMat2D<T>& up) const ;
+    void lowertriangular(gMat2D<T>& lo) const ;
 
-	gMat2D<bool> & operator ==(T threshold) const ;
-	gMat2D<bool> & operator <(T threshold) const ;
-	gMat2D<bool> & operator <=(T threshold) const ;
-	gMat2D<bool> &  operator >(T threshold) const ;
-	gMat2D<bool> & operator >=(T threshold) const ;
-	gMat2D<bool> & compare(T& threshold, std::string logical_operator = GreaterEq) const ;
-	gVec<T>& where(const gMat2D<bool> & comparison) const ;
+    static const std::string Less;
+    static const std::string Greater;
+    static const std::string LessEq;
+    static const std::string GreaterEq;
+    static const std::string Equal;
 
-	gMat2D<T>& reciprocal() const;
+    gMat2D<bool> & operator ==(T threshold) const ;
+    gMat2D<bool> & operator <(T threshold) const ;
+    gMat2D<bool> & operator <=(T threshold) const ;
+    gMat2D<bool> &  operator >(T threshold) const ;
+    gMat2D<bool> & operator >=(T threshold) const ;
+    gMat2D<bool> & compare(T& threshold, std::string logical_operator = GreaterEq) const ;
+    gVec<T>& where(const gMat2D<bool> & comparison) const ;
 
-	virtual std::string what() const {
-		std::stringstream v("gMat2D:");
-		v << std::string(" (");
-		v << this->rows() ;
-		v << std::string(" x ");
-		v << this->cols();
-		v <<std::string(") matrix of type ");
-		v << typeid(T).name();
-		return v.str();
-	}
+    gMat2D<T>& reciprocal() const;
 
-	using BaseArray<T>::max;
-	using BaseArray<T>::min;
-	using BaseArray<T>::sum;
+    virtual std::string what() const {
+        std::stringstream v("gMat2D:");
+        v << std::string(" (");
+        v << this->rows() ;
+        v << std::string(" x ");
+        v << this->cols();
+        v <<std::string(") matrix of type ");
+        v << typeid(T).name();
+        return v.str();
+    }
 
-	gVec<T>& min(int order) ;
-	gVec<T>& max(int order) ;
-	gVec<T>& argmin(int order) ;
-	gVec<T>& argmax(int order) ;
-	gVec<T>& sum(int order) ;
+    using BaseArray<T>::max;
+    using BaseArray<T>::min;
+    using BaseArray<T>::sum;
 
-	friend class boost::serialization::access;
-	template<class Archive>
-	void save(Archive & , const unsigned int) const;
-	template<class Archive>
-	void load(Archive & , const unsigned int);
-	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    gVec<T>& min(int order) ;
+    gVec<T>& max(int order) ;
+    gVec<T>& argmin(int order) ;
+    gVec<T>& argmax(int order) ;
+    gVec<T>& sum(int order) ;
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void save(Archive & , const unsigned int) const;
+    template<class Archive>
+    void load(Archive & , const unsigned int);
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+    void save(const std::string& fileName) const;
+    void load(const std::string& fileName);
 
 };
 

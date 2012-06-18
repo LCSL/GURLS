@@ -40,107 +40,86 @@
  */
 
 
-#ifndef _GURLS_PRECISIONRECALL_H_
-#define _GURLS_PRECISIONRECALL_H_
+#ifndef _GURLS_RMSE_H_
+#define _GURLS_RMSE_H_
 
 #include "perf.h"
 
 #include "utils.h"
 #include "gvec.h"
 
+#include "float.h"
+
 namespace gurls {
 
     /**
-     * \brief PrecisionRecall is the sub-class of Performance that evaluates prediction precision
+     * \brief Rmse is the sub-class of Performance that evaluates prediction error
      */
 
 template <typename T>
-class PrecisionRecall: public Performance<T>{
+class Rmse: public Performance<T>{
 
 public:
     /**
-     * Evaluates the average precision per class through precision and recall.
-     *
-     * \param X input data matrix
+     * Evaluates the root mean square error of the predicted labels stored in the field pred of opt with respect to the true input labels Y. It computes it as the frobenius norm over the classes and the samples of the difference between the true and predicted labels matrices.
+     * \param X not used
      * \param Y labels matrix
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \return adds to opt the field perf, which is a list with the following fields:
-     *  - acc = array of prediction accuracy for each class
-     *  - forho = acc
-     *  - forplot = acc
+     * \return adds to opt the field perf wich is a list containing the following fields (if opt already contains perf than adds to it the following fields):
+     *  - rmse = root mean square error
      */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void PrecisionRecall<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
+void Rmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
 {
     const int rows = Y_OMR.rows();
     const int cols = Y_OMR.cols();
 
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
 
-    //    if isfield (opt,'perf')
-    //        p = opt.perf; % lets not overwrite existing performance measures.
-    //                  % unless they have the same name
-    //    end
+    gMat2D<T> Y(cols, rows);
+    Y_OMR.transpose(Y);
+    T* y_true = Y.getData();
+
+//    if isfield (opt,'perf')
+//        p = opt.perf; % lets not overwrite existing performance measures.
+//                  % unless they have the same name
+//    end
 
     if(!opt.hasOpt("perf"))
     {
         GurlsOptionsList* perf = new GurlsOptionsList("perf");
         opt.addOpt("perf", perf);
     }
-
     GurlsOptionsList* perf = static_cast<GurlsOptionsList*>(opt.getOpt("perf"));
 
-    if(perf->hasOpt("ap"))
-        perf->removeOpt("ap");
 
-    if(perf->hasOpt("forho"))
-        perf->removeOpt("forho");
-
-    T* ap = new T[cols];
-    T* forho = new T[cols];
-
-//    y_true = y;
-    T* y_true = Y.getData();
-
-//    y_pred = opt.pred;
     GurlsOption *pred_opt = opt.getOpt("pred");
-
-//    if (pred_opt->getDataID() != typeid(T))
-//            throw gException("Different types");
-
     gMat2D<T> *pred_mat = &(OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
-    gMat2D<T> y_pred(pred_mat->cols(), pred_mat->rows());
-    pred_mat->transpose(y_pred);
 
+    gMat2D<T> pred_t(cols, rows);
+    pred_mat->transpose(pred_t);
 
-//    T = size(y,2);
-//    for t = 1:T,
-    for(int i=0; i<cols; ++i)
-    {
-//        p.ap(t) = precrec_driver(y_pred(:,t), y_true(:,t),0);
-//        p.forho(t) = p.ap(t);
-        ap[i] = static_cast<T>(precrec_driver(y_pred.getData()+(i*rows), y_true+(i*rows), rows));
+    //pred = rows*cols
+//    T* diff = new T[rows*cols];
 
-//        p.forplot(t) = p.ap(t);
-    }
+//     n 	= size(X,1);
+    const T n = static_cast<T>(X_OMR.rows());
 
-    copy(forho, ap, cols);
+//     diff 	= opt.pred - y;
+//    copy(diff, pred_t.getData(), rows*cols);
+    axpy(rows*cols, (T)-1.0, y_true, 1, pred_t.getData(), 1);
 
-    gMat2D<T>* ap_mat = new gMat2D<T>(ap, 1, cols, true);
-    OptMatrix<gMat2D<T> >* ap_opt = new OptMatrix<gMat2D<T> >(*ap_mat);
-    perf->addOpt("ap", ap_opt);
+//  p.rmse = norm(diff,'fro') / sqrt(n);
+    T rmse = nrm2<T>(rows*cols, pred_t.getData(), 1)/sqrt(n);
 
-    gMat2D<T>* forho_mat = new gMat2D<T>(forho, 1, cols, true);
-    OptMatrix<gMat2D<T> >* forho_opt = new OptMatrix<gMat2D<T> >(*forho_mat);
-    perf->addOpt("forho", forho_opt);
+    perf->addOpt("rmse", new OptNumber(rmse));
+
 }
 
 }
 
-#endif //_GURLS_PRECISIONRECALL_H_
+#endif //_GURLS_RMSE_H_

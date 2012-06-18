@@ -55,23 +55,38 @@
 
 #include "pred.h"
 
-using namespace std;
 
 namespace gurls {
+
+    /**
+     * \brief PredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the primal formulation
+     */
 
 template <typename T>
 class PredPrimal: public Prediction<T > {
 
 public:
+    /**
+     * Computes the predictions of the linear classifier stored in the field optimizer of opt and computed using the primal formulation on the samples passed in the X matrix.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - optimizer (settable with the class Optimizers and its subclasses)
+     *
+     * \return adds the following fields to opt:
+     *  - pred = matrix of predicted labels
+     */
    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
 template <typename T>
 void PredPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/,
                                    GurlsOptionsList &opt){
-   if (opt.hasOpt("W"))
+   if (opt.hasOpt("optimizer"))
    {
-       GurlsOption *g = opt.getOpt("W");
+       GurlsOptionsList* optimizer = static_cast<GurlsOptionsList*>(opt.getOpt("optimizer"));
+//        GurlsOption *g = opt.getOpt("W");
+       GurlsOption *g = optimizer->getOpt("W");
        gMat2D<T>& W = OptMatrix< gMat2D<T> >::dynacast(g)->getValue();
        gMat2D<T>* Z = new gMat2D<T>(X.rows(), W.cols());
        *Z = 0;

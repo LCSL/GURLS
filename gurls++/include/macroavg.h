@@ -52,14 +52,31 @@
 
 namespace gurls {
 
+    /**
+     * \brief MacroAvg is the sub-class of Performance that evaluates prediction accuracy
+     */
+
 template <typename T>
 class MacroAvg: public Performance<T>{
 
 public:
+    /**
+     * Evaluates the average accuracy per class.
+     *
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - pred (settable with the class Prediction and its subclasses)
+     *
+     * \return adds the following fields to opt:
+     *  - acc = array of prediction accuracy for each class
+     *  - forho = acc
+     *  - forplot = acc
+     */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 
 protected:
-    void macroavg(const unsigned int* trueY, const unsigned int* predY, const int length, T* &perClass, T &macroAverage, int &perClass_length);
+    void macroavg(const unsigned long* trueY, const unsigned long* predY, const int length,int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length);
 };
 
 template<typename T>
@@ -70,8 +87,8 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
 //                  % unless they have the same name
 //    end
 
-    const int rows = Y_OMR.rows();
-    const int cols = Y_OMR.cols();
+    const unsigned long rows = Y_OMR.rows();
+    const unsigned long cols = Y_OMR.cols();
 
 
     gMat2D<T> Y(cols, rows);
@@ -108,8 +125,14 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
 //            throw gException("Different types");
 
     gMat2D<T> *pred_mat = &(OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
-    gMat2D<float> y_pred(pred_mat->cols(), pred_mat->rows());
+    gMat2D<T> y_pred(pred_mat->cols(), pred_mat->rows());
     pred_mat->transpose(y_pred);
+
+
+    //TODO
+//    for(int i=0;i<pred_mat->cols()*pred_mat->rows();i++)
+//      if(abs(y_pred.getData()[i]) < opt.getOptAsNumber("smallnumber"))
+//      y_pred.getData()[i]=0.0;
 
 
 //    if size(y,2) == 1
@@ -118,7 +141,7 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
 //        predlab = sign(y_pred);
         T* predLab = sign(y_pred.getData(), y_pred.getSize());
 
-        T* tmp = compare(predLab, Y.getData(), rows, &eq);
+        T* tmp = compare<T>(predLab, Y.getData(), rows, &eq);
 
 //        p.acc = mean(predlab == y);
         mean(tmp, acc, rows, 1, 1);
@@ -127,7 +150,6 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
         *forho = *acc;
 
 //        p.forplot = mean(predlab == y);
-        //TODO?
 
         delete [] tmp;
         delete [] predLab;
@@ -136,19 +158,26 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
     {
 //        %% Assumes single label prediction.
 //        [dummy, predlab] = max(y_pred,[],2);
-        unsigned int* predLab = indicesOfMax(y_pred.getData(), pred_mat->rows(), pred_mat->cols(), 2);
+//        unsigned long* predLab = indicesOfMax(y_pred.getData(), pred_mat->rows(), pred_mat->cols(), 2);
+        T* work = new T[std::max(Y.getSize(), pred_mat->getSize() )];
+
+        unsigned long* predLab = new unsigned long[rows];
+        indicesOfMax(y_pred.getData(), rows, pred_mat->cols(), predLab, work, 2);
 
 //        [dummy, truelab] = max(y_true,[],2);
-        unsigned int* trueLab = indicesOfMax(y_true, rows, cols, 2);
+//        unsigned long* trueLab = indicesOfMax(y_true, rows, cols, 2);
+        unsigned long* trueLab = new unsigned long[rows];
+        indicesOfMax(y_true, rows, cols, trueLab, work, 2);
 
+        delete[] work;
 
 //        [MacroAvg, PerClass] = macroavg(truelab, predlab);
 
         T macroAverage;
         T* perClass;
-        int perClass_length;
+        unsigned long perClass_length;
 
-        macroavg(trueLab, predLab, rows, perClass, macroAverage, perClass_length);
+        macroavg(trueLab, predLab, rows, cols, perClass, macroAverage, perClass_length);
 
         if(perClass_length > cols)
             throw gException(Exception_Inconsistent_Size);
@@ -183,7 +212,7 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
 }
 
 template<typename T>
-void MacroAvg<T>::macroavg(const unsigned int* trueY, const unsigned int* predY, const int length, T* &perClass, T &macroAverage, int &perClass_length)
+void MacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* predY, const int length, int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length)
 {
 //function [MacroAverage, PerClass] = macroavg(TrueY, PredY)
 //% Computes average of performance for each class.
@@ -191,35 +220,40 @@ void MacroAvg<T>::macroavg(const unsigned int* trueY, const unsigned int* predY,
 //% Macro
 //nClasses = max(TrueY);
     int nClasses = *(std::max_element(trueY, trueY+length));
-
     perClass_length = nClasses+1;
-    perClass = new T[perClass_length];
+//     perClass = new T[perClass_length];
+    perClass = new T[totClasses];
+
+    unsigned long* ty_and_py = new unsigned long[length];
+    unsigned long* num = new unsigned long[1];
+    unsigned long* den = new unsigned long[1];
 
 //    for i = 1:nClasses,
-    for(unsigned int i=0; i<=nClasses; ++i)
+    for(unsigned long i=0; i<perClass_length; ++i)
     {
 //    acc(i) = sum((TrueY == i) & (PredY == i))/(sum(TrueY == i) + eps);
-        unsigned int* tyEqI = compare(trueY, i, length, &eq);
-        unsigned int* pyEqI = compare(predY, i, length, &eq);
-
-        unsigned int* ty_and_py = new unsigned int[length];
+        unsigned long* tyEqI = compare<unsigned long>(trueY, i, length, &eq);
+        unsigned long* pyEqI = compare<unsigned long>(predY, i, length, &eq);
 
         mult(tyEqI, pyEqI, ty_and_py, length);
 
-        unsigned int* num = new unsigned int[1];
         sum(ty_and_py, num, length, 1, 1);
-
-        unsigned int* den = new unsigned int[1];
         sum(tyEqI, den, length, 1, 1);
 
-        perClass[i] = (((T)(*num))/(*den)) + std::numeric_limits<T>::epsilon();
+        perClass[i] = ((T)(*num))/((*den) + std::numeric_limits<T>::epsilon());
 
         delete [] tyEqI;
         delete [] pyEqI;
-        delete [] ty_and_py;
-        delete [] num;
-        delete [] den;
     }
+
+    delete [] ty_and_py;
+    delete [] num;
+    delete [] den;
+
+    //set accuracy =1 on classes with no samples
+    for(int i=perClass_length; i<totClasses; ++i)
+      perClass[i] = 1;
+
 
 //PerClass = acc;
 

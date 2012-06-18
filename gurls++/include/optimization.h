@@ -60,6 +60,13 @@
 
 namespace gurls {
 
+    /**
+     * \brief Optimizer is a class that implements a Regularized Least Square algorithm
+     */
+
+template <typename T>
+class RLSAuto;
+
 template <typename T>
 class RLSPrimal;
 
@@ -69,10 +76,22 @@ class RLSDual;
 template <typename T>
 class RLSPegasos;
 
+    /**
+     * \brief Optimizer is a class that implements a Regularized Least Square algorithm
+     */
+
 template <typename T>
 class Optimizer
 {
 public:
+    /**
+     * Implements a Regularized Least Square algorithm
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the different required fields based on the sub-class
+     * \return adds the fields rls to opt
+     */
+
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
     ~Optimizer(){}
 
@@ -84,7 +103,9 @@ public:
     static Optimizer<T>*
     factory(const std::string& id) throw(BadOptimizerCreation) {
 
-      if(id == "rlsprimal")
+      if(id == "rlsauto")
+        return new RLSAuto<T>;
+      else if(id == "rlsprimal")
         return new RLSPrimal<T>;
       else if(id == "rlsdual")
             return new RLSDual<T>;

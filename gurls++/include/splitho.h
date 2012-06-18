@@ -40,55 +40,66 @@
  */
 
 
-#ifndef _GURLS_LINEARKERNEL_H_
-#define _GURLS_LINEARKERNEL_H_
+#ifndef _GURLS_SPLITHO_H_
+#define _GURLS_SPLITHO_H_
 
 
-#include "kernel.h"
+#include "split.h"
 #include "gmath.h"
 
 namespace gurls {
 
-    /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
+   /**
+     * \brief SplitHo is the sub-class of Split that splits data into one pair of training and test samples.
      */
 
 template <typename T>
-class LinearKernel: public Kernel<T>
+class SplitHo: public Split<T>
 {
 public:
     /**
-     * Builds the symmetric kernel matrix of matrix X for a linear model.
-     *
-     * \param X input data matrix
+     * Splits data into one pair of training and test samples, to be used for cross-validation. The fraction of samples for the validation set is specified in the field hoproportion of opt.
+     * \param X not used
      * \param Y labels matrix
-     * \param opt not udes
+     * \param opt options with the following field
+     *   - hoproportion (default)
      *
-     * \return adds the field kernel to opt, where kernel has the following fields:
-     *  - type = "linear"
-     *  - K = the kernel matrix
+     * \return adds to opt the field split, which is a list containing the following fields:
+     *  - indices = 1xn array containing the indices of training and validation samples
+     *  - lasts = number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
 {
+//  n= size(y,1);
+    const int n =  Y_OMR.rows();
 
-    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    kernel->addOpt("type", "linear");
+//  order = randperm(n);
+    gMat2D<unsigned long>* indices = new gMat2D<unsigned long>(1, n);
+    gMat2D<unsigned long>* lasts = new gMat2D<unsigned long>(1, 1);
 
-    gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
+    randperm(n, indices->getData(), true, 0);
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
+//last = floor(n*opt.hoproportion);
+    lasts->getData()[0] = n - static_cast<unsigned long>(std::floor( n * opt.getOptAsNumber("hoproportion")));
 
-    dot(X, Xt, *K);
+//vout.va = order(1:last);
+//vout.tr = order(last+1:end);
 
-    kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
+    if(opt.hasOpt("split"))
+        opt.removeOpt("split");
+
+    GurlsOptionsList* split = new GurlsOptionsList("split");
+
+    split->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*indices));
+    split->addOpt("lasts", new OptMatrix<gMat2D<unsigned long> >(*lasts));
+
+    opt.addOpt("split",split);
 }
 
 }
 
-#endif //_GURLS_LINEARKERNEL_H_
+#endif //_GURLS_SPLITHO_H_
