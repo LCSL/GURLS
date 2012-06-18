@@ -58,7 +58,7 @@ using namespace std;
 typedef float T;
 const int CLOCKS_PER_MILLISEC = CLOCKS_PER_SEC/1000;
 const int reportLength = 50;
-const int TOT_COUNT = 1E5;
+const int TOT_COUNT = static_cast<int>(1E5);
 
 void benchmarkGVEC(int N, int reps);
 void benchmarkGMAT2D(int Nrows, int Ncols, int reps);
@@ -77,8 +77,8 @@ void printReportMsg(string operation, clock_t start, clock_t end, int reps){
 int main(int argc, char *argv[])
 {
 
-	int N1 = 1E4;
-	int N2 = 4E3;
+	int N1 = static_cast<int>(1E4);
+	int N2 = static_cast<int>(4E3);
 	int reps = TOT_COUNT/N1;
 
 	if (argc > 4){
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 			N2 = atoi( argv[2]);
 		}
 		if (N1 < TOT_COUNT){
-			reps = ceil(TOT_COUNT/N1);
+			reps = static_cast<int>(ceil((double)( TOT_COUNT/N1)));
 		} else {
 			reps = 1;
 		}
@@ -248,12 +248,12 @@ void benchmarkGVEC(int N, int reps){
 		A = new gVec<T>(N);
 		B = new gVec<T>(N);
 		*A = 2.0;
-		*B = gVec<T>::rand(N)/1E11+2;
+		*B = gVec<T>::rand(N)/static_cast<T>(1E11+2);
 		start = clock();
 		for (int i = 0; i < reps; ++i) {
-			A->closeTo(*B, 1E-10);
+			A->closeTo(*B, (T)1E-10);
 		}
-		assert(A->closeTo(*B, 1E-10));
+		assert(A->closeTo(*B, (T)1E-10));
 		end = clock();
 		delete A;
 		delete B;
@@ -355,12 +355,12 @@ void benchmarkGMAT2D(int Nrows, int Ncols, int reps){
 
 		// --------------------------------------------------- CHECK "CLOSE TO"
 		A = 2.0;
-		B = gMat2D<T>::rand(Nrows,Ncols)/1E11+2;
+		B = gMat2D<T>::rand(Nrows,Ncols)/static_cast<T>(1E11+2);
 		start = clock();
 		for (int i = 0; i < reps; ++i) {
-			A.closeTo(B, 1E-10);
+			A.closeTo(B, (T)1E-10);
 		}
-		assert(A.closeTo(B, 1E-10));
+		assert(A.closeTo(B, (T)1E-10));
 		end = clock();
 		printReportMsg("test of method closeto()", start, end, reps);
 

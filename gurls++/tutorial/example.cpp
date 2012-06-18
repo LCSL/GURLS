@@ -68,7 +68,7 @@ typedef float T;
 const int Ncols = 12;
 const int Nrows = 6;
 const int Nsquared = 10;
-const T tolerance = 1e-4;
+const T tolerance = static_cast<T>(1e-4);
 
 
 int main(int argc, char *argv[])
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         cout << "A*B = " << endl << C << endl;
         cout << "A.*B " << endl << (A*B) << endl;
 
-        T thres = 0.81;
+        T thres = static_cast<T>(0.81);
 
         B.randomize();
         cout << "randomize(B) = " << endl << B << endl;
@@ -234,7 +234,12 @@ int main(int argc, char *argv[])
 
         assert(M->closeTo(*TMP1, tolerance));
 
-        delete M, U, TMP1, TMP2, Vt, W;
+        delete M;
+        delete U;
+        delete TMP1;
+        delete TMP2;
+        delete Vt;
+        delete W;
 
         cout << endl
              << "=================================================" << endl
@@ -266,7 +271,10 @@ int main(int argc, char *argv[])
 
         assert(U->closeTo(*TMP2, tolerance));
 
-        delete M, U, TMP1, TMP2;
+        delete M;
+        delete U;
+        delete TMP1;
+        delete TMP2;
 
         // STARTING TO TEST SOME MORE INTERESTING FUNCTIONALITY OF GURLS
         GurlsOptionsList opt1("LOOCV", true);
@@ -361,13 +369,15 @@ int main(int argc, char *argv[])
 
     T* outPtr = out.getData();
     bool* gtPtr_bool = gt.getData();
-    T gtPtr[gt.getSize()];
-    for (int i = 0; i < gt.getSize(); i++){
-        gtPtr[i] = 2.*gtPtr_bool[i]-1;
+    T *gtPtr = new T[gt.getSize()];
+    for (unsigned long i = 0; i < gt.getSize(); ++i){
+        gtPtr[i] = static_cast<T>(2.0)*gtPtr_bool[i]-1;
     }
     double ap = precrec_driver(outPtr, gtPtr, out.getSize());
 
     cout << "average precision = " << ap << endl;
+
+    delete [] gtPtr;
 
     return 0;
 

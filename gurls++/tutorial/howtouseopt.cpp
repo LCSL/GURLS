@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 		cout << table << endl;
 
 	}
-	catch (gException& e){
+	catch (gException& /*e*/){
 		cout << table.getOpt(key)->getType() << endl;
 	}
 

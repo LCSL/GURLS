@@ -85,19 +85,23 @@ using namespace gurls;
 using namespace std;
 
 typedef float T;
+//typedef double T;
+
 const int d = 8;
-//const int Ntrain = 9;
-const int Ntrain = 1034;
+const int Ntrain = 10;
 const int Ntest = 261;
-const int Nsquared = 10;
 const int t = 4;
-const T tolerance = 1e-4;
+const int Nsquared = 10;
+const T tolerance = static_cast<T>(1e-4);
 
-
+//const int d = 5000;
+//const int Ntrain = 5000;
+//const int Ntest = 10000;
+//const int t = 10;
 
 int main(int argc, char *argv[])
 {
-//    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
 
 //    cout.precision(4);
 //    cout.width(11);
@@ -135,20 +139,25 @@ int main(int argc, char *argv[])
         for (int s = 0; s < Ntest*t; s++) ifile >> *(yte.getData() + s);
         ifile.close();
 
-        cout << "Xtr = " << endl << Xtr << endl;
-        cout << "Xte = " << endl << Xte << endl;
+//        cout << "Xtr = " << endl << Xtr << endl;
+//        cout << "Xte = " << endl << Xte << endl;
 
 
         GurlsOptionsList opt("ExampleExperiment", true);
 
         OptTaskSequence *seq = new OptTaskSequence();
-        seq->addTask("kernel:linear");
-        seq->addTask("paramsel:loocvprimal");
-        //seq->addTask("optimizer:rlspegasos");
-	seq->addTask("optimizer:rlsprimal");
-        //seq->addTask("pred:rlsdual");
-        seq->addTask("pred:rlsprimal");
-        seq->addTask("perf:precrec");
+//        seq->addTask("norm:testzscore");
+//        seq->addTask("kernel:chisquared");
+//        seq->addTask("optimizer:rlsdual");
+//        seq->addTask("predkernel:traintest");
+
+//        seq->addTask("split:ho");
+        seq->addTask("paramsel:siglam");
+        seq->addTask("kernel:rbf");
+        seq->addTask("optimizer:rlsdual");
+        seq->addTask("predkernel:traintest");
+        seq->addTask("pred:dual");
+//        seq->addTask("perf:precrec");
         seq->addTask("perf:macroavg");
 
         opt.addOpt("seq", seq);
@@ -159,6 +168,7 @@ int main(int argc, char *argv[])
         GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
         std::vector<double> process1;
+//        process1.push_back(GURLS::computeNsave);
         process1.push_back(GURLS::computeNsave);
         process1.push_back(GURLS::computeNsave);
         process1.push_back(GURLS::computeNsave);
@@ -168,6 +178,7 @@ int main(int argc, char *argv[])
         process->addOpt("one", new OptNumberList(process1));
 
         std::vector<double> process2;
+//        process2.push_back(GURLS::load);
         process2.push_back(GURLS::load);
         process2.push_back(GURLS::load);
         process2.push_back(GURLS::load);
@@ -185,6 +196,10 @@ int main(int argc, char *argv[])
 
         GURLS G;
 
+//        GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+//        paramsel->addOpt("sigma", new OptNumber(1));
+//        opt.addOpt("paramsel", paramsel);
+
         G.run(Xtr, ytr, opt, jobid1);
 
         std::cout << std::endl;
@@ -196,22 +211,25 @@ int main(int argc, char *argv[])
         //        std::cout << "ytr= " << std::endl << ytr  << std::endl
         //                  << "B = " << std::endl << B << std::endl;
 
-        gMat2D<T> yest(ytr.rows(), ytr.cols());
+//        gMat2D<T> yest(ytr.rows(), ytr.cols());
 
         //        dot(X,  opt.getOpt("W"))
         //                  << "yest = " << std::endl <<  << std::endl;
 
-        std::ofstream oparstream("par1.txt");
-        oarchive oparar(oparstream);
-        oparar << opt;
-        oparstream.close();
+        //cout << opt << endl;
 
-        std::ifstream iparstream("par1.txt");
-        iarchive iparar(iparstream);
-        GurlsOptionsList *s1 = new GurlsOptionsList("dummy", false);
-        iparar >> *s1;
-        iparstream.close();
-        std::cout << *s1 << std::endl;
+//        std::ofstream oparstream("par1.txt");
+//        oarchive oparar(oparstream);
+//        oparar << opt;
+//        oparstream.close();
+
+//        std::ifstream iparstream("par1.txt");
+//        iarchive iparar(iparstream);
+//        GurlsOptionsList *s1 = new GurlsOptionsList("dummy", false);
+//        iparar >> *s1;
+//        iparstream.close();
+
+//        std::cout << *s1 << std::endl;
 
     }
     catch (gException& e){
