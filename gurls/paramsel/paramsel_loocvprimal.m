@@ -21,6 +21,10 @@ function vout = paramsel_loocvprimal(X,y,opt)
 %        and for each class
 % -guesses: array of guesses for the regularization parameter lambda 
 
+if isfield (opt,'paramsel')
+	vout = opt.paramsel; % lets not overwrite existing parameters.
+			      		 % unless they have the same name
+end
 
 K = X'*X;
 [n,T]  = size(y);
@@ -55,6 +59,7 @@ for i = 1:tot
 	for t = 1:T
 		ap(i,t) = opt.perf.forho(t);
 	end	
+
 
 end
 [dummy,idx] = max(ap,[],1);	

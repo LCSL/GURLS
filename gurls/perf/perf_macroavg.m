@@ -24,6 +24,7 @@ T = size(y,2);
 y_true = y;
 y_pred = opt.pred;
 
+
 if size(y,2) == 1
 	predlab = sign(y_pred);
 

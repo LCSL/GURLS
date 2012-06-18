@@ -30,6 +30,10 @@ function [vout] = paramsel_hoprimalr(X,y,opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
+if isfield (opt,'paramsel')
+	vout = opt.paramsel; % lets not overwrite existing parameters.
+			      		 % unless they have the same name
+end
 savevars = [];
 
 for nh = 1:opt.nholdouts

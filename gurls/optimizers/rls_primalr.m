@@ -26,7 +26,7 @@ function [cfr] = rls_primalr(X, y, opt)
 
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
-fprintf('\tSolving primal RLS using Randomized SVD...\n');
+%fprintf('\tSolving primal RLS using Randomized SVD...\n');
 [n,d] = size(X);
 
 XtX = X'*X; % n\lambda is added in rls_eigen;

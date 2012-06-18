@@ -24,7 +24,7 @@ function [cfr] = rls_primal (X, y, opt)
 
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
-fprintf('\tSolving primal RLS...\n');
+%fprintf('\tSolving primal RLS...\n');
 
 [n,d] = size(X);
 
