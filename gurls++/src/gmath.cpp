@@ -44,41 +44,54 @@
 #include "gmat2d.h"
 #include "gvec.h"
 
-
+#ifndef _ACML
 extern "C" {
 
 int sgetrf_(int *m, int *n, float *a, int *lda, int *ipiv, int *info);
 int sgesvd_(char *jobu, char *jobvt, int *m, int *n, float *a, int *lda, float *s, float *u, int *ldu, float *vt, int *ldvt, float *work, int *lwork, int *info);
+int dgesvd_(char *jobu, char *jobvt, int *m, int *n, double *a, int *lda, double *s, double *u, int *ldu, double *vt, int *ldvt, double *work, int *lwork, int *info);
 int sgeev_(char *jobvl, char *jobvr, int *n, float *a, int *lda, float *wr, float *wi, float *vl, int *ldvl, float *vr, int *ldvr, float *work, int *lwork, int *info);
 int sgetri_(int *n, float *a, int* lda, int *ipiv, float*work, int *lwork, int *info);
 int spotrf_(char *UPLO, int *n, float *a, int *lda , int *info);
+int dpotrf_(char *UPLO, int *n, double *a, int *lda , int *info);
 int sgelss_( int *m, int *n, int* nrhs, float *a, int *lda, float* b, int *ldb, float *s, float *rcond, int *rank, float *work, int *lwork, int *info);
 int ssyev_( char* jobz, char* uplo, int* n, float* a, int* lda, float* w, float* work, int* lwork, int* info );
 int dsyev_( char* jobz, char* uplo, int* n, double* a, int* lda, double* w, double* work, int* lwork, int* info );
 
 }
+#endif
 
 namespace gurls {
 
 template <>
-float dot(const gVec<float>& x, const gVec<float>& y) {
+GURLS_EXPORT float dot(const gVec<float>& x, const gVec<float>& y) {
 
     if ( x.getSize() != y.getSize() ) {
         throw gException(gurls::Exception_Inconsistent_Size);
     }
-
-    return ( cblas_sdot (x.getSize(), x.getData(), 1, y.getData(), 1) );
+#if defined(GOTOBLAS)
+    return ( cblas_sdot (x.getSize(), (float*)x.getData(), 1, (float*)y.getData(), 1) );
+#elif defined _ACML
+	return sdot(x.getSize(), (float*)(x.getData()), 1, (float*)(y.getData()), 1);
+#else
+	return ( cblas_sdot (x.getSize(), x.getData(), 1, y.getData(), 1) );
+#endif
 
 }
 
 template <>
-double dot(const gVec<double>& x, const gVec<double>& y) {
+GURLS_EXPORT double dot(const gVec<double>& x, const gVec<double>& y) {
 
     if ( x.getSize() != y.getSize() ) {
         throw gException(gurls::Exception_Inconsistent_Size);
     }
-
+#if defined(GOTOBLAS)
+    return ( cblas_ddot (x.getSize(),(double*)x.getData(), 1, (double*)y.getData(), 1) );
+#elif defined _ACML
+	return ddot(x.getSize(), (double*)(x.getData()), 1, (double*)(y.getData()), 1);
+#else
     return ( cblas_ddot (x.getSize(), x.getData(), 1, y.getData(), 1) );
+#endif
 
 }
 
@@ -86,7 +99,7 @@ double dot(const gVec<double>& x, const gVec<double>& y) {
 // ============ OUT-OF-PLACE MATRIX MULTIPLICATION ==================
 
 template <>
-void dot(const gMat2D<float>& A, const gMat2D<float>& B, gMat2D<float>& C) {
+GURLS_EXPORT void dot(const gMat2D<float>& A, const gMat2D<float>& B, gMat2D<float>& C) {
 
     if ((C.rows() != A.rows()) || (C.cols() != B.cols())) {
         throw gException(gurls::Exception_Inconsistent_Size);
@@ -98,14 +111,22 @@ void dot(const gMat2D<float>& A, const gMat2D<float>& B, gMat2D<float>& C) {
     const /*enum*/ CBLAS_TRANSPOSE TransA = CblasNoTrans;
     const /*enum*/ CBLAS_TRANSPOSE TransB = CblasNoTrans;
     const /*enum*/ CBLAS_ORDER Order = CblasRowMajor;
+#if defined(GOTOBLAS)
+    cblas_sgemm(Order, TransA, TransB, (int)C.rows(), (int)C.cols(), (int)A.cols(), (float)alpha,
+                (float*)A.getData(), (int)A.cols(), (float*)B.getData(), (int)B.cols(), (float)beta, (float*)C.getData(), (int)C.cols());
+#elif defined _ACML
+    sgemm('N', 'N', (int)C.rows(), (int)C.cols(), (int)A.cols(), (float)alpha,
+                (float*)A.getData(), (int)A.cols(), (float*)B.getData(), (int)B.cols(), (float)beta, (float*)C.getData(), (int)C.cols());
+#else
     cblas_sgemm(Order, TransA, TransB, C.rows(), C.cols(), A.cols(), alpha,
                 A.getData(), A.cols(), B.getData(), B.cols(), beta, C.getData(), C.cols());
+#endif
 
 }
 
 
 template <>
-void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<double>& C) {
+GURLS_EXPORT void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<double>& C) {
 
     if ((C.rows() != A.rows()) || (C.cols() != B.cols())) {
         throw gException("Inconsistent matrix dimensions.");
@@ -117,8 +138,16 @@ void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<double>& C) {
     const /*enum*/ CBLAS_TRANSPOSE TransA = CblasNoTrans;
     const /*enum*/ CBLAS_TRANSPOSE TransB = CblasNoTrans;
     const /*enum*/ CBLAS_ORDER Order = CblasRowMajor;
+#if defined(GOTOBLAS)
+    cblas_dgemm(Order, TransA, TransB, (int)C.rows(), (int)C.cols(), (int)A.cols(), (double)alpha,
+                (double*)A.getData(), (int)A.cols(), (double*)B.getData(), (int)B.cols(), (double)beta, (double*)C.getData(), (int)C.cols());
+#elif defined _ACML
+    dgemm('N', 'N', (int)C.rows(), (int)C.cols(), (int)A.cols(), (double)alpha,
+                (double*)A.getData(), (int)A.cols(), (double*)B.getData(), (int)B.cols(), (double)beta, (double*)C.getData(), (int)C.cols());
+#else
     cblas_dgemm(Order, TransA, TransB, C.rows(), C.cols(), A.cols(), alpha,
                 A.getData(), A.cols(), B.getData(), B.cols(), beta, C.getData(), C.cols());
+#endif
 
 }
 
@@ -127,7 +156,7 @@ void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<double>& C) {
 // ============ OUT-OF-PLACE MATRIX-VECTOR MULTIPLICATION ==================
 
 template <>
-void dot(const gMat2D<float>& A, const gVec<float>& x, gVec<float>& y){
+GURLS_EXPORT void dot(const gMat2D<float>& A, const gVec<float>& x, gVec<float>& y){
 
     if ( (A.cols() != x.getSize()) ||  (A.rows() != y.getSize())){
         throw gException("Inconsistent matrix dimensions.");
@@ -139,12 +168,20 @@ void dot(const gMat2D<float>& A, const gVec<float>& x, gVec<float>& y){
     const /*enum*/ CBLAS_TRANSPOSE TransA = CblasNoTrans;
     const /*enum*/ CBLAS_ORDER Order = CblasRowMajor;
 
+#if defined(GOTOBLAS)
+    cblas_sgemv(Order, TransA, (int)A.rows(), (int)A.cols(),(float)alpha, (float*)A.getData(), (int)A.cols(),
+                (float*)x.getData(), 1, (float)beta, (float*)y.getData(), 1);
+#elif defined _ACML
+    sgemv('N', (int)A.rows(), (int)A.cols(),(float)alpha, (float*)A.getData(), (int)A.cols(),
+                (float*)x.getData(), 1, (float)beta, (float*)y.getData(), 1);
+#else
     cblas_sgemv(Order, TransA, A.rows(), A.cols(),alpha, A.getData(), A.cols(),
                 x.getData(), 1, beta, y.getData(), 1);
+#endif
 }
 
 template <>
-void dot(const gMat2D<double>& A, const gVec<double>& x, gVec<double>& y){
+GURLS_EXPORT void dot(const gMat2D<double>& A, const gVec<double>& x, gVec<double>& y){
     if ( (A.cols() != x.getSize()) ||  (A.rows() != y.getSize())){
         throw gException("Inconsistent matrix dimensions.");
     }
@@ -155,13 +192,21 @@ void dot(const gMat2D<double>& A, const gVec<double>& x, gVec<double>& y){
     const /*enum*/ CBLAS_TRANSPOSE TransA = CblasNoTrans;
     const /*enum*/ CBLAS_ORDER Order = CblasRowMajor;
 
+#if defined(GOTOBLAS)
+    cblas_dgemv(Order, TransA, (int)A.rows(), (int)A.cols(),(double)alpha, (double*)A.getData(), (int)A.cols(),
+                (double*)x.getData(), 1, (double)beta, (double*)y.getData(), 1);
+#elif defined _ACML
+    dgemv('N', (int)A.rows(), (int)A.cols(),(double)alpha, (double*)A.getData(), (int)A.cols(),
+                (double*)x.getData(), 1, (double)beta, (double*)y.getData(), 1);
+#else
     cblas_dgemv(Order, TransA, A.rows(), A.cols(),alpha, A.getData(), A.cols(),
                 x.getData(), 1, beta, y.getData(), 1);
+#endif
 
 }
 
 template <>
-void lu(gMat2D<float>& A, gVec<int>& pv) {
+GURLS_EXPORT void lu(gMat2D<float>& A, gVec<int>& pv) {
 
     unsigned int k = std::min<unsigned int>(A.cols(), A.rows());
     if (pv.getSize() != k) {
@@ -176,14 +221,14 @@ void lu(gMat2D<float>& A, gVec<int>& pv) {
 }
 
 template <>
-void lu(gMat2D<float>& A) {
+GURLS_EXPORT void lu(gMat2D<float>& A) {
 
     gVec<int> pv(std::min<int>(A.cols(), A.rows()));
     lu(A, pv);
 }
 
 template <>
-void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgorithm alg){
+GURLS_EXPORT void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgorithm alg){
     Ainv = A;
     int k = std::min<int>(Ainv.cols(), Ainv.rows());
     int info;
@@ -202,7 +247,7 @@ void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgorithm alg){
 
 
 template <>
-void pinv(const gMat2D<float>& A, gMat2D<float>& Ainv, float RCOND){
+GURLS_EXPORT void pinv(const gMat2D<float>& A, gMat2D<float>& Ainv, float RCOND){
 
     /*
 
@@ -270,17 +315,17 @@ subroutine SGELSS 	( 	INTEGER  	M,
     int INFO;
 
     /* Query and allocate the optimal workspace */
-    int res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
-    LWORK = WORK[0];
+    /*int res = */sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
+    LWORK = static_cast<int>(WORK[0]);
     delete [] WORK;
     WORK = new float[LWORK];
 
-    res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
+    /*res = */sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
     // TODO: check INFO on exit
     condnum = S[0]/(S[std::min(M, N)]-1);
 
 
-    gMat2D<float> *tmp = new gMat2D<float>(b, LDB, LDB, false);
+//    gMat2D<float> *tmp = new gMat2D<float>(b, LDB, LDB, false);
 
     float *ainv = new float[N*M];
     float* ptr_b = ainv;
@@ -306,20 +351,20 @@ subroutine SGELSS 	( 	INTEGER  	M,
 }
 
 template <>
-void svd(const gMat2D<float>& A, gMat2D<float>& U, gVec<float>& W, gMat2D<float>& Vt) {
+GURLS_EXPORT void svd(const gMat2D<float>& A, gMat2D<float>& U, gVec<float>& W, gMat2D<float>& Vt) {
 
     char jobu = 'S', jobvt = 'S';
     int m = A.rows();
     int n = A.cols();
     int k = std::min<int>(m, n);
 
-    if (W.getSize() < k) {
+    if ((int)W.getSize() < k) {
         throw gException("The length of vector W must be at least equal to the minimum dimension of the input matrix A");
     }
-    if (U.rows() < m || U.cols() < k) {
+    if ((int)U.rows() < m || (int)U.cols() < k) {
         throw gException("Please check the dimensions of the matrix U where to store the singular vectors");
     }
-    if (Vt.rows() < k || Vt.cols() < n) {
+    if ((int)Vt.rows() < k || (int)Vt.cols() < n) {
         throw gException("Please check the dimensions of the matrix Vt where to store the rigth singular vectors");
     }
 
@@ -337,7 +382,7 @@ void svd(const gMat2D<float>& A, gMat2D<float>& U, gVec<float>& W, gMat2D<float>
 
 
 template <>
-void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>& Wi) {
+GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>& Wi) {
 
     if (A.cols() != A.rows()) {
         throw gException("The input matrix A must be squared");
@@ -356,14 +401,14 @@ void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>&
 
 
 template <>
-void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W){
+GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W){
     gVec<float> tmp(W.getSize());
     tmp = 0;
     eig(A, V, W, tmp);
 }
 
 template <>
-void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi) {
+GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi) {
 
     if (A.cols() != A.rows()) {
         throw gException("The input matrix A must be squared");
@@ -378,7 +423,7 @@ void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi) {
 }
 
 template <>
-void eig(const gMat2D<float>& A, gVec<float>& W){
+GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W){
     gVec<float> tmp = W;
     eig(A, W, tmp);
 }
@@ -386,7 +431,7 @@ void eig(const gMat2D<float>& A, gVec<float>& W){
 
 
 template <>
-void cholesky(const gMat2D<float>& A, gMat2D<float>& L, bool upper){
+GURLS_EXPORT void cholesky(const gMat2D<float>& A, gMat2D<float>& L, bool upper){
 
     typedef float T;
     L = A;
@@ -413,62 +458,86 @@ void cholesky(const gMat2D<float>& A, gMat2D<float>& L, bool upper){
 
 
 template<>
-void set(float* buffer, const float value, const int size, const int incr)
+void GURLS_EXPORT set(float* buffer, const float value, const int size, const int incr)
 {
+#if defined (GOTOBLAS)
+    cblas_scopy((int)size, (float*)(&value), 0, buffer, (int)incr);
+#else
     cblas_scopy(size, &value, 0, buffer, incr);
+#endif
 }
 
 template<>
-void set(float* buffer, const float value, const int size)
+void GURLS_EXPORT set(float* buffer, const float value, const int size)
 {
-    set(buffer, value, size, 1);
+    set<float>(buffer, value, size, 1);
 }
 
 template<>
-void set(double* buffer, const double value, const int size, const int incr)
+void GURLS_EXPORT set(double* buffer, const double value, const int size, const int incr)
 {
+#if defined(GOTOBLAS)
+    cblas_dcopy((int)size, (double*)(&value), 0, buffer, (int)incr);
+#else
     cblas_dcopy(size, &value, 0, buffer, incr);
+#endif
 }
 
 template<>
-void set(double* buffer, const double value, const int size)
+void GURLS_EXPORT set(double* buffer, const double value, const int size)
 {
-    set(buffer, value, size, 1);
+    set<double>(buffer, value, size, 1);
 }
 
 
 template<>
-void copy(float* dst, const float* src, const int size, const int dstIncr, const int srcIncr)
+void GURLS_EXPORT copy(float* dst, const float* src, const int size, const int dstIncr, const int srcIncr)
 {
+#if defined(GOTOBLAS)
+    cblas_scopy((int)size, (float*)src, (int)srcIncr, dst, (int)dstIncr);
+#else
     cblas_scopy(size, src, srcIncr, dst, dstIncr);
+#endif
 }
 
 template<>
-void copy(float* dst, const float* src, const int size)
+void GURLS_EXPORT copy(float* dst, const float* src, const int size)
 {
+#if defined(GOTOBLAS)
+    cblas_scopy((int)size, (float*)src, 1, dst, 1);
+#else
     cblas_scopy(size, src, 1, dst, 1);
+#endif
 }
 
 template<>
-void copy(double* dst, const double* src, const int size, const int dstIncr, const int srcIncr)
+void GURLS_EXPORT copy(double* dst, const double* src, const int size, const int dstIncr, const int srcIncr)
 {
+#if defined(GOTOBLAS)
+    cblas_dcopy((int)size, (double*)src, (int)srcIncr, dst, (int)dstIncr);
+#else
     cblas_dcopy(size, src, srcIncr, dst, dstIncr);
+#endif
 }
 
 template<>
-void copy(double* dst, const double* src, const int size)
+void GURLS_EXPORT copy(double* dst, const double* src, const int size)
 {
+#if defined(GOTOBLAS)
+    cblas_dcopy((int)size, (double*)src, 1, dst, 1);
+#else
     cblas_dcopy(size, src, 1, dst, 1);
+#endif
 }
 
 template<>
-float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND)
+GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND)
 {
     int M = rows;
     int N = cols;
 
     float* a = new float[rows*cols];
-    copy(a, A, rows*cols);
+    copy<float>(a, A, rows*cols);
 
     int LDA = M;
     int LDB = std::max(M, N);
@@ -479,8 +548,8 @@ float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, fl
 
     const int b_size = LDB*NRHS;
     float *b = new float[LDB*NRHS];
-    set(b, 0.f, b_size);
-    set(b, 1.f, std::min(LDB, NRHS), NRHS+1);
+    set<float>(b, 0.f, b_size);
+    set<float>(b, 1.f, std::min(LDB, NRHS), NRHS+1);
 
     float* S = new float[std::min(M,N)];
 //    float condnum = 0.f; // The condition number of A in the 2-norm = S(1)/S(min(m,n)).
@@ -525,7 +594,7 @@ float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, fl
 
     /* Query and allocate the optimal workspace */
     int res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
-    LWORK = WORK[0];
+    LWORK = static_cast<int>(WORK[0]);
     delete [] WORK;
     WORK = new float[LWORK];
 
@@ -551,81 +620,131 @@ float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, fl
 
 }
 
+//template<>
+//GURLS_EXPORT void dot(const float* A, const float* B, float* C,
+//         int A_rows, int A_cols,
+//         int B_rows, int B_cols,
+//         int C_rows, int C_cols,
+//         const /*enum*/ CBLAS_TRANSPOSE TransA,
+//         const /*enum*/ CBLAS_TRANSPOSE TransB,
+//         const /*enum*/ CBLAS_ORDER Order)
+//{
+
+//    bool transposeA = (TransA == CblasTrans || TransA == CblasConjTrans);
+//    bool transposeB = (TransB == CblasTrans || TransB == CblasConjTrans);
+
+//    if(transposeA)
+//        std::swap(A_rows, A_cols);
+
+//    if(transposeB)
+//        std::swap(B_rows, B_cols);
+
+//    if ((C_rows != A_rows) || (C_cols != B_cols))
+//        throw gException(gurls::Exception_Inconsistent_Size);
+
+//    const float alpha = 1.0;
+//    const float beta = 0.0;
+
+//    int lda, ldb, ldc;
+//    switch(Order)
+//    {
+//    case CblasColMajor:
+//        lda = transposeA? A_cols: A_rows;
+//        ldb = transposeB? B_cols: B_rows;
+//        ldc = C_rows;
+//        break;
+//    case CblasRowMajor:
+//        lda = transposeA? A_rows: A_cols;
+//        ldb = transposeB? B_rows: B_cols;
+//        ldc = C_cols;
+//        break;
+////    default:
+////        assert(0);
+//    }
+
+//    // C = alpha*A*B + beta*C
+//#if defined (GOTOBLAS)
+//    cblas_sgemm(Order, TransA, TransB, (int)C_rows, (int)C_cols, (int)A_cols, (float)alpha,
+//                (float*)A, lda, (float*)B, ldb, (float)beta, C, ldc);
+//#else
+//    cblas_sgemm(Order, TransA, TransB, C_rows, C_cols, A_cols, alpha,
+//                A, lda, B, ldb, beta, C, ldc);
+//#endif
+
+//}
+
 template<>
-void dot(const float* A, const float* B, float* C,
-         int A_rows, int A_cols,
-         int B_rows, int B_cols,
-         int C_rows, int C_cols,
-         const /*enum*/ CBLAS_TRANSPOSE TransA,
-         const /*enum*/ CBLAS_TRANSPOSE TransB,
-         const /*enum*/ CBLAS_ORDER Order)
+GURLS_EXPORT void gemm(const CBLAS_ORDER Order, const CBLAS_TRANSPOSE TransA, const CBLAS_TRANSPOSE TransB,
+          const int M, const int N, const int K, const float alpha, const float *A, const int lda,
+          const float *B, const int ldb, const float beta, float *C, const int ldc)
 {
-
-    bool transposeA = (TransA == CblasTrans || TransA == CblasConjTrans);
-    bool transposeB = (TransB == CblasTrans || TransB == CblasConjTrans);
-
-    if(transposeA)
-        std::swap(A_rows, A_cols);
-
-    if(transposeB)
-        std::swap(B_rows, B_cols);
-
-    if ((C_rows != A_rows) || (C_cols != B_cols))
-        throw gException(gurls::Exception_Inconsistent_Size);
-
-    const float alpha = 1.0;
-    const float beta = 0.0;
-
-    int lda, ldb, ldc;
-    switch(Order)
-    {
-    case CblasColMajor:
-        lda = transposeA? A_cols: A_rows;
-        ldb = transposeB? B_cols: B_rows;
-        ldc = C_rows;
-        break;
-    case CblasRowMajor:
-        lda = transposeA? A_rows: A_cols;
-        ldb = transposeB? B_rows: B_cols;
-        ldc = C_cols;
-        break;
-//    default:
-//        assert(0);
-    }
-
-    // C = alpha*A*B + beta*C
-    cblas_sgemm(Order, TransA, TransB, C_rows, C_cols, A_cols, alpha,
-                A, lda, B, ldb, beta, C, ldc);
-
+#if defined(GOTOBLAS)
+	cblas_sgemm((CBLAS_ORDER)Order, (CBLAS_TRANSPOSE)TransA, (CBLAS_TRANSPOSE)TransB,
+                (int)M, (int)N, (int)K, (float)alpha, (float*)A, (int)lda,
+                (float*)B, (int)ldb, (float)beta, (float*)C, (int)ldc);
+#else
+	cblas_sgemm(Order, TransA, TransB,
+                M, N, K, alpha, A, lda,
+                B, ldb, beta, C, ldc);
+#endif
 }
 
 template<>
-float* cholesky(const float* matrix, const int rows, const int cols, bool upper)
+GURLS_EXPORT void gemm(const CBLAS_ORDER Order, const CBLAS_TRANSPOSE TransA, const CBLAS_TRANSPOSE TransB,
+          const int M, const int N, const int K, const double alpha, const double *A, const int lda,
+          const double *B, const int ldb, const double beta, double *C, const int ldc)
 {
-    float* ret = new float[rows*cols];
-    copy(ret, matrix, rows*cols);
+#if defined(GOTOBLAS)
+	cblas_dgemm((CBLAS_ORDER)Order, (CBLAS_TRANSPOSE)TransA, (CBLAS_TRANSPOSE)TransB,
+                (int)M, (int)N, (int)K, (double)alpha, (double*)A, (int)lda,
+                (double*)B, (int)ldb, (double)beta, (double*)C, (int)ldc);
+#else
+    cblas_dgemm(Order, TransA, TransB,
+                M, N, K, alpha, A, lda,
+                B, ldb, beta, C, ldc);
+#endif
+}
 
-    int LDA = rows;
-    int nc = cols;
-    char UPLO = upper? 'U':'L';
-    int info;
+//template<>
+//float* cholesky(const float* matrix, const int rows, const int cols, bool upper)
+//{
+//    float* ret = new float[rows*cols];
+//    copy(ret, matrix, rows*cols);
 
-    spotrf_(&UPLO, &nc, ret, &LDA, &info);
+//    int LDA = rows;
+//    int nc = cols;
+//    char UPLO = upper? 'U':'L';
+//    int info;
 
-    if(info != 0)
-    {
-        std::stringstream str;
-        str << "Cholesky factorization failed, error code " << info << ";" << std::endl;
-        throw gException(str.str());
-    }
+//    spotrf_(&UPLO, &nc, ret, &LDA, &info);
 
-    clearLowerTriangular(ret, rows, cols);
+//    if(info != 0)
+//    {
+//        std::stringstream str;
+//        str << "Cholesky factorization failed, error code " << info << ";" << std::endl;
+//        throw gException(str.str());
+//    }
 
-    return ret;
+//    clearLowerTriangular(ret, rows, cols);
+
+//    return ret;
+//}
+
+template<>
+GURLS_EXPORT int potrf_(char *UPLO, int *n, float *a, int *lda , int *info)
+{
+    return spotrf_(UPLO, n, a, lda, info);
 }
 
 template<>
-void eig(const float* A, float* &V, float* &Wr, float* &Wi, int A_rows, int A_cols) throw (gException)
+GURLS_EXPORT int potrf_(char *UPLO, int *n, double *a, int *lda , int *info)
+{
+    return dpotrf_(UPLO, n, a, lda, info);
+}
+
+
+template<>
+GURLS_EXPORT void eig(const float* A, float* &V, float* &Wr, float* &Wi, int A_rows, int A_cols) throw (gException)
 {
     if (A_cols != A_rows)
         throw gException("The input matrix A must be squared");
@@ -657,31 +776,40 @@ void eig(const float* A, float* &V, float* &Wr, float* &Wi, int A_rows, int A_co
 }
 
 template<>
-void eig(const float* A, float* &V, float* &W, int A_rows, int A_cols) throw (gException)
+GURLS_EXPORT void eig(const float* A, float* &V, float* &W, int A_rows, int A_cols) throw (gException)
 {
-    float* tmp;
+    float* tmp = NULL;
     try
     {
         eig(A, V, W, tmp, A_rows, A_cols);
     }
     catch(gException &ex)
     {
-        delete[] tmp;
+		if(tmp != NULL)
+			delete[] tmp;
         throw(ex);
     }
     delete[] tmp;
 }
 
 template<>
-void axpy(const int N, const float alpha, const float *X, const int incX, float *Y, const int incY)
+GURLS_EXPORT void axpy(const int N, const float alpha, const float *X, const int incX, float *Y, const int incY)
 {
+    #if defined(GOTOBLAS)
+    cblas_saxpy((int)N, (float)alpha, (float *)X, (int)incX, Y, (int)incY);
+    #else
     cblas_saxpy(N, alpha, X, incX, Y, incY);
+    #endif
 }
 
 template<>
-void axpy(const int N, const double alpha, const double *X, const int incX, double *Y, const int incY)
+GURLS_EXPORT void axpy(const int N, const double alpha, const double *X, const int incX, double *Y, const int incY)
 {
+    #if defined(GOTOBLAS)
+    cblas_daxpy((int)N, (double)alpha, (double *)X, (int)incX, Y, (int)incY);
+    #else
     cblas_daxpy(N, alpha, X, incX, Y, incY);
+    #endif
 }
 
 //template <>
@@ -697,152 +825,208 @@ void axpy(const int N, const double alpha, const double *X, const int incX, doub
 //}
 
 template <>
-float dot(const int N, const float *X, const int incX, const float *Y, const int incY)
+GURLS_EXPORT float dot(const int N, const float *X, const int incX, const float *Y, const int incY)
 {
-    cblas_sdot(N, X, incX, Y, incY);
+#if defined(GOTOBLAS)
+    return cblas_sdot((int)N, (float *)X, (int)incX, (float*)Y, (int)incY);
+#else
+    return cblas_sdot(N, X, incX, Y, incY);
+#endif
 }
 
 template <>
-double dot(const int N, const double *X, const int incX, const double *Y, const int incY)
+GURLS_EXPORT double dot(const int N, const double *X, const int incX, const double *Y, const int incY)
 {
-    cblas_ddot(N, X, incX, Y, incY);
+#if defined(GOTOBLAS)
+    return cblas_ddot((int)N, (double *)X, (int)incX, (double*)Y, (int)incY);
+#else
+    return cblas_ddot(N, X, incX, Y, incY);
+#endif
 }
 
 template<>
-bool eq(double val1, double val2)
+GURLS_EXPORT bool eq(double val1, double val2)
 {
     return (val1 >= val2-DBL_EPSILON && val1 <= val2+DBL_EPSILON );
 }
 
 template<>
-bool eq(float val1, float val2)
+GURLS_EXPORT bool eq(float val1, float val2)
 {
     return ( val1 >= val2-FLT_EPSILON && val1 <= val2+FLT_EPSILON );
 }
 
-template <>
-void svd(const float* A, float*& U, float*& W, float*& Vt,
-         const int A_rows, const int A_cols,
-         int& U_rows, int& U_cols,
-         int& W_len,
-         int& Vt_rows, int& Vt_cols) throw(gException)
+
+template<>
+GURLS_EXPORT bool gt(double a, double b)
 {
-    // A = U*S*Vt
-
-    char jobu = 'S', jobvt = 'S';
-    int m = A_rows;
-    int n = A_cols;
-    int k = std::min<int>(m, n);
-
-    W = new float[k];
-    U = new float[m*k];
-    Vt = new float[k*n];
-
-    U_rows = m;
-    U_cols = k;
-
-    W_len = k;
-
-    Vt_rows = k;
-    Vt_cols = n;
-//MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))
-    int lda = A_cols;
-    int ldu = k;
-    int ldvt = n;
-    int info, lwork = std::max<int>(3*k+std::max<int>(m,n), 5*k);
-    float* work = new float[lwork];
-    float* cpy = new float[m*n];
-    copy(cpy, A, A_rows*A_cols);
-
-    sgesvd_(&jobu, &jobvt, &n, &m, cpy, &lda, W, U, &ldu, Vt, &ldvt, work, &lwork, &info);
-
-    delete[] work;
-    delete[] cpy;
-
-    if(info != 0)
-    {
-        std::stringstream str;
-        str << "SVD failed, error code " << info << std::endl;
-        throw gException(str.str());
-    }
-}
-
-void randperm(const unsigned int n, unsigned int* seq)
-{
-    unsigned int val = 0;
-    for(unsigned int *it = seq, *end= seq+n; it != end; ++it)
-        *it = ++val;
-
-    for(int i=0; i<n; ++i)
-        std::swap(seq[rand()%n], seq[rand()%n]);
+    return ((a - b) > ( std::min(fabs(a), fabs(b))* std::numeric_limits<double>::epsilon()));
 }
 
 template<>
-float nrm2(const int N, const float* X, const int incX)
+GURLS_EXPORT bool gt(float a, float b)
 {
-    cblas_snrm2(N, X, incX);
+    return ((a - b) > ( std::min(fabs(a), fabs(b))* std::numeric_limits<float>::epsilon()));
+}
+
+//template <>
+//void svd(const float* A, float*& U, float*& W, float*& Vt,
+//         const int A_rows, const int A_cols,
+//         int& U_rows, int& U_cols,
+//         int& W_len,
+//         int& Vt_rows, int& Vt_cols) throw(gException)
+//{
+//    // A = U*S*Vt
+
+//    char jobu = 'S', jobvt = 'S';
+//    int m = A_rows;
+//    int n = A_cols;
+//    int k = std::min<int>(m, n);
+
+//    W = new float[k];
+//    U = new float[m*k];
+//    Vt = new float[k*n];
+
+//    U_rows = m;
+//    U_cols = k;
+
+//    W_len = k;
+
+//    Vt_rows = k;
+//    Vt_cols = n;
+////MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))
+//    int lda = A_cols;
+//    int ldu = k;
+//    int ldvt = n;
+//    int info, lwork = std::max<int>(3*k+std::max<int>(m,n), 5*k);
+//    float* work = new float[lwork];
+//    float* cpy = new float[m*n];
+//    copy(cpy, A, A_rows*A_cols);
+
+//    sgesvd_(&jobu, &jobvt, &n, &m, cpy, &lda, W, U, &ldu, Vt, &ldvt, work, &lwork, &info);
+
+//    delete[] work;
+//    delete[] cpy;
+
+//    if(info != 0)
+//    {
+//        std::stringstream str;
+//        str << "SVD failed, error code " << info << std::endl;
+//        throw gException(str.str());
+//    }
+//}
+
+template<>
+GURLS_EXPORT float nrm2(const int N, const float* X, const int incX)
+{
+#if defined (GOTOBLAS)
+    return cblas_snrm2((int)N, (float*)X, (int)incX);
+#else
+    return cblas_snrm2(N, X, incX);
+#endif
 }
 
 template<>
-double nrm2(const int N, const double* X, const int incX)
+GURLS_EXPORT double nrm2(const int N, const double* X, const int incX)
 {
-    cblas_dnrm2(N, X, incX);
+#if defined (GOTOBLAS)
+    return cblas_dnrm2((int)N, (double*)X, (int)incX);
+#else
+    return cblas_dnrm2(N, X, incX);
+#endif
 }
 
 template<>
-void scal(const int N, const float alpha, float *X, const int incX)
+GURLS_EXPORT void scal(const int N, const float alpha, float *X, const int incX)
 {
+#if defined (GOTOBLAS)
+    cblas_sscal((int)N, (float)alpha, (float*)X, (int)incX);
+#else
     cblas_sscal(N, alpha, X, incX);
+#endif
 }
 
 template<>
-void scal(const int N, const double alpha, double *X, const int incX)
+GURLS_EXPORT void scal(const int N, const double alpha, double *X, const int incX)
 {
+
+#if defined (GOTOBLAS)
+    cblas_dscal((int)N, (double)alpha, (double*)X, (int)incX);
+#else
     cblas_dscal(N, alpha, X, incX);
+#endif
 }
 
 template<>
-void gemv(const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,
+GURLS_EXPORT void gemv(const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,
           const int M, const int N, const float alpha, const float *A,
           const int lda, const float *X, const int incX,
           const float beta, float *Y, const int incY)
 {
+#if defined (GOTOBLAS)
+    cblas_sgemv(order, TransA, (int)M, (int)N, (float)alpha, (float*)A, (int)lda, (float*)X, (int)incX, (float)beta, (float*)Y, (int)incY);
+#else
     cblas_sgemv(order, TransA, M, N, alpha, A, lda, X, incX, beta, Y, incY);
+#endif
 }
 
 template<>
-void gemv(const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,
+GURLS_EXPORT void gemv(const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,
           const int M, const int N, const double alpha, const double *A,
           const int lda, const double *X, const int incX,
           const double beta, double *Y, const int incY)
 {
+#if defined (GOTOBLAS)
+    cblas_dgemv(order, TransA, (int)M, (int)N, (double)alpha, (double*)A, (int)lda, (double*)X, (int)incX, (double)beta, (double*)Y, (int)incY);
+#else
     cblas_dgemv(order, TransA, M, N, alpha, A, lda, X, incX, beta, Y, incY);
+#endif
 }
 
 template<>
-void syev( char* jobz, char* uplo, int* n, float* a, int* lda, float* w, float* work, int* lwork, int* info)
+GURLS_EXPORT void syev( char* jobz, char* uplo, int* n, float* a, int* lda, float* w, float* work, int* lwork, int* info)
 {
     ssyev_(jobz, uplo, n, a, lda, w, work, lwork, info);
 }
 
 template<>
-void syev( char* jobz, char* uplo, int* n, double* a, int* lda, double* w, double* work, int* lwork, int* info)
+GURLS_EXPORT void syev( char* jobz, char* uplo, int* n, double* a, int* lda, double* w, double* work, int* lwork, int* info)
 {
     dsyev_(jobz, uplo, n, a, lda, w, work, lwork, info);
 }
 
 template <>
-void trsm(const CBLAS_ORDER Order, const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+GURLS_EXPORT void trsm(const CBLAS_ORDER Order, const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int M, const int N, const float alpha, const float *A, const int lda, float *B, const int ldb)
 {
+#if defined (GOTOBLAS)
+    cblas_strsm(Order, Side, Uplo, TransA, Diag, (int)M, (int)N, (float)alpha, (float*)A, (int)lda, (float*)B, (int)ldb);
+#else
     cblas_strsm(Order, Side, Uplo, TransA, Diag, M, N, alpha, A, lda, B, ldb);
+#endif
 }
 
 template <>
-void trsm(const CBLAS_ORDER Order, const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+GURLS_EXPORT void trsm(const CBLAS_ORDER Order, const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int M, const int N, const double alpha, const double *A, const int lda, double *B, const int ldb)
 {
+#if defined (GOTOBLAS)
+    cblas_dtrsm(Order, Side, Uplo, TransA, Diag, (int)M, (int)N, (double)alpha, (double*)A, (int)lda, (double*)B, (int)ldb);
+#else
     cblas_dtrsm(Order, Side, Uplo, TransA, Diag, M, N, alpha, A, lda, B, ldb);
+#endif
+}
+
+template <>
+GURLS_EXPORT int gesvd_(char *jobu, char *jobvt, int *m, int *n, float *a, int *lda, float *s, float *u, int *ldu, float *vt, int *ldvt, float *work, int *lwork, int *info)
+{
+    return sgesvd_(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, info);
+}
+
+template <>
+GURLS_EXPORT int gesvd_(char *jobu, char *jobvt, int *m, int *n, double *a, int *lda, double *s, double *u, int *ldu, double *vt, int *ldvt, double *work, int *lwork, int *info)
+{
+    return dgesvd_(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, info);
 }
 
 }

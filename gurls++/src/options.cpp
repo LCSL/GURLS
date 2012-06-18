@@ -52,7 +52,7 @@ using namespace std;
 
 namespace gurls{
 
-std::ostream& operator<<(std::ostream& os, GurlsOption& opt) {
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOption& opt) {
     opt.operator <<(os);
     return os;
 }
@@ -99,53 +99,65 @@ std::ostream& operator<<(std::ostream& os, OptFunction& opt){
 */
 
 
-std::ostream& OptString::operator<<(std::ostream& os){
+GURLS_EXPORT std::ostream& OptString::operator<<(std::ostream& os){
     return os << this->getValue();
 }
 
-std::ostream& OptNumber::operator<<(std::ostream& os) {
+GURLS_EXPORT std::ostream& OptNumber::operator<<(std::ostream& os) {
     return os << this->getValue();
 }
 
-std::ostream& OptStringList::operator<<(std::ostream& os){
-    std::vector<std::string> V = this->getValue();
+GURLS_EXPORT std::ostream& OptStringList::operator<<(std::ostream& os){
+    std::vector<std::string>& V = this->getValue();
     std::vector<std::string>::iterator it = V.begin();
     std::vector<std::string>::iterator end = V.end();
-    os << "(" << (*it++);
-    while( it != end){
+
+    os << "(";
+    if(!V.empty())
+        os << (*it++);
+
+    while( it != end)
         os << ", " << (*it++);
-    }
     os << ")";
+
     return os;
 }
 
-std::ostream& OptNumberList::operator<<(std::ostream& os){
-    std::vector<double> V = this->getValue();
+GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os){
+    std::vector<double>& V = this->getValue();
     std::vector<double>::iterator it = V.begin();
     std::vector<double>::iterator end = V.end();
-    os << "(" << (*it++);
-    while( it != end){
+
+    os << "(";
+    if(!V.empty())
+        os << (*it++);
+
+    while( it != end)
         os << ", " << (*it++);
-    }
     os << ")";
+
     return os;
 }
 
-std::ostream& OptFunction::operator<<(std::ostream& os){
+GURLS_EXPORT std::ostream& OptFunction::operator<<(std::ostream& os){
     os << "Pointer to the function <" << this->getName()
        << "> whose signature is: double (*func)(double*, int)" ;
     return os;
 }
 
-std::ostream& OptTaskSequence::operator<<(std::ostream& os){
-    std::vector<std::string> V = this->tasks;
-    std::vector<std::string>::iterator it = V.begin();
-    std::vector<std::string>::iterator end = V.end();
-    os << "(" << (*it++);
-    while( it != end){
+GURLS_EXPORT std::ostream& OptTaskSequence::operator<<(std::ostream& os){
+
+    std::vector<std::string>::iterator it = tasks->begin();
+    std::vector<std::string>::iterator end = tasks->end();
+
+    os << "(";
+    if(!tasks->empty())
+        os << (*it++);
+
+    while( it != end)
         os << ", " << (*it++);
-    }
     os << ")";
+
     return os;
 }
 
@@ -191,7 +203,41 @@ bool OptTaskSequence::isValid(const std::string & str, std::string& type, std::s
     return true;
 }
 
+template <>
+GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<float>(2,2)))
+{
+    this->matType = FLOAT;
+}
 
+template <>
+GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(gMat2D<float>& m): OptMatrixBase(), value(m)
+{
+    this->matType = FLOAT;
+}
+
+template <>
+GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<double>(2,2)))
+{
+    this->matType = DOUBLE;
+}
+
+template <>
+GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(gMat2D<double>& m): OptMatrixBase(), value(m)
+{
+    this->matType = DOUBLE;
+}
+
+template <>
+GURLS_EXPORT OptMatrix <gMat2D<unsigned long> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<unsigned long>(2,2)))
+{
+    this->matType = ULONG;
+}
+
+template <>
+GURLS_EXPORT OptMatrix <gMat2D<unsigned long> >::OptMatrix(gMat2D<unsigned long>& m): OptMatrixBase(), value(m)
+{
+    this->matType = ULONG;
+}
 
 }
 

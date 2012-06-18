@@ -56,8 +56,8 @@ namespace gurls{
 void GurlsOptionsList::setName(std::string newname){
 
     this->name = newname;
-    this->table.erase("Name");
-    this->table.insert(pair<std::string, GurlsOption*> ("Name", new OptString(newname)));
+    this->table->erase("Name");
+    this->table->insert(pair<std::string, GurlsOption*> ("Name", new OptString(newname)));
 }
 
 GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOption(OptListOption), name(ExpName){
@@ -65,58 +65,82 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
     string key ("Name");
     GurlsOption* value;
     value = new OptString(ExpName);
-    this->table.insert( pair<std::string,GurlsOption*>(key, value) );
+	table = new std::map<std::string, GurlsOption* >();
+    table->insert( pair<std::string,GurlsOption*>(key, value) );
 
     if(usedefopt){
 
         //		opt.combineclasses = @mean; % How to combine performance measure per class (mean/median/min/max?)
         //this->table["combineclasses"] = new OptFunction("mean", mean);
-        this->table["combineclasses"] = new OptFunction("mean");
+        (*table)["combineclasses"] = new OptFunction("mean");
 
-        this->table["plotstr"] = new OptString(ExpName);
+        (*table)["name"] = new OptString(ExpName);
+        (*table)["plotstr"] = new OptString(ExpName);
 
         //		WARNING: THE FILE EXTENSION AND THE POSSIBILITY TO SAVE
         //		THE EXPERIMENTS HAVE NOT BEEN IMPLEMENTED YET
-        this->table["savefile"] = new OptString(ExpName.append(".mat"));
+#ifdef USE_BINARY_ARCHIVES
+        (*table)["savefile"] = new OptString(ExpName.append(".bin"));
+#else
+        (*table)["savefile"] = new OptString(ExpName.append(".txt"));
+#endif
 
         // ================================================== Algorithm options
 
         //		opt.kernel.type = 'rbf';
-        //this->table["singlelambda"] = new OptFunction("median", median);
-        //this->table["singlelambda"] = new OptFunction("median", median);
-        this->table["singlelambda"] = new OptFunction("median");
-        this->table["predbagmethod"] = new OptString("vote");
+        //(*table)["singlelambda"] = new OptFunction("median", median);
+        //(*table)["singlelambda"] = new OptFunction("median", median);
+        (*table)["singlelambda"] = new OptFunction("median");
+        (*table)["predbagmethod"] = new OptString("vote");
         // NOTE: lambda is searched between
         // [min(eig_r, opt.smallnumber), eig_1],
         // where r = rank, eig_1 = max eig val.
-        this->table["smallnumber"] = new OptNumber(1e-8);
+        (*table)["smallnumber"] = new OptNumber(1e-8);
 
         // ================================================== Directory options
-        this->table["tmpdir"] = new OptString(ExpName);
+        (*table)["tmpdir"] = new OptString(ExpName);
 
         // ===================================================== Output options
-        this->table["savekernel"] = new OptNumber(1);
-        this->table["saveanalysis"] = new OptNumber(1);
+        (*table)["savekernel"] = new OptNumber(1);
+        (*table)["saveanalysis"] = new OptNumber(1);
         //		opt.hoperf = @perf_precrec;
-        this->table["ploteval"] = new OptString("acc");
+        (*table)["ploteval"] = new OptString("acc");
         //		WARNING: this should be an array of strings...
-        this->table["perfeval"] = new OptString("acc");
+        (*table)["perfeval"] = new OptString("acc");
 
         // ======================================================== Data option
-        this->table["nholdouts"] = new OptNumber(1);
-        this->table["hoproportion"] = new OptNumber(0.2);
-        this->table["nlambda"] = new OptNumber(100);
-        this->table["nsigma"] =  new OptNumber(25);
+        (*table)["nholdouts"] = new OptNumber(1);
+        (*table)["hoproportion"] = new OptNumber(0.2);
+//        (*table)["nlambda"] = new OptNumber(100);
+//        (*table)["nsigma"] =  new OptNumber(25);
+        (*table)["nlambda"] = new OptNumber(20);
+        (*table)["nsigma"] =  new OptNumber(10);
+
+
+    // ======================================================== Pegasos option
+        (*table)["subsize"]   = new OptNumber(50);
+        (*table)["calibfile"] = new OptString("pippo");
+        (*table)["epochs"]   = new OptNumber(4);
 
         // ============================================================== Quiet
         // Currenty either 0 or 1; levels of verbosity may be implemented later;
-        this->table["verbose"] = new OptNumber(1);
+        (*table)["verbose"] = new OptNumber(1);
 
         // ======================================================= Version info
-        this->table["version"] = new OptString("0.1");
+        (*table)["version"] = new OptString("0.1");
 
     }
 
+}
+
+GurlsOptionsList::~GurlsOptionsList()
+{
+    std::map<std::string, GurlsOption* >::iterator it, end;
+    for(it = table->begin(), end = table->end(); it != end; ++it)
+        delete (it->second);
+
+    table->clear();
+	delete table;
 }
 
 void GurlsOptionsList::printAll(){
@@ -128,9 +152,9 @@ void GurlsOptionsList::removeOpt(string key, bool deleteMembers)
     if(hasOpt(key))
     {
         if (deleteMembers)
-            delete table[key];
+            delete (*table)[key];
 
-        table.erase(key);
+        table->erase(key);
     }
 }
 std::ostream& GurlsOptionsList::operator<<(std::ostream& os){
@@ -138,13 +162,13 @@ std::ostream& GurlsOptionsList::operator<<(std::ostream& os){
 }
 
 
-std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt) {
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt) {
     std::map<std::string, GurlsOption* >::iterator it;
     GurlsOption* current;
     os << std::endl
        << "~~~~~~~ GurlsOptionList: " << opt.getName()
        << std::endl;
-    for (it = opt.table.begin(); it != opt.table.end(); it++){
+    for (it = opt.table->begin(); it != opt.table->end(); it++){
         current = (*it).second;
         os << "\t[ " << (*it).first << " ] = ";
         current->operator <<(os);
@@ -155,18 +179,20 @@ std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt) {
 }
 
 bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value){
-    this->table.insert( pair<std::string,GurlsOption*>(key, value) );
+    table->insert( pair<std::string,GurlsOption*>(key, value) );
+    return true;
 }
 
 bool GurlsOptionsList::addOpt(std::string key, std::string value){
     OptString* v = new OptString(value);
-    this->table.insert( pair<std::string,GurlsOption*>(key, v) );
+    table->insert( pair<std::string,GurlsOption*>(key, v) );
+    return true;
 }
 
 GurlsOption* GurlsOptionsList::getOpt(std::string key){
-    GurlsOption* gout = this->table[key];
+    GurlsOption* gout = (*table)[key];
     if (!gout){
-        throw gException(Exception_Parameter_Not_Definied_Yet);
+        throw gException(Exception_Parameter_Not_Definied_Yet + "( " + key + " )");
     }
     return gout;
 }
@@ -190,6 +216,32 @@ double GurlsOptionsList::getOptAsNumber(std::string key){
     }else {
         throw gException(Exception_Unknown_Option);
     }
+}
+
+void GurlsOptionsList::save(const std::string& fileName) const
+{
+    std::ofstream outstream(fileName.c_str());
+
+    if(!outstream.is_open())
+        throw gException("Could not open file " + fileName);
+
+    oarchive outar(outstream);
+    outar << *this;
+
+    outstream.close();
+}
+
+void GurlsOptionsList::load(const std::string& fileName)
+{
+    std::ifstream instream(fileName.c_str());
+
+    if(!instream.is_open())
+        throw gException("Could not open file " + fileName);
+
+    iarchive inar(instream);
+    inar >> *this;
+
+    instream.close();
 }
 
 
