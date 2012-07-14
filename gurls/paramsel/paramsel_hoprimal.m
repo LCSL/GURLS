@@ -23,7 +23,7 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 % -lambdas_round: cell array (opt.nholdoutsX1). For each split a cell contains the 
 %       values of the regularization parameter lambda minimizing the 
 %       validation error for each class.
-% -forho: cell array (opt.nholdoutsX1). For each split a cell contains a matrix 
+% -perf: cell array (opt.nholdouts). For each split a cell contains a matrix 
 %       with the validation error for each lambda guess and for each class
 % -guesses: cell array (opt.nholdoutsX1). For each split a cell contains an 
 %       array of guesses for the regularization parameter lambda
@@ -44,12 +44,6 @@ for nh = 1:opt.nholdouts
 		tr = opt.split.tr;
 		va = opt.split.va;
 	end	
-
-	if opt.hoMOnline
-		tr = opt.split.monline{1}.idx;
-	end	
-
-
 
 	[n,d] = size(X(tr,:));
 	[n,T]  = size(y(tr,:));
@@ -84,13 +78,8 @@ for nh = 1:opt.nholdouts
 	end	
 	[dummy,idx] = max(ap,[],1);	
 	vout.lambdas_round{nh} = guesses(idx);
-	vout.forho{nh} = ap;
+	vout.perf{nh} = ap;
 	vout.guesses{nh} = guesses;
-	% This is awesome
-	if numel(savevars) > 0
-		[ST,I] = dbstack();
-		save(ST(1).name,savevars{:});
-	end	
 end	
 if numel(vout.lambdas_round) > 1
 	lambdas = cell2mat(vout.lambdas_round');

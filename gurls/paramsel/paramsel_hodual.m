@@ -86,11 +86,8 @@ for nh = 1:opt.nholdouts
 		yva = y(va,:);
 		if strcmp(opt.kernel.type,'linear')
 			opt.rls.W = X(tr,:)'*opt.rls.C; 
-		elseif strcmp(opt.kernel.type,'load')
-			opt.predkernel.type = 'load';
+		else 
 			opt.predkernel.K = opt.kernel.K(va,tr);
-		else
-			opt.predkernel = predkernel_traintest(X(va,:),y(va,:),opt);
 		end	
 	
 		opt.pred = pred_dual(Xva,yva,opt);
@@ -102,15 +99,12 @@ for nh = 1:opt.nholdouts
 	end	
 	[dummy,idx] = max(ap,[],1);	
 	vout.lambdas_round{nh} = guesses(idx);
-	vout.forho{nh} = ap;
+	vout.perf{nh} = ap;
 	vout.guesses{nh} = guesses;
-	% This is awesome
 end	
 if numel(vout.lambdas_round) > 1
 	lambdas = cell2mat(vout.lambdas_round');
-	vout.lambdas = mean(lambdas);
+	vout.lambdas = median(lambdas);
 else
 	vout.lambdas = vout.lambdas_round{1};
 end
-
-		

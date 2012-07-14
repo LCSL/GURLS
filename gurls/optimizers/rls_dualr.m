@@ -52,4 +52,5 @@ if strcmp(opt.kernel.type, 'linear')
 	cfr.X = [];
 else
 	cfr.W = [];
+	cfr.X = X;
 end

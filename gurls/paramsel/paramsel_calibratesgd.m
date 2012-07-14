@@ -41,8 +41,8 @@ for i = 1:n_estimates,
 		fprintf('\n\tCalibrating...');
 		%% Step 1 : Hold out parameter selection in the dual
 		name = opt.calibfile;
-		tmp.hoperf = opt.hoperf;
 		tmp = defopt(name);
+		tmp.hoperf = opt.hoperf;
 		tmp.seq = {'split:ho','kernel:linear','paramsel:hodual','rls:dual'};
 		tmp.process{1} = [2,2,2,2];
 		tmp.singlelambda = opt.singlelambda;

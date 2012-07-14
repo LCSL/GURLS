@@ -20,7 +20,7 @@ function vout = paramsel_loocvdual(X,y,opt)
 % OUTPUT: struct with the following fields:
 % -lambdas: array of values of the regularization parameter lambda
 %           minimizing the validation error for each class
-% -looe: loo{1} is a matrix with the validation error for each lambda guess 
+% -perf: is a matrix with the validation error for each lambda guess 
 %        and for each class
 % -guesses: array of guesses for the regularization parameter lambda 
 
@@ -40,7 +40,6 @@ lmin = min(filtered)/n;
 lmax = max(filtered)/n;
 q = (lmax/lmin)^(1/tot);
 guesses = zeros(1,tot);
-LOOSQE = zeros(tot,T);
 for i = 1:tot
 	guesses(i) = lmin*(q^i);
 	%C = rls_dual(K,y,guesses(i));
@@ -59,5 +58,5 @@ end
 
 [dummy,idx] = max(ap,[],1);	
 vout.lambdas = 	guesses(idx);
-vout.looe{1} = 	ap;
+vout.perf = 	ap;
 vout.guesses = 	guesses;

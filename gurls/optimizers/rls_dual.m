@@ -41,7 +41,6 @@ try
 	R = chol(K); 
 	
 	cfr.C = R\(R'\y);
-	cfr.X = X;
 catch
 	[Q,L,V] = svd(K);
 	Q = double(Q);
@@ -55,4 +54,5 @@ if strcmp(opt.kernel.type, 'linear')
 	cfr.X = [];
 else
 	cfr.W = [];
+	cfr.X = X;
 end

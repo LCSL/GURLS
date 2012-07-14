@@ -29,7 +29,7 @@ lmax = eigvals(1);
 % just in case, when r = min(n,d) and r x r has some zero eigenvalues
 % we take a max; 200*sqrt(eps) is the legacy number used in the previous
 % code, so i am just continuing it.
-lmin = max(min(opt.smallnumber, eigvals(r)), 200*sqrt(eps));
+lmin = max(min(lmax*opt.smallnumber, eigvals(r)), 200*sqrt(eps));
 
 powers = linspace(0,1,opt.nlambda);
 

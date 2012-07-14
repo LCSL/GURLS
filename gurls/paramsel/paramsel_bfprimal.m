@@ -47,10 +47,6 @@ for nh = 1:opt.nholdouts
 		va = opt.split.va;
 	end	
 
-	if opt.hoMOnline
-		tr = opt.split.monline{1}.idx;
-	end	
-
 	for i = 1:numel(opt.paramsel.guesses)
 		opt.paramsel.lambdas = opt.paramsel.guesses(i);
 		opt.rls = opt.paramsel.optimizer(X(tr,:),y(tr,:),opt);

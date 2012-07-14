@@ -4,7 +4,7 @@ function [splits] = splits_homulti(X, y, opt)
 
 
 nSplits = opt.nholdouts;
-fraction = opt.hoproportion;
+fraction = 1-opt.hoproportion;
 
 [n,T] = size(y);
 [dummy, y] = max(y,[],2);

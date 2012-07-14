@@ -16,6 +16,9 @@ function [p] =  perf_precrec(X, y, opt)
 % 
 % Code adapted from PASCAL VOC 2007 code
 
+if isstruct(opt.pred)
+	opt.pred = opt.pred.means;
+end	
 if isfield (opt,'perf')
 	p = opt.perf; % lets not overwrite existing performance measures.
 		      % unless they have the same name

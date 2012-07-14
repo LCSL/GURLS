@@ -17,7 +17,7 @@ function vout = paramsel_loocvprimal(X,y,opt)
 % OUTPUTS: structURE with the following fields:
 % -lambdas: array of values of the regularization parameter lambda
 %           minimizing the validation error for each class
-% -looe: loo{1} is a matrix with the validation error for each lambda guess 
+% -perf: is a matrix with the validation error for each lambda guess 
 %        and for each class
 % -guesses: array of guesses for the regularization parameter lambda 
 
@@ -64,5 +64,5 @@ for i = 1:tot
 end
 [dummy,idx] = max(ap,[],1);	
 vout.lambdas = 	guesses(idx);
-vout.looe{1} = 	ap;
+vout.perf = 	ap;
 vout.guesses = 	guesses;

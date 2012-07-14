@@ -26,30 +26,28 @@ function vout = paramsel_siglamho(X,y,opt)
 % -sigma: value of the kernel parameter minimizing the validation error
 
 
-%savevars = {'forho','M'};
 
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
 end
-savevars = [];
 
 [n,T]  = size(y);
 if ~isfield(opt,'kernel')
 	opt.kernel.type = 'rbf';
 end
 if ~isfield(opt.kernel,'distance')
-	opt.kernel.distance = squareform(pdist(X));
+	opt.kernel.distance = distance(X',X');
 end	
 if ~isfield(opt,'sigmamin')
-	D = sort(squareform(opt.kernel.distance));
+	D = sqrt(sort(squareform(opt.kernel.distance)));
 	firstPercentile = round(0.01*numel(D)+0.5);
 	opt.sigmamin = D(firstPercentile);
 	clear D;
 end
 if ~isfield(opt,'sigmamax')
-	opt.sigmamax = max(max(opt.kernel.distance));
+	opt.sigmamax = sqrt(max(max(opt.kernel.distance)));
 end
 if opt.sigmamin <= 0
 	opt.sigmamin = eps;
@@ -57,17 +55,18 @@ end
 if opt.sigmamin <= 0
 	opt.sigmamax = eps;
 end	
-q = (opt.sigmamax/opt.sigmamin)^(1/opt.nsigma);
+q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));
 LOOSQE = zeros(opt.nsigma,opt.nlambda,T);
 sigmas = zeros(1,opt.nsigma);
 
 for i = 1:opt.nsigma
-	sigmas(i) = (opt.sigmamin*(q^i));
+	sigmas(i) = (opt.sigmamin*(q^(i-1)));
 	opt.paramsel.sigma = sigmas(i);
 	opt.kernel = kernel_rbf(X,y,opt);
 	paramsel = paramsel_hodual(X,y,opt);
-	forho(i,:,:) = paramsel.forho{1};
-	guesses(i,:) = paramsel.guesses{1};
+	nh = numel(paramsel.perf);
+	PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',n*T,nh),2),T,n)';
+	guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
 end
 % The lambda axis is redefined each time but
 % it is the same for all classes as it depends
@@ -77,17 +76,12 @@ end
 %
 % TODO: select a lambda for each class fixing sigma.
 
-M = sum(forho,3); % sum over classes
+M = sum(PERF,3); % sum over classes
 
 [dummy,i] = max(M(:));
 [m,n] = ind2sub(size(M),i);
 
 % opt sigma
-vout.sigma = opt.sigmamin*(q^m);
+vout.sigma = opt.sigmamin*(q^(m-1));
 % opt lambda
 vout.lambdas = guesses(m,n)*ones(1,T);
-% This is awesome
-if numel(savevars) > 0
-	[ST,I] = dbstack();
-	save(ST(1).name,savevars{:});
-end	

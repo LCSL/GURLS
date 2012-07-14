@@ -17,12 +17,13 @@ function [kernel] = kernel_rbf(X,y,opt)
 if ~isfield(opt,'kernel')
 	opt.kernel.type = 'rbf';
 end
+
+
 if ~isfield(opt.kernel,'distance')
 	opt.kernel.distance = distance(X',X');
-	kernel.distance = opt.kernel.distance;
 end	
 
-%D = -(opt.kernel.distance.^2);
+kernel = opt.kernel;
 D = -(opt.kernel.distance);
 K = exp(D/(opt.paramsel.sigma^2));
 

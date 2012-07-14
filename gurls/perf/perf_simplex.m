@@ -6,6 +6,10 @@ function [p] = perf_simplex(X, y, opt)
 %	NEEDS:
 %		- opt.pred
 
+if isstruct(opt.pred)
+	opt.pred = opt.pred.means;
+end	
+
 if isfield (opt,'perf')
 	p = opt.perf; % lets not overwrite existing performance measures.
 		      % unless they have the same name

@@ -78,13 +78,8 @@ for nh = 1:opt.nholdouts
 	end	
 	[dummy,idx] = max(ap,[],1);	
 	vout.lambdas_round{nh} = guesses(idx);
-	vout.forho{nh} = ap;
+	vout.perf{nh} = ap;
 	vout.guesses{nh} = guesses;
-	% This is awesome
-	if numel(savevars) > 0
-		[ST,I] = dbstack();
-		save(ST(1).name,savevars{:});
-	end	
 end	
 if numel(vout.lambdas_round) > 1
 	lambdas = cell2mat(vout.lambdas_round');
