@@ -6,6 +6,7 @@ end
 
 %% Experiment options
 opt.name = expname; % We can make this argument mandatory; Unique name per experiment
+opt.savefile = [opt.name '.mat'];
 
 %% Algorithm options
 opt.kernel.type = 'rbf';
@@ -41,7 +42,7 @@ opt.nsigma =  25;
 opt.verbose = 1;
 
 %% Version info
-opt.version = 0.1;
+opt.version = 1.0;
 
 %% Online
 opt.epochs = 4;

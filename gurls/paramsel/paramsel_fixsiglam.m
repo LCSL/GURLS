@@ -1,4 +1,4 @@
-function [param] = paramsel_fixlambda(X, y, opt)
+function [param] = paramsel_fixsiglam(X, y, opt)
 % paramsel_fixlambda(X,Y,OPT)
 % Set the regularization parameter to the value set in OPT
 % 
@@ -10,4 +10,5 @@ function [param] = paramsel_fixlambda(X, y, opt)
 % OUTPUT: struct with the following field:
 % -lambdas: fixed value for the regularization parameter
 
-param.lambdas = 1.0;
+param.lambdas = 10^-8;
+param.sigma = 15;

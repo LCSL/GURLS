@@ -40,7 +40,7 @@ T = size(y,2);
 
 K = opt.kernel.K + (n*lambda)*eye(n);
 
-[Q,L,V] = tygert_svd(K,n);
+[Q,L,V] = tygert_svd(K);
 Q = double(Q);
 L = double(diag(L));
 

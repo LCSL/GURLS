@@ -1,7 +1,6 @@
 function vout = paramsel_bfdual(X,y,opt)
-
-% paramsel_loocvdual(X,Y,OPT)
-% Performs parameter selection when the primal formulation of RLS is used.
+% paramsel_bfdual(X,Y,OPT)
+% Performs parameter selection when the dual formulation of RLS is used.
 % This method uses the hold-out cross validation approach in a brute force way
 % i.e. the RLS problem is solved from scratch for each value of the regularizer.
 %

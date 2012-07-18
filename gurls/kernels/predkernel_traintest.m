@@ -18,7 +18,7 @@ function [fk] = predkernel_traintest(X,y,opt)
 %   For more information on standard OPT fields
 %   see also defopt
 % 
-% OUTPUT: ntestxntr matrix
+% OUTPUT: struct with at least the field K containing the ntestxntr kernel matrix
 
 
 switch opt.kernel.type
@@ -29,11 +29,14 @@ switch opt.kernel.type
 		end
 		if ~isfield(opt.predkernel,'distance')
 			opt.predkernel.distance = distance(X',opt.rls.X');
-			fk.distance = opt.predkernel.distance;
-		end
+        end
+        fk.distance = opt.predkernel.distance;
 		%D = -(opt.finalkernel.distance.^2);
 		D = -(opt.predkernel.distance);
 		fk.K = exp(D/(opt.paramsel.sigma^2));
+        if isfield(opt.rls,'L')
+            fk.Ktest = ones(size(X,1),1);
+        end
 	case {'load'}
 		fk.type = 'load';
 		load(opt.testkernel);

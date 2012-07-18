@@ -31,9 +31,9 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 XtX = X'*X; % n\lambda is added in rls_eigen;
 
-tic;
-[Q,L,U] = tygert_svd(XtX,d);
-cfr.dcomptime = toc;
+% tic;
+[Q,L,U] = tygert_svd(XtX);
+% cfr.dcomptime = toc;
 Q = double(Q);
 L = double(diag(L));
 
@@ -43,10 +43,10 @@ if isfield(opt,'W0')
 	Xty = Xty + opt.W0;
 end
 
-tic;
+% tic;
 
 cfr.W = rls_eigen(Q, L, Xty, lambda,d);
-cfr.rlseigtime = toc;
+% cfr.rlseigtime = toc;
 
 cfr.C = [];
 cfr.X = [];

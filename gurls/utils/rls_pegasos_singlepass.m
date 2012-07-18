@@ -1,4 +1,4 @@
-function [cfr] = rls_pegasos_driver(X, bY, opt)
+function [cfr] = rls_pegasos_singlepass(X, bY, opt)
 % rls_pegasos_singlepass(X,BY,OPT)
 % utility function called by rls_pegasos
 % computes a single pass for pegasos algorithm, performing the stochastic

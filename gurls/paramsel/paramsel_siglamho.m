@@ -25,9 +25,6 @@ function vout = paramsel_siglamho(X,y,opt)
 %           where T is the number of classes
 % -sigma: value of the kernel parameter minimizing the validation error
 
-
-
-
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
@@ -56,7 +53,7 @@ if opt.sigmamin <= 0
 	opt.sigmamax = eps;
 end	
 q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));
-LOOSQE = zeros(opt.nsigma,opt.nlambda,T);
+PERF = zeros(opt.nsigma,opt.nlambda,T);
 sigmas = zeros(1,opt.nsigma);
 
 for i = 1:opt.nsigma
@@ -65,7 +62,7 @@ for i = 1:opt.nsigma
 	opt.kernel = kernel_rbf(X,y,opt);
 	paramsel = paramsel_hodual(X,y,opt);
 	nh = numel(paramsel.perf);
-	PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',n*T,nh),2),T,n)';
+	PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',opt.nlambda*T,nh),2),T,opt.nlambda)';
 	guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
 end
 % The lambda axis is redefined each time but

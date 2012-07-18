@@ -1,4 +1,4 @@
-function [splits] = splits_homulti(X, y, opt)
+function [splits] = split_ho(X, y, opt)
 % [splits] = splits_incbatch(X, y, opt)
 % Expects binary coded 'y', just like all other functions
 

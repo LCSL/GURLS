@@ -39,12 +39,12 @@ else
 	[dummy, truelab] = max(y_true,[],2);
 	[MacroAvg, PerClass] = macroavg(truelab, predlab);
 	
-	for t = 1:lenght(PerClass)
+	for t = 1:length(PerClass)
 		p.acc(t) = PerClass(t);
 		p.forho(t) = p.acc(t);
 		p.forplot(t) = p.acc(t);
 	end
-	for t = lenght(PerClass)+1:T
+	for t = length(PerClass)+1:T
 		p.acc(t) = 0;
 		p.forho(t) = 0;
 		p.forplot(t) = 0;
