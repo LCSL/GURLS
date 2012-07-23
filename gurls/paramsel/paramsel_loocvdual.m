@@ -35,14 +35,16 @@ tot = opt.nlambda;
 Q = double(Q);
 L = double(diag(L));
 Qty = Q'*y;
-filtered = L(L > 200*eps^0.5);
-lmin = min(filtered)/n;
-lmax = max(filtered)/n;
-q = (lmax/lmin)^(1/tot);
-guesses = zeros(1,tot);
+
+if strcmp(opt.kernel.type,'linear')
+    d = size(X,2);
+    r = min(n,d);
+else
+    r = n;
+end
+guesses = paramsel_lambdaguesses(L, r, n, opt);
+
 for i = 1:tot
-	guesses(i) = lmin*(q^i);
-	%C = rls_dual(K,y,guesses(i));
 	C = rls_eigen(Q,L,Qty,guesses(i),n);
 	Z = GInverseDiagonal(Q,L,guesses(i));
 	opt.pred = zeros(n,T);

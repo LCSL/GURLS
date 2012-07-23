@@ -23,8 +23,8 @@ prec=tp./(fp+tp);
 
 % compute average precision
 ap=0;
-for t=0:0.1:1
-    p=max(prec(rec>=t));
+for t=0.0:0.1:1.0
+    p=max(prec(rec>t | abs(rec - t) < eps));
     if isempty(p)
         p=0;
     end

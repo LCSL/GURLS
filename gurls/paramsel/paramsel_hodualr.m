@@ -50,23 +50,23 @@ for nh = 1:opt.nholdouts
 
 	[n,T]  = size(y(tr,:));
 	
-	if strcmp(opt.kernel.type,'load')
-		d = n; % Here U is same as Q
-	else
-		[n, d] = size(X(tr,:));
+	if strcmp(opt.kernel.type,'linear')
+		d = size(X(tr,:),2);
+        r = min(n,d);
+    else
+        r = n;
 	end
 	
 	[Q,L,U] = tygert_svd(opt.kernel.K(tr,tr),n);
 	Q = double(Q);
 	L = double(diag(L));
 	
-	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
+	guesses = paramsel_lambdaguesses(L, r, n, opt);
 	tot = opt.nlambda;
 	ap = zeros(tot,T);
 	
 	QtY = Q'*y(tr,:);
 	for i = 1:tot
-		%guesses(i) = lmin*(q^i);
 		%%%%%% REPLICATING CODE FROM RLS_DUAL %%%%%%%%
 		opt.rls.C = rls_eigen(Q,L,QtY,guesses(i),n);
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -57,17 +57,9 @@ for nh = 1:opt.nholdouts
 	QtXtY = Q'*(X(tr,:)'*y(tr,:));
 	
 	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
-	
-	% Replaced with new function paramsel_lambdaguesses
-	%filtered = L(L > 200*eps^0.5);
-	%lmin = min(filtered)/n;
-	%lmax = max(filtered)/n;
-	%q = (lmax/lmin)^(1/tot);
-	%guesses = zeros(1,tot);
-	
+		
 	ap = zeros(tot,T);
 	for i = 1:tot
-		% guesses(i) = lmin*(q^i); % replaced the computation with new function paramsel_lambdaguesses
 		opt.rls.W = rls_eigen(Q,L,QtXtY,guesses(i),n);
 		opt.pred = pred_primal(X(va,:),y(va,:),opt);
 		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);

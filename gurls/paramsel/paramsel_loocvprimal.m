@@ -29,7 +29,6 @@ end
 K = X'*X;
 [n,T]  = size(y);
 d = size(X,2);
-tot = opt.nlambda;
 [Q,L] = eig(K);
 L = double(diag(L));
 

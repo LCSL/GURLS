@@ -58,7 +58,7 @@ if opt.sigmamin <= 0
 	opt.sigmamax = eps;
 end	
 q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));
-LOOSQE = zeros(opt.nsigma,opt.nlambda,T);
+PERF = zeros(opt.nsigma,opt.nlambda,T);
 sigmas = zeros(1,opt.nsigma);
 
 for i = 1:opt.nsigma

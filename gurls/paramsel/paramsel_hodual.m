@@ -47,31 +47,23 @@ for nh = 1:opt.nholdouts
 	
 	[n,T]  = size(y(tr,:));
 	
-	if strcmp(opt.kernel.type,'load')
-		d = n;
-	else
-		[n, d] = size(X(tr,:));
+	if strcmp(opt.kernel.type,'linear')
+		d = size(X(tr,:),2);
+        r = min(n,d);
+    else
+        r = n;
 	end
 	
 	[Q,L] = eig(opt.kernel.K(tr,tr));
 	Q = double(Q);
 	L = double(diag(L));
 	
-	% Replaced with paramsel_lambdaguesses
-	%tot = opt.nlambda;
-	%filtered = L(L > 200*eps^0.5);
-	%lmin = min(filtered)/n;
-	%lmax = max(filtered)/n;
-	%q = (lmax/lmin)^(1/tot);
-	%guesses = zeros(1,tot);
-	
 	tot = opt.nlambda;
-	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
+	guesses = paramsel_lambdaguesses(L, r, n, opt);
 	
 	ap = zeros(tot,T);
 	QtY = Q'*y(tr,:);
 	for i = 1:tot
-		%guesses(i) = lmin*(q^i);
 		%%%%%% REPLICATING CODE FROM RLS_DUAL %%%%%%%%
 		opt.rls.C = rls_eigen(Q,L,QtY,guesses(i),n);
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
