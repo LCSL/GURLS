@@ -70,7 +70,7 @@ template <typename T>
 void gMat2D<T>::submatrix(const gMat2D<T>& other, unsigned long r, unsigned long c) {
     unsigned long w1 = this->cols();
     unsigned long w2 = other.cols();
-    unsigned long size = std::min(w2, w1-c);
+//    unsigned long size = std::min(w2, w1-c);
     const T* ptrin = other.getData();
     int i1, i2;
     for (int i = 0; i < other.rows() && r+i < this->rows(); ++i) {
@@ -168,6 +168,9 @@ gMat2D<T> gMat2D<T>::operator+(T val) const {
     return w;
 }
 
+/**
+  * Returns a matrix containing the sum between a matrix and a scalar
+  */
 template <typename T>
 gMat2D<T> operator+(T val, const gMat2D<T>& v) {
     gMat2D<T> w(v);
@@ -175,6 +178,9 @@ gMat2D<T> operator+(T val, const gMat2D<T>& v) {
     return w;
 }
 
+/**
+  * Returns a matrix containing the difference between a matrix and a scalar
+  */
 template <typename T>
 gMat2D<T> operator-(T val, const gMat2D<T>& v) {
     gMat2D<T> w(-v);
@@ -191,6 +197,9 @@ gMat2D<T> gMat2D<T>::operator*(T val) const {
     return w;
 }
 
+/**
+  * Returns a matrix containing the multiplication of a matrix by a scalar
+  */
 template <typename T>
 gMat2D<T> operator*(T val, const gMat2D<T>& v) {
     gMat2D<T> w(v);
@@ -198,7 +207,9 @@ gMat2D<T> operator*(T val, const gMat2D<T>& v) {
     return w;
 }
 
-
+/**
+  * Returns a matrix containing the division of a matrix by a scalar
+  */
 template <typename T>
 gMat2D<T> operator/(T val, const gMat2D<T>& v) {
     gMat2D<T> w(v);
@@ -400,6 +411,9 @@ bool gMat2D<T>::allEqualsTo(const T& val)  const {
 
 // ----------------------- PRINTOUT --------------------------------
 
+/**
+  * Writes matrix information and data to a stream
+  */
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const gMat2D<T>& v) {
    if (v.rows() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE || v.cols() >= (unsigned long) gurls::MAX_PRINTABLE_SIZE){
@@ -411,12 +425,10 @@ std::ostream& operator<<(std::ostream& os, const gMat2D<T>& v) {
         for (unsigned long j = 0; j < v.numcols; ++j) {
             os << " " << v.data[i*v.numcols+j];
         }
-        if( i == (v.numrows-1) )
-            os << " ]";
-        else{
+        if( i != (v.numrows-1) )
             os << std::endl << " ";
-        }
     }
+    os << " ]";
     os << std::endl;
     return os;
 }
@@ -463,7 +475,7 @@ gMat2D<T>& gMat2D<T>::reciprocal() const {
 }
 
 template <typename T>
-gVec<T>& gMat2D<T>::sum(int order) {
+gVec<T>& gMat2D<T>::sum(int order) const {
     gVec<T> *v;
     unsigned long n;
     if (order == gurls::COLUMNWISE){
@@ -480,7 +492,7 @@ gVec<T>& gMat2D<T>::sum(int order) {
             v->at(i) = static_cast<T>((this->operator [](i)).sum());
         }
     } else {
-        throw gException(gurls::Exception_Illegat_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
+        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
     return *v;
@@ -504,7 +516,7 @@ gVec<T>& gMat2D<T>::max(int order) {
             v->at(i) = (this->operator [](i)).max();
         }
     } else {
-        throw gException(gurls::Exception_Illegat_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
+        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
     return *v;
@@ -528,7 +540,7 @@ gVec<T>& gMat2D<T>::min(int order) {
             v->at(i) = (this->operator [](i)).min();
         }
     } else {
-        throw gException(gurls::Exception_Illegat_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
+        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
     return *v;
@@ -554,7 +566,7 @@ gVec<T>& gMat2D<T>::argmax(int order) {
             v->at(i) = (this->operator [](i)).argmax();
         }
     } else {
-        throw gException(gurls::Exception_Illegat_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
+        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
     return *v;
@@ -578,7 +590,7 @@ gVec<T>& gMat2D<T>::argmin(int order) {
             v->at(i) = (this->operator [](i)).argmin();
         }
     } else {
-        throw gException(gurls::Exception_Illegat_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
+        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
     return *v;
@@ -613,13 +625,25 @@ void gMat2D<T>::load(Archive & ar, const unsigned int /* file_version */){
 template <typename T>
 void gMat2D<T>::load(const std::string& fileName)
 {
+#ifndef USE_BINARY_ARCHIVES
     std::ifstream instream(fileName.c_str());
+#else
+    std::ifstream instream(fileName.c_str(), std::ios_base::binary);
+#endif
 
     if(!instream.is_open())
         throw gException("Could not open file " + fileName);
 
-    iarchive inar(instream);
-    inar >> *this;
+    try
+    {
+        iarchive inar(instream);
+        inar >> *this;
+    }
+    catch(boost::archive::archive_exception&)
+    {
+        instream.close();
+        throw gException("Invalid file format for " + fileName);
+    }
 
     instream.close();
 }
@@ -627,7 +651,11 @@ void gMat2D<T>::load(const std::string& fileName)
 template <typename T>
 void gMat2D<T>::save(const std::string& fileName) const
 {
+#ifndef USE_BINARY_ARCHIVES
     std::ofstream outstream(fileName.c_str());
+#else
+    std::ofstream outstream(fileName.c_str(), std::ios_base::binary);
+#endif
 
     if(!outstream.is_open())
         throw gException("Could not open file " + fileName);

@@ -58,9 +58,10 @@
 
 namespace gurls {
 
-    /**
-     * \brief PredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the primal formulation
-     */
+/**
+ * \ingroup Prediction
+ * \brief PredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the primal formulation
+ */
 
 template <typename T>
 class PredPrimal: public Prediction<T > {
@@ -84,7 +85,7 @@ void PredPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/,
                                    GurlsOptionsList &opt){
    if (opt.hasOpt("optimizer"))
    {
-       GurlsOptionsList* optimizer = static_cast<GurlsOptionsList*>(opt.getOpt("optimizer"));
+       GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
 //        GurlsOption *g = opt.getOpt("W");
        GurlsOption *g = optimizer->getOpt("W");
        gMat2D<T>& W = OptMatrix< gMat2D<T> >::dynacast(g)->getValue();

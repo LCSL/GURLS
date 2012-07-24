@@ -50,15 +50,18 @@
 #include <string>
 
 namespace gurls {
-    /**
-     * \brief NormZScore is the sub-class of Norm that centers and rescales the input data matrix X.
-     */
+
+/**
+ * \ingroup Norms
+ * \brief NormZScore is the sub-class of Norm that centers and rescales the input data matrix X.
+ */
+
 template <typename T>
 class NormZScore: public Norm<T>
 {
 public:
     /**
-     * Normalizes the input data matrix X, centering them and rescaling it so that each dimension has std. deviation 1. Then saves stats in a file with name root specified in the field name of opt 
+     * Normalizes the input data matrix X, centering them and rescaling it so that each dimension has std. deviation 1. Then saves stats in a file with name root specified in the field name of opt
      * \param X input data matrix
      * \param Y not used
      * \param opt not used

@@ -58,16 +58,17 @@
 
 namespace gurls {
 
-    /**
-     * \brief PredDual is the sub-class of Prediction that computes the predictions of a linear classifier in the dual formulation
-     */
+/**
+ * \ingroup Prediction
+ * \brief PredDual is the sub-class of Prediction that computes the predictions of a linear classifier in the dual formulation
+ */
 
 template <typename T>
 class PredDual: public Prediction<T> {
 
 public:
     /**
-     * computes the predictions of the linear classifier stored in opt.W and computed using the primal formulation, on the samples passed in the X matrix.
+     * Computes the predictions of the linear classifier stored in opt.W and computed using the primal formulation, on the samples passed in the X matrix.
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the following:
@@ -87,7 +88,7 @@ void PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsLi
 
     if(opt.hasOpt("kernel"))
     {
-        GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
+        GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
 
         if(kernel->getOptAsString("type") == "linear")
         {
@@ -97,12 +98,12 @@ void PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsLi
     }
 
 
-    GurlsOptionsList* predkernel = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
+    GurlsOptionsList* predkernel = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
     GurlsOption *K_opt = predkernel->getOpt("K");
     gMat2D<T> *K = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
 
 
-    GurlsOptionsList* rls = static_cast<GurlsOptionsList*>(opt.getOpt("optimizer"));
+    GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
     GurlsOption *C_opt = rls->getOpt("C");
     gMat2D<T> *C = &(OptMatrix<gMat2D<T> >::dynacast(C_opt))->getValue();
 

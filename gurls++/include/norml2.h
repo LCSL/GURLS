@@ -51,9 +51,11 @@
 
 namespace gurls {
 
-    /**
-     * \brief NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.
-     */
+/**
+ * \ingroup Norms
+ * \brief NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.
+ */
+
 template <typename T>
 class NormL2: public Norm<T>
 {

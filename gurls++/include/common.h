@@ -50,7 +50,7 @@
 supervised mult-class learning problems using a regularized least
 square approach.
 
-<p>GURLS++ is the C++ implementation of the Matlab toolbox GURLS 
+<p>GURLS++ is the C++ implementation of the Matlab toolbox GURLS
 (http://cbcl.mit.edu/gurls/).
 
 <p>The ultimate goal of the authors and contributors to GURLS++ has
@@ -108,10 +108,10 @@ or tables.
 
 <p><strong>Current Development Status</strong></p>
 
-The current version of this C++ library implements all the core 
+The current version of this C++ library implements all the core
 functionalities available in GURLS but still miss the functionalities
 required to handle large scale machine learning. A major upgrade and
-revision will be available soon. Check out the main GURLS repository 
+revision will be available soon. Check out the main GURLS repository
 at (https://github.com/CBCL/GURLS) and keep updated for futher developments.
 
 
@@ -172,7 +172,7 @@ GURLS++ is released under the following licence:
 <li> Version 1.0.00, released 2012 June 1th. GURLS++ 1.0.00 is the first
 complete release.
 
-<li> Version 0.1.00, released 2011 October 7th. GURLS++ 1.0.00 is an initial
+<li> Version 0.1.00, released 2011 October 7th. GURLS++ 0.1.00 is an initial
 release and should be used with caution. The library has already been
 in use, but not every function/method has been thoroughly tested.
 Only a limited subset of GURLS is interfaced. Commens, bugfixes,
@@ -182,53 +182,81 @@ enhancements, suggestions are wellcome.
 */
 
 /**
-\defgroup LinearAlgebra
-\brief Contains classes representing 1D/2D matrices and methods to compute basic linear algebra operations on them.
-
-*/
-
-/**
-\defgroup Common
-\brief Contains common constants, typedes, classes and methods used within the library.
-
-*/
+ * \defgroup LinearAlgebra LinearAlgebra
+ * \brief Contains classes representing 1D/2D matrices and methods to compute basic linear algebra operations on them.
+ */
 
 /**
-\defgroup Optimization
-\brief Contains classes and methods to implement the abstract concept of an <em>optimization algorithm</em>.
-
-*/
-
-/**
-\defgroup Evaluation
-\brief Contains classes and methods to evaluate and assess the results of a machine learning experiment.
-
-*/
+ * \defgroup Common Common
+ * \brief Contains common constants, typedes, classes and methods used within the library.
+ */
 
 /**
-\defgroup ModelSelection
-\brief Contains classes and methods to implement the abstract concept of an <em>model selection</em>.
-
-
-*/
-
+ * \defgroup Kernels Kernels
+ * \brief Contains classes that compute the kernel matrix.
+ */
 
 /**
-\defgroup Settings
-\brief Contains classes and methods useful to define a set of parameters used by any learning algorith.
-*/
+ * \defgroup Optimization Optimization
+ * \brief Contains classes and methods to implement the abstract concept of an <em>optimization algorithm</em>.
+ */
 
 /**
-\defgroup Tutorials
-\brief Contains example files that show how to use the GURLS++ API to build simple machine learning applications.
-*/
+ * \defgroup ParameterSelection ParameterSelection
+ * \brief Contains classes and methods to implement parameter selection.
+ */
 
+/**
+ * \defgroup Prediction Prediction
+ * \brief Contains classes that compute predictions.
+ */
 
-/** \ingroup Common
-  \file
-  \brief Header file containing a number of common definition.
+/**
+ * \defgroup Performance Performance
+ * \brief Contains classes and methods to evaluate predictions performances.
+ */
 
-*/
+/**
+ * \defgroup Norms Norms
+ * \brief Contains classes that spherify the data.
+ */
+
+/**
+ * \defgroup Split Split
+ * \brief Contains classes that split data into pairs of training and test samples.
+ */
+
+/**
+ * \defgroup PredKernels PredKernels
+ * \brief Contains classes that computes the kernel matrix for prediction.
+ */
+
+/**
+ * \defgroup Confidence Confidence
+ * \brief Contains classes that compute a confidence score for the predicted labels.
+ */
+
+/**
+ * \defgroup Settings Settings
+ * \brief Contains classes and methods useful to define a set of parameters used by any learning algorith.
+ */
+
+/**
+ * \defgroup Tutorials Tutorials
+ * \brief Contains example files that show how to use the GURLS++ API to build simple machine learning applications.
+ */
+
+/**
+ * \defgroup Exceptions Exceptions
+ * \brief Contains classes representing errors.
+ */
+
+/**
+ * \ingroup Common Common
+ * \file
+ * \brief Header file containing a number of common definition.
+ */
+
 
 //! The main namespace of GURLS++
 /*!
@@ -240,9 +268,5 @@ namespace gurls {
 
 }
 
-
-namespace linalg {
-
-}
 
 #endif // _GURLS_COMMON_H_

@@ -61,12 +61,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief LoocvDual is the sub-class of ParamSelection that implements LOO cross-validation with the dual formulation
-     */
+/**
+ * \ingroup ParameterSelection
+ * \brief ParamSelLoocvDual is the sub-class of ParamSelection that implements LOO cross-validation with the dual formulation
+ */
 
 template <typename T>
-class LoocvDual: public ParamSelection<T>{
+class ParamSelLoocvDual: public ParamSelection<T>{
 
 public:
     /**
@@ -89,7 +90,7 @@ public:
 };
 
 template <typename T>
-void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+void ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
 {
 //    [n,T]  = size(y);
     const int n = Y_OMR.rows();
@@ -104,13 +105,13 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
 
 
 //    tot = opt.nlambda;
-    int tot = static_cast<int>(std::ceil( static_cast<OptNumber*>(opt.getOpt("nlambda"))->getValue() ));
+    int tot = static_cast<int>(std::ceil( opt.getOptAsNumber("nlambda")));
 
 
 //    [Q,L] = eig(opt.kernel.K);
 //    Q = double(Q);
 //    L = double(diag(L));
-    GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
+    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
     GurlsOption *K_opt = kernel->getOpt("K");
 
 
@@ -125,7 +126,7 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     T *Q = K.getData();
     T *L = new T[l_length];
 
-    eig_sm(Q, L, qrows, qcols);
+    eig_sm(Q, L, qrows); // qrows == qcols
 
     int r = n;
     if(kernel->getOptAsString("type") == "linear")
@@ -225,31 +226,40 @@ void LoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
 
     delete[] lambdas;
 
-    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+//    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+    GurlsOptionsList* paramsel = NULL;
+    if(!opt.hasOpt("paramsel"))
+    {
+        paramsel = new GurlsOptionsList("paramsel");
+        opt.addOpt("paramsel", paramsel);
+    }
+    else
+    {
+        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+
+        paramsel->removeOpt("lambdas");
+        paramsel->removeOpt("perf");
+        paramsel->removeOpt("guesses");
+
+    }
 
 //     opt.addOpt("lambdas", LAMBDA);
     paramsel->addOpt("lambdas", LAMBDA);
 
-    //vout.looe{1} = 	ap;
+    //vout.perf = 	ap;
 
-    T* tmp = transpose_rm(ap, t, tot);
+    gMat2D<T>* looe_mat = new gMat2D<T>(tot, t);
+    transpose(ap, tot, t, looe_mat->getData());
 
     delete[] ap;
 
-    gMat2D<T>* looe_mat = new gMat2D<T>(tmp, tot, t, true);
-
-    delete[] tmp;
-
-    paramsel->addOpt("acc", new OptMatrix<gMat2D<T> >(*looe_mat));
-
+    paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*looe_mat));
 
     //vout.guesses = 	guesses;
-    gVec<T> guessesVector(guesses, tot, false);
-    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(guessesVector.asMatrix()));
+    gMat2D<T> *guesses_mat = new gMat2D<T>(guesses, 1, tot, true);
+    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
     delete[] guesses;
-
-   opt.addOpt("paramsel", paramsel);
 
     opt.removeOpt("pred");
     if(pred_old != NULL)

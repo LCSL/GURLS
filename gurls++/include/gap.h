@@ -49,9 +49,10 @@
 
 namespace gurls {
 
-    /**
-     * \brief ConfGap is the sub-class of Confidence that computes a confidence estimation for the predicted class.
-     */
+/**
+ * \ingroup Confidence
+ * \brief ConfGap is the sub-class of Confidence that computes a confidence estimation for the predicted class.
+ */
 
 template <typename T>
 class ConfGap: public Confidence<T>
@@ -59,8 +60,8 @@ class ConfGap: public Confidence<T>
 public:
     /**
      * Computes a confidence estimation for the predicted class (i.e. highest scoring class). The difference between the highest scoring class and the second highest scoring class is used as an estimate.
-     * \param not used
-     * \param not used
+     * \param X not used
+     * \param Y not used
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
@@ -71,44 +72,43 @@ public:
 };
 
 template<typename T>
-void ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y_OMR*/, GurlsOptionsList& opt) throw(gException)
+void ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
-//   out = struct;
-//   [n,k] = size(opt.pred);
-     GurlsOption *pred_opt = opt.getOpt("pred");
-     gMat2D<T> *pred_mat = &(OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
-     int n = pred_mat->rows();
-     int t = pred_mat->cols();
-     gMat2D<T> y_pred(t, n);
-     pred_mat->transpose(y_pred);
-     T* expscoresTranspose = new T[n*t];
-     copy< T >(expscoresTranspose,y_pred.getData(),n*t,1,1);
+    //   out = struct;
+    //   [n,k] = size(opt.pred);
+
+    GurlsOption *pred_opt = opt.getOpt("pred");
+    gMat2D<T> pred_mat = (OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
+
+    const int n = pred_mat.rows();
+    const int t = pred_mat.cols();
+
+    gMat2D<T> y_pred(t, n);
+    pred_mat.transpose(y_pred);
+
+    T* expscoresTranspose = y_pred.getData();
 
 //      out.confidence = opt.pred;
 //      out.confidence = sort(out.confidence,2,'descend');
 //      out.confidence = out.confidence(:,1) - out.confidence(:,2);
 
-     //TODO optmize search of two maxes
-//      for(int i=0;i<n;i++)
-//        std::sort(expscoresTranspose + t*i,expscoresTranspose + t*i +t);
+    gMat2D<T> *conf = new gMat2D<T>(n,1);
+    T* confidence = conf->getData();
 
-     T* confidence = new T[n];
-     T* rowT = new T[t];
-     for(int i=0;i<n;i++)
-     {
-       getRow< T >(expscoresTranspose,n,t,i,rowT);
-       std::sort(rowT,rowT+t);
-       confidence[i] =  rowT[t-1]-rowT[t-2];      
-     }
+    T* rowT = new T[t];
 
-     
-     gVec< T > conf(confidence, n, false);
-     
-     
-     opt.addOpt("confidence", new OptMatrix<gMat2D<T> >(conf.asMatrix()));
-     delete [] expscoresTranspose;
-     delete [] confidence;
-     delete [] rowT;
+    for(int i=0; i<n; ++i)
+    {
+        getRow(expscoresTranspose, n, t, i, rowT);
+        std::sort(rowT,rowT+t);
+        confidence[i] = rowT[t-1]-rowT[t-2];
+    }
+
+    delete [] rowT;
+
+    GurlsOptionsList* ret = new GurlsOptionsList("confidence");
+    ret->addOpt("confidence", new OptMatrix<gMat2D<T> >(*conf));
+    opt.addOpt("conf", ret);
 }
 
 }

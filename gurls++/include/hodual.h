@@ -65,11 +65,12 @@
 namespace gurls {
 
 /**
-   * \brief HoDual is the subclass of ParamSelection that implements hold-out cross validation with the dual formulation of RLS
-   */
+ * \ingroup ParameterSelection
+ * \brief ParamSelHoDual is the subclass of ParamSelection that implements hold-out cross validation with the dual formulation of RLS
+ */
 
 template <typename T>
-class HoDual: public ParamSelection<T>{
+class ParamSelHoDual: public ParamSelection<T>{
 
 public:
     /**
@@ -91,10 +92,49 @@ public:
      *  - forho = matrix of validation accuracies for each lambda guess and for each class
      */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+
+protected:
+    /**
+     * Auxiliary method used to call the right eig/svd function for this class
+     */
+    virtual void eig_function(T* A, T* L, int A_rows_cols);
 };
 
+
+/**
+ * \ingroup ParameterSelection
+ * \brief ParamSelHoDualr is the randomized version of \ref ParamSelHoDual
+ */
+
 template <typename T>
-void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+class ParamSelHoDualr: public ParamSelHoDual<T>{
+
+protected:
+    /**
+     * Auxiliary method used to call the right eig/svd function for this class
+     */
+    virtual void eig_function(T* A, T* L, int A_rows_cols);
+};
+
+
+
+
+
+template<typename T>
+void ParamSelHoDual<T>::eig_function(T* A, T* L, int A_rows_cols)
+{
+    eig_sm(A, L, A_rows_cols);
+}
+
+template<typename T>
+void ParamSelHoDualr<T>::eig_function(T* A, T* L, int A_rows_cols)
+{
+    T* V = NULL;
+    random_svd(A, A_rows_cols, A_rows_cols, A, L, V, A_rows_cols);
+}
+
+template <typename T>
+void ParamSelHoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
 {
     //    [n,T]  = size(y);
     const int n = Y_OMR.rows();
@@ -113,33 +153,34 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
     GurlsOptionsList* perf_old = NULL;
     if(opt.hasOpt("perf"))
     {
-        perf_old = static_cast<GurlsOptionsList*>(opt.getOpt("perf"));
+        perf_old = GurlsOptionsList::dynacast(opt.getOpt("perf"));
         opt.removeOpt("perf", false);
     }
-    GurlsOption* pred_old = NULL;
 
+    GurlsOption* pred_old = NULL;
     if(opt.hasOpt("pred"))
     {
         pred_old = opt.getOpt("pred");
         opt.removeOpt("pred", false);
     }
+
     GurlsOptionsList* optimizer_old = NULL;
     if(opt.hasOpt("optimizer"))
     {
-        optimizer_old = static_cast<GurlsOptionsList*>(opt.getOpt("optimizer"));
+        optimizer_old = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
         opt.removeOpt("optimizer", false);
     }
 
     GurlsOptionsList* predkernel_old = NULL;
     if(opt.hasOpt("predkernel"))
     {
-        predkernel_old = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
+        predkernel_old = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
         opt.removeOpt("predkernel", false);
     }
     opt.addOpt("predkernel", new GurlsOptionsList("predkernel"));
 
 
-    GurlsOptionsList* split = static_cast<GurlsOptionsList*>(opt.getOpt("split"));
+    GurlsOptionsList* split = GurlsOptionsList::dynacast(opt.getOpt("split"));
     GurlsOption *index_opt = split->getOpt("indices");
     GurlsOption *lasts_opt = split->getOpt("lasts");
     gMat2D< unsigned long > *indices_mat = &(OptMatrix<gMat2D< unsigned long > >::dynacast(index_opt))->getValue();
@@ -149,43 +190,37 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
 
     gMat2D< unsigned long > Indices(indices_mat->cols(), indices_mat->rows());
     indices_mat->transpose(Indices);
-    unsigned long* indices_buffer = new unsigned long[indices_mat->cols()*indices_mat->rows()];
-    copy< unsigned long >(indices_buffer,Indices.getData(),indices_mat->cols()*indices_mat->rows());
+    unsigned long* indices_buffer = Indices.getData();
 
-    GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
-    GurlsOption *K_opt = kernel->getOpt("K");
-    gMat2D<T> *K_mat = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
-    gMat2D<T> K(K_mat->cols(), K_mat->rows());
-    K_mat->transpose(K);
-    unsigned long k_rows = K_mat->rows();
-    T* k_buffer_total = new T[K_mat->cols()*K_mat->rows()];
-    copy< T >(k_buffer_total,K.getData(),K_mat->cols()*K_mat->rows());
+    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+    gMat2D<T> &K = OptMatrix<gMat2D<T> >::dynacast(kernel->getOpt("K"))->getValue();
 
-    unsigned long* indices_from0toD = new unsigned long[d];
-    unsigned long* indices_from0toT = new unsigned long[t];
+    const unsigned long k_rows = K.rows();
 
-    for(int i=0;i<d;++i)
-        indices_from0toD[i]=i;
-    for(int i=0;i<t;++i)
-        indices_from0toT[i]=i;
-
-    int tot = static_cast<int>(std::ceil( static_cast<OptNumber*>(opt.getOpt("nlambda"))->getValue() ));
-    int nholdouts = static_cast<int>(std::ceil( static_cast<OptNumber*>(opt.getOpt("nholdouts"))->getValue() ));
+    int tot = static_cast<int>(std::ceil( opt.getOptAsNumber("nlambda") ));
+    int nholdouts = static_cast<int>(std::ceil( opt.getOptAsNumber("nholdouts") ));
 
     T* lambdas = new T[t];
     set(lambdas, (T)0.0, t);
 
-    T* forho_nholdouts = new T[nholdouts * tot*t];
     T* acc_avg = new T[tot*t];
     set(acc_avg, (T)0.0, tot*t);
-    T* guesses_nholdouts = new T[nholdouts * tot];
 
     //     for nh = 1:opt.nholdouts
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
     Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
-    PredDual< T > dual;
+    PredDual<T> dual;
 
     opt.addOpt("optimizer",optimizer);
+
+    gMat2D<T>* perf_mat = new gMat2D<T>(nholdouts, tot*t);
+    T* perf = perf_mat->getData();
+
+    gMat2D<T>*  guesses_mat = new gMat2D<T>(nholdouts, tot);
+    T* ret_guesses = guesses_mat->getData();
+
+    gMat2D<T>* lambdas_round_mat = new gMat2D<T>(nholdouts, t);
+    T* lambdas_round = lambdas_round_mat->getData();
 
     for(int nh=0; nh<nholdouts; ++nh)
     {
@@ -199,14 +234,15 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
         copy<unsigned long>(va,(indices_buffer+ n*nh+lasts), n-lasts);
 
 
-        //Get K(tr,tr) from k_buffer_total
+        //Get K(tr,tr) from K
         T* Q = new T[lasts*lasts];
-        copy_submatrix(Q, k_buffer_total, k_rows, lasts, lasts, tr,tr);
+        copy_submatrix(Q, K.getData(), k_rows, lasts, lasts, tr,tr);
 
         T *L = new T[lasts];
-        eig_sm(Q, L, lasts, lasts);
+        eig_function(Q, L, lasts);
 
         unsigned long r = lasts;
+
         if(kernel->getOptAsString("type") == "linear")
             r = std::min< unsigned long > (lasts,d);
         else
@@ -214,9 +250,9 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
             // 	opt.predkernel.K = opt.kernel.K(va,tr);%nva x ntr
             gMat2D<T> tmp(lasts, n-lasts);
             T* Kvatr = tmp.getData();
-            copy_submatrix(Kvatr, k_buffer_total, k_rows, n-lasts, lasts, va, tr);
+            copy_submatrix(Kvatr, K.getData(), k_rows, n-lasts, lasts, va, tr);
 
-            GurlsOptionsList* predkernel = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
+            GurlsOptionsList* predkernel = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
 
             gMat2D<T>* k_t = new gMat2D<T>(n-lasts, lasts);
             tmp.transpose(*k_t);
@@ -229,18 +265,20 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
         //  ap = zeros(tot,T);
         T* ap = new T[tot*t];
         T* Ytr = new T[lasts*t];
-        copy_submatrix(Ytr, Y.getData(), n, lasts, t, tr, indices_from0toT);
-        //    QtY = Q'*y(tr,:); %
+        subMatrixFromRows(Y.getData(), n, t, tr, lasts, Ytr);
+
+        //    QtY = Q'*y(tr,:);
         T* Qty = new T[lasts*t];
 
-        //       dot(Q, Y.getData(), Qty, lasts, lasts, lasts, t, lasts, t, CblasTrans, CblasNoTrans, CblasColMajor);
         dot(Q, Ytr, Qty, lasts, lasts, lasts, t, lasts, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
         T* C = new T[lasts*t];
+
         //    for i = 1:tot
         // 	opt.rls.X = X(tr,:);
         T* Xtr = new T[lasts*d];
-        copy_submatrix(Xtr, X.getData(), x_rows, lasts, d, tr, indices_from0toD);
+        subMatrixFromRows(X.getData(), x_rows, d, tr, lasts, Xtr);
+
         gMat2D<T> rlsX_tmp(Xtr, d, lasts, false);
         gMat2D<T>* rlsX_t = new gMat2D<T>(lasts, d);
         rlsX_tmp.transpose(*rlsX_t);
@@ -248,10 +286,10 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
         optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*rlsX_t));
 
         T* Xva = new T[(n-lasts)*d];
-        copy_submatrix(Xva, X.getData(), x_rows, n-lasts, d, va, indices_from0toD);
+        subMatrixFromRows(X.getData(), x_rows, d, va, n-lasts, Xva);
 
         T* Yva = new T[(n-lasts)*t];
-        copy_submatrix(Yva, Y.getData(), n, n-lasts, t, va, indices_from0toT);
+        subMatrixFromRows(Y.getData(), n, t, va, n-lasts, Yva);
 
         for(int i=0; i<tot; ++i)
         {
@@ -267,40 +305,22 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
 
             if(kernel->getOptAsString("type") == "linear")
             {
-                //         opt.rls.W = X(tr,:)'*opt.rls.C; % dxT = (ntrxd)'*ntrxT   lasts*d lasts*lasts
+//                opt.rls.W = X(tr,:)'*opt.rls.C; % dxT = (ntrxd)'*ntrxT   lasts*d lasts*lasts
                 T* rlsW = new T[d*t];
                 dot(Xtr, C, rlsW, lasts, d, lasts, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
                 gMat2D<T> tmp(rlsW, t, d, false);
                 gMat2D<T>* W = new gMat2D<T>(d, t);
                 tmp.transpose(*W);
+
                 delete[] rlsW;
                 optimizer->removeOpt("W");
                 optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
             }
-
-            // 	%elseif strcmp(opt.kernel.type,'load')
-            // 	%	opt.predkernel.type = 'load';
-            // 	else
 //            else
-//            {
-//                // 	opt.predkernel.K = opt.kernel.K(va,tr);%nva x ntr
-//                T* Kvatr = new T[(n-lasts)*lasts];
-//                copy_submatrix(Kvatr, k_buffer_total, k_rows, n-lasts, lasts, va, tr);
-//                if(opt.hasOpt())
-//                GurlsOptionsList* predkernel = static_cast<GurlsOptionsList*>(opt.getOpt("predkernel"));
-
-//                gMat2D<T> tmp(Kvatr, lasts, n-lasts, false);
-//                gMat2D<T>* k_t = new gMat2D<T>(n-lasts, lasts);
-//                tmp.transpose(*k_t);
-//                optimizer->removeOpt("K");
-//                predkernel->addOpt("K", new OptMatrix<gMat2D<T> >(*k_t));
-//                delete[] Kvatr;
-//            }
-            // 	%else
-            // 	%	opt.predkernel = predkernel_traintest(X(va,:),y(va,:),opt);
-            //      end
-            // 	opt.pred = pred_dual(Xva,yva,opt);
+//            opt.predkernel.K = opt.kernel.K(va,tr);%nva x ntr
+//            (see above)
 
 
             gMat2D<T> tmp_x(Xva, d, n -lasts, false);
@@ -315,20 +335,15 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
             dual.execute(*xx, *yy, opt);
 
 
-            //  	gMat2D<T> *predV = &(OptMatrix<gMat2D<T> >::dynacast(opt.getOpt("pred")))->getValue();
-
             // 	opt.perf = opt.hoperf(Xva,yva,opt);
             perfClass->execute(*xx, *yy, opt);
 
-            GurlsOptionsList* perf = static_cast<GurlsOptionsList*>(opt.getOpt("perf"));
+            GurlsOptionsList* perf_opt = GurlsOptionsList::dynacast(opt.getOpt("perf"));
+            gMat2D<T> &forho_vec = OptMatrix<gMat2D<T> >::dynacast(perf_opt->getOpt("forho"))->getValue();
 
-            gMat2D<T> *forho_vec = &(OptMatrix<gMat2D<T> >::dynacast(perf->getOpt("forho")))->getValue();
             //       for t = 1:T
-            for(int j = 0; j<t; ++j)
-            {
-                //          ap(i,t) = opt.perf.forho(t);
-                ap[i +(tot*j)] = forho_vec->getData()[j];
-            }
+            //          ap(i,t) = opt.perf.forho(t);
+            copy(ap+i, forho_vec.getData(), t, tot, 1);
 
         }//for tot
 
@@ -353,44 +368,49 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
 
         //vout.lambdas_round{nh} = guesses(idx);
         T* lambdas_nh = copyLocations(idx, guesses, t, tot);
+
+        copy(lambdas_round+nh*t, lambdas_nh, t);
+
         //add lambdas_nh to lambdas
         axpy< T >(t, (T)1, lambdas_nh, 1, lambdas, 1);
+
         delete [] lambdas_nh;
         delete [] idx;
-        //  vout.forho{nh} = ap;
-        copy< T >(forho_nholdouts + nh*tot*t,ap,tot*t,1,1);
-    axpy< T >(tot*t, (T)1, ap, 1, acc_avg, 1);
+
+        //  vout.perf{nh} = ap;
+        copy(perf + nh*tot*t, ap, tot*t, 1, 1);
+
+        axpy(tot*t, (T)1, ap, 1, acc_avg, 1);
+
         //  vout.guesses{nh} = guesses;
-        copy< T >(guesses_nholdouts + nh*tot,guesses,tot,1,1);
+        copy(ret_guesses + nh*tot,guesses,tot,1,1);
 
         delete [] guesses;
         delete [] ap;
     }//for nholdouts
 
-    delete [] indices_from0toD;
-    delete [] indices_from0toT;
-
     delete perfClass;
 
-    delete [] indices_buffer;
-    delete [] k_buffer_total;
 
-    gMat2D< T > forho_tmp(forho_nholdouts, tot*t,nholdouts,false);
-    gMat2D<T>* forho_t = new gMat2D<T>(nholdouts, tot*t);
-    forho_tmp.transpose(*forho_t);
+    GurlsOptionsList* paramsel = NULL;
+    if(!opt.hasOpt("paramsel"))
+    {
+        paramsel = new GurlsOptionsList("paramsel");
+        opt.addOpt("paramsel", paramsel);
+    }
+    else
+    {
+        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
 
-    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
-    paramsel->addOpt("forho", new OptMatrix<gMat2D<T> >(*forho_t));
+        paramsel->removeOpt("perf");
+        paramsel->removeOpt("guesses");
+        paramsel->removeOpt("acc_avg");
+        paramsel->removeOpt("lambdas");
+        paramsel->removeOpt("lambdas_round");
+    }
 
-    delete [] forho_nholdouts;
-
-    gMat2D< T > guesses_tmp(guesses_nholdouts,tot,nholdouts,false);
-    gMat2D<T>*  guesses_t = new gMat2D<T>(nholdouts, tot);
-    guesses_tmp.transpose(*guesses_t);
-    //     opt.addOpt("guesses", new OptMatrix<gMat2D<T> >(guesses_t));
-    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_t));
-
-    delete [] guesses_nholdouts;
+    paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*perf_mat));
+    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
     //     if numel(vout.lambdas_round) > 1
     // 	lambdas = cell2mat(vout.lambdas_round');
@@ -400,27 +420,24 @@ void HoDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
     //     end
     if(nholdouts>1)
     {
-        for(T *it = lambdas, *end = lambdas+t; it != end; ++it)
-            *it = *it / nholdouts;
-    for(T *it = acc_avg, *end = acc_avg+tot*t; it != end; ++it)
-            *it = *it / nholdouts;
+        scal(t, (T)1.0/nholdouts, lambdas, 1);
+        scal(t, (T)1.0/nholdouts, acc_avg, 1);
     }
+
     gMat2D< T > acc_tmp(acc_avg,t,tot,false);
     gMat2D<T>*  acc_t = new gMat2D<T>(tot, t);
     acc_tmp.transpose(*acc_t);
+    delete [] acc_avg;
     paramsel->addOpt("acc_avg", new OptMatrix<gMat2D<T> >(*acc_t));
 
     OptNumberList* LAMBDA = new OptNumberList();
     for (T* l_it = lambdas, *l_end = lambdas+t; l_it != l_end; ++l_it)
-    {
         LAMBDA->add(static_cast<double>(*l_it));
-    }
 
     delete [] lambdas;
 
-    //     opt.addOpt("lambdas", LAMBDA);
     paramsel->addOpt("lambdas", LAMBDA);
-    opt.addOpt("paramsel", paramsel);
+    paramsel->addOpt("lambdas_round", new OptMatrix<gMat2D<T> >(*lambdas_round_mat));
 
     opt.removeOpt("pred");
     if(pred_old != NULL)

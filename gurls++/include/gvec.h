@@ -61,150 +61,270 @@ namespace gurls {
 template <typename T>
 class gMat2D;
 
-// Implements a vector of generic length.
+/**
+  * \ingroup LinearAlgebra
+  * \brief gVec implements a vector of generic length
+  * \tparam T Cells type.
+  */
 template <typename T>
 class gVec : public BaseArray<T> {
 
 public:
-	gVec(unsigned long n = 0);
-	gVec(T* buf, unsigned long n, bool ownership = true);
-	gVec(const gVec& other);
-	gVec<T>& operator=(const gVec& other);
+    /**
+      * Initializes a vector of n elements.
+      */
+    gVec(unsigned long n = 0);
 
-	static gVec<T> zeros(unsigned long n = 0);
+    /**
+      * Initializes a vector of n elements from a data buffer. If ownership == true the class will take the ownership of the buffer
+      */
+    gVec(T* buf, unsigned long n, bool ownership = true);
 
-	static gVec<T> rand(unsigned long n = 0);
+    /**
+      * Constructor form an existing \ref gVec
+      */
+    gVec(const gVec<T>& other);
 
-	gVec<unsigned long> nonzeros() const;
+    /**
+      * Assignment operator
+      */
+    gVec<T>& operator=(const gVec<T>& other);
 
-	// Make the vector as if it had been default-constructed.
-	void clear();
+    /**
+      * Returns a vector of all zeros
+      */
+    static gVec<T> zeros(unsigned long n = 0);
 
-	//using BaseArray<T>::size;
+    /**
+      * Returns a n-length vector initialized with pseudo-random values
+      */
+    static gVec<T> rand(unsigned long n = 0);
 
-	gVec<T>& operator=(const T& val) {
-		return static_cast<gVec<T>&>(this->BaseArray<T>::operator=(val));
-	}
+    /**
+      * Returns a subvector containing all nonzero values
+      */
+    gVec<unsigned long> nonzeros() const;
 
-	//gVec<T>& set(const T * v, unsigned long n, unsigned long start = 0);
-	using BaseArray<T>::set;
+    /**
+      * Clears the vector, making it as if it had been default-constructed.
+      */
+    void clear();
 
-	//gVec<T>& set(const gVec<T>& v, unsigned long start=0) { return this->set(v.data(), v.size(), start); }
-	void set(const gVec<T>& v, unsigned long start=0) { this->set(v.data(), v.size(), start); }
+    /**
+      * Sets all elements of the vector to the value specified in \c val
+      */
+    gVec<T>& operator=(const T& val) { return static_cast<gVec<T>&>(this->BaseArray<T>::operator=(val)); }
 
-	//using BaseArray<T>::asarray;
-	//void asarray(T * v, unsigned long n) const;
+    using BaseArray<T>::set;
 
-	const T& at(unsigned long i) const { return this->data[i]; }
+    /**
+      * Copies all elements of a given vector \c v to the vector starting from \c start
+      */
+    void set(const gVec<T>& v, unsigned long start=0) { this->set(v.data(), v.size(), start); }
 
-	T& at(unsigned long i) { return this->data[i]; }
+    /**
+      * Returns a const reference to the i-th element
+      */
+    const T& at(unsigned long i) const { return this->data[i]; }
 
-	const T& operator[](unsigned long i) const {
+    /**
+      * Returns a reference to the i-th element
+      */
+    T& at(unsigned long i) { return this->data[i]; }
+
+    /**
+      * Returns a const reference to the i-th element
+      */
+    const T& operator[](unsigned long i) const {
 #ifdef DEBUG
-		if (i < 0 || i >= this->size) {
-			throw gException("Index exceeds array dimension.");
-		}
+        if (i < 0 || i >= this->size)
+            throw gException("Index exceeds array dimension.");
 #endif // DEBUG
-		return at(i);
-	};
+        return at(i);
+    }
 
-	T& operator[](unsigned long i) {
+    /**
+      * Returns a reference to the i-th element
+      */
+    T& operator[](unsigned long i) {
 #ifdef DEBUG
-		if (i < 0 || i >= this->size) {
-			throw gException("Index exceeds array dimension.");
-		}
+        if (i < 0 || i >= this->size)
+            throw gException("Index exceeds array dimension.");
 #endif // DEBUG
-		return at(i);
-	};
+        return at(i);
+    }
 
-	gVec<T> subvec(unsigned int len, unsigned int start=0) const;
+    /**
+      * Returns a subvector containing all values beginning from \c start
+      */
+    gVec<T> subvec(unsigned int len, unsigned int start=0) const;
 
-	gVec<T> operator-() const { return static_cast<T>(-1)*(*this); }
+    /**
+      * Inverts elements sign
+      */
+    gVec<T> operator-() const { return static_cast<T>(-1)*(*this); }
 
-	using BaseArray<T>::operator+=;
-	gVec<T> operator+(T) const;
-	template <typename U>
-	friend gVec<U> operator+(U val, const gVec<U>& v);
+    using BaseArray<T>::operator+=;
 
-	using BaseArray<T>::operator-=;
-	gVec<T> operator-(T val) const { return *this + (-val); }
-	template <typename U>
-	friend gVec<U> operator-(U val, const gVec<U>& v);
+    /**
+      * Returns a vector containing the sum between the vector and a scalar
+      */
+    gVec<T> operator+(T) const;
 
-	//gVec<T>& operator*=(T );
-	using BaseArray<T>::operator*=;
-	gVec<T> operator*(T) const;
-	template <typename U>
-	friend gVec<U> operator*(U val, const gVec<U>& v);
-
-	//gVec<T>& operator/=(T val);
-	using BaseArray<T>::operator/=;
-	gVec<T> operator/(T val) const { return *this * (static_cast<T>(1)/val); }
-	template <typename U>
-	friend gVec<U> operator/(U val, const gVec<U>& v);
-
-	gVec<T>& operator+=(const gVec<T>&);
-	gVec<T> operator+(const gVec<T>&) const;
-
-	gVec<T>& operator-=(const gVec<T>& v);
-	gVec<T> operator-(const gVec<T>& v) const;
-
-	gVec<T>& operator*=(const gVec<T>&);
-	gVec<T> operator*(const gVec<T>&) const;
-
-	gVec<T>& operator/=(const gVec<T>&);
-	gVec<T> operator/(const gVec<T>&) const;
-
-	gVec<T>& reciprocal() const;
+    /**
+      * Returns a vector containing the sum between a vector and a scalar
+      */
+    template <typename U>
+    friend gVec<U> operator+(U val, const gVec<U>& v);
 
 
-	gMat2D<T>& asMatrix(bool ascolumn = true){
-		unsigned long int r = this->size;
-		unsigned long int c = 1;
-		if (!ascolumn){
-			r = 1;
-			c = this->size;
-		}
-		gMat2D<T>* mat = new gMat2D<T>(this->data, r, c, true);
-		return *mat;
-	}
+    using BaseArray<T>::operator-=;
 
-	void isequal(const T& value, std::vector<int>& indices);
+    /**
+      * Returns a vector containing the difference between the vector and a scalar
+      */
+    gVec<T> operator-(T val) const { return *this + (-val); }
 
-	template <typename U>
-	friend bool operator== (const gVec<U>&, const U&);
+    /**
+      * Returns a vector containing the difference between a vector and a scalar
+      */
+    template <typename U>
+    friend gVec<U> operator-(U val, const gVec<U>& v);
 
-	template <typename U>
-	friend std::ostream& operator<<(std::ostream&, const gVec<U>&);
+    using BaseArray<T>::operator*=;
 
-	template <typename U>
-	friend void dot(const gMat2D<U>&, const gVec<U>&, gVec<U>&);
+    /**
+      * Returns a vector containing the multiplication of the vector by a scalar
+      */
+    gVec<T> operator*(T) const;
 
-	template <typename U>
-	friend void dot(const gVec<T>& x, const gVec<T>& y);
+    /**
+      * Returns a vector containing the multiplication of a vector by a scalar
+      */
+    template <typename U>
+    friend gVec<U> operator*(U val, const gVec<U>& v);
 
-	virtual std::string what() const {
-		std::stringstream v("gVec:");
-		v << std::string(" vector of length ");
-		v << this->getSize();
-		v <<  std::string("and type ");
-		v << typeid(T).name();
-		return v.str();
-	}
+    using BaseArray<T>::operator/=;
 
-	T argmin() const;
-	T argmax() const;
+    /**
+      * Returns a vector containing the division of the vector by a scalar
+      */
+    gVec<T> operator/(T val) const { return *this * (static_cast<T>(1)/val); }
 
-	gVec<T>& copyLocations(const gVec<T> locs);
+    /**
+      * Returns a vector containing the division of a vector by a scalar
+      */
+    template <typename U>
+    friend gVec<U> operator/(U val, const gVec<U>& v);
 
+    /**
+      * In-place addition to a vector
+      */
+    gVec<T>& operator+=(const gVec<T>&);
 
+    /**
+      * Returns the sum of two vectors
+      */
+    gVec<T> operator+(const gVec<T>&) const;
 
-//	friend class boost::serialization::access;
-//	template<class Archive>
-//	void save(Archive & , const unsigned int) const;
-//	template<class Archive>
-//	void load(Archive & , const unsigned int);
-//	BOOST_SERIALIZATION_SPLIT_MEMBER()
+    /**
+      * In-place subtraction to a vector
+      */
+    gVec<T>& operator-=(const gVec<T>& v);
+
+    /**
+      * Returns the difference between two vectors
+      */
+    gVec<T> operator-(const gVec<T>& v) const;
+
+    /**
+      * In-place element by element multiplication by a vector
+      */
+    gVec<T>& operator*=(const gVec<T>&);
+
+    /**
+      * Returns the element by element multiplication between two vectors
+      */
+    gVec<T> operator*(const gVec<T>&) const;
+
+    /**
+      * In-place element by element division by a vector
+      */
+    gVec<T>& operator/=(const gVec<T>&);
+
+    /**
+      * Returns the element by element division between two vectors
+      */
+    gVec<T> operator/(const gVec<T>&) const;
+
+    /**
+      * Returns vector's multiplicative inverse
+      */
+    gVec<T>& reciprocal() const;
+
+    /**
+      * Returns a matrix representing the vector
+      */
+    gMat2D<T>& asMatrix(bool ascolumn = true){
+        unsigned long int r = this->size;
+        unsigned long int c = 1;
+        if (!ascolumn){
+            r = 1;
+            c = this->size;
+        }
+        gMat2D<T>* mat = new gMat2D<T>(this->data, r, c, true);
+        return *mat;
+    }
+
+    /**
+      * Writes into the vector \c indices the indices of the elements whose value is equal to the given one
+      */
+    void isequal(const T& value, std::vector<int>& indices);
+
+    /**
+      * Checks if all elements in a vector are equal to a given value
+      */
+    template <typename U>
+    friend bool operator== (const gVec<U>&, const U&);
+
+    /**
+      * Writes vector's information and data to a stream
+      */
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream&, const gVec<U>&);
+
+//    template <typename U>
+//    friend void dot(const gMat2D<U>&, const gVec<U>&, gVec<U>&);
+
+//    template <typename U>
+//    friend void dot(const gVec<T>& x, const gVec<T>& y);
+
+    /**
+      * Returns a string description of the vector
+      */
+    virtual std::string what() const {
+        std::stringstream v("gVec:");
+        v << std::string(" vector of length ");
+        v << this->getSize();
+        v <<  std::string("and type ");
+        v << typeid(T).name();
+        return v.str();
+    }
+
+    /**
+     * Returns the smallest element in the vector
+     */
+    T argmin() const;
+
+    /**
+     * Returns the largest element in the vector
+     */
+    T argmax() const;
+
+    /**
+     * Returns a subvector containing elements whose index in the vector is contained in \c locs
+     */
+    gVec<T>& copyLocations(const gVec<T> locs);
 
 };
 

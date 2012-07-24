@@ -55,77 +55,208 @@
 
 #include "exceptions.h"
 
-//using namespace boost;
-
 namespace gurls {
 
+/**
+  * Maximum vector size for printing.
+  * Verctor with a largest size will not be printed out
+  */
 const static int MAX_PRINTABLE_SIZE = 200;
 
+/**
+  *  \brief BaseArray is the base class for all classes implementing
+  *  vectors and matrices as arrays of cells.
+  *  \tparam T Cells type.
+  */
 template <typename T>
 class BaseArray {
 
 protected:
 
-    T* data;
-    unsigned long size;
-    bool isowner;
+    T* data;                    ///< Pointer to the data buffer
+    unsigned long size;         ///< Data buffer length
+    bool isowner;               ///< Flag indicating whether vector has ownership of (and has to deallocate in destructor) the pointed buffer or not
 
-    void alloc(unsigned long n);
+    void alloc(unsigned long n); ///< Allocates the \c n elements data buffer
 
 public:
 
+    /**
+      * Default constructor, initializes an empty vector
+      */
     BaseArray() : data(0), size(0), isowner(false) { /* TO BE DISCUSSED*/}
-    BaseArray(unsigned long n) {this->alloc(n);}
-    BaseArray(const BaseArray& other);
 
-    BaseArray<T>& operator=(const BaseArray& other);
+    /**
+      * Initializes a vector of n elements.
+      */
+    BaseArray(unsigned long n) {this->alloc(n);}
+
+    /**
+      * Initializes a vector copying elements from another vector
+      */
+    BaseArray(const BaseArray<T>& other);
+
+    /**
+      * Copies values form vector \c other to this one
+      */
+    BaseArray<T>& operator=(const BaseArray<T>& other);
+
+    /**
+      * Sets all elements of the vector to the value specified in \c val
+      */
     BaseArray<T>& operator=(const T& val);
 
-    ~BaseArray(){ if (this->isowner) { delete[] this->data; } }
+    /**
+      * Destructor
+      */
+    ~BaseArray(){ if (this->isowner && data != NULL) { delete[] this->data; } }
 
+    /**
+      * Copies \c n elements of a given vector \c v to this vector starting from \c start
+      */
     void set(const T * v, unsigned long n, unsigned long start = 0);
+
+    /**
+      * Resizes the vector to length \c n
+      */
     void resize(unsigned long n);
+
+    /**
+      * Copies \c n elements from this vector to a new buffer \c v
+      */
     void asarray(T * v, unsigned long n) const;
+
+    /**
+      * Initializes the vector with pseudo-random values
+      */
     void randomize();
 
+    /**
+      * Returns vector length
+      */
     unsigned long getSize() const { return this->size; }
+
+    /**
+      * Returns a const pointer to the vector buffer
+      */
     const T* getData() const { return this->data; }
+
+    /**
+      * Returns a non-const pointer to the vector buffer
+      */
     T* getData() { return this->data; }
 
+    /**
+      * Returns a const pointer to the begin of vector buffer
+      */
     const T* begin() const { return this->data(); }
+
+    /**
+      * Returns a non-const pointer to the begin of vector buffer
+      */
     T* begin() { return this->data(); }
+
+    /**
+      * Returns a const pointer to the end of vector buffer
+      */
     const T* end() const { return (this->data() + this->size); }
+
+    /**
+      * Returns a non-const pointer to the end of vector buffer
+      */
     T* end() { return (this->data() + this->size); }
 
-    const T& max() const;
-    const T& min() const;
-    const double& sum() const;
 
+    /**
+      * Returns a reference to the element with the largest value in the vector
+      */
+    const T& max() const;
+
+    /**
+      * Returns a reference to the element with the smallest value in the vector
+      */
+    const T& min() const;
+
+    /**
+      * Returns the sum of all elements in the vector
+      */
+    double sum() const;
+
+    /**
+      * Adds a value to all elements
+      */
     BaseArray<T>& operator+=(T);
+
+    /**
+      * Subtracts a value to all elements
+      */
     BaseArray<T>& operator-=(T);
+
+    /**
+      * Multiplies all elements by a scalar
+      */
     BaseArray<T>& operator*=(T);
+
+    /**
+      * Divides all elements by a scalar
+      */
     BaseArray<T>& operator/=(T);
 
-    // The following methods implements in-place arithmetic operations between arrays
+    /**
+      * In-place addition to a vector
+      */
     BaseArray<T>& add(const BaseArray<T>&);
+
+    /**
+      * In-place subtraction to a vector
+      */
     BaseArray<T>& subtract(const BaseArray<T>&);
+
+    /**
+      * In-place element by element multiplication by a vector
+      */
     BaseArray<T>& multiply(const BaseArray<T>&);
+
+    /**
+      * In-place element by element division by a vector
+      */
     BaseArray<T>& divide(const BaseArray<T>&);
 
-    // In-place multiplicative inverse of each element
+    /**
+      * In-place multiplicative inverse of each element
+      */
     BaseArray<T>& setReciprocal();
 
+    /**
+      * Checks if all elements in a vector are equal to a given value
+      */
     template <typename U>
     friend bool operator== (const BaseArray<U>&, const U&);
+
+    /**
+      * Checks if vector values are element by element close to a given array
+      */
     bool closeTo(const BaseArray<T>&, T tolerance) const;
 
-    virtual std::string what() const = 0 ;
+    /**
+      * Returns a string description of the vector
+      */
+    virtual std::string what() const = 0;
 
     friend class boost::serialization::access;
+
+    /**
+      * Serializes the vector to a generic archive
+      */
     template<class Archive>
     void save(Archive & , const unsigned int) const;
+
+    /**
+      * Deserializes the vector from a generic archive
+      */
     template<class Archive>
     void load(Archive & , const unsigned int);
+
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 

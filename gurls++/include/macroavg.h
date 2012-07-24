@@ -52,12 +52,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief MacroAvg is the sub-class of Performance that evaluates prediction accuracy
-     */
+/**
+ * \ingroup Performance
+ * \brief PerfMacroAvg is the sub-class of Performance that evaluates prediction accuracy
+ */
 
 template <typename T>
-class MacroAvg: public Performance<T>{
+class PerfMacroAvg: public Performance<T>{
 
 public:
     /**
@@ -80,7 +81,7 @@ protected:
 };
 
 template<typename T>
-void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
+void PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
 {
 //    if isfield (opt,'perf')
 //        p = opt.perf; % lets not overwrite existing performance measures.
@@ -101,7 +102,7 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
         opt.addOpt("perf", perf);
     }
 
-    GurlsOptionsList* perf = static_cast<GurlsOptionsList*>(opt.getOpt("perf"));
+    GurlsOptionsList* perf = GurlsOptionsList::dynacast(opt.getOpt("perf"));
 
     if(perf->hasOpt("acc"))
         perf->removeOpt("acc");
@@ -109,8 +110,8 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
     if(perf->hasOpt("forho"))
         perf->removeOpt("forho");
 
-    T* acc = new T[cols];
-    T* forho = new T[cols];
+    gMat2D<T>* acc_mat = new gMat2D<T>(1, cols);
+    T* acc = acc_mat->getData();
 
 //    T = size(y,2);
 
@@ -147,8 +148,6 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
         mean(tmp, acc, rows, 1, 1);
 
 //        p.forho = mean(predlab == y);
-        *forho = *acc;
-
 //        p.forplot = mean(predlab == y);
 
         delete [] tmp;
@@ -185,34 +184,41 @@ void MacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, Gu
         delete[] predLab;
         delete[] trueLab;
 
-//        for t = 1:T,
+//        for t = 1:length(PerClass),
 //            p.acc(t) = PerClass(t);
 //            p.forho(t) = p.acc(t);
 //            p.forplot(t) = p.acc(t);
 //        end
-        copy(acc, perClass, cols);
-        copy(forho, perClass, cols);
+//        for t = (length(PerClass)+1):T
+//            p.acc(t) = 1;
+//            p.forho(t) = 1;
+//            p.forplot(t) = 1;
+//        end
+
+        copy(acc, perClass, perClass_length);
+
+        if(perClass_length < cols)
+            set(acc+perClass_length, (T)1.0, cols-perClass_length);
 
     }
 
-//        for(int i=0; i<cols; ++i)
-//        {
-//            acc[i] = i;
-//            forho[i] = 2*i+1;
-//        }
-
-    gMat2D<T>* acc_mat = new gMat2D<T>(acc, 1, cols, true);
     OptMatrix<gMat2D<T> >* acc_opt = new OptMatrix<gMat2D<T> >(*acc_mat);
     perf->addOpt("acc", acc_opt);
 
-    gMat2D<T>* forho_mat = new gMat2D<T>(forho, 1, cols, true);
-    OptMatrix<gMat2D<T> >* forho_opt = new OptMatrix<gMat2D<T> >(*forho_mat);
+
+    OptMatrix<gMat2D<T> >* forho_opt = new OptMatrix<gMat2D<T> >(*(new gMat2D<T>(*acc_mat)));
     perf->addOpt("forho", forho_opt);
+
+//    OptMatrix<gMat2D<T> >* forplot_opt = new OptMatrix<gMat2D<T> >(*(new gMat2D<T>(*acc_mat)));
+//    perf->addOpt("forplot", forplot_opt);
 
 }
 
+/**
+ * Auxiliary function called by \ref execute method
+ */
 template<typename T>
-void MacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* predY, const int length, int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length)
+void PerfMacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* predY, const int length, int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length)
 {
 //function [MacroAverage, PerClass] = macroavg(TrueY, PredY)
 //% Computes average of performance for each class.
@@ -220,6 +226,10 @@ void MacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* pred
 //% Macro
 //nClasses = max(TrueY);
     int nClasses = *(std::max_element(trueY, trueY+length));
+
+    if(nClasses < 0)
+        throw gException(Exception_Inconsistent_Size);
+
     perClass_length = nClasses+1;
 //     perClass = new T[perClass_length];
     perClass = new T[totClasses];

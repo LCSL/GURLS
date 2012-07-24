@@ -109,7 +109,7 @@ gVec<unsigned long> gVec<T>::nonzeros() const
     }
 
     return indexes;
-};
+}
 
 
 template <typename T>
@@ -152,6 +152,9 @@ gVec<T> gVec<T>::operator+(T val) const {
     return w;
 }
 
+/**
+  * Returns a vector containing the sum between a vector and a scalar
+  */
 template <typename T>
 gVec<T> operator+(T val, const gVec<T>& v) {
     gVec<T> w(v);
@@ -159,6 +162,9 @@ gVec<T> operator+(T val, const gVec<T>& v) {
     return w;
 }
 
+/**
+  * Returns a vector containing the difference between a vector and a scalar
+  */
 template <typename T>
 gVec<T> operator-(T val, const gVec<T>& v) {
     gVec<T> w(-v);
@@ -186,6 +192,9 @@ gVec<T> gVec<T>::operator*(T val) const {
     return w;
 }
 
+/**
+  * Returns a vector containing the multiplication of a vector by a scalar
+  */
 template <typename T>
 gVec<T> operator*(T val, const gVec<T>& v) {
     gVec<T> w(v);
@@ -205,6 +214,9 @@ gVec<T>& gVec<T>::operator/=(T val) {
 };
 */
 
+/**
+  * Returns a vector containing the division of a vector by a scalar
+  */
 template <typename T>
 gVec<T> operator/(T val, const gVec<T>& v) {
     gVec<T> w(v);
@@ -303,6 +315,9 @@ gVec<T> gVec<T>::operator/(const gVec<T>& v) const {
 
 // TODO: to implement the comparison between two vectors!!
 
+/**
+  * Checks if all elements in a vector are equal to a given value
+  */
 template <typename U>
 bool operator== (const gVec<U>& v, const U& val) {
     U *ptr = v.data;
@@ -317,6 +332,9 @@ bool operator== (const gVec<U>& v, const U& val) {
 
 // ----------------------- PRINTOUT --------------------------------
 
+/**
+  * Writes vector's information and data to a stream
+  */
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const gVec<T>& v) {
     if (v.getSize() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE){

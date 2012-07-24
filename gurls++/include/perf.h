@@ -59,17 +59,18 @@
 namespace gurls {
 
 template <typename T>
-class MacroAvg;
+class PerfMacroAvg;
 
 template <typename T>
-class PrecisionRecall;
+class PerfPrecRec;
 
 template <typename T>
-class Rmse;
+class PerfRmse;
 
-    /**
-     * \brief Performance is the class that evaluates prediction performance
-     */
+/**
+ * \ingroup Performance
+ * \brief Performance is the class that evaluates prediction performance
+ */
 
 //template <typename Matrix>
 template <typename T>
@@ -78,7 +79,7 @@ class Performance
 public:
     /**
      * Evaluates prediction performance
-     * 
+     *
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the different required fields based on the sub-class
@@ -89,21 +90,35 @@ public:
 //	virtual Matrix& execute( const Matrix& X, const Matrix& Y, GurlsOptionsList& opt) = 0;
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
-    class BadPerformanceCreation : public std::logic_error {
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadPerformanceCreation is thrown when \ref factory tries to generate an unknown performance evaluator
+     */
+    class BadPerformanceCreation : public std::logic_error
+    {
     public:
+		/**
+		 * Exception constructor.
+		 */
         BadPerformanceCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
-//    static Performance<Matrix>*
-    static Performance<T>*
-    factory(const std::string& id) throw(BadPerformanceCreation)
+
+	/**
+	 * Factory function returning a pointer to the newly created object.
+	 *
+	 * \warning The returned pointer is a plain, un-managed pointer. The calling
+	 * function is responsible of deallocating the object.
+	 */
+    static Performance<T>* factory(const std::string& id) throw(BadPerformanceCreation)
     {
         if(id == "precrec")
-            return new PrecisionRecall<T>;
+            return new PerfPrecRec<T>;
         else if(id == "macroavg")
-            return new MacroAvg<T>;
-	else if(id == "rmse")
-            return new Rmse<T>;
+            return new PerfMacroAvg<T>;
+    else if(id == "rmse")
+            return new PerfRmse<T>;
         else
             throw BadPerformanceCreation(id);
     }

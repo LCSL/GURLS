@@ -50,12 +50,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief RBFKernel is the sub-class of Kernel that builds the Gaussian kernel matrix
-     */
+/**
+ * \ingroup Kernels
+ * \brief KernelRBF is the sub-class of Kernel that builds the Gaussian kernel matrix
+ */
 
 template <typename T>
-class RBFKernel: public Kernel<T>
+class KernelRBF: public Kernel<T>
 {
 public:
     /**
@@ -75,7 +76,7 @@ public:
 };
 
 template<typename T>
-void RBFKernel<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void KernelRBF<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
@@ -87,7 +88,7 @@ void RBFKernel<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, Gurls
         opt.addOpt("kernel", new GurlsOptionsList("kernel"));
 
 //    GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
-    GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
+    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
 
 
 //    if ~isfield(opt.kernel,'distance')
@@ -113,7 +114,7 @@ void RBFKernel<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, Gurls
 
     dist = &(static_cast<OptMatrix<gMat2D<T> >* >( kernel->getOpt("distance"))->getValue());
 
-    GurlsOptionsList* paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
     double sigma = paramsel->getOptAsNumber("sigma");
 
     const int len = xr*xr;

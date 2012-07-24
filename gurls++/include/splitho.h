@@ -49,53 +49,139 @@
 
 namespace gurls {
 
-   /**
-     * \brief SplitHo is the sub-class of Split that splits data into one pair of training and test samples.
-     */
+/**
+ * \ingroup Split
+ * \brief SplitHoMulti is the sub-class of Split that splits data into one or more pairs of training and test samples.
+ */
 
 template <typename T>
 class SplitHo: public Split<T>
 {
 public:
     /**
-     * Splits data into one pair of training and test samples, to be used for cross-validation. The fraction of samples for the validation set is specified in the field hoproportion of opt.
+     * Splits data into one or more pairs of training and test samples, to be used for cross-validation. The fraction of samples for the validation set is specified in the field hoproportion of opt, and the number of pairs is specified in the field nholdouts of opt
      * \param X not used
      * \param Y labels matrix
      * \param opt options with the following field
      *   - hoproportion (default)
+     *   - nholdouts (default)
      *
      * \return adds to opt the field split, which is a list containing the following fields:
-     *  - indices = 1xn array containing the indices of training and validation samples
-     *  - lasts = number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
+     *  - indices = nholdoutsxn matrix, each row contains the indices of training and validation samples
+     *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
+
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
 void SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
 {
-//  n= size(y,1);
-    const int n =  Y_OMR.rows();
 
-//  order = randperm(n);
-    gMat2D<unsigned long>* indices = new gMat2D<unsigned long>(1, n);
-    gMat2D<unsigned long>* lasts = new gMat2D<unsigned long>(1, 1);
+    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
+    Y_OMR.transpose(Y);
 
-    randperm(n, indices->getData(), true, 0);
+//    nSplits = opt.nholdouts;
+    const int nSplits = static_cast<int>(opt.getOptAsNumber("nholdouts"));
 
-//last = floor(n*opt.hoproportion);
-    lasts->getData()[0] = n - static_cast<unsigned long>(std::floor( n * opt.getOptAsNumber("hoproportion")));
+//    fraction = opt.hoproportion;
+    const double fraction = opt.getOptAsNumber("hoproportion");
 
-//vout.va = order(1:last);
-//vout.tr = order(last+1:end);
+//    [n,T] = size(y);
+    const int n = Y_OMR.rows();
+    const int t = Y_OMR.cols();
+
+//    [dummy, y] = max(y,[],2);
+    T* work = new T[Y.getSize()];
+    unsigned long* y = new unsigned long[n];
+
+//    maxPerRow(Y.getData(), n, t, y);
+    indicesOfMax(Y.getData(), n, t, y, work, 2);
+
+    delete[] work;
+
+//    for t = 1:T,
+//        classes{t}.idx = find(y == t);
+//    end
+
+    int* nSamples = new int[t];
+    int nva = 0;
+    unsigned long* idx = new unsigned long[n];
+    unsigned long* it_idx = idx;
+
+//    for t = 1:T,
+    for(int i=0; i<t; ++i)
+    {
+//        nSamples(t) = numel(classes{t}.idx);
+        indicesOfEqualsTo<unsigned long>(y, n, i, it_idx, nSamples[i]);
+
+//        nva = nva + floor(fraction*nSamples(t));
+        nva += static_cast<int>(std::floor(fraction*nSamples[i]));
+
+        it_idx += nSamples[i];
+    }
+
+    delete[] y;
+
+    gMat2D<unsigned long> tmp_indices (n, nSplits);
+    unsigned long* indices = tmp_indices.getData();
+
+//    T* indices = new T[nSplits*n];
+
+    int count_tr;
+    int count_va;
+//    T* order = new T[n];
+
+//    for state = 1:nSplits,
+    for(int state=0; state<nSplits; ++state)
+    {
+//    %% Shuffle each class
+        count_tr = 0;
+        count_va = n-nva;
+
+        it_idx = idx;
+
+//        for t = 1:T,
+        for(int i=0; i<t; ++i)
+        {
+            const int nsamples = nSamples[i];
+
+            if(nsamples == 0)
+                continue;
+
+            randperm(nsamples, it_idx, false);
+
+            int last = nsamples - static_cast<int>(std::floor(nsamples*fraction));
+
+
+            copy(indices+(nSplits*count_tr)+state, it_idx, last, nSplits, 1);
+
+            copy(indices+(nSplits*count_va)+state, it_idx+last, nsamples-last, nSplits, 1);
+
+            count_tr += last;
+            count_va += nsamples-last;
+            it_idx += nsamples;
+
+        }
+
+    }
+
+    delete[] nSamples;
+    delete[] idx;
+
+    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(nSplits, n);
+    tmp_indices.transpose(*m_indices);
+
+    gMat2D<unsigned long>* m_lasts = new gMat2D<unsigned long>(nSplits, 1);
+    set(m_lasts->getData(), (unsigned long) (n-nva), nSplits);
+
 
     if(opt.hasOpt("split"))
         opt.removeOpt("split");
 
     GurlsOptionsList* split = new GurlsOptionsList("split");
-
-    split->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*indices));
-    split->addOpt("lasts", new OptMatrix<gMat2D<unsigned long> >(*lasts));
+    split->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*m_indices));
+    split->addOpt("lasts", new OptMatrix<gMat2D<unsigned long> >(*m_lasts));
 
     opt.addOpt("split",split);
 }

@@ -55,13 +55,12 @@
 namespace gurls {
 
 /**
-     * \brief CalibrateSGD is the sub-class of ParamSelection that implements parameter selection for pegasos
-     */
-
-class GURLS;
+ * \ingroup ParameterSelection
+ * \brief ParamselCalibrateSGD is the sub-class of ParamSelection that implements parameter selection for pegasos
+ */
 
 template <typename T>
-class CalibrateSGD: public ParamSelection<T>{
+class ParamSelCalibrateSGD: public ParamSelection<T>{
 
 public:
     /**
@@ -83,7 +82,7 @@ public:
 };
 
 template <typename T>
-void CalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+void ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
 {
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
@@ -145,7 +144,7 @@ void CalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gu
         randperm(n, idx);
 
 //        M = X(idx,:);
-        subMatrixFromRows(X.getData(), n, t, idx, subsize, Mx_tmp.getData(), work);
+        subMatrixFromRows(X.getData(), n, t, idx, subsize, Mx_tmp.getData()/*, work*/);
 
 //        if ~exist([opt.calibfile '.mat'],'file')
 //            fprintf('\n\tCalibrating...');
@@ -158,7 +157,7 @@ void CalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gu
 //            tmp.singlelambda = opt.singlelambda;
 
 //            gurls(M,y(idx,:),tmp,1);
-        subMatrixFromRows(Y.getData(), Y_OMR.rows(), Y_OMR.cols(), idx, subsize, My_tmp.getData(), work);
+        subMatrixFromRows(Y.getData(), Y_OMR.rows(), Y_OMR.cols(), idx, subsize, My_tmp.getData()/*, work*/);
 
         Mx_tmp.transpose(Mx);
         My_tmp.transpose(My);
@@ -170,7 +169,7 @@ void CalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gu
 //        load([opt.calibfile '.mat']);
 //        lambdas(i) = opt.singlelambda(opt.paramsel.lambdas);
 
-        GurlsOptionsList* paramsel = static_cast<GurlsOptionsList*>(tmp->getOpt("paramsel"));
+        GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(tmp->getOpt("paramsel"));
         std::vector<double>& ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
         T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
         lambdas[i] = lambda;
@@ -181,7 +180,7 @@ void CalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gu
 
     delete[] idx;
 
-    GurlsOptionsList* paramsel;// = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+    GurlsOptionsList* paramsel;// = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
     if(!opt.hasOpt("paramsel"))
     {
         paramsel = new GurlsOptionsList("paramsel");
@@ -189,13 +188,13 @@ void CalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gu
     }
     else
     {
-        paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
         paramsel->removeOpt("lambdas");
         paramsel->removeOpt("W");
     }
 
 
-    GurlsOptionsList* rls = static_cast<GurlsOptionsList*>(tmp->getOpt("optimizer"));
+    GurlsOptionsList* rls = GurlsOptionsList::dynacast(tmp->getOpt("optimizer"));
 //    params.lambdas = mean(lambdas);
     OptNumberList* LAMBDA = new OptNumberList();
     LAMBDA->add(static_cast<double>(sumv(lambdas, n_estimates, work)/n_estimates));

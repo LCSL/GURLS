@@ -65,12 +65,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief LoocvPrimal is the sub-class of ParamSelection that implements LOO cross-validation with the primal formulation
-     */
+/**
+ * \ingroup ParameterSelection
+ * \brief ParamSelLoocvPrimal is the sub-class of ParamSelection that implements LOO cross-validation with the primal formulation
+ */
 
 template <typename T>
-class LoocvPrimal: public ParamSelection<T>{
+class ParamSelLoocvPrimal: public ParamSelection<T>{
 
 public:
     /**
@@ -90,7 +91,7 @@ public:
 };
 
 template <typename T>
-void LoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt){
+void ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt){
 
     typename std::set<T*> garbage;
 
@@ -115,15 +116,13 @@ void LoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gur
         if(xr != n)
             throw gException("X and Y must have the same row number");
 
-
         T* K = new T[xc*xc];
         garbage.insert(K);
         dot(X.getData(), X.getData(), K, xr, xc, xr, xc, xc, xc, CblasTrans, CblasNoTrans, CblasColMajor);
 
 
-
         // tot = opt.nlambda;
-        int tot = static_cast<int>(std::ceil( static_cast<OptNumber*>(opt.getOpt("nlambda"))->getValue() ));
+        int tot = static_cast<int>(std::ceil( opt.getOptAsNumber("nlambda")));
 
         //	[Q,L] = eig(K);
         //	L = diag(L);
@@ -134,16 +133,15 @@ void LoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gur
 //        garbage.insert(Q);
 //        garbage.insert(L);
 
-
         T* Q = K;
         T* L = new T[xc];
         garbage.insert(L);
 
-        eig_sm(Q, L, xc, xc);
+        eig_sm(Q, L, xc);
 
 
         T* filtered = L;
-		T* guesses = lambdaguesses(filtered, xc, std::min(xc,xr), xr, tot, (T)(opt.getOptAsNumber("smallnumber")));
+        T* guesses = lambdaguesses(filtered, xc, std::min(xc,xr), xr, tot, (T)(opt.getOptAsNumber("smallnumber")));
         garbage.insert(guesses);
 //        set(guesses, 0.f, tot);
 
@@ -209,7 +207,6 @@ void LoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gur
         Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
 
         T* ap = new T[tot*t];
-
 
         //	for i = 1:tot
         for(int s = 0; s < tot; ++s)
@@ -352,24 +349,33 @@ void LoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gur
 
         delete[] lambdas;
 
-    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
-    paramsel->addOpt("lambdas", LAMBDA);
+        GurlsOptionsList* paramsel = NULL;
+        if(!opt.hasOpt("paramsel"))
+        {
+            paramsel = new GurlsOptionsList("paramsel");
+            opt.addOpt("paramsel", paramsel);
+        }
+        else
+        {
+            paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
 
+            paramsel->removeOpt("guesses");
+            paramsel->removeOpt("perf");
+            paramsel->removeOpt("lambdas");
+        }
 
-        tmp = transpose_rm(ap, t, tot);
+        paramsel->addOpt("lambdas", LAMBDA);
+
+        gMat2D<T>* looe_mat = new gMat2D<T>(tot, t);
+        transpose(ap, tot, t, looe_mat->getData());
 
         delete[] ap;
 
-        gMat2D<T>* looe_mat = new gMat2D<T>(tmp, tot, t, true);
-
-        delete[] tmp;
-
-    paramsel->addOpt("acc", new OptMatrix<gMat2D<T> >(*looe_mat));
+        paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*looe_mat));
 
         //vout.guesses = 	guesses;
-        gVec<T> guessesVector(guesses, tot, false);
-    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(guessesVector.asMatrix()));
-    opt.addOpt("paramsel", paramsel);
+        gMat2D<T> *guesses_mat = new gMat2D<T>(guesses, 1, tot, true);
+        paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
         delete[] guesses;
 

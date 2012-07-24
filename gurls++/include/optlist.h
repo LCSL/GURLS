@@ -61,31 +61,103 @@
 
 namespace gurls {
 
+
+
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4251)
+#endif
+
+/**
+  * \ingroup Settings
+  * \brief GurlsOptionsList is an option containing a list of options
+  * mapped by name.
+  */
 class GURLS_EXPORT GurlsOptionsList: public GurlsOption
 {
 private:
-    std::string name;
-    std::map<std::string, GurlsOption* >* table;
+    std::string name;                               ///< Option name
+    std::map<std::string, GurlsOption* >* table;    ///< Options list, indexed by name
 
 public:
+
+
+    /**
+      * Constructor. Builds an optionlist with a name and optionally a set of default options
+      *
+      * \param ExpName name of the options list
+      * \param usedefopt if \a true the list is filled with a set of default options, if \a false the list is left empty
+      */
     GurlsOptionsList(std::string ExpName, bool usedefopt = false);
 
+
+    /**
+      * Destructor
+      */
     ~GurlsOptionsList();
 
+
+    /**
+      * Adds a generic option to the list indexed with a specified key
+      */
     bool addOpt(std::string key, GurlsOption* value);
+
+    /**
+      * Adds a string option to the list indexed with a specified key
+      */
     bool addOpt(std::string key, std::string value);
+
+    /**
+      * Returns a pointer to a generic option mapped with a key
+      */
     GurlsOption* getOpt(std::string key);
+
+    /**
+      * Returns a string option mapped with a key
+      */
     std::string getOptAsString(std::string key);
+
+    /**
+      * Returns the list name
+      */
     std::string getName() const {return this->name;}
+
+    /**
+      * Sets the list name
+      */
     void setName(std::string);
+
+    /**
+      * Returns a numeric option mapped with a key
+      */
     double getOptAsNumber(std::string key);
+
+    /**
+      * Prints the options list
+      */
     void printAll();
+
+    /**
+      * Checks if the list has an option mapped with a specified key
+      */
     bool hasOpt(std::string key) {return table->count(key)>0;}
+
+    /**
+      * Removes the option mapped with a specified key
+      *
+      * \param key string key
+      * \param deleteMembers If true deallocates the removed option, if false option will be only detached
+      */
     void removeOpt(std::string key, bool deleteMembers = true);
 
-
+    /**
+      * Checks if the option has the given type
+      */
     virtual bool isA(OptTypes id) { return (id == OptListOption); }
 
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref GurlsOptionsList
+      */
     static GurlsOptionsList* dynacast(GurlsOption* opt) {
         if (opt->isA(OptListOption) ){
             return static_cast<GurlsOptionsList*>(opt);
@@ -93,8 +165,15 @@ public:
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
     }
+
+    /**
+      * Returns the number of options on the list
+      */
     int size() const {return table->size();}
 
+    /**
+      * Returns a pointer to the idx-th option into the list
+      */
     GurlsOption* operator[] (int idx){
 
         if ( idx > this->size() ) {
@@ -109,13 +188,31 @@ public:
         return itr->second;
     }
 
+    /**
+      * Writes a GurlsOptionsList to a stream
+      */
     friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt);
+
+    /**
+      * Writes the list to a stream
+      */
     virtual std::ostream& operator<<(std::ostream& os);
 
+    /**
+      * Serializes the list to file
+      */
     void save(const std::string& fileName) const;
+
+    /**
+      * Deserializes the list from file
+      */
     void load(const std::string& fileName);
 
     friend class boost::serialization::access;
+
+    /**
+      * Serializes the option to a generic archive
+      */
     template<class Archive>
     void save(Archive & ar, const unsigned int /* file_version */) const{
         ar & this->type;
@@ -173,7 +270,7 @@ public:
                 OptTaskSequence* opt = static_cast<OptTaskSequence*>(opt0);
                 ar & (*opt);
             } else if (type == OptListOption){
-                GurlsOptionsList* opt = static_cast<GurlsOptionsList*>(opt0);
+                GurlsOptionsList* opt = GurlsOptionsList::dynacast(opt0);
                 ar & (*opt);
             } else {
                 // AN EXCEPTION SHOULD BE RAISED
@@ -185,11 +282,14 @@ public:
         }
     }
 
+    /**
+      * Deserializes the option from a generic archive
+      */
     template<class Archive>
     void load(Archive & ar, const unsigned int /* file_version */){
         ar & this->type;
         ar & this->name;
-        this->setName(this->name);
+        removeOpt("Name");
         int n = 0;
         int type = -1;
         ar & n;
@@ -261,11 +361,16 @@ public:
             //ar & (*opt);
             //this->addOpt(s, opt);
         }
+        this->setName(this->name);
     }
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 
 
 };
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
 
 }
 

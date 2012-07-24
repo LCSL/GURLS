@@ -65,7 +65,7 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
     string key ("Name");
     GurlsOption* value;
     value = new OptString(ExpName);
-	table = new std::map<std::string, GurlsOption* >();
+    table = new std::map<std::string, GurlsOption* >();
     table->insert( pair<std::string,GurlsOption*>(key, value) );
 
     if(usedefopt){
@@ -111,6 +111,7 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
         // ======================================================== Data option
         (*table)["nholdouts"] = new OptNumber(1);
         (*table)["hoproportion"] = new OptNumber(0.2);
+        (*table)["hoperf"] = new OptString("macroavg");
 //        (*table)["nlambda"] = new OptNumber(100);
 //        (*table)["nsigma"] =  new OptNumber(25);
         (*table)["nlambda"] = new OptNumber(20);
@@ -119,7 +120,7 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
 
     // ======================================================== Pegasos option
         (*table)["subsize"]   = new OptNumber(50);
-        (*table)["calibfile"] = new OptString("pippo");
+        (*table)["calibfile"] = new OptString("foo");
         (*table)["epochs"]   = new OptNumber(4);
 
         // ============================================================== Quiet
@@ -140,7 +141,7 @@ GurlsOptionsList::~GurlsOptionsList()
         delete (it->second);
 
     table->clear();
-	delete table;
+    delete table;
 }
 
 void GurlsOptionsList::printAll(){
@@ -161,7 +162,9 @@ std::ostream& GurlsOptionsList::operator<<(std::ostream& os){
     return os << *this;
 }
 
-
+/**
+  * Writes a GurlsOptionsList to a stream
+  */
 GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt) {
     std::map<std::string, GurlsOption* >::iterator it;
     GurlsOption* current;
@@ -179,11 +182,19 @@ GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt) {
 }
 
 bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value){
+
+    if(hasOpt(key))
+        throw gException(Exception_Parameter_Already_Definied + " (" + key + ")");
+
     table->insert( pair<std::string,GurlsOption*>(key, value) );
     return true;
 }
 
 bool GurlsOptionsList::addOpt(std::string key, std::string value){
+
+    if(hasOpt(key))
+        throw gException(Exception_Parameter_Already_Definied + " (" + key + ")");
+
     OptString* v = new OptString(value);
     table->insert( pair<std::string,GurlsOption*>(key, v) );
     return true;
@@ -220,7 +231,11 @@ double GurlsOptionsList::getOptAsNumber(std::string key){
 
 void GurlsOptionsList::save(const std::string& fileName) const
 {
+#ifndef USE_BINARY_ARCHIVES
     std::ofstream outstream(fileName.c_str());
+#else
+    std::ofstream outstream(fileName.c_str(), ios_base::binary);
+#endif
 
     if(!outstream.is_open())
         throw gException("Could not open file " + fileName);
@@ -233,13 +248,25 @@ void GurlsOptionsList::save(const std::string& fileName) const
 
 void GurlsOptionsList::load(const std::string& fileName)
 {
+#ifndef USE_BINARY_ARCHIVES
     std::ifstream instream(fileName.c_str());
+#else
+    std::ifstream instream(fileName.c_str(), ios_base::binary);
+#endif
 
     if(!instream.is_open())
         throw gException("Could not open file " + fileName);
 
-    iarchive inar(instream);
-    inar >> *this;
+    try
+    {
+        iarchive inar(instream);
+        inar >> *this;
+    }
+    catch(boost::archive::archive_exception&)
+    {
+        instream.close();
+        throw gException("Invalid file format for " + fileName);
+    }
 
     instream.close();
 }

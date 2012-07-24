@@ -49,15 +49,16 @@
 
 namespace gurls {
 
-    /**
-     * \brief ChisquaredKernel is the sub-class of Kernel that builds the kernel matrix for a chi-squared model
-     */
+/**
+ * \ingroup Kernels
+ * \brief KernelChisquared is the sub-class of Kernel that builds the kernel matrix for a chi-squared model
+ */
 
 template <typename T>
-class ChisquaredKernel: public Kernel<T>
+class KernelChisquared: public Kernel<T>
 {
 public:
-    /** 
+    /**
      * Builds the symmetric kernel matrix of matrix X for a chi-squared model.
      *
      * \param X input data matrix
@@ -72,7 +73,7 @@ public:
 };
 
 template<typename T>
-void ChisquaredKernel<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
     gMat2D<T> Xt(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(Xt);

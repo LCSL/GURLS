@@ -60,9 +60,10 @@ class ConfGap;
 template<typename T>
 class ConfMaxScore;
 
-    /**
-     * \brief Confidence is the class that computes a confidence score for the predicted labels
-     */
+/**
+ * \ingroup Confidence
+ * \brief Confidence is the class that computes a confidence score for the predicted labels
+ */
 
 template<typename T>
 class Confidence
@@ -79,26 +80,39 @@ public:
      */
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
-    class BadSplitCreation : public std::logic_error
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadConfidenceCreation is thrown when \ref factory tries to generate an unknown confidence method
+     */
+    class BadConfidenceCreation : public std::logic_error
     {
     public:
-        BadSplitCreation(std::string type)
+		/**
+		 * Exception constructor.
+		 */
+        BadConfidenceCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
-    static Confidence<T> *factory(const std::string& id) throw(BadSplitCreation)
+	/**
+	 * Factory function returning a pointer to the newly created object.
+	 *
+	 * \warning The returned pointer is a plain, un-managed pointer. The calling
+	 * function is responsible of deallocating the object.
+	 */
+    static Confidence<T> *factory(const std::string& id) throw(BadConfidenceCreation)
     {
         if(id == "boltzman")
             return new ConfBoltzman<T>;
         else if(id == "boltzmangap")
             return new ConfBoltzmanGap<T>;
-	else if(id == "gap")
-            return new ConfGap<T>;
-	else if(id == "maxscore")
+        else if(id == "gap")
+                return new ConfGap<T>;
+        else if(id == "maxscore")
             return new ConfMaxScore<T>;
-
         else
-            throw BadSplitCreation(id);
+            throw BadConfidenceCreation(id);
     }
 };
 

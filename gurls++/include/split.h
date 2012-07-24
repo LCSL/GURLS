@@ -51,12 +51,11 @@ namespace gurls {
 template<typename T>
 class SplitHo;
 
-template<typename T>
-class SplitHoMulti;
 
-   /**
-     * \brief Split is the class that splits data into pair(s) of training and test samples
-     */
+/**
+ * \ingroup Split
+ * \brief Split is the class that splits data into pair(s) of training and test samples
+ */
 
 template<typename T>
 class Split
@@ -72,22 +71,33 @@ public:
      */
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadSplitCreation is thrown when \ref factory tries to generate an unknown split method
+     */
     class BadSplitCreation : public std::logic_error
     {
     public:
+        /**
+         * Exception constructor.
+         */
         BadSplitCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
     static Split<T> *factory(const std::string& id) throw(BadSplitCreation)
     {
         if(id == "ho")
             return new SplitHo<T>;
-        else if(id == "homulti")
-            return new SplitHoMulti<T>;
 
-        else
-            throw BadSplitCreation(id);
+        throw BadSplitCreation(id);
     }
 };
 

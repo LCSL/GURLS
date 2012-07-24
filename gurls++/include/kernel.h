@@ -82,17 +82,18 @@ namespace gurls {
 //};
 
 template<typename T>
-class LinearKernel;
+class KernelLinear;
 
 template<typename T>
-class RBFKernel;
+class KernelRBF;
 
 template<typename T>
-class ChisquaredKernel;
+class KernelChisquared;
 
-    /**
-     * \brief Kernel is the class that computes the kernel matrix
-     */
+/**
+ * \ingroup Kernels
+ * \brief Kernel is the class that computes the kernel matrix
+ */
 
 template<typename T>
 class Kernel
@@ -108,21 +109,35 @@ public:
      */
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadKernelCreation is thrown when \ref factory tries to generate an unknown kernel
+     */
     class BadKernelCreation : public std::logic_error
     {
     public:
+		/**
+		 * Exception constructor.
+		 */
         BadKernelCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
+	/**
+	 * Factory function returning a pointer to the newly created object.
+	 *
+	 * \warning The returned pointer is a plain, un-managed pointer. The calling
+	 * function is responsible of deallocating the object.
+	 */
     static Kernel<T> *factory(const std::string& id) throw(BadKernelCreation)
     {
         if(id == "linear")
-            return new LinearKernel<T>;
+            return new KernelLinear<T>;
         if(id == "rbf")
-            return new RBFKernel<T>;
+            return new KernelRBF<T>;
         if(id == "chisquared")
-            return new ChisquaredKernel<T>;
+            return new KernelChisquared<T>;
         else
             throw BadKernelCreation(id);
     }

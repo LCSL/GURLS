@@ -49,12 +49,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief LinearKernel is the sub-class of Kernel that builds the kernel matrix for a linear model
-     */
+/**
+ * \ingroup Kernels
+ * \brief KernelLinear is the sub-class of Kernel that builds the kernel matrix for a linear model
+ */
 
 template <typename T>
-class LinearKernel: public Kernel<T>
+class KernelLinear: public Kernel<T>
 {
 public:
     /**
@@ -72,7 +73,7 @@ public:
 };
 
 template<typename T>
-void LinearKernel<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+void KernelLinear<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
 
     GurlsOptionsList* kernel = new GurlsOptionsList("kernel");

@@ -41,12 +41,11 @@
 
 
 /**
-\ingroup LinearAlgebra
-\file
-\brief Contains functions that implement some relevant BLAS level 1,2
-or 3 and Lapack functionalities.
-
-*/
+ * \ingroup LinearAlgebra
+ * \file
+ * \brief Contains functions that implement some relevant BLAS level 1,2
+ * or 3 and Lapack functionalities.
+ */
 
 #ifndef _GURLS_GMATH_H_
 #define _GURLS_GMATH_H_
@@ -64,20 +63,7 @@ or 3 and Lapack functionalities.
 #pragma warning(disable : 4290)
 #endif
 
-#ifdef _ACML
-#include <acml.h>
-enum CBLAS_ORDER     {CblasRowMajor=101, CblasColMajor=102};
-enum CBLAS_TRANSPOSE {CblasNoTrans=111, CblasTrans=112, CblasConjTrans=113, CblasConjNoTrans=114};
-enum CBLAS_UPLO      {CblasUpper=121, CblasLower=122};
-enum CBLAS_DIAG      {CblasNonUnit=131, CblasUnit=132};
-enum CBLAS_SIDE      {CblasLeft=141, CblasRight=142};
-#elif defined _MKL
-#include <mkl_cblas.h>
-#else
-extern "C" {
-#include <cblas.h>
-}
-#endif
+#include "blas_lapack.h"
 
 namespace gurls	{
 
@@ -87,50 +73,42 @@ class gMat2D;
 template <typename T>
 class gVec;
 
-//! Implements the standard GEMM routine from Level3 BLAS
-/*! \fn void dot(const gMat2D<T>& A, const gMat2D<T>& B, gMat2D<T>& C);
-
-General Matrix-Matrix multiplication of two single/double precision
-real matrices A and B (the corresponding Matlab code is: C = A*B;).
-
- \param[in] A Left matrix
- \param[in] B Right matrix
- \param[out] C Product Matrix
-
+/**
+  * \brief Implements the standard GEMM routine from Level3 BLAS
+  * General Matrix-Matrix multiplication of two single/double precision
+  * real matrices A and B (the corresponding Matlab code is: C = A*B;).
+  *
+  * \param[in] A Left matrix
+  * \param[in] B Right matrix
+  * \param[out] C Product Matrix
 */
 template <typename T>
 void dot(const gMat2D<T>& A, const gMat2D<T>& B, gMat2D<T>& C);
 
-//!  Implements the standard DOT routine from Level 1 BLAS
-/*! \fn void dot(const gMat2D<T>& A, const gVec<T>& x, gVec<T>& y);
-
-General Matrix-Vector multiplication of a single/double precision
-matrix A with a vector x (the corresponding Matlab code is y = A*x;).
-
-\param[in] A Input matrix
-\param[in] x Input vector
-\param[out] y Output vector
-
+/**
+  * Implements the standard DOT routine from Level 1 BLAS
+  * General Matrix-Vector multiplication of a single/double precision
+  * matrix A with a vector x (the corresponding Matlab code is y = A*x;).
+  *
+  * \param[in] A Input matrix
+  * \param[in] x Input vector
+  * \param[out] y Output vector
 */
 template <typename T>
 void dot(const gMat2D<T>& A, const gVec<T>& x, gVec<T>& y);
 
-//! Implements the standard scalar product between vectors
-/*! \fn T dot(const gVec<T>& x, const gVec<T>& y);
-
-General routine from Level1 BLAS: n <-- x^T * y
- General Vector-Vector multiplication for single/double precision real data
-*/
+/**
+  * Implements the standard scalar product between vectors
+  * General routine from Level1 BLAS: n <-- x^T * y
+  * General Vector-Vector multiplication for single/double precision real data
+  */
 template <typename T>
 T dot(const gVec<T>& x, const gVec<T>& y);
 
-
-// =========================================================
-// ================= TODO: TO BE DISCUSSED =======================
-// =========================================================
-/* Replicate a vector n times along the columns (or along the rows if transpose==true)
-   If x is a vector of length N, then the output is an N-by-N matrix whose columns (or rows) are copies of x.
-*/
+/**
+  * Replicates a vector n times along the columns (or along the rows if transpose==true)
+  * If x is a vector of length N, then the output is an N-by-N matrix whose columns (or rows) are copies of x.
+  */
 template <typename T>
 gMat2D<T> repmat(const gVec<T>& x, unsigned long n, bool transpose = false){
 
@@ -158,85 +136,105 @@ gMat2D<T> repmat(const gVec<T>& x, unsigned long n, bool transpose = false){
     return A;
 }
 
+/**
+  * \enum InversionAlgorithm
+  * Implemented inversion algorithms
+  */
 enum InversionAlgorithm {LU,GaussJ};
 
-/*
- Implements the LU decomposition usig LAPACK routines
- */
+/**
+  * Implements the LU decomposition usig LAPACK routines
+  */
 template <typename T>
 void lu(gMat2D<T>& A);
 
 
-/*
- Implements the LU factorization of a general M-by-N matrix A using partial
- pivoting with row interchanges,, using LAPACK routines.
-
- The factorization has the form  A = P * L * U  where  P  is a permutation
- matrix, L is lower triangular with unit diagonal elements (lower
- trapezoidal if m > n), and U is upper triangular (upper trapezoidal
- if m < n). This is the right-looking Level 3 BLAS version of the algorithm.
+/**
+  * Implements the LU factorization of a general M-by-N matrix A using partial
+  * pivoting with row interchanges, using LAPACK routines.
+  * The factorization has the form  A = P * L * U  where  P  is a permutation
+  * matrix, L is lower triangular with unit diagonal elements (lower
+  * trapezoidal if m > n), and U is upper triangular (upper trapezoidal
+  * if m < n). This is the right-looking Level 3 BLAS version of the algorithm.
 */
 template <typename T>
 void lu(gMat2D<T>& A, gVec<int>& pv);
 
-/*
- Implements the SVD decomposition of a general rectangular matrix: A = U*W*Vt
- A Matrix to be decomposed
- U Matrix of the left singular vectors
- W Vector containing the singular values of the decomposition
- Vt transposed matrix of the right singular vectors
+/**
+  * Implements the SVD decomposition of a general rectangular matrix: A = U*W*Vt
+  * \param A Matrix to be decomposed
+  * \param U Matrix of the left singular vectors
+  * \param W Vector containing the singular values of the decomposition
+  * \param Vt transposed matrix of the right singular vectors
 */
 template <typename T>
 void svd(const gMat2D<T>& A, gMat2D<T>& U, gVec<T>& W, gMat2D<T>& Vt);
 
-/* Implements the computation of the eigenvalues of A using the LAPACK routine
- SGEEV with default computation of the right eigenvectors.
+/**
+  * Implements the computation of the eigenvalues of A using the LAPACK routine
+  * SGEEV with default computation of the right eigenvectors.
  */
 template <typename T>
 void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& Wr, gVec<T>& Wi);
 
-/* Implements the computation of the eigenvalues of A using the LAPACK routine
- SGEEV with default computation of the right eigenvectors.
- */
+/**
+  * Implements the computation of the eigenvalues of A using the LAPACK routine
+  * SGEEV with default computation of the right eigenvectors.
+  */
 template <typename T>
 void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& W);
 
 
-/*
- Implements the computation of the eigenvalues of A
-*/
+/**
+  * Implements the computation of the eigenvalues of A
+  */
 template <typename T>
 void eig(const gMat2D<T>& A, gVec<T>& Wr, gVec<T>& Wi);
 
-/*
-Implements the computation of the eigenvalues of A
-*/template <typename T>
+/**
+  * Implements the computation of the eigenvalues of A
+  */
+template <typename T>
 void eig(const gMat2D<T>& A, gVec<T>& W);
 
 
-/*
- Compute the inverse (A^-1) of a matrix A
-*/
+/**
+  * Computes the inverse \f$A^-{1}\f$ of a matrix \f$A\f$
+  */
 template <typename T>
 void inv(const gMat2D<T>& A, gMat2D<T>& Ainv, InversionAlgorithm alg = LU);
 
-/*
-  Compute the pseudo-inverse of a non square matrix A
-*/
+/**
+  * Computes the pseudo-inverse of a non square matrix A
+  */
 template <typename T>
 void pinv(const gMat2D<T>& A, gMat2D<T>& Ainv, T RCOND = 0);
 
-/*
- Computes the Cholesky factorization of a symmetric,
- positive definite matrix using the LAPACK routine SPOTRF
-*/
+/**
+  * Computes the Cholesky factorization of a symmetric,
+  * positive definite matrix using the LAPACK routine SPOTRF
+  */
 template <typename T>
 void  cholesky(const gMat2D<T>& A, gMat2D<T>& L, bool upper = true);
 
-
+/**
+  * Sets elements of a vector to a specified value
+  *
+  * \param buffer vector to be set
+  * \param value value to set
+  * \param size number of copy operations to be performed
+  * \param incr number of element to skip after every copy (if incr == 1 all elements will be set)
+  */
 template<typename T>
 void set(T* buffer, const T value, const int size, const int incr);
 
+/**
+  * Sets all elements of a vector to a specified value
+  *
+  * \param buffer vector to be set
+  * \param value value to set
+  * \param size buffer length
+  */
 template<typename T>
 void set(T* buffer, const T value, const int size)
 {
@@ -244,25 +242,52 @@ void set(T* buffer, const T value, const int size)
         *it = value;
 }
 
+/**
+  * Specialized version of set for float buffers
+  */
 template<>
 void GURLS_EXPORT set(float* buffer, const float value, const int size);
 
+/**
+  * Specialized version of set for double buffers
+  */
 template<>
 void GURLS_EXPORT set(double* buffer, const double value, const int size);
 
-
+/**
+  * Copies element form one vector to another one
+  *
+  * \param dst destination vector
+  * \param src source vector
+  * \param size vectors length
+  */
 template<typename T>
 void copy(T* dst, const T* src, const int size)
 {
     memcpy(dst, src, size*sizeof(T));
 }
 
+/**
+  * Specialized version of copy for float buffers
+  */
 template<>
 GURLS_EXPORT void copy(float* dst, const float* src, const int size);
 
+/**
+  * Specialized version of copy for double buffers
+  */
 template<>
 GURLS_EXPORT void copy(double* dst, const double* src, const int size);
 
+/**
+  * Copies element form one vector to another one
+  *
+  * \param dst destination vector
+  * \param src source vector
+  * \param size number of copies to be performed
+  * \param dstIncr iteration increment on destination buffer
+  * \param srcIncr iteration increment on source buffer
+  */
 template<typename T>
 void copy(T* dst, const T* src, const int size, const int dstIncr, const int srcIncr)
 {
@@ -278,13 +303,29 @@ void copy(T* dst, const T* src, const int size, const int dstIncr, const int src
     }
 }
 
+/**
+  * Specialized version of copy for float buffers
+  */
 template<>
 GURLS_EXPORT void copy(float* dst, const float* src, const int size, const int dstIncr, const int srcIncr);
 
+/**
+  * Specialized version of copy for double buffers
+  */
 template<>
 GURLS_EXPORT void copy(double* dst, const double* src, const int size, const int dstIncr, const int srcIncr);
 
-//TODO optimize
+/**
+  * Generates a submatrix from an input matrix
+  *
+  * \param dst output submatrix
+  * \param src input matrix
+  * \param src_Rows number of rows of the input matrix
+  * \param sizeRows number of rows of the output submatrix
+  * \param sizeCols number of columns of the output submatrix
+  * \param indices_rows vector containing the row indices to copy (length must be == sizeRows)
+  * \param indices_cols vector containing the column indices to copy (length must be == sizeCols)
+  */
 template<typename T>
 void copy_submatrix(T* dst, const T* src, const int src_Rows, const int sizeRows, const int sizeCols, unsigned long *indices_rows, unsigned long *indices_cols)
 {
@@ -292,22 +333,59 @@ void copy_submatrix(T* dst, const T* src, const int src_Rows, const int sizeRows
   for (int j = 0; j < sizeCols; j++)
     for (int i = 0; i < sizeRows; i++)
     {
-      dst[t] = src[ indices_rows[i] + indices_cols[j]*src_Rows ] ;
+      dst[t] = src[ indices_rows[i] + indices_cols[j]*src_Rows ];
       ++t;
     }
 }
 
+/**
+  * Generates a submatrix from an input matrix
+  *
+  * \param matrix input matrix
+  * \param mRows number of rows of the input matrix
+  * \param mCols number of columns of the input matrix
+  * \param rowsIndices vector containing the row indices to copy
+  * \param nIndices length of the indices vector
+  * \param submat output submatrix
+  */
 template<typename T>
-void subMatrixFromRows(const T* matrix, const int m_Rows, const int m_Cols, const unsigned long* rowsIndices, const int nIndices, T* submat, T* work)
+void subMatrixFromRows(const T* matrix, const int mRows, const int mCols, const unsigned long* rowsIndices, const int nIndices, T* submat)
 {
-    for(const unsigned long *it = rowsIndices, *end = rowsIndices+nIndices; it != end; ++it)
-    {
-        getRow(matrix, m_Rows, m_Cols, *it, work);
+    if(mRows < nIndices)
+        throw gException(Exception_Inconsistent_Size);
 
-        copy(submat + (it-rowsIndices), work, m_Cols, nIndices, 1);
-    }
+    for(const unsigned long *it = rowsIndices, *end = rowsIndices+nIndices; it != end; ++it)
+        copy(submat + (it-rowsIndices), matrix+(*it), mCols, nIndices, mRows);
 }
 
+
+/**
+  * Generates a submatrix from an input matrix
+  *
+  * \param matrix input matrix
+  * \param mRows number of rows of the input matrix
+  * \param mCols number of columns of the input matrix
+  * \param colsIndices vector containing the columns indices to copy
+  * \param nIndices length of the indices vector
+  * \param submat output submatrix
+  */
+template<typename T>
+void subMatrixFromColumns(const T* matrix, const int mRows, const int mCols, const unsigned long* colsIndices, const int nIndices, T* submat)
+{
+    if(mCols < nIndices)
+        throw gException(Exception_Inconsistent_Size);
+
+    for(const unsigned long *it = colsIndices, *end = colsIndices+nIndices; it != end; ++it)
+        copy(submat+(mRows*(it-colsIndices)), matrix+(mRows*(*it)), mRows);
+}
+
+/**
+  * Zeroes on the lower triangle of a matrix
+  *
+  * \param matrix input matrix
+  * \param rows number of rows
+  * \param cols number of columns
+  */
 template <typename T>
 void clearLowerTriangular(T* matrix, int rows, int cols)
 {
@@ -329,39 +407,29 @@ void clearLowerTriangular(T* matrix, int rows, int cols)
     }
 }
 
+/**
+  * Computes the pseudo-inverse of a matrix
+  *
+  * \param A input matrix
+  * \param rows number of rows
+  * \param cols number of columns
+  * \param res_rows on exit contains the number of rows of the pseudoinverse matrix
+  * \param res_cols on exit contains the number of columns of the pseudoinverse matrix
+  * \param RCOND used to determine the effective rank of A. If *RCOND < 0, machine precision is used
+  * \return the pseudoinverse matrix
+  */
 template <typename T>
 T* pinv(const T* A, const int rows, const int cols, int& res_rows, int& res_cols, T* RCOND = NULL);
 
-template <typename T>
-T* transpose_rm(const T* matrix, int rows, int cols)
-{
-    T* ret = new T[rows*cols];
-    T* d1 = ret;
-    const T* d0 = matrix;
-    int N = cols;
-
-    for (int c = 0; c < cols; ++c)
-        for (int r = 0; r < rows; ++r)
-            *d1++=*(d0+r*N+c);
-
-    return ret;
-}
-
-template <typename T>
-T* transpose_cm(const T* matrix, int rows, int cols)
-{
-    T* ret = new T[rows*cols];
-    T* d1 = ret;
-    const T* d0 = matrix;
-    int N = rows;
-
-    for (int r = 0; r < rows; ++r)
-        for (int c = 0; c < cols; ++c)
-            *d1++=*(d0+c*N+r);
-
-    return ret;
-}
-
+/**
+  * Transpose a matrix.
+  *
+  * \param matrix input matrix to be transposed
+  * \param rows number of rows of the input matrix
+  * \param cols number of columns of the input matrix
+  * \param transposed on exit contains the transposed matrix. Must be already initialized
+  * with a number of rows and columns equal to the number of columns and rows of the input matrix
+  */
 template <typename T>
 void transpose(const T* matrix, const int rows, const int cols, T* transposed)
 {
@@ -374,14 +442,31 @@ void transpose(const T* matrix, const int rows, const int cols, T* transposed)
             *d1++=*(d0+c*N+r);
 }
 
+/**
+  * General Matrix-Matrix multiplication of two single/double precision
+  * real matrices A and B.
+  *
+  * \param[in] A Left matrix
+  * \param[in] B Right matrix
+  * \param[out] C Product Matrix
+  * \param[in] A_rows numer of rows of the matrix A
+  * \param[in] A_cols numer of columns of the matrix A
+  * \param[in] B_rows numer of rows of the matrix B
+  * \param[in] B_cols numer of columns of the matrix B
+  * \param[in] C_rows numer of rows of the matrix C
+  * \param[in] C_cols numer of columns of the matrix C
+  * \param[in] TransA Transposition option form matrix A
+  * \param[in] TransB Transposition option form matrix B
+  * \param[in] Order order option for matrix multiplication
+*/
 template <typename T>
 void dot(const T* A, const T* B, T* C,
          int A_rows, int A_cols,
          int B_rows, int B_cols,
          int C_rows, int C_cols,
-         const /*enum*/ CBLAS_TRANSPOSE TransA,
-         const /*enum*/ CBLAS_TRANSPOSE TransB,
-         const /*enum*/ CBLAS_ORDER Order)
+         const CBLAS_TRANSPOSE TransA,
+         const CBLAS_TRANSPOSE TransB,
+         const CBLAS_ORDER Order)
 {
 
     bool transposeA = (TransA == CblasTrans || TransA == CblasConjTrans);
@@ -396,32 +481,54 @@ void dot(const T* A, const T* B, T* C,
     if ((C_rows != A_rows) || (C_cols != B_cols))
         throw gException(gurls::Exception_Inconsistent_Size);
 
+    if (A_cols != B_rows)
+        throw gException(gurls::Exception_Inconsistent_Size);
+
     const T alpha = 1.0;
     const T beta = 0.0;
 
     int lda, ldb, ldc;
+
+    int k = A_cols;
+
+    // mxk kxn mxn
+
     switch(Order)
     {
     case CblasColMajor:
-        lda = transposeA? A_cols: A_rows;
-        ldb = transposeB? B_cols: B_rows;
+
+        lda = transposeA? k: A_rows;
+        ldb = transposeB? B_cols: k;
         ldc = C_rows;
+
+        gemm(TransA, TransB, A_rows, B_cols, k, alpha, A, lda, B, ldb, beta, C, ldc);
         break;
+
     case CblasRowMajor:
-        lda = transposeA? A_rows: A_cols;
-        ldb = transposeB? B_rows: B_cols;
+
+        lda = transposeA? A_rows: k;
+        ldb = transposeB? k: B_cols;
         ldc = C_cols;
+
+        gemm(TransB, TransA, B_cols, A_rows, k, alpha, B, ldb, A, lda, beta, C, ldc);
         break;
+
     default:
         lda = ldb = ldc = 0;
         assert(0);
     }
-
-    // C = alpha*A*B + beta*C
-    gemm(Order, TransA, TransB, C_rows, C_cols, A_cols, alpha, A, lda, B, ldb, beta, C, ldc);
-
 }
 
+/**
+  * Computes the Cholesky factorization of a symmetric,
+  * positive definite matrix using the LAPACK routine SPOTRF
+  *
+  * \param matrix input matrix
+  * \param rows number of rows of the input matrix
+  * \param cols number of columns of the input matrix
+  * \param upper whether to store the upper or the lower triangle of the result matrix
+  * \return Cholesky factorization of the input matrix
+  */
 template<typename T>
 T* cholesky(const T* matrix, const int rows, const int cols, bool upper = true)
 {
@@ -447,28 +554,18 @@ T* cholesky(const T* matrix, const int rows, const int cols, bool upper = true)
     return ret;
 }
 
+/**
+  * Template function to call LAPACK *POTRF routines
+  */
 template<typename T>
 int potrf_(char *UPLO, int *n, T *a, int *lda , int *info);
 
-template <typename T>
-void eig(const T* A, T* &V, T* &Wr, T* &Wi, int A_rows, int A_cols) throw (gException);
-
-template <typename T>
-void eig(const T* A, T* &V, T* &W, int A_rows, int A_cols) throw (gException)
-{
-    T* tmp;
-    try
-    {
-        eig(A, V, W, tmp, A_rows, A_cols);
-    }
-    catch(gException &ex)
-    {
-        delete[] tmp;
-        throw(ex);
-    }
-    delete[] tmp;
-}
-
+/**
+  * Computes the element-by-element multiplicative inverse of an input matrix
+  *
+  * \param matrix input matrix
+  * \param len number of matrix elements
+  */
 template <typename T>
 void setReciprocal(T* matrix, const int len)
 {
@@ -478,6 +575,13 @@ void setReciprocal(T* matrix, const int len)
         *it = one / *it;
 }
 
+/**
+  * Returns a squared matrix initialized in the diagonal with values from a vector
+  *
+  * \param vector input vector
+  * \param len vector length
+  * \return a len-by-len matrix with vector on the diagonal
+  */
 template <typename T>
 T* diag(T* vector, const int len)
 {
@@ -491,34 +595,105 @@ T* diag(T* vector, const int len)
     return ret;
 }
 
-
+/**
+  * Multiplication of two scalars
+  */
 template <typename T>
-T mul1(T a, T b)
+T mul(T a, T b)
 {
     return a*b;
 }
 
+/**
+  * Division of two scalars
+  */
 template <typename T>
 T div(T a, T b)
 {
     return a/b;
 }
 
-template <typename T>
-T diff(T a, T b)
-{
-    return a-b;
-}
-
+/**
+  * "Equals" operator between two scalars
+  */
 template<typename T>
 bool eq(T val1, T val2)
 {
     return val1 == val2;
 }
 
-template<typename T>
-bool gt(T a, T b);
+/**
+  * "Equals" operator between two scalars, specialized for float values
+  */
+template<>
+GURLS_EXPORT bool eq(float val1, float val2);
 
+/**
+  * "Equals" operator between two scalars, specialized for double values
+  */
+template<>
+GURLS_EXPORT bool eq(double val1, double val2);
+
+/**
+  * "Greater than" operator between two scalars
+  */
+template<typename T>
+bool gt(T a, T b)
+{
+    return a > b;
+}
+
+/**
+  * "Greater than" operator between two scalars, specialized for float values
+  */
+template<>
+GURLS_EXPORT bool gt(float a, float b);
+
+/**
+  * "Greater than" operator between two scalars, specialized for double values
+  */
+template<>
+GURLS_EXPORT bool gt(double a, double b);
+
+/**
+  * "Less or equal than" operator between two scalars
+  */
+template<typename T>
+bool le(T a, T b)
+{
+    return !gt(a,b);
+}
+
+/**
+  * "Less than" operator between two scalars
+  */
+template<typename T>
+bool lt(T a, T b)
+{
+    return a < b;
+}
+
+/**
+  * "Less than" operator between two scalars, specialized for float values
+  */
+template<>
+GURLS_EXPORT bool lt(float a, float b);
+
+/**
+  * "Less than" operator between two scalars, specialized for double values
+  */
+template<>
+GURLS_EXPORT bool lt(double a, double b);
+
+/**
+  * Applies an element by element binary operation \f$op\f$ over two vectors (\f$result = A op B\f$)
+  *
+  * \param A first input vector
+  * \param B second input vector
+  * \param result vector
+  * \param len vectors length
+  * \param op binary operation to perform
+  */
 template <typename T>
 void binOperation(const T* A, const T* B, T* result, const int len, T(*op)(T,T))
 {
@@ -536,23 +711,48 @@ void binOperation(const T* A, const T* B, T* result, const int len, T(*op)(T,T))
     }
 }
 
+/**
+  * Element by element multiplication of two vectors
+  *
+  * \param A first input vector
+  * \param B second input vector
+  * \param result vector
+  * \param len vectors length
+  */
 template <typename T>
 void mult(const T* A, const T* B, T* result, const int len)
 {
-    binOperation<T>(A, B, result, len, &mul1);
+    binOperation<T>(A, B, result, len, &mul);
 }
 
+/**
+  * Element by element division of two vectors
+  *
+  * \param A first input vector
+  * \param B second input vector
+  * \param result vector
+  * \param len vectors length
+  */
 template <typename T>
 void rdivide(const T* A, const T* B, T* result, const int len)
 {
     binOperation<T>(A, B, result, len, &div);
 }
 
+/**
+  * Sums all elements along the rows of a matrix
+  *
+  * \param A input matrix
+  * \param result vecotr of length A_cols containing sums for each row of the matrix
+  * \param A_rows number of rows of matrix A
+  * \param A_cols number of columns of matrix A
+  * \param res_length results vector length (MUST be == A_cols)
+  */
 template <typename T>
 void sum(const T* A, T* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
 {
     if(A_cols != res_length)
-        throw gException("Sum: vector lengths mismatch");
+        throw gException(Exception_Inconsistent_Size);
 
     const T *a_it = A, *a_end;
 
@@ -572,16 +772,33 @@ void sum(const T* A, T* result, const int A_rows, const int A_cols, const int re
     }
 }
 
+/**
+  * Computes the sum of all elements of a vector
+  *
+  * \param V input vector
+  * \param len vector length
+  * \param work work buffer of length >= len
+  * \return sum of all elements of the input vector
+  */
 template <typename T>
 T sumv(const T* V, const int len, T* work) throw (gException)
 {
     set(work, (T)1.0, len);
 
-    gemv(CblasColMajor, CblasNoTrans, 1, len, (T)1.0, work, 1, V, 1, (T)0.0, work+len, 1);
+    gemv(CblasNoTrans, 1, len, (T)1.0, work, 1, V, 1, (T)0.0, work+len, 1);
 
     return work[len];
 }
 
+/**
+  * Computes the mean values along the rows of a matrix
+  *
+  * \param A input matrix
+  * \param result vecotr of length A_cols containing mean values for each row of the matrix
+  * \param A_rows number of rows of matrix A
+  * \param A_cols number of columns of matrix A
+  * \param res_length results vector length (MUST be == A_cols)
+  */
 template <typename T>
 void mean(const T* A, T* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
 {
@@ -591,12 +808,20 @@ void mean(const T* A, T* result, const int A_rows, const int A_cols, const int r
         *it /= A_rows;
 }
 
-//min along rows
+/**
+  * Coputes the smallest elements along the rows of a matrix
+  *
+  * \param A input matrix
+  * \param result vecotr of length A_cols containing the smallest elements for each row of the matrix
+  * \param A_rows number of rows of matrix A
+  * \param A_cols number of columns of matrix A
+  * \param res_length results vector length (MUST be == A_cols)
+  */
 template <typename T>
 void argmin(const T* A, unsigned long* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
 {
     if(A_cols != res_length)
-        throw gException("Sum: vector lengths mismatch");
+        throw gException(Exception_Inconsistent_Size);
 
     const T *a_it = A;
 
@@ -604,6 +829,15 @@ void argmin(const T* A, unsigned long* result, const int A_rows, const int A_col
         *r_it = (std::min_element(a_it, a_it+A_rows) - a_it);
 }
 
+/**
+ * Returns a subvector of an input vector, containing elements of the input vector whose index is contained into an indices vector
+ *
+ * \param locs indices vector
+ * \param src input vector
+ * \param locs_len length of the indices vector
+ * \param src_len length of the input vector
+ * \return subvector containing elements of the input vector whose index is contained into \c locs
+ */
 template <typename T>
 T* copyLocations(const unsigned long* locs, const T* src, const int locs_len, const int src_len)
 {
@@ -623,15 +857,33 @@ T* copyLocations(const unsigned long* locs, const T* src, const int locs_len, co
     return v;
 }
 
+/**
+  * Template function to call BLAS *AXPY routines
+  */
 template <typename T>
 void axpy(const int N, const T alpha, const T *X, const int incX, T *Y, const int incY);
 
-//template <typename T>
-//void axpby(const int N, const T alpha, const T *X, const int incX, const T beta, T *Y, const int incY);
-
+/**
+  * Template function to call BLAS *DOT routines
+  */
 template <typename T>
 T dot(const int N, const T *X, const int incX, const T *Y, const int incY);
 
+/**
+  * Computes RLS estimator given the singular value decomposition of the kernel matrix
+  *
+  * \param Q eigenvectors of the kernel matrix
+  * \param L eigenvalues of the kernel matrix
+  * \param Qty result of the matrix multiplication of the transpose of Q times the labels vector Y \f$(Q^T Y)\f$
+  * \param C on exit contains the rls coefficients matrix
+  * \param lambda regularization parameter
+  * \param n number of training samples
+  * \param Q_rows number of rows of the matrix Q
+  * \param Q_cols number of columns of the matrix Q
+  * \param L_length number of elements of the vector L
+  * \param Qty_rows number of rows of the matrix Qty
+  * \param Qty_cols number of columns of the matrix Qty
+  */
 template<typename T>
 void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const int n,
              const int Q_rows, const int Q_cols,
@@ -661,57 +913,22 @@ void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const
 
 
     //C = (Q*L)*QtY;
-//    T* C = new T[Q_rows*Qty_cols];
     dot(QL, Qty, C, Q_rows, L_length, Qty_rows, Qty_cols, Q_rows, Qty_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
     delete[] L1;
-//    delete[] Ldiag;
     delete[] QL;
-
-//    return C;
 }
 
-
-template<typename T>
-void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
-                    const int Q_rows, const int Q_cols,
-                    const int L_length, const int lambda_length)
-{
-    //function Z = GInverseDiagonal( Q, L, lambda )
-
-    //n = size(Q, 1); -> Q_rows
-    //t = size(lambda, 2); -> lambda_length
-
-    //Z = zeros(n, t);
-
-    //D = Q.^(2);
-    const int Q_size = Q_rows*Q_cols;
-    T* D = new T[Q_size];
-    //copy(D, Q, Q_size, 1, 1);
-    mult(Q, Q, D, Q_size);
-
-    T* d = new T[L_length];
-//    T* Dd = new T[Q_rows /* *1 */];
-
-    //for i = 1 : t
-    for(int i=0; i<lambda_length; ++i)
-    {
-//    d = L + (n*lambda(i));
-        set(d, Q_rows*lambda[i] , L_length);
-        axpy(L_length, (T)1.0, L, 1, d, 1);
-
-//    d  = d.^(-1);
-        setReciprocal(d, L_length);
-
-//    Z(:,i) = D*d;
-        gemv(CblasColMajor, CblasNoTrans, Q_rows, Q_cols, (T)1.0, D, Q_cols, d, 1, (T)0.0, Z+(i*lambda_length), 1);
-    }
-
-    delete[] d;
-    delete[] D;
-}
-
-
+/**
+  * Computes a "signum vector" of the same size as an input vector, where each element is:
+  *  - 1 if the corresponding element of the input vector is greater than zero
+  *  - 0 if the corresponding element of the input vector is zero
+  *  - -1 if the corresponding element of the input vector is less than zero
+  *
+  * \param vector input vector
+  * \param size number of elements of the input vector
+  * \return the signum vector
+  */
 template<typename T>
 T* sign(const T* vector, const int size)
 {
@@ -734,6 +951,18 @@ T* sign(const T* vector, const int size)
     return ret;
 }
 
+/**
+  * Compares element by element two vectors using a binary predicate,
+  * and returns a vector where each element is:
+  * - 1 if comparison predicate was verified on the pair of elements at the corresponging index
+  * - 0 if comparison predicate was not verified on the pair of elements at the corresponging index
+  *
+  * \param vector1 first input vector
+  * \param vector2 second input vector
+  * \param size number of elements of the input vectors
+  * \param pred binary predicate used for comparison
+  * \return the results vector
+  */
 template<typename T>
 T* compare(const T* vector1, const T* vector2, const int size, bool(*pred)(T,T))
 {
@@ -750,22 +979,46 @@ T* compare(const T* vector1, const T* vector2, const int size, bool(*pred)(T,T))
     return ret;
 }
 
+
+/**
+  * Compares each element of a vector with a threshold using a binary predicate
+  * and returns a vector where each element is:
+  * - 1 if comparison predicate was verified on the pair (element at the corresponging index, threshold)
+  * - 0 if comparison predicate was not verified on the pair (element at the corresponging index, threshold)
+  *
+  * \param vector input vector
+  * \param thr threshold
+  * \param size number of elements of the input vector
+  * \param pred binary predicate used for comparison
+  * \return the results vector
+  */
 template<typename T>
-T* compare(const T* vector1, const T val, const int size, bool(*pred)(T,T))
+T* compare(const T* vector, const T thr, const int size, bool(*pred)(T,T))
 {
-    const T* v1_end = vector1+size;
+    const T* v1_end = vector+size;
 
     T* ret = new T[size];
     T* r_it = ret;
 
-    for(const T *v1_it = vector1; v1_it != v1_end; ++v1_it, ++r_it)
+    for(const T *v1_it = vector; v1_it != v1_end; ++v1_it, ++r_it)
     {
-        *r_it = (*pred)(*v1_it, val)? (T)1.0: (T)0.0;
+        *r_it = (*pred)(*v1_it, thr)? (T)1.0: (T)0.0;
     }
 
     return ret;
 }
 
+/**
+  * Returns the indices of the largest elements along different dimensions of a matrix.
+  *
+  * \param A input matrix
+  * \param A_rows number of rows of the input matrix
+  * \param A_cols number of columns of the input matrix
+  * \param ind vector containing computed indices, length must be A_cols if dimension == 1,  or A_rows if dimension == 2
+  * \param work work buffer of size >= 0 if dimension == 1, or size >= (A_rows*A_cols) if dimension == 2
+  * \param dimension the dimension along which largest elements have to be computed
+  * \return the results vector
+  */
 template<typename T>
 void indicesOfMax(const T* A, const int A_rows, const int A_cols, unsigned long* ind, T* work, const int dimension) throw (gException)
 {
@@ -787,7 +1040,7 @@ void indicesOfMax(const T* A, const int A_rows, const int A_cols, unsigned long*
         m_cols = A_rows;
         break;
     default:
-        throw gException(gurls::Exception_Illegat_Argument_Value);
+        throw gException(gurls::Exception_Illegal_Argument_Value);
     }
 
     for(unsigned long *r_it = ind, *r_end = ind+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
@@ -795,6 +1048,60 @@ void indicesOfMax(const T* A, const int A_rows, const int A_cols, unsigned long*
 
 }
 
+/**
+  * Returns the largest elements along different dimensions of a matrix.
+  *
+  * \param A input matrix
+  * \param A_rows number of rows of the input matrix
+  * \param A_cols number of columns of the input matrix
+  * \param maxv vector containing computed values, length must be A_cols if dimension == 1,  or A_rows if dimension == 2
+  * \param work work buffer of size >= 0 if dimension == 1, or size >= (A_rows*A_cols) if dimension == 2
+  * \param dimension the dimension along which largest elements have to be computed
+  * \return the results vector
+  */
+template<typename T>
+void maxValues(const T* A, const int A_rows, const int A_cols, T* maxv, T* work, const int dimension) throw (gException)
+{
+    const T *m_it;
+    int m_rows;
+    int m_cols;
+
+    switch(dimension)
+    {
+    case 1:
+        m_it = A;
+        m_rows = A_rows;
+        m_cols = A_cols;
+        break;
+    case 2:
+        transpose(A, A_rows, A_cols, work);
+        m_it = work;
+        m_rows = A_cols;
+        m_cols = A_rows;
+        break;
+    default:
+        throw gException(gurls::Exception_Illegal_Argument_Value);
+    }
+
+    for(T *r_it = maxv, *r_end = maxv+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
+        *r_it = *std::max_element(m_it, m_it+m_rows);
+
+}
+
+/**
+  * Builds array of possible values for the regularization parameter,
+  * generating a geometric series from the values in EIGVALS
+  * Internal function, not to be called from gurls
+  *
+  * \param eigvals vector containing the eigenvalues of \f$X^T X\f$ or \f$X X^T\f$ where \f$X\f$ is
+  * the input data matrix
+  * \param len number of elements of input vector
+  * \param r rank
+  * \param n number of samples
+  * \param nlambda
+  * \param minl
+  * \return vector of values for the regularization parameter
+  */
 template<typename T>
 T* lambdaguesses(const T* eigvals, const int len, const int r, const int n, const int nlambda, const T minl)
 {
@@ -848,6 +1155,17 @@ T* lambdaguesses(const T* eigvals, const int len, const int r, const int n, cons
 
 //}
 
+/**
+  * Performs left division of squared matrices
+  *
+  * \param A first input matrix
+  * \param B second input matrix. On exit B contains the result matrix
+  * \param a_rows number of rows of matrix A
+  * \param a_cols number of columns of matrix A
+  * \param b_rows number of rows of matrix B
+  * \param b_cols number of columns of matrix B
+  * \param transA specifies whether to transpose A or not
+  */
 template<typename T>
 void mldivide_squared(const T* A, T* B,
             const int a_rows, const int a_cols,
@@ -860,48 +1178,104 @@ void mldivide_squared(const T* A, T* B,
     const int lda = a_rows;
     const int ldb = b_rows;
 
-    trsm(CblasColMajor, CblasLeft, CblasUpper, transA, CblasNonUnit, b_rows, b_cols, (T)1.0, A, lda, B, ldb);
+    trsm(CblasLeft, CblasUpper, transA, CblasNonUnit, b_rows, b_cols, (T)1.0, A, lda, B, ldb);
 }
 
+
+/**
+  * Template function to call BLAS *TRSM routines
+  */
 template <typename T>
-void trsm(const CBLAS_ORDER Order, const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
+void trsm(const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
                  const int M, const int N, const T alpha, const T *A, const int lda, T *B, const int ldb);
 
+/**
+  * Computes singular value decomposition of an input matrix A such that  A = U*diag(S)*Vt.
+  *
+  * \param A Input matrix to be decomposed
+  * \param U Matrix of the left singular vectors
+  * \param S Vector containing the singular values of the decomposition
+  * \param Vt transposed matrix of the right singular vectors
+  * \param A_rows number of rows of matrix A
+  * \param A_cols number of columns of matrix A
+  * \param U_rows number of rows of matrix U
+  * \param U_cols number of columns of matrix U
+  * \param S_len number of elements of vector S
+  * \param Vt_rows number of rows of matrix Vt
+  * \param Vt_cols number of columns of matrix Vt
+  * \param econ if true computes the "economy size" decomposition.
+    If A_rows >= A_cols, then svd computes only the first A_cols columns of U and S length is A_cols.
+    For A_rows < A_cols, only the first A_rows rows of Vt are computed and S length is A_rows.
+  */
 template <typename T>
-void svd(const T* A, T*& U, T*& W, T*& Vt,
+void svd(const T* A, T*& U, T*& S, T*& Vt,
          const int A_rows, const int A_cols,
          int& U_rows, int& U_cols,
-         int& W_len,
-         int& Vt_rows, int& Vt_cols) throw(gException)
+         int& S_len,
+         int& Vt_rows, int& Vt_cols, bool econ = false) throw(gException)
 {
     // A = U*S*Vt
 
-    char jobu = 'S', jobvt = 'S';
+    char jobu, jobvt;
+
     int m = A_rows;
     int n = A_cols;
     int k = std::min<int>(m, n);
+    int ldvt;
 
-    W = new T[k];
-    U = new T[m*k];
-    Vt = new T[k*n];
+    S = new T[k];
+    S_len = k;
 
     U_rows = m;
-    U_cols = k;
-
-    W_len = k;
-
-    Vt_rows = k;
     Vt_cols = n;
-//MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))
-    int lda = A_cols;
-    int ldu = k;
-    int ldvt = n;
+
+    if(econ)
+    {
+//        jobu = jobvt = 'S';
+        if(m>n)
+        {
+            jobu = 'S';
+            jobvt = 'A';
+        }
+        else if(m<n)
+        {
+            jobu = 'A';
+            jobvt = 'S';
+        }
+        else
+            jobu = jobvt = 'S';
+
+        U = new T[m*k];
+        Vt = new T[k*n];
+
+        U_cols = k;
+        Vt_rows = k;
+
+        ldvt = k;
+    }
+    else
+    {
+        jobu = jobvt = 'A';
+
+        U = new T[m*m];
+        Vt = new T[n*n];
+
+        U_cols = m;
+        Vt_rows = n;
+
+        ldvt = n;
+    }
+
+    //MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))
+
+    int lda = A_rows;
+    int ldu = m;
     int info, lwork = std::max<int>(3*k+std::max<int>(m,n), 5*k);
     T* work = new T[lwork];
     T* cpy = new T[m*n];
     copy(cpy, A, A_rows*A_cols);
 
-    gesvd_(&jobu, &jobvt, &n, &m, cpy, &lda, W, U, &ldu, Vt, &ldvt, work, &lwork, &info);
+    gesvd_(&jobu, &jobvt, &m, &n, cpy, &lda, S, U, &ldu, Vt, &ldvt, work, &lwork, &info);
 
     delete[] work;
     delete[] cpy;
@@ -914,9 +1288,15 @@ void svd(const T* A, T*& U, T*& W, T*& Vt,
     }
 }
 
+/**
+  * Template function to call BLAS *GESVD routines
+  */
 template<typename T>
 int gesvd_(char *jobu, char *jobvt, int *m, int *n, T *a, int *lda, T *s, T *u, int *ldu, T *vt, int *ldvt, T *work, int *lwork, int *info);
 
+/**
+  * Generates a vector containing a random permutation of the values from start to start+n inclusive
+  */
 template<typename T>
 void randperm(const unsigned long n, T* seq, bool generate = true, unsigned long start = 1)
 {
@@ -931,42 +1311,72 @@ void randperm(const unsigned long n, T* seq, bool generate = true, unsigned long
         std::swap(seq[rand()%n], seq[rand()%n]);
 }
 
+/**
+  * Generates a vector containing a copy of a row of an input matrix
+  *
+  * \param M input matrix
+  * \param rows number of rows of the input matrix
+  * \param cols number of columns of the input matrix
+  * \param row_index index of the row to be extracted
+  * \param row vector containing the extracted row. Length must be equals to \c cols
+  */
 template<typename T>
 void getRow(const T* M, const int rows, const int cols, const int row_index , T* row)
 {
     copy(row, M+row_index, cols, 1, rows);
 }
 
+/**
+  * Template function to call BLAS *NRM2 routines
+  */
 template<typename T>
 T nrm2(const int N, const T* X, const int incX);
 
+/**
+  * Template function to call BLAS *SCAL routines
+  */
 template<typename T>
 void scal(const int N, const T alpha, T *X, const int incX);
 
+
+/**
+  * Template function to call BLAS *GEMV routines
+  */
 template<typename T>
-void gemv(const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,
+void gemv(const CBLAS_TRANSPOSE TransA,
           const int M, const int N, const T alpha, const T *A, const int lda,
           const T *X, const int incX,
           const T beta, T *Y, const int incY);
 
+/**
+  * Template function to call LAPACK *SYEV routines
+  */
 template<typename T>
 void syev( char* jobz, char* uplo, int* n, T* a, int* lda, T* w, T* work, int* lwork, int* info);
 
+
+/**
+  * Template function to call BLAS *GEMM routines
+  */
 template<typename T>
-void gemm(const CBLAS_ORDER Order, const CBLAS_TRANSPOSE TransA, const CBLAS_TRANSPOSE TransB,
+void gemm(const CBLAS_TRANSPOSE TransA, const CBLAS_TRANSPOSE TransB,
           const int M, const int N, const int K, const T alpha, const T *A, const int lda,
           const T *B, const int ldb,
           const T beta, T *C, const int ldc);
 
+/**
+  * Computes the eigenvalues/eigenvectors of a squared and symmetric input matrix.
+  *
+  * \param A input matrix. On exit it contains the orthonormal eigenvectors of the matrix A
+  * \param L vector of eigenvalues in ascending order
+  * \param A_rows_cols number of rows/columns of matrix A
+  */
 template<typename T>
-void eig_sm(T* A, T* L, int A_rows, int A_cols) throw (gException)
+void eig_sm(T* A, T* L, int A_rows_cols) throw (gException)
 {
-    if (A_cols != A_rows)
-        throw gException("The input matrix A must be squared");
-
     char jobz = 'V';
     char uplo = 'L';
-    int n = A_cols, lda = A_rows;
+    int n = A_rows_cols, lda = n;
     int info, lwork = 4*n;
     T* work = new T[lwork];
 
@@ -982,6 +1392,12 @@ void eig_sm(T* A, T* L, int A_rows, int A_cols) throw (gException)
     }
 }
 
+/**
+  * In place computation of the exponential for each element of a vector
+  *
+  * \param v vector
+  * \param length vector size
+  */
 template<typename T>
 void exp(T* v, const int length)
 {
@@ -989,21 +1405,30 @@ void exp(T* v, const int length)
         *it = (T) std::exp(*it);
 }
 
+/**
+  * Computes Euclidean distance between two vectors
+  *
+  * \param A first vector
+  * \param B first vector
+  * \param len number of element of vectors A and B
+  * \param work work buffer of length >= \c len
+  * \return Euclidean distance
+  */
 template<typename T>
 T eucl_dist(const T* A, const T* B, const int len, T* work)
 {
     copy(work, A, len);
     axpy(len, (T)-1.0, B, 1, work, 1);
     return nrm2(len, work, 1);
-
 }
 
-// Y = PDIST(X) returns a vector Y containing the Euclidean distances
-// between each pair of observations in the N-by-P data matrix X.  Rows of
-// X correspond to observations, columns correspond to variables.  Y is a
-// 1-by-(N*(N-1)/2) row vector, corresponding to the N*(N-1)/2 pairs of
-// observations in X.
-// D allocated
+/**
+  * Computes a vector D containing the Euclidean distances
+  * between each pair of observations in the N-by-P data matrix A. Rows of
+  * A correspond to observations, columns correspond to variables. D is a
+  * 1-by-(N*(N-1)/2) vector, corresponding to the N*(N-1)/2 pairs of
+  * observations in A.
+  */
 template<typename T>
 void pdist(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D)
 {
@@ -1030,13 +1455,16 @@ void pdist(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D)
     delete [] rowNPlusOne;
 }
 
-//  SQUAREFORM Reformat a distance matrix between upper triangular and square form.
-//     Z = SQUAREFORM(Y), if Y is a vector as created by the PDIST function,
-//     converts Y into a symmetric, square format, so that Z(i,j) denotes the
-//     distance between the i and j objects in the original data.
-//   Y = SQUAREFORM(Z), if Z is a symmetric, square matrix with zeros along
-//     the diagonal, creates a vector Y containing the Z elements below the
-//     diagonal.  Y has the same format as the output from the PDIST function.
+
+/**
+  * Reformats a distance matrix between upper triangular and square form.
+  * If A is a vector as created by the pdist function,
+  * converts A into a symmetric, square format, so that D(i,j) denotes the
+  * distance between the i and j objects in the original data.
+  * If A is a symmetric, square matrix with zeros along
+  * the diagonal, creates a vector D containing the A elements below the
+  * diagonal. D has the same format as the output from the PDIST function.
+  */
 template<typename T>
 void squareform(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D, const int d_cols)
 {
@@ -1071,6 +1499,15 @@ void squareform(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D, 
     }
 }
 
+/**
+  * Computes a vector containing the indices of all elements of an input vector that are equals to a given value
+  *
+  * \param V input vector
+  * \param len number of elements of the input vector
+  * \param value value for comparison
+  * \param ind vector of the indices. Length must be >= len
+  * \param ind_length total number of indices written into \c ind
+  */
 template<typename T>
 void indicesOfEqualsTo(const T* V, const int len, const T value, unsigned long* ind, int& ind_length)
 {
@@ -1087,6 +1524,9 @@ void indicesOfEqualsTo(const T* V, const int len, const T value, unsigned long* 
     ind_length = r_it - ind;
 }
 
+/**
+  * Rounds an input value to the nearest integer
+  */
 template<typename T>
 int round(const T value)
 {
@@ -1096,5 +1536,207 @@ int round(const T value)
     return gt(value,(T)0.0)? ((int)(value+0.5)): ((int)(value-0.5));
 }
 
+/**
+  * Template function to call LAPACK *GEQP3 routines
+  */
+template<typename T>
+void geqp3( int *m, int *n, T *A, int *lda, int *jpvt, T *tau, T *work, int *lwork, int *info);
+
+/**
+  * Template function to call LAPACK *ORGQR routines
+  */
+template<typename T>
+void orgqr(int *m, int *n, int *k, T *a, int *lda, T *tau, T *work, int *lwork, int *info);
+
+/**
+  * Computes an economy-size QR decomposition of an input matrix A so that A(:,E) = Q*R.
+  * If m > n, only the first n columns of Q and the first n rows of R are computed.
+  *
+  * \param A input matrix
+  * \param m number of rows of the input matrix
+  * \param n number of columns of the input matrix
+  * \param Q  Q matrix
+  * \param R  upper triangular R matrix
+  * \param E permutations vector
+  */
+template<typename T>
+void qr_econ(const T* A, int m, int n, T* Q, T* R, int* E)
+{
+    // Q: mxmin(m,n)
+    // R: min(m,n)xn
+    // E: n
+
+    T* Q_tmp = new T[m*n];
+    copy(Q_tmp, A, m*n);
+
+    int k = std::min(m, n);
+
+    int lda = std::max(1,m);
+    int* jpvt = E;
+    set(jpvt, 0, n);
+
+    T* tau = new T[k];
+
+    T* work;
+    int lwork = -1;
+    int info;
+
+    // query
+    T qwork;
+    geqp3( &m, &n, Q_tmp, &lda, jpvt, tau, &qwork, &lwork, &info);
+
+    // exec
+    lwork = static_cast<int>(qwork);
+    work = new T[lwork];
+    geqp3( &m, &n, Q_tmp, &lda, jpvt, tau, work, &lwork, &info);
+
+    if(info != 0)
+    {
+        delete[] tau;
+        delete[] work;
+        delete[] Q_tmp;
+
+        std::stringstream str;
+        str << "QR factorization failed, error code " << info << std::endl;
+        throw gException(str.str());
+    }
+
+    if(R != NULL)
+    {
+        for(int i=0; i<n; ++i)
+        {
+            copy(R + k*i, Q_tmp + m*i, i+1);
+
+            set(R + (k*i) + i+1, (T)0.0, k - (i+1));
+        }
+    }
+
+    // query
+    lwork = -1;
+    orgqr(&m, &k, &k, Q_tmp, &lda, tau, &qwork, &lwork, &info);
+
+    if(info != 0)
+    {
+        delete[] tau;
+        delete[] work;
+        delete[] Q_tmp;
+
+        std::stringstream str;
+        str << "QR factorization failed, error code " << info << std::endl;
+        throw gException(str.str());
+    }
+
+    //exec
+    lwork = static_cast<int>(qwork);
+    delete[] work;
+    work = new T[lwork];
+    orgqr(&m, &k, &k, Q_tmp, &lda, tau, work, &lwork, &info);
+
+    copy(Q, Q_tmp, m*k);
+
+    delete[] tau;
+    delete[] work;
+    delete[] Q_tmp;
+
 }
+
+/**
+  * Generates a row vector of n points linearly spaced between and including a and b
+  */
+template<typename T>
+void linspace(T a, T b, unsigned long n, T* res)
+{
+    unsigned long i = 0;
+
+    if(n > 0)
+    {
+        const T coeff = (b - a)/(static_cast<T>(n)-1);
+        for(i = 0; i < n-1; ++i)
+            res[i] = a + (i*coeff);
+    }
+
+    res[i] = b;
+}
+
+
+/**
+  * Generates a row vector containing the standard deviation of the elements of each column of an input matrix
+  *
+  * \param X input matrix
+  * \param rows number of rows of the input matrix
+  * \param cols number of columns of the input matrix
+  * \param res output standard deviations vector
+  * \param work work buffer of size >= cols+rows
+  */
+template<typename T>
+void stdDev(const T* X, const int rows, const int cols, T* res, T* work)
+{
+    T* meanX = work;
+    mean(X, meanX, rows, cols, cols);
+
+    T* stdX = res;
+    T* column = work+cols;
+
+    for(int i=0; i< cols; ++i)
+    {
+        copy(column, X+(rows*i), rows);
+
+        axpy(rows, (T)-1.0, meanX+i, 0, column, 1);
+
+        stdX[i] = sqrt( pow(nrm2(rows, column, 1), 2) / (rows-1));
+    }
+}
+
+/**
+  * Returns the median value of a vector. This function does not preserve input vector.
+  *
+  * \param v input vector
+  * \param length number of elements of the input vector
+  */
+template<typename T>
+T median(T* v, const int length)
+{
+    std::sort(v, v+length);
+
+    if(length%2)
+        return v[length/2];
+    else
+        return static_cast<T>( (v[length/2] + v[(length/2)-1]) /2.0 );
+}
+
+/**
+  * Computes the median values of the elements along different dimensions of a matrix
+  *
+  * \param M input matrix
+  * \param rows number of rows of the input matrix
+  * \param cols number of columns of the input matrix
+  * \param res output median values vector, size == cols if dimension == 1  or size == rows if dimension == 2
+  * \param work work buffer of size >= rows if dimension == 1  or >= cols if dimension == 2
+  */
+template<typename T>
+void median(const T* M, const int rows, const int cols, const int dimension, T* res, T* work)
+{
+    switch(dimension)
+    {
+    case 1:
+        for(int i=0; i<cols; ++i)
+        {
+            copy(work, M+(i*rows), rows);
+            res[i] = median(work, rows);
+        }
+        break;
+    case 2:
+        for(int i=0; i<rows; ++i)
+        {
+            copy(work, M+i, cols, 1, rows);
+            res[i] = median(work, cols);
+        }
+        break;
+    default:
+        throw gException(Exception_Illegal_Argument_Value);
+    }
+}
+
+}
+
 #endif // _GURLS_GMATH_H_

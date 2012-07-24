@@ -53,12 +53,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief FixSigLam is the sub-class of ParamSelection that sets the regularization parameters to constants
-     */
+/**
+ * \ingroup ParameterSelection
+ * \brief ParamSelFixSigLam is the sub-class of ParamSelection that sets the regularization parameters to constants
+ */
 
 template <typename T>
-class FixSigLam: public ParamSelection<T>
+class ParamSelFixSigLam: public ParamSelection<T>
 {
 public:
     /**
@@ -68,14 +69,14 @@ public:
      * \param opt not used
      *
      * \return adds the following fields to opt:
-     *  - lambdas(=1.0) 
-     *  - sigma(=1.0) 
+     *  - lambdas(=1.0)
+     *  - sigma(=1.0)
      */
     void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
 };
 
 template <typename T>
-void FixSigLam<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+void ParamSelFixSigLam<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
 {
     GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
     OptNumberList* lambda = new OptNumberList();

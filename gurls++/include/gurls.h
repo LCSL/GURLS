@@ -69,7 +69,9 @@
 
 #include "rlsauto.h"
 #include "rlsprimal.h"
+#include "rlsprimalr.h"
 #include "rlsdual.h"
+#include "rlsdualr.h"
 #include "rlspegasos.h"
 
 #include "loocvprimal.h"
@@ -90,7 +92,6 @@
 #include "normzscore.h"
 
 #include "splitho.h"
-#include "splithomulti.h"
 
 #include "boltzman.h"
 #include "boltzmangap.h"
@@ -100,31 +101,32 @@
 namespace gurls {
 
     /**
+     * \ingroup Common
      * \brief GURLS is the class that implements a GURLS process
      */
 
-	class GURLS_EXPORT GURLS {
+    class GURLS_EXPORT GURLS
+    {
 
-public:
-    /**
-     * set the execution option for a GURLS tasks:
-     */
+    public:
 
-    enum Action {ignore, compute, computeNsave, load, remove};
+        /**
+         * Execution options for a GURLS tasks
+         */
+        enum Action {ignore, compute, computeNsave, load, remove};
 
-    /**
-     * Implements a GURLS process and stores results of each GULRS task in opt.
-     *
-     * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt initial GURLS options
-     * \param processid a job-id number
-     *
-     */
-    template <typename T>
-    void run(const gMat2D<T>& , const gMat2D<T>&,
-             GurlsOptionsList&, std::string );
-
+        /**
+         * Implements a GURLS process and stores results of each GULRS task in opt.
+         *
+         * \param X input data matrix
+         * \param y labels matrix
+         * \param opt initial GURLS options
+         * \param processid a job-id number
+         *
+         */
+        template <typename T>
+        void run(const gMat2D<T>& X, const gMat2D<T>& y,
+                 GurlsOptionsList& opt, std::string processid);
 };
 
 
@@ -222,7 +224,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
             std::cout << "\t" << "[Task " << i << ": "
                       << reg1 << "]: " << reg2 << "... ";
-	    std::cout.flush();
+            std::cout.flush();
 
 
             switch ( static_cast<int>(process[i]) ) {
@@ -266,15 +268,15 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 }else if (!reg1.compare("predkernel")) {
                     taskPredKernel = PredKernel<T>::factory(reg2);
                     taskPredKernel->execute(X, y, opt);
-                }else if (!reg1.compare("confidence")) {
+                }else if (!reg1.compare("conf")) {
                     taskConfidence = Confidence<T>::factory(reg2);
                     taskConfidence->execute(X, y, opt);
                 }
 
-                fun = reg1;
-                fun+="_";
-                fun+=reg2;
-                opt.addOpt(reg1, new OptString(fun));
+//                fun = reg1;
+//                fun+="_";
+//                fun+=reg2;
+//                opt.addOpt(reg1, new OptString(fun));
 
                 end = boost::posix_time::microsec_clock::local_time();
                 diff = end-begin;
@@ -304,9 +306,9 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     throw gException("Opt savefile not found");
                 if(!loadOpt->hasOpt(reg1))
                 {
-		  std::string s = "Task " + reg1 + " not found in opt savefile";
-		  gException e(s);
-		  throw e;
+                    std::string s = "Task " + reg1 + " not found in opt savefile";
+                    gException e(s);
+                    throw e;
                 }
 
                 opt.removeOpt(reg1);
@@ -346,12 +348,12 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
         bool save = false;
 
-	std::cout << std::endl << "Save cycle..." << std::endl;
+        std::cout << std::endl << "Save cycle..." << std::endl;
         for (int i = 0; i < seq->size(); ++i)
         {
             seq->getTaskAt(i, reg1, reg2);
             std::cout << "\t" << "[Task " << i << ": " << reg1 << "]: " << reg2 << "... ";
-	    std::cout.flush();
+            std::cout.flush();
 
             switch ( static_cast<int>(process[i]) )
             {
@@ -359,11 +361,11 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
             case GURLS::compute:
             case GURLS::load:
             case GURLS::remove:
-	        std::cout << "not saved" << std::endl;
+                std::cout << "not saved" << std::endl;
                 opt.removeOpt(reg1);
                 break;
             case GURLS::computeNsave:
-	        std::cout << " saving" << std::endl;
+                std::cout << " saving" << std::endl;
                 save = true;
                 break;
             }
@@ -371,7 +373,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
         if(save)
         {
-	    std::cout << std::endl << "Saving opt in " << saveFile << std::endl;
+            std::cout << std::endl << "Saving opt in " << saveFile << std::endl;
             opt.save(saveFile);
         }
 

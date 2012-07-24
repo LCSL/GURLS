@@ -64,9 +64,10 @@ class PredPrimal;
 template <typename T>
 class PredDual;
 
-   /**
-     * \brief Prediction is the class that computes predictions
-     */
+/**
+ * \ingroup Prediction
+ * \brief Prediction is the class that computes predictions
+ */
 
 template <typename T>
 class Prediction
@@ -82,86 +83,38 @@ public:
      */
     virtual void execute( const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
-    class BadPredictionCreation : public std::logic_error {
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadPredictionCreation is thrown when \ref factory tries to generate an unknown prediction method
+     */
+    class BadPredictionCreation : public std::logic_error
+    {
     public:
+        /**
+         * Exception constructor.
+         */
         BadPredictionCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
-    static Prediction<T>*
-    factory(const std::string& id) throw(BadPredictionCreation) {
-        if(id == "primal"){
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
+    static Prediction<T>* factory(const std::string& id) throw(BadPredictionCreation)
+    {
+        if(id == "primal")
             return new PredPrimal<T>;
-        }	else if(id == "dual"){
+        else if(id == "dual")
             return new PredDual<T>;
-        } else
+        else
             throw BadPredictionCreation(id);
     }
 
 };
-
-//template <typename Matrix>
-//class PredPrimal: public Prediction<Matrix> {
-
-//public:
-//	Matrix& execute(const Matrix &X, const Matrix &Y, GurlsOptionsList &opt);
-//};
-
-//template <typename Matrix>
-//class PredDual: public Prediction<Matrix> {
-
-//public:
-//	Matrix& execute(const Matrix &X, const Matrix &Y, GurlsOptionsList& opt);
-//};
-
-//template <typename Matrix>
-//Matrix& PredPrimal<Matrix>::execute(const Matrix &X, const Matrix &Y,
-//									GurlsOptionsList &opt){
-//	if (opt.hasOpt("W")){
-//		GurlsOption *g = opt.getOpt("W");
-//		//Matrix& W = OptMatrixTMP<Matrix>::dynacast(g)->getValue();
-//		Matrix& W = OptMatrix<Matrix>::dynacast(g)->getValue();
-//		Matrix* Z = new Matrix(X.rows(), W.cols());
-//		*Z = 0;
-//		dot(X, W, *Z);
-//		return *Z;
-//	}else {
-//		throw gException(gurls::Exception_Required_Parameter_Missing);
-//	}
-//}
-
-//template <typename Matrix>
-//Matrix& PredDual<Matrix>::execute(const Matrix& X, const Matrix &Y,
-//								  GurlsOptionsList& opt){
-
-//	try {
-
-//		string type = OptString::dynacast( opt.getOpt("kernel.type") )->getValue();
-//		if (type == "linear"){
-//			PredPrimal<Matrix> pred;
-//			return pred.execute(X, Y, opt);
-
-//		}else {
-//			if (opt.hasOpt("finalkernel.K") && opt.hasOpt("rls.C")){
-//				GurlsOption *g = opt.getOpt("finalkernel.K");
-//				//Matrix& K = OptMatrixTMP<Matrix>::dynacast(g)->getValue();
-//				Matrix& K = OptMatrix<Matrix>::dynacast(g)->getValue();
-//				g = opt.getOpt("rls.C");
-//				//Matrix& C = OptMatrixTMP<Matrix>::dynacast(g)->getValue();
-//				Matrix& C = OptMatrix<Matrix>::dynacast(g)->getValue();
-//				Matrix* Z = new Matrix(K->rows(), C->cols());
-//				*Z = 0;
-//				dot(*K, *C, *Z);
-//				return *Z;
-//			}else {
-//				throw gException(gurls::Exception_Required_Parameter_Missing);
-//			}
-//		}
-//	}catch (gException& ex){
-//		throw ex;
-//	}
-
-//}
 
 }
 #endif // _GURLS_PRED_H_

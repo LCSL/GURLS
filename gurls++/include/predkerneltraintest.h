@@ -52,9 +52,10 @@
 namespace gurls {
 
 
-   /**
-     * \brief PredKernelTrainTest is the sub-class of PredKernel that computes the kernel matrix between training and test sets
-     */
+/**
+ * \ingroup PredKernels
+ * \brief PredKernelTrainTest is the sub-class of PredKernel that computes the kernel matrix between training and test sets
+ */
 
 template <typename T>
 class PredKernelTrainTest: public PredKernel<T>
@@ -83,9 +84,8 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
 
-    GurlsOptionsList* kernel = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
-    GurlsOptionsList* rls = static_cast<GurlsOptionsList*>(opt.getOpt("optimizer"));
-    GurlsOptionsList* paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+    GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
 
     std::string kernelType = kernel->getOptAsString("type");
 
@@ -112,7 +112,9 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
 
     if(kernelType == "rbf")
     {
-    double sigma = paramsel->getOptAsNumber("sigma");
+        GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+
+        double sigma = paramsel->getOptAsNumber("sigma");
 
 //                opt.predkernel.distance = distance(X',opt.rls.X');
         gMat2D<T> dist(rls_xr, xr);
@@ -141,6 +143,15 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
 
         K_m = new gMat2D<T>(xr, rls_xr);
         dist.transpose(*K_m);
+
+        if(!rls->hasOpt("L"))
+        {
+            gMat2D<T> *Ktest = new gMat2D<T>(xr, 1);
+            set(Ktest->getData(), (T)1.0, xr);
+
+            opt.addOpt("Ktest", new OptMatrix<gMat2D<T> >(*Ktest));
+        }
+
     }
 
     else if(kernelType == "load")
@@ -188,15 +199,6 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
         K_m = new gMat2D<T>(xr, rls_xr);
         K.transpose(*K_m);
 
-//         for(int i=0; i<10; ++i)
-//         {
-//             for(int j=0; j<10; ++j)
-//             {
-//                 std::cout << Kbuf[i+(xr*j)] << " ";
-//             }
-//
-//             std::cout << std::endl;
-//         }
     }
 
     else

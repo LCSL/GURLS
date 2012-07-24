@@ -51,8 +51,9 @@
 namespace gurls {
 
 /**
-     * \brief RLSPeagsos is the sub-class of Optimizer that implements the Pegaosos algorithm
-     */
+ * \ingroup Optimization
+ * \brief RLSPegasos is the sub-class of Optimizer that implements the Pegaosos algorithm
+ */
 
 template <typename T>
 class RLSPegasos: public Optimizer<T>{
@@ -70,7 +71,6 @@ public:
      *  - singlelambda (default)
      *  - epochs (default)
      *  - paramsel (settable with the class ParamSelection and its subclasses)
-sses)
      *  - Xte (test input data matrix, needed for accuracy evaluation)
      *  - yte (test labels matrix, needed for accuracy evaluation)
      *
@@ -92,7 +92,7 @@ void RLSPegasos<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurl
 {
     //	lambda = opt.singlelambda(opt.paramsel.lambdas);
     //    std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
-    GurlsOptionsList* paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
     std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
     T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
 
@@ -157,7 +157,7 @@ void RLSPegasos<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurl
 
     T count = static_cast<T>(optimizer->getOptAsNumber("count"));
     if(eq(count, (T)0.0))
-        throw gException(Exception_Illegat_Argument_Value);
+        throw gException(Exception_Illegal_Argument_Value);
 
     set(W->getData(), (T)0.0, W->getSize());
     axpy(W->getSize(), (T)(1.0/count), W_sum->getData(), 1, W->getData(), 1);

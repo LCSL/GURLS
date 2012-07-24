@@ -52,9 +52,10 @@ namespace gurls {
 template<typename T>
 class PredKernelTrainTest;
 
-   /**
-     * \brief PredKernel is the class that computes the kernel matrix for prediction
-     */
+/**
+ * \ingroup PredKernels
+ * \brief PredKernel is the class that computes the kernel matrix for prediction
+ */
 
 template<typename T>
 class PredKernel
@@ -62,7 +63,7 @@ class PredKernel
 public:
    /**
      * Computes the kernel matrix necessary for predicting the labels associated to X
-     * 
+     *
      * \param X input data matrix
      * \param Y not used
      * \param opt options with the different required fields based on the sub-class
@@ -71,13 +72,27 @@ public:
      */
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadPredKernelCreation is thrown when \ref factory tries to generate an unknown prediction kernel
+     */
     class BadPredKernelCreation : public std::logic_error
     {
     public:
+		/**
+		 * Exception constructor.
+		 */
         BadPredKernelCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
+	/**
+	 * Factory function returning a pointer to the newly created object.
+	 *
+	 * \warning The returned pointer is a plain, un-managed pointer. The calling
+	 * function is responsible of deallocating the object.
+	 */
     static PredKernel<T> *factory(const std::string& id) throw(BadPredKernelCreation)
     {
         if(id == "traintest")

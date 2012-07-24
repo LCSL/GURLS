@@ -49,8 +49,9 @@
 namespace gurls {
 
 /**
-    * \brief RLSAuto is the sub-class of Optimizer that implements automatic selection of primal/dual procedure.
-    */
+ * \ingroup Optimization
+ * \brief RLSAuto is the sub-class of Optimizer that implements automatic selection of primal/dual procedure.
+ */
 
 template <typename T>
 class RLSAuto: public Optimizer<T>{

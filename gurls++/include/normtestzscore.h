@@ -49,9 +49,11 @@
 
 namespace gurls {
 
-    /**
-     * \brief NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmoputed on the training set.
-     */
+/**
+ * \ingroup Norms
+ * \brief NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmoputed on the training set.
+ */
+
 template <typename T>
 class NormTestZScore: public Norm<T>
 {

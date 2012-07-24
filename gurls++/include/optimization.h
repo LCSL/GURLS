@@ -71,10 +71,17 @@ template <typename T>
 class RLSPrimal;
 
 template <typename T>
+class RLSPrimalr;
+
+template <typename T>
 class RLSDual;
 
 template <typename T>
+class RLSDualr;
+
+template <typename T>
 class RLSPegasos;
+
 
     /**
      * \brief Optimizer is a class that implements a Regularized Least Square algorithm
@@ -95,22 +102,40 @@ public:
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
     ~Optimizer(){}
 
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadOptimizerCreation is thrown when \ref factory tries to generate an unknown optimizer
+     */
     class BadOptimizerCreation : public std::logic_error {
     public:
+        /**
+         * Exception constructor.
+         */
       BadOptimizerCreation(std::string type)
       : logic_error("Cannot create type " + type) {}
     };
-    static Optimizer<T>*
-    factory(const std::string& id) throw(BadOptimizerCreation) {
 
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
+    static Optimizer<T>* factory(const std::string& id) throw(BadOptimizerCreation)
+    {
       if(id == "rlsauto")
         return new RLSAuto<T>;
       else if(id == "rlsprimal")
         return new RLSPrimal<T>;
+      else if(id == "rlsprimalr")
+        return new RLSPrimalr<T>;
       else if(id == "rlsdual")
-            return new RLSDual<T>;
+        return new RLSDual<T>;
+      else if(id == "rlsdualr")
+        return new RLSDualr<T>;
       else if(id == "rlspegasos")
-            return new RLSPegasos<T>;
+        return new RLSPegasos<T>;
       else
         throw BadOptimizerCreation(id);
     }

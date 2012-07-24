@@ -65,7 +65,8 @@ void BaseArray<T>::resize(unsigned long n) {
         unsigned long oldsize = this->size;
         this->alloc(n);
         this->set(tmp, std::min(n, oldsize));
-        delete[] tmp;
+        if(tmp != NULL)
+            delete[] tmp;
     };
 }
 
@@ -155,6 +156,9 @@ BaseArray<T>& BaseArray<T>::divide(const BaseArray<T>& v) {
     return *this;
 }
 
+/**
+  * Checks if all elements in a vector are equal to a given value
+  */
 template <typename U>
 bool operator== (const BaseArray<U>& v, const U& val) {
     U *ptr = v.data;
@@ -195,15 +199,15 @@ const T& BaseArray<T>::min() const {
 }
 
 template <typename T>
-const double& BaseArray<T>::sum() const {
+double BaseArray<T>::sum() const{
     T* ptr = this->data;
     T* endptr = this->data+this->size;
+
     double sum = 0.0;
     while(ptr != endptr){
         sum+=*ptr++;
     }
-    const double& s = sum;
-    return s;
+    return sum;
 }
 
 

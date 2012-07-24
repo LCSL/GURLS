@@ -63,12 +63,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief Siglam is the sub-class of ParamSelection that implements LOO cross-validation with the dual formulation for a rbf kernel
-     */
+/**
+ * \ingroup ParameterSelection
+ * \brief ParamSelSiglam is the sub-class of ParamSelection that implements LOO cross-validation with the dual formulation for a rbf kernel
+ */
 
 template <typename T>
-class Siglam: public ParamSelection<T>{
+class ParamSelSiglam: public ParamSelection<T>{
 
 public:
     /**
@@ -92,7 +93,7 @@ public:
 };
 
 template <typename T>
-void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+void ParamSelSiglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
 {
     //  [n,T]  = size(y);
 //    const int n = Y_OMR.rows();
@@ -107,7 +108,7 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
     GurlsOptionsList* kernel_old = NULL;
     if (opt.hasOpt("kernel"))
     {
-        kernel_old = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
+        kernel_old = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
         opt.removeOpt("kernel", false);
     }
 
@@ -115,7 +116,20 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
     kernel->addOpt("type", "rbf");
     opt.addOpt("kernel", kernel);
 
-    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+//    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
+    GurlsOptionsList* paramsel = NULL;
+    if(!opt.hasOpt("paramsel"))
+    {
+        paramsel = new GurlsOptionsList("paramsel");
+//        opt.addOpt("paramsel", paramsel);
+    }
+    else
+    {
+        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+
+        paramsel->removeOpt("lambdas");
+        paramsel->removeOpt("sigma");
+    }
 
     gMat2D<T>* dist = new gMat2D<T>(X_OMR.rows(), X_OMR.rows());
 
@@ -160,7 +174,7 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
         std::sort(distY, distY + d_len);
         // 	firstPercentile = round(0.01*numel(D)+0.5);
 
-        int firstPercentile = gurls::round( (T)0.01 * d_len + (T)0.5);
+        int firstPercentile = gurls::round( (T)0.01 * d_len + (T)0.5) -1;
 
         // 	opt.sigmamin = D(firstPercentile);
         opt.addOpt("sigmamin", new OptNumber(sqrt( distY[firstPercentile]) ));
@@ -184,12 +198,12 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
     T sigmamax = static_cast<T>(opt.getOptAsNumber("sigmamax"));
 
     // if opt.sigmamin <= 0
-    if(sigmamin <= 0)
+    if( le(sigmamin, (T)0.0) )
         // 	opt.sigmamin = eps;
         opt.addOpt("sigmamin", new OptNumber(std::numeric_limits<T>::epsilon()));
 
     // if opt.sigmamin <= 0
-    if(sigmamin <= 0)
+    if( le(sigmamin, (T)0.0))
         // 	opt.sigmamax = eps;
         opt.addOpt("sigmamax", new OptNumber(std::numeric_limits<T>::epsilon()));
 
@@ -200,29 +214,30 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
 
     // LOOSQE = zeros(opt.nsigma,opt.nlambda,T);
     //T* LOOSQE = new T[nsigma*nlambda*t];
-    T* acc = new T[nlambda];
+    T* perf = new T[nlambda];
 
     // sigmas = zeros(1,opt.nsigma);
     //     T* sigmas = new T[nsigma];
     // for i = 1:opt.nsigma
 
-    RBFKernel< T > rbfkernel;
-    LoocvDual< T > loocvdual;
+    KernelRBF<T> rbfkernel;
+    ParamSelLoocvDual<T> loocvdual;
+
     T* lwork = new T[nlambda];
-    T maxTmp = 0;
+    T maxTmp = (T)-1.0;
     int m = -1;
-    T voutLambdas = -1;
-    unsigned long* mm = new unsigned long[1];
+    T guess = (T)-1.0;
 
     for(int i=0;i<nsigma;i++)
     {
-        paramsel->removeOpt("sigma",false);
+//        paramsel->removeOpt("sigma",false);
+        paramsel->removeOpt("sigma");
         paramsel->addOpt("sigma", new OptNumber( sigmamin * pow(q, i)));
 
         // 	opt.kernel = kernel_rbf(X,y,opt);
         opt.addOpt("paramsel",paramsel);
         rbfkernel.execute(X_OMR, Y_OMR, opt);
-        //  	GurlsOptionsList* ret_k = static_cast<GurlsOptionsList*>(opt.getOpt("kernel"));
+        //  	GurlsOptionsList* ret_k = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
         // 	cout << *ret_k << endl;
         opt.removeOpt("paramsel", false);
 
@@ -230,38 +245,36 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
         loocvdual.execute(X_OMR, Y_OMR, opt);
 
 
-        GurlsOptionsList* ret_paramsel = static_cast<GurlsOptionsList*>(opt.getOpt("paramsel"));
+        GurlsOptionsList* ret_paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
 
 
-        GurlsOption *looe_opt = ret_paramsel->getOpt("acc");
+        GurlsOption *looe_opt = ret_paramsel->getOpt("perf");
         GurlsOption *guesses_opt = ret_paramsel->getOpt("guesses");
 
-        gMat2D<T> *looe_mat = &(OptMatrix<gMat2D<T> >::dynacast(looe_opt))->getValue();
+        gMat2D<T> &looe_mat = (OptMatrix<gMat2D<T> >::dynacast(looe_opt))->getValue();
 
         // 	LOOSQE(i,:,:) = paramsel.looe{1};
         // 	guesses(i,:) = paramsel.guesses;
-        gMat2D<T> *guesses_mat = &(OptMatrix<gMat2D<T> >::dynacast(guesses_opt))->getValue();
+        gMat2D<T> &guesses_mat = (OptMatrix<gMat2D<T> >::dynacast(guesses_opt))->getValue();
 
         for(int j=0;j<nlambda;++j)
-            acc[j] = sumv<T>(looe_mat->getData() + j*t, t, lwork);
+            perf[j] = sumv<T>(looe_mat.getData() + j*t, t, lwork);
 
-        //        unsigned long* mm = indicesOfMax( acc, t, 1, 1);
-        indicesOfMax(acc, nlambda, 1, mm, lwork, 1);
+        unsigned long mm = std::max_element(perf, perf + nlambda) - perf;
 
-        if( acc[mm[0]] >= maxTmp)
+        if( gt(perf[mm], maxTmp))
         {
-            maxTmp = acc[mm[0]];
+            maxTmp = perf[mm];
             m = i;
-            voutLambdas = guesses_mat->operator()(0, mm[0]);
+            guess = guesses_mat(0, mm);
         }
 
         opt.removeOpt("paramsel");
     }
 
-    delete[] mm;
     delete [] lwork;
     //     delete [] sigmas;
-    delete [] acc;
+    delete [] perf;
 
     // M = sum(LOOSQE,3); % sum over classes
     //
@@ -278,14 +291,10 @@ void Siglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOpt
     // % opt lambda
     // vout.lambdas = guesses(m,n)*ones(1,T);
 
-    T* voutLam = new T[t];
-    set<T>(voutLam,voutLambdas,t);
-
     OptNumberList* LAMBDA = new OptNumberList();
-    for (T* l_it = voutLam, *l_end = voutLam+t; l_it != l_end; ++l_it)
-        LAMBDA->add(static_cast<double>(*l_it));
-
-    delete [] voutLam;
+    const double lambda = static_cast<double>(guess);
+    for (int i=0; i<t; ++i)
+        LAMBDA->add(lambda);
 
     //     opt.addOpt("lambdas", LAMBDA);
     paramsel->addOpt("lambdas", LAMBDA);

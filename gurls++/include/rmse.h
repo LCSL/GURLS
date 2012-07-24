@@ -52,12 +52,13 @@
 
 namespace gurls {
 
-    /**
-     * \brief Rmse is the sub-class of Performance that evaluates prediction error
-     */
+/**
+ * \ingroup Performance
+ * \brief PerfRmse is the sub-class of Performance that evaluates prediction error
+ */
 
 template <typename T>
-class Rmse: public Performance<T>{
+class PerfRmse: public Performance<T>{
 
 public:
     /**
@@ -74,7 +75,7 @@ public:
 };
 
 template<typename T>
-void Rmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
+void PerfRmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
 {
     const int rows = Y_OMR.rows();
     const int cols = Y_OMR.cols();
@@ -94,7 +95,7 @@ void Rmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptio
         GurlsOptionsList* perf = new GurlsOptionsList("perf");
         opt.addOpt("perf", perf);
     }
-    GurlsOptionsList* perf = static_cast<GurlsOptionsList*>(opt.getOpt("perf"));
+    GurlsOptionsList* perf = GurlsOptionsList::dynacast(opt.getOpt("perf"));
 
 
     GurlsOption *pred_opt = opt.getOpt("pred");
@@ -117,6 +118,12 @@ void Rmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptio
     T rmse = nrm2<T>(rows*cols, pred_t.getData(), 1)/sqrt(n);
 
     perf->addOpt("rmse", new OptNumber(rmse));
+
+//    p.forho 	= -p.rmse;
+    perf->addOpt("forho", new OptNumber(-rmse));
+
+//    p.forplot 	= p.rmse;
+//    perf->addOpt("forplot", new OptNumber(rmse));
 
 }
 

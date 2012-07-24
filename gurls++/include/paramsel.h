@@ -59,35 +59,42 @@
 namespace gurls {
 
 template <typename T>
-class LoocvPrimal;
+class ParamSelLoocvPrimal;
 
 template <typename T>
-class LoocvDual;
+class ParamSelLoocvDual;
 
 template <typename T>
-class FixLambda;
+class ParamSelFixLambda;
 
 template <typename T>
-class FixSigLam;
+class ParamSelFixSigLam;
 
 template <typename T>
-class CalibrateSGD;
+class ParamSelCalibrateSGD;
 
 template <typename T>
-class Siglam;
+class ParamSelSiglam;
 
 template <typename T>
-class SiglamHo;
+class ParamSelSiglamHo;
 
 template <typename T>
-class HoPrimal;
+class ParamSelHoPrimal;
 
 template <typename T>
-class HoDual;
+class ParamSelHoPrimalr;
 
-    /**
-     * \brief ParamSelection is the class that implements parameter selection
-     */
+template <typename T>
+class ParamSelHoDual;
+
+template <typename T>
+class ParamSelHoDualr;
+
+/**
+ * \ingroup ParameterSelection
+ * \brief ParamSelection is the class that implements parameter selection
+ */
 
 template <typename T>
 class ParamSelection
@@ -98,37 +105,56 @@ public:
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the different required fields based on the sub-class
-     * \return adds to opt the field paramsel 
+     * \return adds to opt the field paramsel
      */
 
     virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
-    class BadParamSelectionCreation : public std::logic_error {
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadParamSelectionCreation is thrown when \ref factory tries to generate an unknown parameter selection method
+     */
+    class BadParamSelectionCreation : public std::logic_error
+    {
     public:
+        /**
+         * Exception constructor.
+         */
       BadParamSelectionCreation(std::string type)
       : logic_error("Cannot create type " + type) {}
     };
-    static ParamSelection<T>*
-    factory(const std::string& id) throw(BadParamSelectionCreation)
+
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
+    static ParamSelection<T>* factory(const std::string& id) throw(BadParamSelectionCreation)
     {
       if(id == "loocvprimal")
-        return new LoocvPrimal<T>;
+        return new ParamSelLoocvPrimal<T>;
       else if(id == "loocvdual")
-        return new LoocvDual<T>;
+        return new ParamSelLoocvDual<T>;
       else if(id == "fixlambda")
-        return new FixLambda<T>;
+        return new ParamSelFixLambda<T>;
       else if(id == "calibratesgd")
-        return new CalibrateSGD<T>;
+        return new ParamSelCalibrateSGD<T>;
       else if(id == "siglam")
-        return new Siglam<T>;
+        return new ParamSelSiglam<T>;
       else if(id == "siglamho")
-        return new SiglamHo<T>;
+        return new ParamSelSiglamHo<T>;
       else if(id == "hodual")
-        return new HoDual<T>;
+        return new ParamSelHoDual<T>;
+      else if(id == "hodualr")
+        return new ParamSelHoDualr<T>;
       else if(id == "hoprimal")
-        return new HoPrimal<T>;
+        return new ParamSelHoPrimal<T>;
+      else if(id == "hoprimalr")
+        return new ParamSelHoPrimalr<T>;
       else if(id == "fixsiglam")
-        return new FixSigLam<T>;
+        return new ParamSelFixSigLam<T>;
       else
         throw BadParamSelectionCreation(id);
     }

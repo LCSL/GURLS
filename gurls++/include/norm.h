@@ -54,11 +54,14 @@
 
 namespace gurls	{
 
-static const std::string L0norm = "l0";
-static const std::string L1norm = "l1";
-static const std::string L2norm = "l2";
-static const std::string LInfnorm = "inf";
+static const std::string L0norm = "l0";     ///< String identifying l0-norm
+static const std::string L1norm = "l1";     ///< String identifying l1-norm
+static const std::string L2norm = "l2";     ///< String identifying l2-norm
+static const std::string LInfnorm = "inf";  ///< String identifying infinity-norm
 
+/**
+  * Computes a vector norm specified by \a type parameter
+  */
 template<typename T>
 T norm(const gVec<T>& x, std::string type = "l2"){
     T nrm = 0;
@@ -89,6 +92,9 @@ T norm(const gVec<T>& x, std::string type = "l2"){
     return nrm;
 }
 
+/**
+  * Computes a matrix norm specified by \a type parameter
+  */
 template<typename T>
 T norm(const gMat2D<T>& A, std::string type = "l2"){
 
@@ -104,30 +110,45 @@ class NormZScore;
 template<typename T>
 class NormTestZScore;
 
-    /**
-     * \brief Norm is a class that spheriphies the data
-     */
+/**
+ * \ingroup Norms
+ * \brief Norm is a class that spherifies the data
+ */
 
 template<typename T>
 class Norm
 {
 public:
     /**
-     * Spheriphies the data
+     * Spherifies the data
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the different required fields based on the sub-class
-     * \return spheriphied input data matrix
+     * \return spherified input data matrix
      */
     virtual gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
 
+    /**
+     * \ingroup Exceptions
+     *
+     * \brief BadNormCreation is thrown when \ref factory tries to generate an unknown norm
+     */
     class BadNormCreation : public std::logic_error
     {
     public:
+        /**
+         * Exception constructor.
+         */
         BadNormCreation(const std::string& type)
             : logic_error("Cannot create type " + type) {}
     };
 
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
     static Norm<T> *factory(const std::string& id) throw(BadNormCreation)
     {
         if(id == "l2")
