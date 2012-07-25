@@ -82,6 +82,8 @@ class RLSDualr;
 template <typename T>
 class RLSPegasos;
 
+template <typename T>
+class RLSGPRegr;
 
     /**
      * \brief Optimizer is a class that implements a Regularized Least Square algorithm
@@ -136,6 +138,8 @@ public:
         return new RLSDualr<T>;
       else if(id == "rlspegasos")
         return new RLSPegasos<T>;
+      else if(id == "rlsgpregr")
+        return new RLSGPRegr<T>;
       else
         throw BadOptimizerCreation(id);
     }

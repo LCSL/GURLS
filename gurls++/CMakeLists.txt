@@ -73,6 +73,7 @@ set(SRCDIR src/)
 set(HDRDIR include/)
 set(DEMODIR demo/)
 set(TESTDIR test/)
+set(MISCDIR misc/)
 
 
 function(add_all_executables ROOTDIR SRCDIR LINK_LIBS)
@@ -136,6 +137,10 @@ else(BUILD_SHARED_LIBS)
     set(LIB_TYPE STATIC)
 endif(BUILD_SHARED_LIBS)
 
+set(BUILD_MISC OFF CACHE BOOL "")
+if(BUILD_MISC)
+    add_all_executables(${PROJECT_SOURCE_DIR} ${MISCDIR} ${GURLS_LINK_LIBRARIES})
+endif(BUILD_MISC)
 
 #add_definitions( -Wall )
 

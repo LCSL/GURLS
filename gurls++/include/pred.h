@@ -64,6 +64,9 @@ class PredPrimal;
 template <typename T>
 class PredDual;
 
+template <typename T>
+class PredGPRegr;
+
 /**
  * \ingroup Prediction
  * \brief Prediction is the class that computes predictions
@@ -110,6 +113,8 @@ public:
             return new PredPrimal<T>;
         else if(id == "dual")
             return new PredDual<T>;
+        else if(id == "gpregr")
+            return new PredGPRegr<T>;
         else
             throw BadPredictionCreation(id);
     }

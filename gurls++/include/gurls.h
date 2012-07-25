@@ -73,6 +73,7 @@
 #include "rlsdual.h"
 #include "rlsdualr.h"
 #include "rlspegasos.h"
+#include "rlsgp.h"
 
 #include "loocvprimal.h"
 #include "loocvdual.h"
@@ -83,9 +84,15 @@
 #include "hoprimal.h"
 #include "hodual.h"
 
+#include "hogpregr.h"
+#include "loogpregr.h"
+#include "siglamhogpregr.h"
+#include "siglamloogpregr.h"
+
 #include "pred.h"
 #include "primal.h"
 #include "dual.h"
+#include "predgp.h"
 
 #include "norml2.h"
 #include "normtestzscore.h"

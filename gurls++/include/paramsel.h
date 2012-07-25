@@ -91,6 +91,18 @@ class ParamSelHoDual;
 template <typename T>
 class ParamSelHoDualr;
 
+template <typename T>
+class ParamSelLooGPRegr;
+
+template <typename T>
+class ParamSelHoGPRegr;
+
+template <typename T>
+class ParamSelSiglamLooGPRegr;
+
+template <typename T>
+class ParamSelSiglamHoGPRegr;
+
 /**
  * \ingroup ParameterSelection
  * \brief ParamSelection is the class that implements parameter selection
@@ -155,6 +167,14 @@ public:
         return new ParamSelHoPrimalr<T>;
       else if(id == "fixsiglam")
         return new ParamSelFixSigLam<T>;
+      else if(id == "loogpregr")
+        return new ParamSelLooGPRegr<T>;
+      else if(id == "hogpregr")
+        return new ParamSelHoGPRegr<T>;
+      else if(id == "siglamloogpregr")
+        return new ParamSelSiglamLooGPRegr<T>;
+      else if(id == "siglamhogpregr")
+        return new ParamSelSiglamHoGPRegr<T>;
       else
         throw BadParamSelectionCreation(id);
     }
