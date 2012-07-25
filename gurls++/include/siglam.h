@@ -223,7 +223,7 @@ void ParamSelSiglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, 
     KernelRBF<T> rbfkernel;
     ParamSelLoocvDual<T> loocvdual;
 
-    T* lwork = new T[nlambda];
+    T* work = new T[std::max(nlambda, t+1)];
     T maxTmp = (T)-1.0;
     int m = -1;
     T guess = (T)-1.0;
@@ -258,7 +258,7 @@ void ParamSelSiglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, 
         gMat2D<T> &guesses_mat = (OptMatrix<gMat2D<T> >::dynacast(guesses_opt))->getValue();
 
         for(int j=0;j<nlambda;++j)
-            perf[j] = sumv<T>(looe_mat.getData() + j*t, t, lwork);
+            perf[j] = sumv<T>(looe_mat.getData() + j*t, t, work);
 
         unsigned long mm = std::max_element(perf, perf + nlambda) - perf;
 
@@ -272,7 +272,7 @@ void ParamSelSiglam<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, 
         opt.removeOpt("paramsel");
     }
 
-    delete [] lwork;
+    delete [] work;
     //     delete [] sigmas;
     delete [] perf;
 

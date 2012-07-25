@@ -95,7 +95,7 @@ void ConfBoltzmanGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y_OM
 //    out.confidence = out.confidence(:,1) - out.confidence(:,2);
 
     T sum;
-    T* work = new T[t];
+    T* work = new T[t+1];
     T* rowT = new T[t];
 
     gMat2D<T> *conf = new gMat2D<T>(n,1);

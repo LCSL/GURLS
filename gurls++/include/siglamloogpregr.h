@@ -188,7 +188,7 @@ void ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>
     KernelRBF<T> rbf;
     ParamSelLooGPRegr<T> loogp;
 
-    T* work = new T[t];
+    T* work = new T[t+1];
 
     GurlsOptionsList* paramsel_rbf = new GurlsOptionsList("paramsel");
 

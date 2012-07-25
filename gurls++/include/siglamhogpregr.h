@@ -195,7 +195,7 @@ void ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>&
     T* guesses_median = new T[nlambda];
 
     const unsigned long nholdouts = static_cast<unsigned long>(opt.getOptAsNumber("nholdouts"));
-    T* work = new T[std::max(nholdouts, t)];
+    T* work = new T[std::max(nholdouts, t+1)];
 
 //    for i = 1:opt.nsigma
     for(int i=0; i<nsigma; ++i)
