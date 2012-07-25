@@ -777,7 +777,7 @@ void sum(const T* A, T* result, const int A_rows, const int A_cols, const int re
   *
   * \param V input vector
   * \param len vector length
-  * \param work work buffer of length >= len
+  * \param work work buffer of length >= len+1
   * \return sum of all elements of the input vector
   */
 template <typename T>

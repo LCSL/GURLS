@@ -235,7 +235,7 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     T* row = new T[t];
 
     const int nholdouts = static_cast<int>(opt.getOptAsNumber("nholdouts"));
-    T* work = new T[std::max(nholdouts, t)];
+    T* work = new T[std::max(nholdouts, t+1)];
 
 //    for i = 1:opt.nsigma
     for(int i=0; i<nsigma; ++i)
