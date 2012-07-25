@@ -24,25 +24,30 @@ for training linear multiclass classifiers based on the Regularized Least Square
 (RLS) loss function, it uses a home brewed memory mapped file system and a simple
 distributed task manager to allow for training from very large datasets.
 
-- gurls++ a C++ standalone implementation of GURLS. This package is
-under active development but it's not very well documented as of right now.
-The linear case is mostly covered and has been succesfully tested.
+- gurls++ a C++ standalone implementation of GURLS.
 
 Documentation
 =============
 
+
 - User's Guide:
 	A User's Guide with help files for each available method is available
-	in the gurls-documentation.pdf file.
+	in the gurls-manual.pdf file.
 
-- Developer's Guide
-	A simple developer's guide is available in the gurls-documentation.pdf file.
+- C++ Code Documentation can be generated with the following command
+	$ doxygen Doxyfile.in
+
+- Matlab and C++ Developer's Guide
+	Simple developer's guides for Matlab and C++ are available in the gurls-manual.pdf file.
 	GURLS is designed for easy expansion. Give it a try!
 
 - Demos
 	Both GURLS and bGURLS have exstensively commented demos in the "demo"
 	subdirectory of each package. We feel this is the best way to learn how
 	to use these packages.
+
+-Test
+	Testing routines and scripts are available in the test directories of the gurls and gursl++ package
 
 - Further Documentation
 	* Have a look at the README files of each individual package.

@@ -43,6 +43,8 @@ https://github.com/CBCL/GURLS/wiki/User-Manual
 
 Quick and Dirty
 ===============
+A straightforward example of GURLS uage can be found in gurls_helloworld.m, which employs the Quick and Dirty utilities.
+Below we describe more in details how to use them on your data.
 
 Put your training data in a n-by-d matrix X with each row being a data sample.
 Put the training labels in a y n-by-one vector. Let the labels go from 1 to T with T 

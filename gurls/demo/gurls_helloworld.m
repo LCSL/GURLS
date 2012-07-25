@@ -1,6 +1,6 @@
 %load the training data 
 load('data/quickanddirty_traindata'); 
-%train the classi?er 
+%train the classifier 
 [opt] = gurls_train(Xtr,ytr); 
 %load the test data 
 load('data/quickanddirty_testdata'); 
