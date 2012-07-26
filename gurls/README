@@ -47,7 +47,8 @@ Documentation
 
 - Demos
 	GURLS has exstensively commented demos in the "demo" subdirectory. 
-	Have a look, and run gurlsdemo.m. We feel this is the best way to learn how to use these packages.
+	Have a look, and run gurlsdemo.m. We feel this is the best way to learn how to use
+	these packages.
 
 - Further Documentation
 	* A collection of the most useful and common pipelines can be found here:

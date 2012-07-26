@@ -156,10 +156,11 @@ Documentation
 - C++ Developer's Guide
 	A simple developer's guides is available in the gurls-manual.pdf file.
 	GURLS is designed for easy expansion. Give it a try!
+	Remark: GURLS++ is still under development please contact the authors before starting your own development.
 
 - Demos
 	GURLS++ has an extensively commented demo in the "demo" subdirectory. 
-	Have a look, and run helloworld.cpp. We feel this is the best way to learn how to use these packages.
+	Have a look, and run GURLSloocvprimal.cpp. We feel this is the best way to learn how to use these packages.
 
 -Test
 	Testing routines and scripts are available in the test subdirectories, for checking that 
