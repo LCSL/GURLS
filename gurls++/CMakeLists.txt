@@ -137,11 +137,6 @@ else(BUILD_SHARED_LIBS)
     set(LIB_TYPE STATIC)
 endif(BUILD_SHARED_LIBS)
 
-set(BUILD_MISC OFF CACHE BOOL "")
-if(BUILD_MISC)
-    add_all_executables(${PROJECT_SOURCE_DIR} ${MISCDIR} ${GURLS_LINK_LIBRARIES})
-endif(BUILD_MISC)
-
 #add_definitions( -Wall )
 
 
@@ -189,6 +184,11 @@ if(BUILD_TEST)
 
     add_all_executables(${PROJECT_SOURCE_DIR} ${TESTDIR} ${GURLS_LINK_LIBRARIES})
 endif(BUILD_TEST)
+
+set(BUILD_MISC OFF CACHE BOOL "")
+if(BUILD_MISC)
+    add_all_executables(${PROJECT_SOURCE_DIR} ${MISCDIR} ${GURLS_LINK_LIBRARIES})
+endif(BUILD_MISC)
 
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)

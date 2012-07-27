@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
         process->addOpt("two", new OptNumberList(process2));
 
         // build an options' structure
-        GurlsOptionsList* opt = new GurlsOptionsList("GURLSlooprimal", false);
+        GurlsOptionsList* opt = new GurlsOptionsList("GURLSlooprimal", true);
         opt->addOpt("seq", seq);
         opt->addOpt("processes", process);
 
