@@ -1,4 +1,4 @@
-function [p] = perf_macroavg(X,y,opt)
+function [p] = bigperf_macroavg(X,y,opt)
 % bigperf_macroavg(X,y,opt);
 % Computes the average classification accuracy per class.
 %

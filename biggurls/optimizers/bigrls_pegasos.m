@@ -1,4 +1,4 @@
-function [cfr] = rls_pegasos(X, bY, opt)
+function [cfr] = bigrls_pegasos(X, bY, opt)
 
 %	bigrls_pegasos(X,y,opt)
 %	computes a classifier for the primal formulation of RLS.

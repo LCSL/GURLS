@@ -1,4 +1,4 @@
-function [cfr] = rls_pegasos_driver(X, bY, opt)
+function [cfr] = bigrls_pegasos_driver(X, bY, opt)
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 %% Inputs

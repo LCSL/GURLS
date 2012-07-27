@@ -1,4 +1,4 @@
-function [vout] = paramsel_hoprimal(X,y,opt)
+function [vout] = bigparamsel_dhoprimal(X,y,opt)
 
 %	bigparamsel_dhoprimal(X,y,opt)
 %	Performs parameter selection when the primal formulation of RLS is used 

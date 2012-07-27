@@ -1,4 +1,4 @@
-function [params] = paramsel_calibratesgd(X, y, opt)
+function [params] = bigparamsel_calibratesgd(X, y, opt)
 
 %	Performs parameter selection when one wants to solve the problem using rls_pegasos.
 %

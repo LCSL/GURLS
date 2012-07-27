@@ -1,4 +1,4 @@
-function [scores] = pred_primal(X,y,opt)
+function [scores] = bigpred_primal(X,y,opt)
 
 % bigpred_primal(X,y,opt)
 % computes the predictions of the linear classifier stored in opt.rls.W 
