@@ -32,8 +32,8 @@ function [p] = perf_macroavg(X,y,opt)
 			y_block = y(i1 : i2, : );
 			ypred_block = opt.pred(i1 : i2, : );
 
-            [~,IY]= max(y_block,[],2);
-            [~,IYpred]= sort(ypred_block,2,'descend');
+            [dummy,IY]= max(y_block,[],2);
+            [dummy,IYpred]= sort(ypred_block,2,'descend');
         
             for i=1:size(y_block,1)
                 flatcost(IY(i)) = flatcost(IY(i)) + ~ismember(IY(i),IYpred(i,1:nb_pred));
