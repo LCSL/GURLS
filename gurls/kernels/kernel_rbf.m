@@ -20,7 +20,7 @@ end
 
 
 if ~isfield(opt.kernel,'distance')
-	opt.kernel.distance = distance(X',X');
+	opt.kernel.distance = square_distance(X',X');
 end	
 
 kernel = opt.kernel;

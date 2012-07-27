@@ -28,7 +28,7 @@ switch opt.kernel.type
 			opt.predkernel.type = 'rbf';
 		end
 		if ~isfield(opt.predkernel,'distance')
-			opt.predkernel.distance = distance(X',opt.rls.X');
+			opt.predkernel.distance = square_distance(X',opt.rls.X');
         end
         fk.distance = opt.predkernel.distance;
 		%D = -(opt.finalkernel.distance.^2);

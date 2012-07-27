@@ -37,15 +37,15 @@ if ~isfield(opt,'kernel')
 	opt.kernel.type = 'rbf';
 end
 if ~isfield(opt.kernel,'distance')
-    opt.kernel.distance = squareform(pdist(X)).^2;
+    opt.kernel.distance = square_distance(X',X');
 end	
 if ~isfield(opt,'sigmamin')
-	D = sort(squareform(opt.kernel.distance.^(1/2)));
+	D = sort(opt.kernel.distance(tril(true(n),-1)));
 	firstPercentile = round(0.01*numel(D)+0.5);
-	opt.sigmamin = D(firstPercentile);
+	opt.sigmamin = sqrt(D(firstPercentile));
 end
 if ~isfield(opt,'sigmamax')
-	opt.sigmamax = max(max(opt.kernel.distance.^(1/2)));
+	opt.sigmamax = sqrt(max(max(opt.kernel.distance)));
 end
 if opt.sigmamin <= 0
 	opt.sigmamin = eps;

@@ -35,12 +35,12 @@ if ~isfield(opt,'kernel')
 	opt.kernel.type = 'rbf';
 end
 if ~isfield(opt.kernel,'distance')
-	opt.kernel.distance = distance(X',X');
+	opt.kernel.distance = square_distance(X',X');
 end	
 if ~isfield(opt,'sigmamin')
-	D = sqrt(sort(squareform(opt.kernel.distance)));
+	D = sort(opt.kernel.distance(tril(true(n),-1)));
 	firstPercentile = round(0.01*numel(D)+0.5);
-	opt.sigmamin = D(firstPercentile);
+	opt.sigmamin = sqrt(D(firstPercentile));
 	clear D;
 end
 if ~isfield(opt,'sigmamax')
