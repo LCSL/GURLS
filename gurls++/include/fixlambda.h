@@ -70,19 +70,19 @@ public:
      *
      * \return adds the field lambdas(=1.0) to opt
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void ParamSelFixLambda<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelFixLambda<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, const GurlsOptionsList &/*opt*/)
 {
     GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
-    OptNumberList* lambda = new OptNumberList();
-    lambda->add(1.0);
-    paramsel->addOpt("lambdas", lambda);
-    opt.addOpt("paramsel", paramsel);
 
+    gMat2D<T> *lambda = new gMat2D<T>(1,1);
+    lambda->getData()[0] = (T)1.0;
+    paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambda));
 
+    return paramsel;
 }
 
 }

@@ -70,7 +70,6 @@ const path yeastDataPath( path(std::string(GURLS_DATA_DIR))/path("yeast"));
 //    fixture.checkResults("split");
 //}
 
-
 BOOST_AUTO_TEST_CASE(TestParamSelSiglam)
 {
     Data data(yeastDataPath, "paramselsiglam", true);

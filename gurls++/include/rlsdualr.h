@@ -77,18 +77,19 @@ public:
      *  - C = matrix of coefficient vectors of dual rls estimator for each class
      *  - X = empty matrix
      */
-   void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+   GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 
 template <typename T>
-void RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
 {
 
 //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
+    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+    const gMat2D<T> &ll = OptMatrix<gMat2D<T> >::dynacast(paramsel->getOpt("lambdas"))->getValue();
+    const OptFunction* singlelambda = OptFunction::dynacast(opt.getOpt("singlelambda"));
+    T lambda = singlelambda->getValue(ll.getData(), ll.getSize());
 
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
@@ -97,11 +98,11 @@ void RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsO
     Y_OMR.transpose(Y);
 
 
-    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-    GurlsOption *K_opt = kernel->getOpt("K");
+    const GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+    const GurlsOption *K_opt = kernel->getOpt("K");
 
 
-    gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(K_opt)->getValue();
+    const gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(K_opt)->getValue();
     gMat2D<T> K(K_mat.cols(), K_mat.rows());
     K_mat.transpose(K);
 
@@ -174,10 +175,9 @@ void RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsO
         optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*optX));
     }
 
-    opt.removeOpt("optimizer");
-    opt.addOpt("optimizer",optimizer);
-
     delete[] retC;
+
+    return optimizer;
 }
 
 }

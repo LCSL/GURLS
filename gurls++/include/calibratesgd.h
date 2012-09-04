@@ -78,11 +78,11 @@ public:
      *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
      *  - W = RLS coefficient vector
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
 {
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
@@ -108,7 +108,7 @@ void ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y
     tmp->addOpt("seq", seq);
 
     tmp->addOpt("hoperf", opt.getOptAsString("hoperf"));
-    tmp->addOpt("singlelambda", new OptFunction(static_cast<OptFunction*>(opt.getOpt("singlelambda"))->getName()));
+    tmp->addOpt("singlelambda", new OptFunction(OptFunction::dynacast(opt.getOpt("singlelambda"))->getName()));
 
 
     GurlsOptionsList * process = new GurlsOptionsList("processes", false);
@@ -180,31 +180,31 @@ void ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y
 
     delete[] idx;
 
-    GurlsOptionsList* paramsel;// = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    if(!opt.hasOpt("paramsel"))
+    GurlsOptionsList* paramsel;
+
+    if(opt.hasOpt("paramsel"))
     {
-        paramsel = new GurlsOptionsList("paramsel");
-        opt.addOpt("paramsel",paramsel);
-    }
-    else
-    {
-        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+        GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
+        tmp_opt->copyOpt<T>("paramsel", opt);
+
+        paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
+        tmp_opt->removeOpt("paramsel", false);
+        delete tmp_opt;
+
         paramsel->removeOpt("lambdas");
         paramsel->removeOpt("W");
     }
+    else
+        paramsel = new GurlsOptionsList("paramsel");
 
 
-    GurlsOptionsList* rls = GurlsOptionsList::dynacast(tmp->getOpt("optimizer"));
 //    params.lambdas = mean(lambdas);
     OptNumberList* LAMBDA = new OptNumberList();
     LAMBDA->add(static_cast<double>(sumv(lambdas, n_estimates, work)/n_estimates));
     paramsel->addOpt("lambdas", LAMBDA);
 
 //    params.W = opt.rls.W;
-
-//    OptMatrix<gMat2D<T> >* W = static_cast<OptMatrix<gMat2D<T> >*>(rls->getOpt("W"));
-//    paramsel->addOpt("W", new OptMatrix<gMat2D<T> >(W->getValue()));
-
+    GurlsOptionsList* rls = GurlsOptionsList::dynacast(tmp->getOpt("optimizer"));
     GurlsOption* W = rls->getOpt("W");
     rls->removeOpt("W", false);
     paramsel->addOpt("W", W);
@@ -212,6 +212,8 @@ void ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y
     delete tmp;
     delete[] lambdas;
     delete[] work;
+
+    return paramsel;
 }
 
 

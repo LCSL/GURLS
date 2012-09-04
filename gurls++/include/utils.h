@@ -165,14 +165,14 @@ double precrec_driver(T* out, T* gt, unsigned long N)
  *  - acc_avg = average accuracy across iterations
  */
 template <typename T>
-void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
+GurlsOptionsList* rls_pegasos_driver(const T* X, const T* bY, const GurlsOptionsList& opt,
                         const int X_rows, const int X_cols,
                         const int bY_rows, const int bY_cols)
 {
 
     //  lambda = opt.singlelambda(opt.paramsel.lambdas);
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
+    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+    const std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
     T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
 
 //            %% Inputs
@@ -188,14 +188,14 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
 //            cfr = opt.cfr;
 
 //            W = cfr.W; %dxT
-    GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+    const GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
 
-    gMat2D<T> &W_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("W"))->getValue();
+    const gMat2D<T> &W_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("W"))->getValue();
     gMat2D<T> W(W_mat.cols(), W_mat.rows());
     W_mat.transpose(W);
 
 //            W_sum = cfr.W_sum;
-    gMat2D<T> &W_sum_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("W_sum"))->getValue();
+    const gMat2D<T> &W_sum_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("W_sum"))->getValue();
     gMat2D<T> W_sum(W_sum_mat.cols(), W_sum_mat.rows());
     W_sum_mat.transpose(W_sum);
 
@@ -296,46 +296,35 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
     delete[] r;
     delete[] xtr;
 
-    //            cfr.W = W;
-    //     W.transpose(*W_mat);
+    GurlsOptionsList* ret = new GurlsOptionsList("optimizer");
 
-    //            cfr.W_last = W;
-    //     if(opt.hasOpt("W_last"))
-    //     {
-    //         GurlsOption *W_last_opt = opt.getOpt("W_last");
-    //         gMat2D<T> *W_last = &(OptMatrix<gMat2D<T> >::dynacast(W_last_opt))->getValue();
-    //         copy(W_last->getData(), W_mat->getData(), W_size);
-    //     }
-    //     else
-    //     {
-    //         gMat2D<T> *W_last = new gMat2D<T>(*W_mat);
-    //         opt.addOpt("W_last", new OptMatrix<gMat2D<T> >(*W_last));
-    //     }
+//            cfr.W = W;
+    gMat2D<T> *ret_W = new gMat2D<T>(W_mat.rows(), W_mat.cols());
+    W_mat.transpose(*ret_W);
+    ret->addOpt("W", new OptMatrix<gMat2D<T> >(*ret_W));
 
-    W.transpose(W_mat);
-    //            cfr.W_sum = W_sum;
-    W_sum.transpose(W_sum_mat);
+//            cfr.W_last = W;
 
-    //            cfr.count = count;
-    optimizer->removeOpt("count");
-    optimizer->addOpt("count", new OptNumber(count));
+//            cfr.W_sum = W_sum;
+    gMat2D<T> *ret_W_sum = new gMat2D<T>(W_sum_mat.rows(), W_sum_mat.cols());
+    W_sum_mat.transpose(*ret_W_sum);
+    ret->addOpt("W_sum", new OptMatrix<gMat2D<T> >(*ret_W_sum));
 
-    //            cfr.iter = iter;
-    optimizer->removeOpt("iter");
-    optimizer->addOpt("iter", new OptNumber(iter));
+//            cfr.count = count;
+    ret->addOpt("count", new OptNumber(count));
+
+//            cfr.iter = iter;
+    ret->addOpt("iter", new OptNumber(iter));
 
     //	cfr.C = [];
-    optimizer->removeOpt("C");
     gMat2D<T>* emptyC = new gMat2D<T>();
-    optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
+    ret->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
 
     //	cfr.X = [];
-    optimizer->removeOpt("X");
     gMat2D<T>* emptyX = new gMat2D<T>();
-    optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+    ret->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
 
-    opt.removeOpt("optimizer", false);
-    opt.addOpt("optimizer",optimizer);
+    return ret;
 
 }
 

@@ -113,9 +113,50 @@ public:
     GurlsOption* getOpt(std::string key);
 
     /**
+      * Returns a pointer to a generic option mapped with a key
+      */
+    const GurlsOption* getOpt(std::string key) const;
+
+    /**
+      * Returns a pointer to a T option mapped with a key
+      */
+    template<class T>
+    T* getOptAs(std::string key)
+    {
+        return T::dynacast(this->getOpt(key));
+    }
+
+    /**
+      * Returns a pointer to a T option mapped with a key
+      */
+    template<class T>
+    const T* getOptAs(std::string key) const
+    {
+        return T::dynacast(this->getOpt(key));
+    }
+
+    /**
+      * Returns a reference to the value contained into an option mapped with a key
+      */
+    template<class T>
+    typename T::ValueType& getOptValue(std::string key)
+    {
+        return this->getOptAs<T>(key)->getValue();
+    }
+
+    /**
+      * Returns a reference to the value contained into an option mapped with a key
+      */
+    template<class T>
+    const typename T::ValueType& getOptValue(std::string key) const
+    {
+        return this->getOptAs<T>(key)->getValue();
+    }
+
+    /**
       * Returns a string option mapped with a key
       */
-    std::string getOptAsString(std::string key);
+    std::string getOptAsString(std::string key) const;
 
     /**
       * Returns the list name
@@ -130,7 +171,7 @@ public:
     /**
       * Returns a numeric option mapped with a key
       */
-    double getOptAsNumber(std::string key);
+    double getOptAsNumber(std::string key) const;
 
     /**
       * Prints the options list
@@ -140,7 +181,7 @@ public:
     /**
       * Checks if the list has an option mapped with a specified key
       */
-    bool hasOpt(std::string key) {return table->count(key)>0;}
+    bool hasOpt(std::string key) const {return table->count(key)>0;}
 
     /**
       * Removes the option mapped with a specified key
@@ -153,7 +194,7 @@ public:
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == OptListOption); }
+    virtual bool isA(OptTypes id) const { return (id == OptListOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref GurlsOptionsList
@@ -161,6 +202,18 @@ public:
     static GurlsOptionsList* dynacast(GurlsOption* opt) {
         if (opt->isA(OptListOption) ){
             return static_cast<GurlsOptionsList*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref GurlsOptionsList
+      */
+    static const GurlsOptionsList* dynacast(const GurlsOption* opt)
+    {
+        if (opt->isA(OptListOption) ){
+            return static_cast<const GurlsOptionsList*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
@@ -197,6 +250,73 @@ public:
       * Writes the list to a stream
       */
     virtual std::ostream& operator<<(std::ostream& os);
+
+    /**
+      *
+      */
+    template<typename T>
+    void copyOpt(std::string key, const GurlsOptionsList &from)
+    {
+        const GurlsOption* toCopy = from.getOpt(key);
+
+        GurlsOption* newOpt;
+
+        switch(toCopy->getType())
+        {
+        case StringOption:
+            newOpt = new OptString(OptString::dynacast(toCopy)->getValue());
+            break;
+        case NumberOption:
+            newOpt = new OptNumber(OptNumber::dynacast(toCopy)->getValue());
+            break;
+        case StringListOption:
+            newOpt = new OptStringList(OptStringList::dynacast(toCopy)->getValue());
+            break;
+        case NumberListOption:
+            newOpt = new OptNumberList(OptNumberList::dynacast(toCopy)->getValue());
+            break;
+        case FunctionOption:
+            newOpt = new OptFunction(OptFunction::dynacast(toCopy)->getName());
+            break;
+        case MatrixOption:
+        case VectorOption:
+        {
+            const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
+            gMat2D<T>* newMat = new gMat2D<T>(mat);
+            newOpt = new OptMatrix<gMat2D<T> >(*newMat);
+        }
+            break;
+        case OptListOption:
+        {
+            const GurlsOptionsList* toCopy_list = GurlsOptionsList::dynacast(toCopy);
+
+            GurlsOptionsList* list = new GurlsOptionsList(toCopy_list->name);
+
+            std::map<std::string, GurlsOption* >::const_iterator it, end;
+
+            list->removeOpt("Name");
+
+            for(it = toCopy_list->table->begin(), end = toCopy_list->table->end(); it != end; ++it)
+                list->copyOpt<T>(it->first, *toCopy_list);
+
+            list->setName(list->getOptAsString("Name"));
+
+            newOpt = list;
+        }
+            break;
+        case TaskSequenceOption:
+            newOpt = new OptTaskSequence(OptTaskSequence::dynacast(toCopy)->getValue());
+            break;
+        case TaskIDOption:
+        case GenericOption:
+            newOpt = NULL;
+            break;
+        }
+
+        if(newOpt != NULL)
+            addOpt(key, newOpt);
+    }
+
 
     /**
       * Serializes the list to file

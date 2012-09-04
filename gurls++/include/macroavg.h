@@ -74,20 +74,15 @@ public:
      *  - forho = acc
      *  - forplot = acc
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 
 protected:
     void macroavg(const unsigned long* trueY, const unsigned long* predY, const int length,int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length);
 };
 
 template<typename T>
-void PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt) throw(gException)
 {
-//    if isfield (opt,'perf')
-//        p = opt.perf; % lets not overwrite existing performance measures.
-//                  % unless they have the same name
-//    end
-
     const unsigned long rows = Y_OMR.rows();
     const unsigned long cols = Y_OMR.cols();
 
@@ -96,19 +91,29 @@ void PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR
     Y_OMR.transpose(Y);
 
 
-    if(!opt.hasOpt("perf"))
+    //    if isfield (opt,'perf')
+    //        p = opt.perf; % lets not overwrite existing performance measures.
+    //                  % unless they have the same name
+    //    end
+
+    GurlsOptionsList* perf;
+
+    if(opt.hasOpt("perf"))
     {
-        GurlsOptionsList* perf = new GurlsOptionsList("perf");
-        opt.addOpt("perf", perf);
-    }
+        GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
+        tmp_opt->copyOpt<T>("perf", opt);
 
-    GurlsOptionsList* perf = GurlsOptionsList::dynacast(opt.getOpt("perf"));
+        perf = GurlsOptionsList::dynacast(tmp_opt->getOpt("perf"));
+        tmp_opt->removeOpt("perf", false);
+        delete tmp_opt;
 
-    if(perf->hasOpt("acc"))
         perf->removeOpt("acc");
-
-    if(perf->hasOpt("forho"))
         perf->removeOpt("forho");
+//        perf->removeOpt("forplot");
+    }
+    else
+        perf = new GurlsOptionsList("perf");
+
 
     gMat2D<T>* acc_mat = new gMat2D<T>(1, cols);
     T* acc = acc_mat->getData();
@@ -120,14 +125,11 @@ void PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR
 
 
 //    y_pred = opt.pred;
-    GurlsOption *pred_opt = opt.getOpt("pred");
+    const GurlsOption *pred_opt = opt.getOpt("pred");
 
-//    if (pred_opt->getDataID() != typeid(T))
-//            throw gException("Different types");
-
-    gMat2D<T> *pred_mat = &(OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
-    gMat2D<T> y_pred(pred_mat->cols(), pred_mat->rows());
-    pred_mat->transpose(y_pred);
+    const gMat2D<T> &pred_mat = OptMatrix<gMat2D<T> >::dynacast(pred_opt)->getValue();
+    gMat2D<T> y_pred(pred_mat.cols(), pred_mat.rows());
+    pred_mat.transpose(y_pred);
 
 
     //TODO
@@ -158,10 +160,10 @@ void PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR
 //        %% Assumes single label prediction.
 //        [dummy, predlab] = max(y_pred,[],2);
 //        unsigned long* predLab = indicesOfMax(y_pred.getData(), pred_mat->rows(), pred_mat->cols(), 2);
-        T* work = new T[std::max(Y.getSize(), pred_mat->getSize() )];
+        T* work = new T[std::max(Y.getSize(), pred_mat.getSize() )];
 
         unsigned long* predLab = new unsigned long[rows];
-        indicesOfMax(y_pred.getData(), rows, pred_mat->cols(), predLab, work, 2);
+        indicesOfMax(y_pred.getData(), rows, pred_mat.cols(), predLab, work, 2);
 
 //        [dummy, truelab] = max(y_true,[],2);
 //        unsigned long* trueLab = indicesOfMax(y_true, rows, cols, 2);
@@ -212,6 +214,7 @@ void PerfMacroAvg<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR
 //    OptMatrix<gMat2D<T> >* forplot_opt = new OptMatrix<gMat2D<T> >(*(new gMat2D<T>(*acc_mat)));
 //    perf->addOpt("forplot", forplot_opt);
 
+    return perf;
 }
 
 /**

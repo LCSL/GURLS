@@ -92,11 +92,11 @@ public:
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - acc = matrix of validation accuracies for each lambda guess and for each class
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
 {
     //  [n,T]  = size(y);
 //    const int n = Y_OMR.rows();
@@ -108,29 +108,36 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
     Y_OMR.transpose(Y);
 
-    GurlsOptionsList* kernel_old = NULL;
-    if (opt.hasOpt("kernel"))
-    {
-        kernel_old = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-        opt.removeOpt("kernel", false);
-    }
+
+    GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
+    nestedOpt->copyOpt<T>("nlambda", opt);
+    nestedOpt->copyOpt<T>("nholdouts", opt);
+    nestedOpt->copyOpt<T>("hoperf", opt);
+    nestedOpt->copyOpt<T>("smallnumber", opt);
+    nestedOpt->copyOpt<T>("split", opt);
 
     GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
     kernel->addOpt("type", "rbf");
-    opt.addOpt("kernel", kernel);
+    nestedOpt->addOpt("kernel", kernel);
 
 
-//    GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
-    GurlsOptionsList* paramsel = NULL;
-    if(!opt.hasOpt("paramsel"))
-        paramsel = new GurlsOptionsList("paramsel");
-    else
+    GurlsOptionsList* paramsel;
+
+    if(opt.hasOpt("paramsel"))
     {
-        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+        GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
+        tmp_opt->copyOpt<T>("paramsel", opt);
+
+        paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
+        tmp_opt->removeOpt("paramsel", false);
+        delete tmp_opt;
 
         paramsel->removeOpt("lambdas");
         paramsel->removeOpt("sigma");
     }
+    else
+        paramsel = new GurlsOptionsList("paramsel");
+
 
     gMat2D<T>* dist = NULL;
 
@@ -149,7 +156,6 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 
         kernel->addOpt("distance", new OptMatrix<gMat2D<T> >(*dist));
         delete [] distSquared;
-
     }
     else
     {
@@ -180,12 +186,16 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
         int firstPercentile = gurls::round((T)0.01 * d_len + (T)0.5)-1;
 
         // 	opt.sigmamin = D(firstPercentile);
-        opt.addOpt("sigmamin", new OptNumber(sqrt( distY[firstPercentile]) ));
+        nestedOpt->addOpt("sigmamin", new OptNumber(sqrt( distY[firstPercentile]) ));
 
         delete [] distY;
     }
+    else
+    {
+        nestedOpt->addOpt("sigmamin", new OptNumber(opt.getOptAsNumber("sigmamin")));
+    }
 
-    T sigmamin = static_cast<T>(opt.getOptAsNumber("sigmamin"));
+    T sigmamin = static_cast<T>(nestedOpt->getOptAsNumber("sigmamin"));
 
     //  if ~isfield(opt,'sigmamax')
     if(!opt.hasOpt("sigmamax"))
@@ -195,20 +205,32 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
         T mAx = *(std::max_element(dist->getData(),dist->getData()+ dist->getSize()));
 
         // 	opt.sigmamax = max(max(opt.kernel.distance));
-        opt.addOpt("sigmamax", new OptNumber( sqrt( mAx )));
+        nestedOpt->addOpt("sigmamax", new OptNumber( sqrt( mAx )));
+    }
+    else
+    {
+        nestedOpt->addOpt("sigmamax", new OptNumber(opt.getOptAsNumber("sigmamax")));
     }
 
-    T sigmamax = static_cast<T>(opt.getOptAsNumber("sigmamax"));
+    T sigmamax = static_cast<T>(nestedOpt->getOptAsNumber("sigmamax"));
 
     // if opt.sigmamin <= 0
     if( le(sigmamin, (T)0.0) )
+    {
         // 	opt.sigmamin = eps;
-        opt.addOpt("sigmamin", new OptNumber(std::numeric_limits<T>::epsilon()));
+        nestedOpt->removeOpt("sigmamin");
+        nestedOpt->addOpt("sigmamin", new OptNumber(std::numeric_limits<T>::epsilon()));
+        sigmamin = std::numeric_limits<T>::epsilon();
+    }
 
     // if opt.sigmamin <= 0
     if( le(sigmamin, (T)0.0) )
+    {
         // 	opt.sigmamax = eps;
-        opt.addOpt("sigmamax", new OptNumber(std::numeric_limits<T>::epsilon()));
+        nestedOpt->removeOpt("sigmamax");
+        nestedOpt->addOpt("sigmamax", new OptNumber(std::numeric_limits<T>::epsilon()));
+        sigmamax = std::numeric_limits<T>::epsilon();
+    }
 
 
     int nlambda = static_cast<int>(opt.getOptAsNumber("nlambda"));
@@ -240,20 +262,22 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 //    for i = 1:opt.nsigma
     for(int i=0; i<nsigma; ++i)
     {
+        nestedOpt->addOpt("paramsel", paramsel);
+
         paramsel->removeOpt("sigma");
         paramsel->addOpt("sigma", new OptNumber( sigmamin * pow(q, i)));
 
         // 	opt.kernel = kernel_rbf(X,y,opt);
-        opt.addOpt("paramsel", paramsel);
-        rbfkernel.execute(X_OMR, Y_OMR, opt);
+        GurlsOptionsList* retKernel = rbfkernel.execute(X_OMR, Y_OMR, *nestedOpt);
 
-        opt.removeOpt("paramsel", false);
+        nestedOpt->removeOpt("kernel");
+        nestedOpt->addOpt("kernel", retKernel);
+
+        nestedOpt->removeOpt("paramsel", false);
 
         // 	paramsel = paramsel_loocvdual(X,y,opt);
-        hodual.execute(X_OMR, Y_OMR, opt);
+        GurlsOptionsList* ret_paramsel = hodual.execute(X_OMR, Y_OMR, *nestedOpt);
 
-
-        GurlsOptionsList* ret_paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
 
 //        PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',opt.nlambda*T,nh),2),T,opt.nlambda)';
         gMat2D<T> &perf_mat = (OptMatrix<gMat2D<T> >::dynacast(ret_paramsel->getOpt("perf")))->getValue(); // nholdouts x nlambda*t
@@ -279,7 +303,7 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
             guess = guesses_median[mm];
         }
 
-        opt.removeOpt("paramsel");
+        delete ret_paramsel;
     }
 
     delete [] row;
@@ -296,18 +320,12 @@ void ParamSelSiglamHo<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     // % opt lambda
     // vout.lambdas = guesses(m,n)*ones(1,T);
 
-    OptNumberList* LAMBDA = new OptNumberList();
-    const double lambda = static_cast<double>(guess);
-    for (int i=0; i<t; ++i)
-        LAMBDA->add(lambda);
+    gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
+    set(LAMBDA->getData(), guess, t);
 
-    paramsel->addOpt("lambdas", LAMBDA);
+    paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*LAMBDA));
 
-    opt.addOpt("paramsel",paramsel);
-
-    opt.removeOpt("kernel");
-    if(kernel_old != NULL)
-        opt.addOpt("kernel", kernel_old);
+    return paramsel;
 
 }
 

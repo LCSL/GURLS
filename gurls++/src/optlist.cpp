@@ -49,6 +49,9 @@
 #include "options.h"
 #include "optlist.h"
 
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+
 using namespace std;
 
 namespace gurls{
@@ -200,33 +203,52 @@ bool GurlsOptionsList::addOpt(std::string key, std::string value){
     return true;
 }
 
-GurlsOption* GurlsOptionsList::getOpt(std::string key){
-    GurlsOption* gout = (*table)[key];
-    if (!gout){
-        throw gException(Exception_Parameter_Not_Definied_Yet + "( " + key + " )");
-    }
+GurlsOption* GurlsOptionsList::getOpt(std::string key)
+{
+    std::vector<std::string> names;
+    boost::split(names, key, boost::is_any_of("."));
+
+    GurlsOption* gout;
+    std::map<std::string, GurlsOption* >::iterator it = table->find(names[0]);
+
+    if(it == table->end())
+        throw gException(Exception_Parameter_Not_Definied_Yet + "( " + names[0] + " )");
+
+    gout = it->second;
+
+    for(unsigned int i=1; i<names.size(); ++i)
+        gout = GurlsOptionsList::dynacast(gout)->getOpt(names[i]);
+
     return gout;
 }
 
-std::string GurlsOptionsList::getOptAsString(std::string key){
+const GurlsOption* GurlsOptionsList::getOpt(std::string key) const
+{
+    std::vector<std::string> names;
+    boost::split(names, key, boost::is_any_of("."));
 
-    GurlsOption* opt = this->getOpt(key);
-    if (opt->getType() == StringOption){
-        return static_cast<OptString*>(opt)->getValue();
-    }else {
-        throw gException(Exception_Unknown_Option);
-    }
+    GurlsOption* gout;
+    std::map<std::string, GurlsOption* >::iterator it = table->find(names[0]);
+
+    if(it == table->end())
+        throw gException(Exception_Parameter_Not_Definied_Yet + "( " + names[0] + " )");
+
+    gout = it->second;
+
+    for(unsigned int i=1; i<names.size(); ++i)
+        gout = GurlsOptionsList::dynacast(gout)->getOpt(names[i]);
+
+    return gout;
 }
 
+std::string GurlsOptionsList::getOptAsString(std::string key) const
+{
+    return getOptValue<OptString>(key);
+}
 
-double GurlsOptionsList::getOptAsNumber(std::string key){
-
-    GurlsOption* opt = this->getOpt(key);
-    if (opt->getType() == NumberOption){
-        return static_cast<OptNumber*>(opt)->getValue();
-    }else {
-        throw gException(Exception_Unknown_Option);
-    }
+double GurlsOptionsList::getOptAsNumber(std::string key) const
+{
+    return getOptValue<OptNumber>(key);
 }
 
 void GurlsOptionsList::save(const std::string& fileName) const

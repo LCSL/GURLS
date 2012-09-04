@@ -102,9 +102,9 @@ gMat2D<T> * readMatrix(const std::string &fileName, bool ROWM = true )
     gMat2D<T> *ret =  new gMat2D<T>(rows, cols);
     T* buffer = ret->getData();
 
-    for(int i=0; i<rows; ++i)
+    for(unsigned long i=0; i<rows; ++i)
     {
-        for(int j=0; j<cols; ++j)
+        for(unsigned long j=0; j<cols; ++j)
         {
             if(ROWM)
                 buffer[i*cols+j]= static_cast<T>(matrix[i][j]);
@@ -190,6 +190,7 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
         file.close();
         throw "Unsupported option";
     }
+    return NULL;
 }
 
 template<typename T>
@@ -207,12 +208,12 @@ void checkOptions(GurlsOption& result, GurlsOption& reference)
         break;
     case StringListOption:
     {
-        std::vector<std::string>& res = OptStringList::dynacast(&result)->getValue();
-        std::vector<std::string>& ref = OptStringList::dynacast(&reference)->getValue();
+        const std::vector<std::string>& res = OptStringList::dynacast(&result)->getValue();
+        const std::vector<std::string>& ref = OptStringList::dynacast(&reference)->getValue();
 
         BOOST_REQUIRE_EQUAL(res.size(), ref.size());
 
-        for(int i=0; i< res.size(); ++i)
+        for(unsigned int i=0; i< res.size(); ++i)
             BOOST_REQUIRE_EQUAL(res[i], ref[i]);
 
         break;
@@ -374,13 +375,13 @@ public:
 
             if(fileName.stem() == "split-indices" || fileName.stem() == "split-lasts")
                 option = openFile<unsigned long>(filePath.native(), MatrixOption);
-            else if(fileName.stem() == "paramsel-lambdas")
-                option = openFile<T>(filePath.native(), NumberListOption);
+//            else if(fileName.stem() == "paramsel-lambdas")
+//                option = openFile<T>(filePath.native(), NumberListOption);
             else
                 option = openFile<T>(filePath.native(), p.second);
 
             GurlsOptionsList* opt_it = this->opt;
-            for(int i=0; i< strs.size()-1; ++i)
+            for(unsigned int i=0; i< strs.size()-1; ++i)
             {
                 if( !(opt_it->hasOpt(strs[i])) )
                 {
@@ -406,7 +407,7 @@ public:
     void runTask()
     {
         TaskType taskProcess;
-        taskProcess.execute(*X, *Y, *opt);
+        res = taskProcess.execute(*X, *Y, *opt);
     }
 
     void checkResults(std::string optField)
@@ -416,7 +417,7 @@ public:
 
         path dataPath = this->dataDir / this->task;
 
-        GurlsOption* fieldToCheck = this->opt->getOpt(optField);
+//        GurlsOption* fieldToCheck = this->opt->getOpt(optField);
 
         for(typename ListType::iterator it = this->data.out.begin(), end = this->data.out.end(); it != end; ++it)
         {
@@ -439,15 +440,16 @@ public:
 
             if(strs.size() > 1)
             {
-                GurlsOptionsList* opt_it = GurlsOptionsList::dynacast(fieldToCheck);
+//                GurlsOptionsList* opt_it = GurlsOptionsList::dynacast(fieldToCheck);
+                GurlsOptionsList* opt_it = GurlsOptionsList::dynacast(this->res);
 
-                for(int i=1; i< strs.size()-1; ++i)
+                for(unsigned int i=1; i< strs.size()-1; ++i)
                     opt_it = GurlsOptionsList::dynacast(opt_it->getOpt(strs[i]));
 
                 result = opt_it->getOpt(strs.back());
             }
             else
-                result = fieldToCheck;
+                result = this->res;
 
             GurlsOption* reference;
 
@@ -460,9 +462,9 @@ public:
             }
             else
             {
-                if(fileName.stem() == "paramsel-lambdas")
-                    reference = openFile<T>(filePath.native(), NumberListOption);
-                else
+//                if(fileName.stem() == "paramsel-lambdas")
+//                    reference = openFile<T>(filePath.native(), NumberListOption);
+//                else
                     reference = openFile<T>(filePath.native(), p.second);
 
                 checkOptions<T>(*result, *reference);
@@ -475,6 +477,7 @@ public:
     gurls::gMat2D<T>* X;
     gurls::gMat2D<T>* Y;
     gurls::GurlsOptionsList* opt;
+    gurls::GurlsOption* res;
 
 protected:
 

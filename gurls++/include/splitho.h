@@ -71,11 +71,11 @@ public:
      *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
 
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt) throw(gException)
 {
 
     gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
@@ -176,14 +176,11 @@ void SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y_OMR, GurlsOp
     set(m_lasts->getData(), (unsigned long) (n-nva), nSplits);
 
 
-    if(opt.hasOpt("split"))
-        opt.removeOpt("split");
-
     GurlsOptionsList* split = new GurlsOptionsList("split");
     split->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*m_indices));
     split->addOpt("lasts", new OptMatrix<gMat2D<unsigned long> >(*m_lasts));
 
-    opt.addOpt("split",split);
+    return split;
 }
 
 }

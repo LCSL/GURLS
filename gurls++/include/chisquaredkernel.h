@@ -69,11 +69,11 @@ public:
      *  - type = "chisquared"
      *  - K = the kernel matrix
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, const GurlsOptionsList &/*opt*/) throw(gException)
 {
     gMat2D<T> Xt(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(Xt);
@@ -113,7 +113,7 @@ void KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/
     kernel->addOpt("type", "chisquared");
     kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K_m));
 
-    opt.addOpt("kernel", kernel);
+    return kernel;
 }
 
 }

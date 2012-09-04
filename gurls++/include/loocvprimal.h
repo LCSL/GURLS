@@ -87,11 +87,11 @@ public:
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - acc = matrix of validation accuracies for each lambda guess and for each class
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt){
+GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt){
 
     typename std::set<T*> garbage;
 
@@ -181,23 +181,13 @@ void ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_
 
         T* tmpvec, *tmp1;
 
-        GurlsOption* pred_old = NULL;
 
-        if(opt.hasOpt("pred"))
-        {
-            pred_old = opt.getOpt("pred");
-            opt.removeOpt("pred", false);
-        }
+        GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
 
         gMat2D<T>* pred = new gMat2D<T>(n, t);
         OptMatrix<gMat2D<T> >* pred_opt = new OptMatrix<gMat2D<T> >(*pred);
-        opt.addOpt("pred", pred_opt);
+        nestedOpt->addOpt("pred", pred_opt);
 
-        GurlsOptionsList* perf = new GurlsOptionsList("perf");
-        opt.addOpt("perf", perf);
-
-    //    if (pred_opt->getDataID() != typeid(T))
-    //        return;
 
         gMat2D<T> tmp_pred(pred->cols(), pred->rows());
 
@@ -304,21 +294,23 @@ void ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_
 
     //        opt.perf = opt.hoperf([],y,opt);
             const gMat2D<T> dummy;
-            perfClass->execute(dummy, Y_OMR, opt);
+            GurlsOptionsList* perf = perfClass->execute(dummy, Y_OMR, *nestedOpt);
 
-            gMat2D<T> *forho_vec = &(OptMatrix<gMat2D<T> >::dynacast(perf->getOpt("forho")))->getValue();
+            gMat2D<T> &forho_vec = OptMatrix<gMat2D<T> >::dynacast(perf->getOpt("forho"))->getValue();
 
     //        for t = 1:T
             for(unsigned long j = 0; j<t; ++j)
             {
     //            ap(i,t) = opt.perf.forho(t);
-                ap[s +(tot*j)] = forho_vec->getData()[j];
+                ap[s +(tot*j)] = forho_vec.getData()[j];
             }
 
+            delete perf;
             delete[] num;
             garbage.erase(num);
         }
 
+        delete nestedOpt;
         delete[] L;
         garbage.erase(L);
         delete[] LEFT;
@@ -343,28 +335,34 @@ void ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_
 
         delete[] idx;
 
-        OptNumberList* LAMBDA = new OptNumberList();
-        for (T* l_it = lambdas, *l_end = lambdas+t; l_it != l_end; ++l_it)
-            LAMBDA->add(static_cast<double>(*l_it));
+
+        gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
+        copy(LAMBDA->getData(), lambdas, t);
 
         delete[] lambdas;
 
-        GurlsOptionsList* paramsel = NULL;
-        if(!opt.hasOpt("paramsel"))
+
+        GurlsOptionsList* paramsel;
+
+        if(opt.hasOpt("paramsel"))
         {
-            paramsel = new GurlsOptionsList("paramsel");
-            opt.addOpt("paramsel", paramsel);
-        }
-        else
-        {
-            paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+            GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
+            tmp_opt->copyOpt<T>("paramsel", opt);
+
+            paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
+            tmp_opt->removeOpt("paramsel", false);
+            delete tmp_opt;
 
             paramsel->removeOpt("guesses");
             paramsel->removeOpt("perf");
             paramsel->removeOpt("lambdas");
         }
+        else
+            paramsel = new GurlsOptionsList("paramsel");
 
-        paramsel->addOpt("lambdas", LAMBDA);
+
+
+        paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*LAMBDA));
 
         gMat2D<T>* looe_mat = new gMat2D<T>(tot, t);
         transpose(ap, tot, t, looe_mat->getData());
@@ -379,9 +377,7 @@ void ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_
 
         delete[] guesses;
 
-        opt.removeOpt("pred");
-        if(pred_old != NULL)
-            opt.addOpt("pred", pred_old);
+        return paramsel;
     }
     catch( gException& e)
     {

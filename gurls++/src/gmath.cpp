@@ -268,7 +268,7 @@ subroutine SGELSS 	( 	INTEGER  	M,
     }
 
     float* S = new float[std::min(M,N)];
-    float condnum = 0.f; // The condition number of A in the 2-norm = S(1)/S(min(m,n)).
+//    float condnum = 0.f; // The condition number of A in the 2-norm = S(1)/S(min(m,n)).
 
     if (RCOND < 0){
         RCOND = 0.f;
@@ -294,7 +294,7 @@ subroutine SGELSS 	( 	INTEGER  	M,
 
     /*res = */sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
     // TODO: check INFO on exit
-    condnum = S[0]/(S[std::min(M, N)]-1);
+//    condnum = S[0]/(S[std::min(M, N)]-1);
 
 
 //    gMat2D<float> *tmp = new gMat2D<float>(b, LDB, LDB, false);
@@ -590,12 +590,12 @@ GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int&
     int INFO;
 
     /* Query and allocate the optimal workspace */
-    int res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
     LWORK = static_cast<int>(WORK[0]);
     delete [] WORK;
     WORK = new float[LWORK];
 
-    res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
 
     // TODO: check INFO on exit
     //condnum = S[0]/(S[std::min(M, N)]-1);

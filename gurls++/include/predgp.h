@@ -76,18 +76,18 @@ public:
      *  - means = matrix of output means
      *  - covs = matrix of output covariances
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
 
 //    pred.means = opt.predkernel.K*opt.rls.alpha;
 
-    GurlsOptionsList* predkernel = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
+    const GurlsOptionsList* predkernel = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
 
-    gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(predkernel->getOpt("K"))->getValue();
+    const gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(predkernel->getOpt("K"))->getValue();
 
     const unsigned long kr = K_mat.rows();
     const unsigned long kc = K_mat.cols();
@@ -96,9 +96,9 @@ void PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptions
     K_mat.transpose(K);
 
 
-    GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+    const GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
 
-    gMat2D<T> &L_mat = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("L"))->getValue();
+    const gMat2D<T> &L_mat = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("L"))->getValue();
     T* L = new T[L_mat.getSize()];
 
     const unsigned long lr = L_mat.rows();
@@ -106,7 +106,7 @@ void PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptions
 
     transpose(L_mat.getData(), lc, lr, L);
 
-    gMat2D<T> &alpha = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("alpha"))->getValue();
+    const gMat2D<T> &alpha = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("alpha"))->getValue();
 
 
     gMat2D<T>* means_mat = new gMat2D<T>(kr, alpha.cols());
@@ -135,7 +135,7 @@ void PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptions
     delete[] L;
 
 //    pred.vars = opt.predkernel.Ktest - pred.vars;
-    gMat2D<T> &Ktest = OptMatrix<gMat2D<T> >::dynacast(predkernel->getOpt("Ktest"))->getValue();
+    const gMat2D<T> &Ktest = OptMatrix<gMat2D<T> >::dynacast(predkernel->getOpt("Ktest"))->getValue();
     copy(v, Ktest.getData(), n);
     axpy(n, (T)-1.0, vars, 1, v, 1);
     copy(vars, v, n);
@@ -147,9 +147,7 @@ void PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptions
     pred->addOpt("means", new OptMatrix<gMat2D<T> >(*means_mat));
     pred->addOpt("vars", new OptMatrix<gMat2D<T> >(*vars_mat));
 
-
-    opt.removeOpt("pred");
-    opt.addOpt("pred",pred);
+    return pred;
 }
 
 }

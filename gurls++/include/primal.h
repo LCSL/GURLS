@@ -77,30 +77,25 @@ public:
      * \return adds the following fields to opt:
      *  - pred = matrix of predicted labels
      */
-   void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+   OptMatrix<gMat2D<T> >* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void PredPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/,
-                                   GurlsOptionsList &opt){
-   if (opt.hasOpt("optimizer"))
-   {
-       GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
-//        GurlsOption *g = opt.getOpt("W");
-       GurlsOption *g = optimizer->getOpt("W");
-       gMat2D<T>& W = OptMatrix< gMat2D<T> >::dynacast(g)->getValue();
-       gMat2D<T>* Z = new gMat2D<T>(X.rows(), W.cols());
-       *Z = 0;
-       dot(X, W, *Z);
+OptMatrix<gMat2D<T> >* PredPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt)
+{
+    if (opt.hasOpt("optimizer"))
+    {
+        const GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+        const gMat2D<T>& W = OptMatrix< gMat2D<T> >::dynacast(optimizer->getOpt("W"))->getValue();
 
-       if(opt.hasOpt("pred"))
-           opt.removeOpt("pred");
+        gMat2D<T>* Z = new gMat2D<T>(X.rows(), W.cols());
+        *Z = 0;
+        dot(X, W, *Z);
 
-        opt.addOpt("pred", new OptMatrix<gMat2D<T> >(*Z));
-
-   }else {
+        return new OptMatrix<gMat2D<T> >(*Z);
+    }
+    else
        throw gException(gurls::Exception_Required_Parameter_Missing);
-   }
 }
 
 

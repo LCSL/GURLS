@@ -69,11 +69,11 @@ public:
      *  - type = "linear"
      *  - K = the kernel matrix
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void KernelLinear<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList* KernelLinear<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList &/*opt*/) throw(gException)
 {
 
     GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
@@ -87,7 +87,8 @@ void KernelLinear<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsO
     dot(X, Xt, *K);
 
     kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
-    opt.addOpt("kernel", kernel);
+
+    return kernel;
 }
 
 }

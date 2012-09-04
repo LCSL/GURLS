@@ -89,7 +89,7 @@ public:
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - forho = matrix of validation accuracies for each lambda guess and for each class
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 
 protected:
     /**
@@ -132,7 +132,7 @@ void ParamSelHoPrimalr<T>::eig_function(T* A, T* L, int A_rows_cols)
 }
 
 template <typename T>
-void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
 {
     //    [n,T]  = size(y);
     const unsigned long n = Y_OMR.rows();
@@ -147,40 +147,25 @@ void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
     Y_OMR.transpose(Y);
 
-    GurlsOptionsList* perf_old = NULL;
-    if(opt.hasOpt("perf"))
-    {
-        perf_old = GurlsOptionsList::dynacast(opt.getOpt("perf"));
-        opt.removeOpt("perf", false);
-    }
-    GurlsOption* pred_old = NULL;
 
-    if(opt.hasOpt("pred"))
-    {
-        pred_old = opt.getOpt("pred");
-        opt.removeOpt("pred", false);
-    }
-    GurlsOptionsList* optimizer_old = NULL;
-    if(opt.hasOpt("optimizer"))
-    {
-        optimizer_old = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
-        opt.removeOpt("optimizer", false);
-    }
+    GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
+//    nestedOpt->copyOpt<T>("kernel", opt);
+//    nestedOpt->addOpt("predkernel", new GurlsOptionsList("predkernel"));
 
-    GurlsOptionsList* split = GurlsOptionsList::dynacast(opt.getOpt("split"));
-    GurlsOption *index_opt = split->getOpt("indices");
-    GurlsOption *lasts_opt = split->getOpt("lasts");
+    const GurlsOptionsList* split = GurlsOptionsList::dynacast(opt.getOpt("split"));
+    const GurlsOption *index_opt = split->getOpt("indices");
+    const GurlsOption *lasts_opt = split->getOpt("lasts");
 
 
-    gMat2D<unsigned long > *indices_mat = &(OptMatrix<gMat2D< unsigned long > >::dynacast(index_opt))->getValue();
+    const gMat2D<unsigned long > &indices_mat = OptMatrix<gMat2D< unsigned long > >::dynacast(index_opt)->getValue();
     //vector of int one for column of indices_mat
-    gMat2D< unsigned long > *lasts_mat = &(OptMatrix<gMat2D< unsigned long > >::dynacast(lasts_opt))->getValue();
-    unsigned long *lasts_ = lasts_mat->getData();
+    const gMat2D< unsigned long > &lasts_mat = OptMatrix<gMat2D< unsigned long > >::dynacast(lasts_opt)->getValue();
+    const unsigned long *lasts_ = lasts_mat.getData();
 
-    gMat2D< unsigned long > Indices(indices_mat->cols(), indices_mat->rows());
-    indices_mat->transpose(Indices);
-    unsigned long* indices_buffer = new unsigned long[indices_mat->cols()*indices_mat->rows()];
-    copy< unsigned long >(indices_buffer,Indices.getData(),indices_mat->cols()*indices_mat->rows());
+    gMat2D< unsigned long > Indices(indices_mat.cols(), indices_mat.rows());
+    indices_mat.transpose(Indices);
+
+    unsigned long* indices_buffer = Indices.getData();
 
     unsigned long *indices_from0toD = new unsigned long[d];
     unsigned long *indices_from0toT = new unsigned long[t];
@@ -214,6 +199,8 @@ void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     PredPrimal< T > primal;
     Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
 
+    GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
+    nestedOpt->addOpt("optimizer",optimizer);
 
     for(int nh=0; nh<nholdouts; ++nh)
     {
@@ -251,8 +238,6 @@ void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
         dot(QtyT, Ytr, Qty, d, lasts, lasts, t, d, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
         delete [] QtyT;
 
-        GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
-        opt.addOpt("optimizer",optimizer);
 
         for(int i=0; i<tot; ++i)
         {
@@ -279,20 +264,23 @@ void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
             gMat2D<T> yy(n-lasts, t);
             Yva_m.transpose(yy);
 
-            primal.execute(xx, yy, opt);
+            OptMatrix<gMat2D<T> > *ret_pred = primal.execute(xx, yy, *nestedOpt);
 
-            perfClass->execute(xx, yy, opt);
+            nestedOpt->removeOpt("pred");
+            nestedOpt->addOpt("pred", ret_pred);
+
+            GurlsOptionsList* ret_perf = perfClass->execute(xx, yy, *nestedOpt);
 
             delete [] Yva;
             delete [] Xva;
 
-            GurlsOptionsList* perf_opt = GurlsOptionsList::dynacast(opt.getOpt("perf"));
-            gMat2D<T> &forho_vec = OptMatrix<gMat2D<T> >::dynacast(perf_opt->getOpt("forho"))->getValue();
+            gMat2D<T> &forho_vec = OptMatrix<gMat2D<T> >::dynacast(ret_perf->getOpt("forho"))->getValue();
 
             copy(ap+i, forho_vec.getData(), t, tot, 1);
+
+            delete ret_perf;
         }
 
-        delete perfClass;
         delete [] va;
         delete [] tr;
         delete [] Xtr;
@@ -325,28 +313,33 @@ void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 
     }
 
-    delete [] indices_buffer;
+    delete nestedOpt;
+
+    delete perfClass;
     delete [] Q;
     delete [] Qty;
     delete [] L;
     delete [] W;
 
 
-    GurlsOptionsList* paramsel = NULL;
-    if(!opt.hasOpt("paramsel"))
+    GurlsOptionsList* paramsel;
+
+    if(opt.hasOpt("paramsel"))
     {
-        paramsel = new GurlsOptionsList("paramsel");
-        opt.addOpt("paramsel", paramsel);
-    }
-    else
-    {
-        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+        GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
+        tmp_opt->copyOpt<T>("paramsel", opt);
+
+        paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
+        tmp_opt->removeOpt("paramsel", false);
+        delete tmp_opt;
 
         paramsel->removeOpt("guesses");
         paramsel->removeOpt("lambdas");
         paramsel->removeOpt("perf");
         paramsel->removeOpt("lambdas_round");
     }
+    else
+        paramsel = new GurlsOptionsList("paramsel");
 
 
     paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
@@ -354,28 +347,17 @@ void ParamSelHoPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     if(nholdouts>1)
         scal(t, (T)1.0/nholdouts, lambdas, 1);
 
-    OptNumberList* LAMBDA = new OptNumberList();
-    for (T* l_it = lambdas, *l_end = lambdas+t; l_it != l_end; ++l_it)
-        LAMBDA->add(static_cast<double>(*l_it));
+    gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
+    copy(LAMBDA->getData(), lambdas, t);
 
     delete [] lambdas;
 
-    paramsel->addOpt("lambdas", LAMBDA);
+    paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*LAMBDA));
     paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*perf_mat));
     paramsel->addOpt("lambdas_round", new OptMatrix<gMat2D<T> >(*lambdas_round_mat));
 
-    opt.removeOpt("pred");
-    if(pred_old != NULL)
-        opt.addOpt("pred", pred_old);
 
-    opt.removeOpt("perf");
-    if(perf_old != NULL)
-        opt.addOpt("perf", perf_old);
-
-    opt.removeOpt("optimizer");
-    if(optimizer_old != NULL)
-        opt.addOpt("optimizer", optimizer_old);
-
+    return paramsel;
 }
 
 }

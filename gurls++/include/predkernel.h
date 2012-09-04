@@ -70,7 +70,7 @@ public:
      *
      * \return adds the field predkernel to opt:
      */
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * \ingroup Exceptions
@@ -80,19 +80,19 @@ public:
     class BadPredKernelCreation : public std::logic_error
     {
     public:
-		/**
-		 * Exception constructor.
-		 */
+        /**
+         * Exception constructor.
+         */
         BadPredKernelCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
-	/**
-	 * Factory function returning a pointer to the newly created object.
-	 *
-	 * \warning The returned pointer is a plain, un-managed pointer. The calling
-	 * function is responsible of deallocating the object.
-	 */
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
     static PredKernel<T> *factory(const std::string& id) throw(BadPredKernelCreation)
     {
         if(id == "traintest")

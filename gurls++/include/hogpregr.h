@@ -71,11 +71,11 @@ public:
     /**
      *
      */
-   void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+   GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
 {
 
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
@@ -95,41 +95,21 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 
 
 //    K = opt.kernel.K;
-    GurlsOptionsList *kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-    gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(kernel->getOpt("K"))->getValue();
+    const gMat2D<T> &K_mat = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.K");
 
     gMat2D<T> K(K_mat.cols(), K_mat.rows());
     K_mat.transpose(K);
 
 
-    opt.removeOpt("kernel", false);
-    GurlsOption* predKernel = NULL;
-    if(opt.hasOpt("predkernel"))
-    {
-        predKernel = opt.getOpt("predkernel");
-        opt.removeOpt("predkernel", false);
-    }
+    const GurlsOptionsList* split = opt.getOptAs<GurlsOptionsList>("split");
 
-    GurlsOption* optimizer = NULL;
-    if(opt.hasOpt("optimizer"))
-    {
-        optimizer = opt.getOpt("optimizer");
-        opt.removeOpt("optimizer", false);
-    }
-
-
-    GurlsOptionsList* split = GurlsOptionsList::dynacast(opt.getOpt("split"));
-
-    gMat2D< unsigned long > &indices_mat = OptMatrix<gMat2D< unsigned long > >::dynacast(split->getOpt("indices"))->getValue();
+    const gMat2D<unsigned long> &indices_mat = split->getOptValue<OptMatrix<gMat2D<unsigned long> > >("indices");
     unsigned long* indices = new unsigned long[indices_mat.cols()*indices_mat.rows()];
     transpose(indices_mat.getData(), indices_mat.cols(), indices_mat.rows(), indices);
 
-    gMat2D< unsigned long > &lasts_mat = OptMatrix<gMat2D< unsigned long > >::dynacast(split->getOpt("lasts"))->getValue();
-    unsigned long *lasts = lasts_mat.getData();
+    const gMat2D<unsigned long> &lasts_mat = split->getOptValue<OptMatrix<gMat2D<unsigned long> > >("lasts");
+    const unsigned long *lasts = lasts_mat.getData();
 
-    std::cout << indices_mat << std::endl;
-
-    std::cout << lasts_mat << std::endl;
     unsigned long *tr = new unsigned long[indices_mat.cols()];
     unsigned long *va;
 
@@ -161,13 +141,17 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 
     delete[] linspc;
 
+    GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
+//    nestedOpt->copyOpt<T>("singlelambda", opt);
+
+
     GurlsOptionsList* tmpPredKernel = new GurlsOptionsList("predkernel");
     GurlsOptionsList* tmpKernel = new GurlsOptionsList("kernel");
     GurlsOptionsList* tmpParamSel = new GurlsOptionsList("paramsel");
 
-    opt.addOpt("kernel", tmpKernel);
-    opt.addOpt("predkernel", tmpPredKernel);
-    opt.addOpt("paramsel", tmpParamSel);
+    nestedOpt->addOpt("kernel", tmpKernel);
+    nestedOpt->addOpt("predkernel", tmpPredKernel);
+    nestedOpt->addOpt("paramsel", tmpParamSel);
 
     gMat2D<T> subXtr;
     gMat2D<T> subYtr;
@@ -195,6 +179,8 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
     gMat2D<T> *perf_mat = new gMat2D<T>(nholdouts, tot*t);
     T *ret_guesses = new T [nholdouts*tot];
 
+    gMat2D<T> * lambda = new gMat2D<T>(1,1);
+    tmpParamSel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambda));
 
 //    for nh = 1:opt.nholdouts
     for(int nh = 0; nh < nholdouts; ++nh)
@@ -256,39 +242,35 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
         for(int i=0; i< tot; ++i)
         {
 //            opt.paramsel.noises = guesses(i);
-            tmpParamSel->removeOpt("lambdas");
-            tmpParamSel->addOpt("lambdas", new OptNumberList(guesses[i]));
+            lambda->getData()[0] = guesses[i];
 
 //            opt.rls = rls_gpregr(X(tr,:),y(tr,:),opt);
-            rlsgp.execute(subXtr, subYtr, opt);
+            GurlsOptionsList* ret_rlsgp = rlsgp.execute(subXtr, subYtr, opt);
+
+            nestedOpt->removeOpt("optimizer");
+            nestedOpt->addOpt("optimizer", ret_rlsgp);
 
 //            tmp = pred_gpregr(X(va,:),y(va,:),opt);
-            predgp.execute(subXva, subYva, opt);
+            GurlsOptionsList * pred_list = predgp.execute(subXva, subYva, opt);
 
 //            opt.pred = tmp.means;
-            opt.removeOpt("optimizer");
-            GurlsOptionsList * pred_list = GurlsOptionsList::dynacast(opt.getOpt("pred"));
-            opt.removeOpt("pred", false);
+            nestedOpt->removeOpt("pred");
+            nestedOpt->addOpt("pred", pred_list->getOpt("means"));
 
-            opt.addOpt("pred", pred_list->getOpt("means"));
             pred_list->removeOpt("means", false);
+
             delete pred_list;
 
 
 //            opt.perf = opt.hoperf([],y(va,:),opt);
-            perfClass->execute(subXva, subYva, opt);
-
-            opt.removeOpt("pred");
-
-            GurlsOptionsList * perf_list = GurlsOptionsList::dynacast(opt.getOpt("perf"));
-            gMat2D<T>& forho = OptMatrix<gMat2D<T> >::dynacast(perf_list->getOpt("forho"))->getValue();
+            GurlsOptionsList * perf_list = perfClass->execute(subXva, subYva, opt);
+            gMat2D<T>& forho = perf_list->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
 //            for t = 1:T
 //                perf(i,t) = opt.perf.forho(t);
             copy(perf+i, forho.getData(), t, tot, 1);
 
-
-            opt.removeOpt("perf");
+            delete perf_list;
         }
 
 //        [dummy,idx] = max(perf,[],1);
@@ -309,38 +291,32 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 
     }
 
-    opt.removeOpt("kernel");
-    opt.removeOpt("predkernel");
-    opt.removeOpt("paramsel");
+    delete nestedOpt;
 
     delete[] guesses;
     delete perfClass;
     delete[] perf;
 
 
-    opt.addOpt("kernel", kernel);
-    if(predKernel != NULL)
-        opt.addOpt("predkernel", predKernel);
+    GurlsOptionsList* paramsel;
 
-    if(optimizer != NULL)
-        opt.addOpt("optimizer", optimizer);
-
-
-    GurlsOptionsList* paramsel = NULL;
-    if(!opt.hasOpt("paramsel"))
+    if(opt.hasOpt("paramsel"))
     {
-        paramsel = new GurlsOptionsList("paramsel");
-        opt.addOpt("paramsel", paramsel);
-    }
-    else
-    {
-        paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+        GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
+        tmp_opt->copyOpt<T>("paramsel", opt);
+
+        paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
+        tmp_opt->removeOpt("paramsel", false);
+        delete tmp_opt;
 
         paramsel->removeOpt("lambdas_round");
         paramsel->removeOpt("guesses");
         paramsel->removeOpt("perf");
         paramsel->removeOpt("lambdas");
     }
+    else
+        paramsel = new GurlsOptionsList("paramsel");
+
 
     gMat2D<T>* lambdas_round_mat = new gMat2D<T>(nholdouts, t);
     transpose(lambdas_round, nholdouts, t, lambdas_round_mat->getData());
@@ -356,7 +332,7 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
 
 
     T *lambdas = NULL;
-    T *it, *end;
+    T *it;
 
 //    if numel(vout.lambdas_round) > 1
     if(nholdouts>1)
@@ -367,24 +343,24 @@ void ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR
         mean(lambdas_round, lambdas, nholdouts, t, t);
 
         it = lambdas;
-        end = lambdas+t;
     }
     else
     {
 //        vout.lambdas = vout.lambdas_round{1};
         it = lambdas_round;
-        end = lambdas_round+t;
     }
 
-    OptNumberList* l = new OptNumberList();
-    for(; it != end; ++it)
-        l->add(static_cast<double>(*it));
-    paramsel->addOpt("lambdas", l);
+    gMat2D<T> *l = new gMat2D<T>(1, t);
+    copy(l->getData(), it, t);
+
+    paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*l));
 
     if(lambdas != NULL)
         delete[] lambdas;
 
     delete[] lambdas_round;
+
+    return paramsel;
 }
 
 

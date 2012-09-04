@@ -73,18 +73,18 @@ public:
      *  - C = empty matrix
      *  - X = empty matrix
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 
 template <typename T>
-void RLSPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
 {
     //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-//     std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
+    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+    const gMat2D<T> &ll = OptMatrix<gMat2D<T> >::dynacast(paramsel->getOpt("lambdas"))->getValue();
+    const OptFunction* singlelambda = OptFunction::dynacast(opt.getOpt("singlelambda"));
+    T lambda = singlelambda->getValue(ll.getData(), ll.getSize());
 
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
@@ -92,7 +92,6 @@ void RLSPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
     Y_OMR.transpose(Y);
 
-    //	fprintf('\tSolving primal RLS...\n');
 //    std::cout << "Solving primal RLS... " << std::endl;
 
     //	[n,d] = size(X_OMR);
@@ -207,8 +206,9 @@ void RLSPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     tmp.transpose(*out);
 
     delete[] W;
+
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
-//     opt.addOpt("W", new OptMatrix<gMat2D<T> >(*out));
+
     optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*out));
 
     delete[] K;
@@ -221,8 +221,7 @@ void RLSPrimal<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     gMat2D<T>* emptyX = new gMat2D<T>();
     optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
 
-    opt.removeOpt("optimizer", false);
-    opt.addOpt("optimizer",optimizer);
+    return optimizer;
 }
 
 

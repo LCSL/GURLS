@@ -80,17 +80,18 @@ public:
      *  - alpha
      *  - X
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt);
 };
 
 
 template <typename T>
-void RLSGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
 {
     //    noise = opt.singlelambda(opt.paramsel.lambdas);
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> nls = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    T noiselevel = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(nls.data(), nls.size()));
+    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+    const gMat2D<T> &nls = OptMatrix<gMat2D<T> >::dynacast(paramsel->getOpt("lambdas"))->getValue();
+    const OptFunction* singlelambda = OptFunction::dynacast(opt.getOpt("singlelambda"));
+    T noiselevel = singlelambda->getValue(nls.getData(), nls.getSize());
 
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
@@ -99,9 +100,9 @@ void RLSGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     Y_OMR.transpose(Y);
 
 
-    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+    const GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
 
-    gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(kernel->getOpt("K"))->getValue();
+    const gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(kernel->getOpt("K"))->getValue();
     gMat2D<T> K(K_mat.cols(), K_mat.rows());
     K_mat.transpose(K);
 
@@ -147,9 +148,7 @@ void RLSGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurls
     gMat2D<T>* optX = new gMat2D<T>(X_OMR);
     optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*optX));
 
-
-    opt.removeOpt("optimizer");
-    opt.addOpt("optimizer",optimizer);
+    return optimizer;
 
 }
 

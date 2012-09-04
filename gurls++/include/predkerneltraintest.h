@@ -75,22 +75,21 @@ public:
      * \return adds to opt the field predkernel, which is a list with at least the field K containing the kernel matrix
      */
 
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y, const GurlsOptionsList &opt) throw(gException)
 {
     gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
     X_OMR.transpose(X);
 
-    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-    GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+    const GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+    const GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
 
     std::string kernelType = kernel->getOptAsString("type");
 
-    OptMatrix<gMat2D<T> >* rls_X_opt = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("X"));
-    gMat2D<T>& rls_X_mat = rls_X_opt->getValue();
+    const gMat2D<T>& rls_X_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("X"))->getValue();
 
 
     if(X_OMR.cols() != rls_X_mat.cols())
@@ -112,7 +111,7 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
 
     if(kernelType == "rbf")
     {
-        GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
+        const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
 
         double sigma = paramsel->getOptAsNumber("sigma");
 
@@ -144,12 +143,12 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
         K_m = new gMat2D<T>(xr, rls_xr);
         dist.transpose(*K_m);
 
-        if(!rls->hasOpt("L"))
+        if(!optimizer->hasOpt("L"))
         {
             gMat2D<T> *Ktest = new gMat2D<T>(xr, 1);
             set(Ktest->getData(), (T)1.0, xr);
 
-            opt.addOpt("Ktest", new OptMatrix<gMat2D<T> >(*Ktest));
+            predkernel->addOpt("Ktest", new OptMatrix<gMat2D<T> >(*Ktest));
         }
 
     }
@@ -207,7 +206,7 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
     predkernel->addOpt("K", new OptMatrix<gMat2D<T> > (*K_m));
 
 
-    opt.addOpt("predkernel", predkernel);
+    return predkernel;
 }
 
 }

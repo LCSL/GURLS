@@ -68,17 +68,17 @@ public:
      * \return adds the following fields to opt:
      *  - confidence = array containing the confidence score for each row of the field pred of opt.
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt) throw(gException)
 {
     //   out = struct;
     //   [n,k] = size(opt.pred);
 
-    GurlsOption *pred_opt = opt.getOpt("pred");
-    gMat2D<T> pred_mat = (OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
+    const GurlsOption *pred_opt = opt.getOpt("pred");
+    const gMat2D<T> &pred_mat = OptMatrix<gMat2D<T> >::dynacast(pred_opt)->getValue();
 
     const int n = pred_mat.rows();
     const int t = pred_mat.cols();
@@ -108,7 +108,8 @@ void ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, GurlsOp
 
     GurlsOptionsList* ret = new GurlsOptionsList("confidence");
     ret->addOpt("confidence", new OptMatrix<gMat2D<T> >(*conf));
-    opt.addOpt("conf", ret);
+
+    return ret;
 }
 
 }
