@@ -181,7 +181,7 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
     case MatrixOption:
     case VectorOption:
         file.close();
-        return new OptMatrix<gMat2D<T> >(*(readMatrix<T>(fileName)));
+        return new OptMatrix<gMat2D<T> >(*(readMatrix<T>(fileName, false)));
 
     case GenericOption:
     case OptListOption:
@@ -342,8 +342,8 @@ public:
 
         path dataPath = this->dataDir / this->task;
 
-        X = readMatrix<T>(data.X);
-        Y = readMatrix<T>(data.Y);
+        X = readMatrix<T>(data.X, false);
+        Y = readMatrix<T>(data.Y, false);
 
         opt = new gurls::GurlsOptionsList("Testdata");
 
@@ -375,8 +375,6 @@ public:
 
             if(fileName.stem() == "split-indices" || fileName.stem() == "split-lasts")
                 option = openFile<unsigned long>(filePath.native(), MatrixOption);
-//            else if(fileName.stem() == "paramsel-lambdas")
-//                option = openFile<T>(filePath.native(), NumberListOption);
             else
                 option = openFile<T>(filePath.native(), p.second);
 
@@ -462,10 +460,7 @@ public:
             }
             else
             {
-//                if(fileName.stem() == "paramsel-lambdas")
-//                    reference = openFile<T>(filePath.native(), NumberListOption);
-//                else
-                    reference = openFile<T>(filePath.native(), p.second);
+                reference = openFile<T>(filePath.native(), p.second);
 
                 checkOptions<T>(*result, *reference);
             }

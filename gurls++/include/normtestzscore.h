@@ -71,15 +71,11 @@ public:
 };
 
 template<typename T>
-gMat2D<T>* NormTestZScore<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+gMat2D<T>* NormTestZScore<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
 //    [n,d] = size(X);
-    const int n = X_OMR.rows();
-    const int d = X_OMR.cols();
-
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
 
     std::string name = opt.getOptAsString("name");
 
@@ -97,20 +93,20 @@ gMat2D<T>* NormTestZScore<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /
     T* meanX = v_meanX.getData();
     T* stdX = v_stdX.getData();
 
+    gMat2D<T>* retX = new gMat2D<T>(n, d);
+    copy(retX->getData(), X.getData(), retX->getSize());
+
 //    X = X - repmat(meanX, n, 1);
 //    X = X./repmat(stdX, n, 1);
-    for(int i=0; i< d; ++i)
+    for(unsigned long i=0; i<d; ++i)
     {
-        T* column = X.getData()+(n*i);
+        T* column = retX->getData()+(n*i);
+
         axpy(n, (T)-1.0, meanX+i, 0, column, 1);
         scal(n, (T)1.0/stdX[i], column, 1);
     }
 
-
-    gMat2D<T>* ret = new gMat2D<T>(X_OMR.rows(), X_OMR.cols());
-    X.transpose(*ret);
-
-    return ret;
+    return retX;
 }
 
 }

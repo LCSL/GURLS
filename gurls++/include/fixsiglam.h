@@ -76,7 +76,7 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList *ParamSelFixSigLam<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
+GurlsOptionsList *ParamSelFixSigLam<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt)
 {
     GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
 

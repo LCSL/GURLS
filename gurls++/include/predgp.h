@@ -80,37 +80,30 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
+GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
-
 //    pred.means = opt.predkernel.K*opt.rls.alpha;
 
-    const GurlsOptionsList* predkernel = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
+    const GurlsOptionsList* predkernel = opt.getOptAs<GurlsOptionsList>("predkernel");
 
-    const gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(predkernel->getOpt("K"))->getValue();
+    const gMat2D<T> &K = predkernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
 
-    const unsigned long kr = K_mat.rows();
-    const unsigned long kc = K_mat.cols();
-
-    gMat2D<T> K(kc, kr);
-    K_mat.transpose(K);
+    const unsigned long kr = K.rows();
+    const unsigned long kc = K.cols();
 
 
-    const GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+    const GurlsOptionsList* rls = opt.getOptAs<GurlsOptionsList>("optimizer");
 
-    const gMat2D<T> &L_mat = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("L"))->getValue();
-    T* L = new T[L_mat.getSize()];
+    const gMat2D<T> &L = rls->getOptValue<OptMatrix<gMat2D<T> > >("L");
 
-    const unsigned long lr = L_mat.rows();
-    const unsigned long lc = L_mat.cols();
+    const unsigned long lr = L.rows();
+    const unsigned long lc = L.cols();
 
-    transpose(L_mat.getData(), lc, lr, L);
-
-    const gMat2D<T> &alpha = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("alpha"))->getValue();
+    const gMat2D<T> &alpha = rls->getOptValue<OptMatrix<gMat2D<T> > >("alpha");
 
 
     gMat2D<T>* means_mat = new gMat2D<T>(kr, alpha.cols());
-    dot(K_mat.getData(), alpha.getData(), means_mat->getData(), kr, kc, alpha.rows(), alpha.cols(), kr, alpha.cols(), CblasNoTrans, CblasNoTrans, CblasRowMajor);
+    dot(K.getData(), alpha.getData(), means_mat->getData(), kr, kc, alpha.rows(), alpha.cols(), kr, alpha.cols(), CblasNoTrans, CblasNoTrans, CblasColMajor);
 
 
     const unsigned long n = Y.rows();
@@ -126,16 +119,15 @@ GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y,
         getRow(K.getData(), kr, kc, i, v);
 
 ////        v = opt.rls.L'\opt.predkernel.K(i,:)';
-        mldivide_squared(L, v, lr, lc, kc, 1, CblasTrans);
+        mldivide_squared(L.getData(), v, lr, lc, kc, 1, CblasTrans);
 
 ////        pred.vars(i) = v'*v;
         vars[i] =  dot(kc, v, 1, v, 1);
     }
 
-    delete[] L;
 
 //    pred.vars = opt.predkernel.Ktest - pred.vars;
-    const gMat2D<T> &Ktest = OptMatrix<gMat2D<T> >::dynacast(predkernel->getOpt("Ktest"))->getValue();
+    const gMat2D<T> &Ktest = predkernel->getOptValue<OptMatrix<gMat2D<T> > >("Ktest");
     copy(v, Ktest.getData(), n);
     axpy(n, (T)-1.0, vars, 1, v, 1);
     copy(vars, v, n);

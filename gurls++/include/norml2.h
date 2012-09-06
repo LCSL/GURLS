@@ -71,28 +71,28 @@ public:
 };
 
 template<typename T>
-gMat2D<T>* NormL2<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& /*opt*/) throw(gException)
+gMat2D<T>* NormL2<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& /*opt*/) throw(gException)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    const int m = X_OMR.rows();
-    const int n = X_OMR.cols();
+    const unsigned long m = X.rows();
+    const unsigned long n = X.cols();
 
     T norm;
 
+    gMat2D<T>* retX = new gMat2D<T>(m, n);
+    copy(retX->getData(), X.getData(), retX->getSize());
+    T*rx = retX->getData();
+
+    const T epsilon = std::numeric_limits<T>::epsilon();
+
 //    for j = 1:size(X,1)
-    for(int j=0; j<m; ++j)
+    for(unsigned long j=0; j<m; ++j)
     {
 //        X(j,:) = X(j,:)/(norm(X(j,:)) + eps);
-        norm = nrm2(n, X.getData()+j, m) + std::numeric_limits<T>::epsilon();
-        scal(n, (T)1.0/norm, X.getData()+j, m);
+        norm = nrm2(n, rx+j, m) + epsilon;
+        scal(n, (T)1.0/norm, rx+j, m);
     }
 
-    gMat2D<T>* ret = new gMat2D<T>(X_OMR.rows(), X_OMR.cols());
-    X.transpose(*ret);
-
-    return ret;
+    return retX;
 }
 
 }

@@ -180,7 +180,7 @@ public:
     /**
       * Returns the sum of all elements in the vector
       */
-    double sum() const;
+    T sum() const;
 
     /**
       * Adds a value to all elements

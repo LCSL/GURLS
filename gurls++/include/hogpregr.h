@@ -75,40 +75,29 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
+GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
-
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
     //    [n,T]  = size(y);
-    const unsigned long n = Y_OMR.rows();
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long n = Y.rows();
+    const unsigned long t = Y.cols();
 
-    const unsigned long d = X_OMR.cols();
+    const unsigned long d = X.cols();
 
 //    tot = opt.nlambda;
     int tot = static_cast<int>(opt.getOptAsNumber("nlambda"));
 
 
 //    K = opt.kernel.K;
-    const gMat2D<T> &K_mat = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.K");
-
-    gMat2D<T> K(K_mat.cols(), K_mat.rows());
-    K_mat.transpose(K);
-
+    const gMat2D<T> &K = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.K");
 
     const GurlsOptionsList* split = opt.getOptAs<GurlsOptionsList>("split");
 
-    const gMat2D<unsigned long> &indices_mat = split->getOptValue<OptMatrix<gMat2D<unsigned long> > >("indices");
-    unsigned long* indices = new unsigned long[indices_mat.cols()*indices_mat.rows()];
-    transpose(indices_mat.getData(), indices_mat.cols(), indices_mat.rows(), indices);
+    const gMat2D< unsigned long > &indices_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("indices");
+    const gMat2D< unsigned long > &lasts_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("lasts");
 
-    const gMat2D<unsigned long> &lasts_mat = split->getOptValue<OptMatrix<gMat2D<unsigned long> > >("lasts");
     const unsigned long *lasts = lasts_mat.getData();
+    const unsigned long *indices = indices_mat.getData();
+
 
     unsigned long *tr = new unsigned long[indices_mat.cols()];
     unsigned long *va;
@@ -175,9 +164,14 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMa
     const unsigned long indices_cols = indices_mat.cols();
 
     T *perf = new T[tot*t];
-    T *lambdas_round = new T[nholdouts*t];
+
+    gMat2D<T>* lambdas_round_mat = new gMat2D<T>(nholdouts, t);
+    T *lambdas_round = lambdas_round_mat->getData();
+
     gMat2D<T> *perf_mat = new gMat2D<T>(nholdouts, tot*t);
-    T *ret_guesses = new T [nholdouts*tot];
+
+    gMat2D<T>* guesses_mat = new gMat2D<T>(nholdouts, tot);
+    T *ret_guesses = guesses_mat->getData();
 
     gMat2D<T> * lambda = new gMat2D<T>(1,1);
     tmpParamSel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambda));
@@ -202,41 +196,36 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMa
 
         // here n is last
 
-        T* tmpMat = new T[std::max(last, va_size) * std::max(va_size, std::max(t, d))];
-
 //        opt.kernel.K = K(tr,tr);
         subK->resize(last, last);
-        copy_submatrix(subK->getData(), K.getData(), K_mat.rows(), last, last, tr, tr);
+        copy_submatrix(subK->getData(), K.getData(), K.rows(), last, last, tr, tr);
 
 
 //        opt.predkernel.K = K(va,tr);
         subPredK->resize(va_size, last);
-        copy_submatrix(tmpMat, K.getData(), K_mat.rows(), va_size, last, va, tr);
-        transpose(tmpMat, va_size, last, subPredK->getData());
+        copy_submatrix(subPredK->getData(), K.getData(), K.rows(), va_size, last, va, tr);
 
 //        opt.predkernel.Ktest = diag(K(va,va));
+        T* tmpMat = new T[va_size*va_size];
         subPredKTest->resize(va_size, 1);
-        copy_submatrix(tmpMat, K.getData(), K_mat.rows(), va_size, va_size, va, va);
+
+        copy_submatrix(tmpMat, K.getData(), K.rows(), va_size, va_size, va, va);
         copy(subPredKTest->getData(), tmpMat, va_size, 1, va_size+1);
 
+        delete[] tmpMat;
 
         subXtr.resize(last, d);
-        subMatrixFromRows(X.getData(), n, d, tr, last, tmpMat);
-        transpose(tmpMat, last, d, subXtr.getData());
+        subMatrixFromRows(X.getData(), n, d, tr, last, subXtr.getData());
 
         subYtr.resize(last, t);
-        subMatrixFromRows(Y.getData(), n, t, tr, last, tmpMat);
-        transpose(tmpMat, last, t, subYtr.getData());
+        subMatrixFromRows(Y.getData(), n, t, tr, last, subYtr.getData());
 
         subXva.resize(va_size, d);
-        subMatrixFromRows(X.getData(), n, d, va, va_size, tmpMat);
-        transpose(tmpMat, va_size, d, subXva.getData());
+        subMatrixFromRows(X.getData(), n, d, va, va_size, subXva.getData());
 
         subYva.resize(va_size, t);
-        subMatrixFromRows(Y.getData(), n, t, va, va_size, tmpMat);
-        transpose(tmpMat, va_size, t, subYva.getData());
+        subMatrixFromRows(Y.getData(), n, t, va, va_size, subYva.getData());
 
-        delete[] tmpMat;
 
 //        for i = 1:tot
         for(int i=0; i< tot; ++i)
@@ -281,10 +270,10 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMa
 //        vout.lambdas_round{nh} = guesses(idx);
         T* lambdas_nh = copyLocations(idx, guesses, t, tot);
         copy(lambdas_round + nh, lambdas_nh, t, nholdouts, 1);
-        delete[] lambdas_nh;
+        delete [] lambdas_nh;
 
 //        vout.perf{nh} = perf;
-        transpose(perf, tot, t, perf_mat->getData()+(nh*tot*t));
+        copy(perf_mat->getData()+nh, perf, tot*t, nholdouts, 1);
 
 //        vout.guesses{nh} = guesses;
         copy(ret_guesses+nh, guesses, tot, nholdouts, 1);
@@ -318,47 +307,32 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMa
         paramsel = new GurlsOptionsList("paramsel");
 
 
-    gMat2D<T>* lambdas_round_mat = new gMat2D<T>(nholdouts, t);
-    transpose(lambdas_round, nholdouts, t, lambdas_round_mat->getData());
     paramsel->addOpt("lambdas_round", new OptMatrix<gMat2D<T> >(*lambdas_round_mat));
-
     paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*perf_mat));
-
-
-    gMat2D<T>* guesses_mat = new gMat2D<T>(nholdouts, tot);
-    transpose(ret_guesses, nholdouts, tot, guesses_mat->getData());
     paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
-    delete [] ret_guesses;
 
 
-    T *lambdas = NULL;
-    T *it;
+    gMat2D<T> *l = new gMat2D<T>(1, t);
 
 //    if numel(vout.lambdas_round) > 1
     if(nholdouts>1)
     {
-        lambdas = new T[t];
+        T *lambdas = new T[t];
 //        lambdas = cell2mat(vout.lambdas_round');
 //        vout.lambdas = mean(lambdas);
         mean(lambdas_round, lambdas, nholdouts, t, t);
 
-        it = lambdas;
+        copy(l->getData(), lambdas, t);
+
+        delete [] lambdas;
     }
     else
     {
 //        vout.lambdas = vout.lambdas_round{1};
-        it = lambdas_round;
+        copy(l->getData(), lambdas_round, t);
     }
 
-    gMat2D<T> *l = new gMat2D<T>(1, t);
-    copy(l->getData(), it, t);
-
     paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*l));
-
-    if(lambdas != NULL)
-        delete[] lambdas;
-
-    delete[] lambdas_round;
 
     return paramsel;
 }

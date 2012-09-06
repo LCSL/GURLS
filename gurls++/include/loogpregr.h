@@ -75,29 +75,19 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
+GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
-
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
 //    [n,T]  = size(y);
-    const unsigned long n = Y_OMR.rows();
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long n = Y.rows();
+    const unsigned long t = Y.cols();
 
-    const unsigned long d = X_OMR.cols();
+    const unsigned long d = X.cols();
 
 //    tot = opt.nlambda;
     int tot = static_cast<int>(opt.getOptAsNumber("nlambda"));
 
 //    K = opt.kernel.K;
-    const gMat2D<T> &K_mat = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.K");
-
-    gMat2D<T> K(K_mat.cols(), K_mat.rows());
-    K_mat.transpose(K);
+    const gMat2D<T> &K = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.K");
 
 
 //    lmax = mean(std(y));
@@ -116,7 +106,9 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gM
     const T lmin = lmax * (T)1.0e-5;
 
 //    guesses = lmin.*(lmax/lmin).^linspace(0,1,tot);
-    T* guesses = new T[tot];
+    gMat2D<T> *guesses_mat = new gMat2D<T>(tot, 1);
+    T* guesses = guesses_mat->getData();
+
     T* linspc = new T[tot];
     linspace((T)0.0, (T)1.0, tot, linspc);
     const T coeff = lmax/lmin;
@@ -128,7 +120,8 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gM
 
 
 //    perf = zeros(tot,T);
-    T* perf = new T[tot*t];
+    gMat2D<T> *perf_mat = new gMat2D<T>(tot, t);
+    T* perf = perf_mat->getData();
     set(perf, (T)0.0, tot*t);
 
     const int tr_size = n-1;
@@ -161,7 +154,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gM
     gMat2D<T> rlsX(tr_size, d);
     gMat2D<T> rlsY(tr_size, t);
 
-    T* tmpMat = new T[ tr_size * std::max(d, t)];
+//    T* tmpMat = new T[ tr_size * std::max(d, t)];
 
     gMat2D<T> predX(1, d);
     gMat2D<T> predY(1, t);
@@ -179,13 +172,13 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gM
 //        tr = setdiff(1:n,k);
 
 //        opt.kernel.K = K(tr,tr);
-        copy_submatrix(tmpK->getData(), K.getData(), K_mat.rows(), tr_size, tr_size, tr, tr);
+        copy_submatrix(tmpK->getData(), K.getData(), K.rows(), tr_size, tr_size, tr, tr);
 
 //        opt.predkernel.K = K(k,tr);
-        copy_submatrix(tmpPredK->getData(), K.getData(), K_mat.rows(), 1, tr_size, &k , tr);
+        copy_submatrix(tmpPredK->getData(), K.getData(), K.rows(), 1, tr_size, &k , tr);
 
 //        opt.predkernel.Ktest = K(k,k);
-        tmpPredKTest->getData()[0] = K.getData()[(k*K_mat.rows()) + k];
+        tmpPredKTest->getData()[0] = K.getData()[(k*K.rows()) + k];
 
 //        for i = 1:tot
         for(int i=0; i< tot; ++i)
@@ -194,11 +187,9 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gM
             lambda->getData()[0] = guesses[i];
 
 //            opt.rls = rls_gpregr(X(tr,:),y(tr,:),opt);
-            subMatrixFromRows(X.getData(), n, d, tr, tr_size, tmpMat);
-            transpose(tmpMat, tr_size, d, rlsX.getData());
+            subMatrixFromRows(X.getData(), n, d, tr, tr_size, rlsX.getData());
 
-            subMatrixFromRows(Y.getData(), n, t, tr, tr_size, tmpMat);
-            transpose(tmpMat, tr_size, t, rlsY.getData());
+            subMatrixFromRows(Y.getData(), n, t, tr, tr_size, rlsY.getData());
 
             GurlsOptionsList* ret_rlsgp = rlsgp.execute(rlsX, rlsY, *nestedOpt);
 
@@ -280,17 +271,9 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gM
     delete[] noises;
 
 //    vout.perf = 	perf;
-    gMat2D<T> *perf_mat = new gMat2D<T>(tot, t);
-    transpose(perf, tot, t, perf_mat->getData());
-    delete[] perf;
-
     paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*perf_mat));
 
-
 //    vout.guesses = guesses;
-    gMat2D<T> *guesses_mat = new gMat2D<T>(guesses, tot, 1, true);
-    delete[] guesses;
-
     paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
     return paramsel;

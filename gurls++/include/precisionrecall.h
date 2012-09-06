@@ -72,17 +72,14 @@ public:
      *  - forho = acc
      *  - forplot = acc
      */
-    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
 template<typename T>
-GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException)
 {
-    const int rows = Y_OMR.rows();
-    const int cols = Y_OMR.cols();
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
+    const int rows = Y.rows();
+    const int cols = Y.cols();
 
     //    if isfield (opt,'perf')
     //        p = opt.perf; % lets not overwrite existing performance measures.
@@ -108,13 +105,10 @@ GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat
         perf = new GurlsOptionsList("perf");
 
 //    y_true = y;
-    T* y_true = Y.getData();
+    const T* y_true = Y.getData();
 
 //    y_pred = opt.pred;
-    const gMat2D<T> &pred_mat = OptMatrix<gMat2D<T> >::dynacast(opt.getOpt("pred"))->getValue();
-    gMat2D<T> y_pred(pred_mat.cols(), pred_mat.rows());
-    pred_mat.transpose(y_pred);
-
+    const gMat2D<T> &y_pred = opt.getOptValue<OptMatrix<gMat2D<T> > >("pred");
 
     gMat2D<T>* ap_mat = new gMat2D<T>(1, cols);
     T* ap = ap_mat->getData();
@@ -133,7 +127,6 @@ GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X_OMR*/, const gMat
 
     OptMatrix<gMat2D<T> >* ap_opt = new OptMatrix<gMat2D<T> >(*ap_mat);
     perf->addOpt("ap", ap_opt);
-
 
     OptMatrix<gMat2D<T> >* forho_opt = new OptMatrix<gMat2D<T> >(*(new gMat2D<T>(*ap_mat)));
     perf->addOpt("forho", forho_opt);

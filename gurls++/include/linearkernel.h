@@ -81,10 +81,7 @@ GurlsOptionsList* KernelLinear<T>::execute(const gMat2D<T>& X, const gMat2D<T>& 
 
     gMat2D<T>* K = new gMat2D<T>(X.rows(), X.rows());
 
-    gMat2D<T> Xt(X.cols(), X.rows());
-    X.transpose(Xt);
-
-    dot(X, Xt, *K);
+    dot(X.getData(), X.getData(), K->getData(), X.rows(), X.cols(), X.rows(), X.cols(), K->rows(), K->cols(), CblasNoTrans, CblasTrans, CblasColMajor);
 
     kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K));
 

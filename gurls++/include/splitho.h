@@ -71,16 +71,12 @@ public:
      *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
 
-    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
 template<typename T>
-GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt) throw(gException)
+GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList &opt) throw(gException)
 {
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
 //    nSplits = opt.nholdouts;
     const int nSplits = static_cast<int>(opt.getOptAsNumber("nholdouts"));
 
@@ -88,8 +84,8 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
     const double fraction = opt.getOptAsNumber("hoproportion");
 
 //    [n,T] = size(y);
-    const int n = Y_OMR.rows();
-    const int t = Y_OMR.cols();
+    const int n = Y.rows();
+    const int t = Y.cols();
 
 //    [dummy, y] = max(y,[],2);
     T* work = new T[Y.getSize()];
@@ -123,8 +119,8 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
 
     delete[] y;
 
-    gMat2D<unsigned long> tmp_indices (n, nSplits);
-    unsigned long* indices = tmp_indices.getData();
+    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(nSplits, n);
+    unsigned long* indices = m_indices->getData();
 
 //    T* indices = new T[nSplits*n];
 
@@ -169,8 +165,6 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
     delete[] nSamples;
     delete[] idx;
 
-    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(nSplits, n);
-    tmp_indices.transpose(*m_indices);
 
     gMat2D<unsigned long>* m_lasts = new gMat2D<unsigned long>(nSplits, 1);
     set(m_lasts->getData(), (unsigned long) (n-nva), nSplits);

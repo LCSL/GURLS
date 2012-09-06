@@ -73,16 +73,13 @@ public:
 };
 
 template<typename T>
-gMat2D<T>* NormZScore<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+gMat2D<T>* NormZScore<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
 //    savevars = {'meanX','stdX'};
 
 //    [n,d] = size(X);
-    const int n = X_OMR.rows();
-    const int d = X_OMR.cols();
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
 
 //    meanX = mean(X);
 
@@ -97,9 +94,12 @@ gMat2D<T>* NormZScore<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/
     gMat2D<T> v_stdX (1, d);
     T* stdX = v_stdX.getData();
 
-    for(int i=0; i< d; ++i)
+    gMat2D<T>* retX = new gMat2D<T>(n, d);
+    copy(retX->getData(), X.getData(), retX->getSize());
+
+    for(unsigned long i=0; i<d; ++i)
     {
-        T* column = X.getData()+(n*i);
+        T* column = retX->getData()+(n*i);
 
         axpy(n, (T)-1.0, meanX+i, 0, column, 1);
 
@@ -124,12 +124,7 @@ gMat2D<T>* NormZScore<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/
     fileName = name + "_norm_zscore_stdX.txt";
     v_stdX.save(fileName);
 
-
-    gMat2D<T>* ret = new gMat2D<T>(X_OMR.rows(), X_OMR.cols());
-    X.transpose(*ret);
-
-    return ret;
-
+    return retX;
 }
 
 }

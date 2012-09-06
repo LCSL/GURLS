@@ -47,6 +47,8 @@
 #include <vector>
 #include <cassert>
 #include <queue>
+#include <sstream>
+#include <typeinfo>
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>

@@ -82,21 +82,14 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
+GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
-
 //    n_estimates = 1;
     const unsigned long n_estimates = 1;
 
 //    [n,d] = size(X);
-    const int n = X_OMR.rows();
-    const int t = X_OMR.cols();
+    const unsigned long n = X.rows();
+    const unsigned long t = X.cols();
 
     GurlsOptionsList* tmp = new GurlsOptionsList("tmp", true);
 
@@ -129,13 +122,11 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const
 
     unsigned long* idx = new unsigned long[n]; //will use only the first subsize elements
     T* lambdas = new T[n_estimates];
-    T* work = new T[std::max(n_estimates+1, std::max(X_OMR.cols(), Y_OMR.cols()))];
+    T* work = new T[std::max(n_estimates+1, std::max(X.cols(), Y.cols()))];
 
-    gMat2D<T> Mx_tmp(t, subsize);
-    gMat2D<T> My_tmp(Y_OMR.cols(), subsize);
 
     gMat2D<T> Mx(subsize, t);
-    gMat2D<T> My(subsize, Y_OMR.cols());
+    gMat2D<T> My(subsize, Y.cols());
 
     //    for i = 1:n_estimates,
     for(unsigned long i=0; i<n_estimates; ++i)
@@ -144,7 +135,7 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const
         randperm(n, idx);
 
 //        M = X(idx,:);
-        subMatrixFromRows(X.getData(), n, t, idx, subsize, Mx_tmp.getData()/*, work*/);
+        subMatrixFromRows(X.getData(), n, t, idx, subsize, Mx.getData()/*, work*/);
 
 //        if ~exist([opt.calibfile '.mat'],'file')
 //            fprintf('\n\tCalibrating...');
@@ -157,10 +148,7 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const
 //            tmp.singlelambda = opt.singlelambda;
 
 //            gurls(M,y(idx,:),tmp,1);
-        subMatrixFromRows(Y.getData(), Y_OMR.rows(), Y_OMR.cols(), idx, subsize, My_tmp.getData()/*, work*/);
-
-        Mx_tmp.transpose(Mx);
-        My_tmp.transpose(My);
+        subMatrixFromRows(Y.getData(), Y.rows(), Y.cols(), idx, subsize, My.getData()/*, work*/);
 
         g.run(Mx, My, *tmp, "one");
 
@@ -169,10 +157,8 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const
 //        load([opt.calibfile '.mat']);
 //        lambdas(i) = opt.singlelambda(opt.paramsel.lambdas);
 
-        GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(tmp->getOpt("paramsel"));
-        std::vector<double>& ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-        T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
-        lambdas[i] = lambda;
+        const gMat2D<T> &ll = tmp->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+        lambdas[i] = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
 //        % Add rescaling
 //    end
@@ -199,15 +185,15 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X_OMR, const
 
 
 //    params.lambdas = mean(lambdas);
-    OptNumberList* LAMBDA = new OptNumberList();
-    LAMBDA->add(static_cast<double>(sumv(lambdas, n_estimates, work)/n_estimates));
-    paramsel->addOpt("lambdas", LAMBDA);
+    gMat2D<T> *lambda = new gMat2D<T>(1,1);
+    lambda->getData()[0] = sumv(lambdas, n_estimates, work)/n_estimates;
+    paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambda));
+
 
 //    params.W = opt.rls.W;
-    GurlsOptionsList* rls = GurlsOptionsList::dynacast(tmp->getOpt("optimizer"));
-    GurlsOption* W = rls->getOpt("W");
+    GurlsOptionsList* rls = tmp->getOptAs<GurlsOptionsList>("optimizer");
     rls->removeOpt("W", false);
-    paramsel->addOpt("W", W);
+    paramsel->addOpt("W", rls->getOpt("W"));
 
     delete tmp;
     delete[] lambdas;

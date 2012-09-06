@@ -90,18 +90,13 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt)
+GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
 //    [n,T]  = size(y);
-    const int n = Y_OMR.rows();
-    const int t = Y_OMR.cols();
-    const int d = X_OMR.cols();
+    const unsigned long n = Y.rows();
+    const unsigned long t = Y.cols();
 
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
+    const unsigned long d = X.cols();
 
 
 //    tot = opt.nlambda;
@@ -111,17 +106,16 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gM
 //    [Q,L] = eig(opt.kernel.K);
 //    Q = double(Q);
 //    L = double(diag(L));
-    const GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-    const GurlsOption *K_opt = kernel->getOpt("K");
+    const GurlsOptionsList* kernel = opt.getOptAs<GurlsOptionsList>("kernel");
 
+    const gMat2D<T> &K_mat = kernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
 
-    const gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(K_opt)->getValue();
-    gMat2D<T> K(K_mat.cols(), K_mat.rows());
-    K_mat.transpose(K);
+    gMat2D<T> K(K_mat.rows(), K_mat.cols());
+    copy(K.getData(), K_mat.getData(), K_mat.getSize());
 
-    const int qrows = K_mat.rows();
-    const int qcols = K_mat.cols();
-    const int l_length = qrows;
+    const unsigned long qrows = K.rows();
+    const unsigned long qcols = K.cols();
+    const unsigned long l_length = qrows;
 
     T *Q = K.getData();
     T *L = new T[l_length];
@@ -131,8 +125,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gM
     int r = n;
     if(kernel->getOptAsString("type") == "linear")
     {
-      //set(L+X_OMR.cols(), (T) 1.0e-12, l_length-X_OMR.cols());
-        set(L, (T) 1.0e-12, l_length-X_OMR.cols());
+        set(L, (T) 1.0e-12, l_length-d);
         r = std::min(n,d);
     }
 
@@ -153,12 +146,11 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gM
     nestedOpt->addOpt("pred", pred_opt);
 
 
-    gMat2D<T> tmp_pred(pred->cols(), pred->rows());
-
-
     Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
 
-    T* ap = new T[tot*t];
+    gMat2D<T>* perf = new gMat2D<T>(tot, t);
+    T* ap = perf->getData();
+
     T* C_div_Z = new T[qrows];
     T* C = new T[qrows*qcols];
     T* Z = new T[qrows];
@@ -168,22 +160,20 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gM
         rls_eigen(Q, L, Qty, C, guesses[i], n, qrows, qcols, l_length, qcols, t);
         GInverseDiagonal(Q, L, guesses+i, Z, qrows, qcols, l_length, 1);
 
-        for(int j = 0; j< t; ++j)
+        for(unsigned long j = 0; j< t; ++j)
         {
             rdivide(C + (qrows*j), Z, C_div_Z, qrows);
 
 //            opt.pred(:,t) = y(:,t) - (C(:,t)./Z);
-            copy(tmp_pred.getData()+(n*j), Y.getData() + (n*j), n);
-            axpy(n, (T)-1.0, C_div_Z, 1, tmp_pred.getData() + (n*j), 1);
+            copy(pred->getData()+(n*j), Y.getData() + (n*j), n);
+            axpy(n, (T)-1.0, C_div_Z, 1, pred->getData() + (n*j), 1);
         }
-
-        tmp_pred.transpose(*pred);
 
 //        opt.perf = opt.hoperf([],y,opt);
         const gMat2D<T> dummy;
-        GurlsOptionsList* perf = perfClass->execute(dummy, Y_OMR, *nestedOpt);
+        GurlsOptionsList* perf = perfClass->execute(dummy, Y, *nestedOpt);
 
-        gMat2D<T> &forho_vec = OptMatrix<gMat2D<T> >::dynacast(perf->getOpt("forho"))->getValue();
+        gMat2D<T> &forho_vec = perf->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
         copy(ap+i, forho_vec.getData(), t, tot, 1);
 
@@ -237,13 +227,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X_OMR, const gM
     paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*LAMBDA));
 
     //vout.perf = 	ap;
-
-    gMat2D<T>* looe_mat = new gMat2D<T>(tot, t);
-    transpose(ap, tot, t, looe_mat->getData());
-
-    delete[] ap;
-
-    paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*looe_mat));
+    paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*perf));
 
     //vout.guesses = 	guesses;
     gMat2D<T> *guesses_mat = new gMat2D<T>(guesses, 1, tot, true);

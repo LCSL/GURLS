@@ -82,39 +82,27 @@ public:
 
 
 template <typename T>
-GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
+GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
-
 //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    const gMat2D<T> &ll = OptMatrix<gMat2D<T> >::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    const OptFunction* singlelambda = OptFunction::dynacast(opt.getOpt("singlelambda"));
-    T lambda = singlelambda->getValue(ll.getData(), ll.getSize());
+    const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+    T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
+    const GurlsOptionsList* kernel = opt.getOptAs<GurlsOptionsList>("kernel");
+    const gMat2D<T>& K_mat = kernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
 
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
-
-    const GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-    const GurlsOption *K_opt = kernel->getOpt("K");
-
-
-    const gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(K_opt)->getValue();
-    gMat2D<T> K(K_mat.cols(), K_mat.rows());
-    K_mat.transpose(K);
+    T* K = new T[K_mat.getSize()];
+    copy(K, K_mat.getData(), K_mat.getSize());
 
     //n = size(opt.kernel.K,1);
     const unsigned long n = K_mat.rows();
 
    //T = size(y,2);
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long t = Y.cols();
 
     const T coeff = n*lambda;
     unsigned long i=0;
-    for(T* it = K.getData(); i<n; ++i, it+=n+1)
+    for(T* it = K; i<n; ++i, it+=n+1)
         *it += coeff;
 
 
@@ -124,12 +112,11 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& 
     T *Q = new T[n*n];
     T *L = new T[n];
     T *V = NULL;
-    random_svd(K.getData(), n, n, Q, L, V, n);
+    random_svd(K, n, n, Q, L, V, n);
 
 
-//    bool retX = false;
-    T* retC = new T[n*t];
-    rls_eigen(Q, L, Y.getData(), retC, lambda, n, n, n, n, Y_OMR.rows(), t);
+    gMat2D<T> *retC = new gMat2D<T>(n,t);
+    rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, n, n, n, Y.rows(), t);
 
     delete [] Q;
     delete [] L;
@@ -141,12 +128,8 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& 
    if(kernel->getOptAsString("type") == "linear")
    {
    //           cfr.W = X'*cfr.C;
-        T* retW  = new T[X_OMR.cols()*t];
-        dot(X.getData(), retC, retW, X_OMR.rows(), X_OMR.cols(), n, t, X_OMR.cols(), t, CblasTrans, CblasNoTrans, CblasColMajor);
-
-        gMat2D<T>* W = new gMat2D<T>(X_OMR.cols(), t);
-        transpose(retW, X_OMR.cols(), t, W->getData());
-        delete[] retW;
+        gMat2D<T>* W  = new gMat2D<T>(X.cols(), t);
+        dot(X.getData(), retC->getData(), W->getData(), X.rows(), X.cols(), n, t, X.cols(), t, CblasTrans, CblasNoTrans, CblasColMajor);
 
         optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
@@ -158,6 +141,7 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& 
         gMat2D<T>* emptyX = new gMat2D<T>();
         optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
 
+        delete retC;
     }
     else
     {
@@ -166,16 +150,12 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& 
         optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*emptyW));
 
 //           cfr.C = retC;
-        gMat2D<T>* C = new gMat2D<T>(n, t);
-        transpose(retC, t, n, C->getData());
-        optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*C));
+        optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*retC));
 
 //           cfr.X = X;
-        gMat2D<T>* optX = new gMat2D<T>(X_OMR);
+        gMat2D<T>* optX = new gMat2D<T>(X);
         optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*optX));
     }
-
-    delete[] retC;
 
     return optimizer;
 }

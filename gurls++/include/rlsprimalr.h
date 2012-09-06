@@ -78,30 +78,22 @@ public:
 
 
 template <typename T>
-GurlsOptionsList* RLSPrimalr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
+GurlsOptionsList* RLSPrimalr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
-
     //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    const gMat2D<T> &ll = OptMatrix<gMat2D<T> >::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    const OptFunction* singlelambda = OptFunction::dynacast(opt.getOpt("singlelambda"));
-    T lambda = singlelambda->getValue(ll.getData(), ll.getSize());
+    const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+    T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
 
 //    std::cout << "Solving primal RLS using Randomized SVD..." << std::endl;
 
     //	[n,d] = size(X);
 
-    const unsigned long n = X_OMR.rows();
-    const unsigned long d = X_OMR.cols();
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
 
-    const unsigned long Yn = Y_OMR.rows();
-    const unsigned long Yd = Y_OMR.cols();
+    const unsigned long Yn = Y.rows();
+    const unsigned long Yd = Y.cols();
 
     //	===================================== Primal K
 
@@ -136,19 +128,16 @@ GurlsOptionsList* RLSPrimalr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>
 
 
 //    cfr.W = rls_eigen(Q, L, Xty, lambda,d);
-    T* W = new T[d*Yd];
-    rls_eigen(Q, L, Xty, W, lambda, d, d, d, d, d, Yd);
+    gMat2D<T>* W = new gMat2D<T>(d,Yd);
+    rls_eigen(Q, L, Xty, W->getData(), lambda, d, d, d, d, d, Yd);
 
     delete [] Xty;
     delete [] Q;
     delete [] L;
 
-    gMat2D<T>* out = new gMat2D<T>(d, Yd);
-    transpose(W, d, Yd, out->getData());
-    delete[] W;
-
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
-    optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*out));
+
+    optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
 //    cfr.C = [];
     gMat2D<T>* emptyC = new gMat2D<T>();

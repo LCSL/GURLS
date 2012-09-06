@@ -71,19 +71,16 @@ public:
      * \return adds to opt the field perf wich is a list containing the following fields (if opt already contains perf than adds to it the following fields):
      *  - rmse = root mean square error
      */
-    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
 template<typename T>
-GurlsOptionsList* PerfRmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList &opt) throw(gException)
+GurlsOptionsList* PerfRmse<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList &opt) throw(gException)
 {
-    const int rows = Y_OMR.rows();
-    const int cols = Y_OMR.cols();
+    const unsigned long rows = Y.rows();
+    const unsigned long cols = Y.cols();
 
-
-    gMat2D<T> Y(cols, rows);
-    Y_OMR.transpose(Y);
-    T* y_true = Y.getData();
+    const T* y_true = Y.getData();
 
 //    if isfield (opt,'perf')
 //        p = opt.perf; % lets not overwrite existing performance measures.
@@ -109,10 +106,10 @@ GurlsOptionsList* PerfRmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& 
         perf = new GurlsOptionsList("perf");
 
 
-    const gMat2D<T> &pred_mat = OptMatrix<gMat2D<T> >::dynacast(opt.getOpt("pred"))->getValue();
+    const gMat2D<T> &pred = opt.getOptValue<OptMatrix<gMat2D<T> > >("pred");
 
-    gMat2D<T> pred_t(cols, rows);
-    pred_mat.transpose(pred_t);
+    T *pred_t = new T[pred.getSize()];
+    copy(pred_t, pred.getData(), pred.getSize());
 
     //pred = rows*cols
 
@@ -120,10 +117,12 @@ GurlsOptionsList* PerfRmse<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& 
     const T n = static_cast<T>(rows);
 
 //     diff 	= opt.pred - y;
-    axpy(rows*cols, (T)-1.0, y_true, 1, pred_t.getData(), 1);
+    axpy(rows*cols, (T)-1.0, y_true, 1, pred_t, 1);
 
 //  p.rmse = norm(diff,'fro') / sqrt(n);
-    T rmse = nrm2<T>(rows*cols, pred_t.getData(), 1)/sqrt(n);
+    T rmse = nrm2<T>(rows*cols, pred_t, 1)/sqrt(n);
+
+    delete [] pred_t;
 
     perf->addOpt("rmse", new OptNumber(rmse));
 

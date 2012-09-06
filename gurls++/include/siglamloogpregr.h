@@ -73,20 +73,13 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
-
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
 //    [n,T]  = size(y);
-    const unsigned long n = Y_OMR.rows();
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long n = Y.rows();
+    const unsigned long t = Y.cols();
 
-    const unsigned long d = X_OMR.cols();
+    const unsigned long d = X.cols();
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
     nestedOpt->copyOpt<T>("nlambda", opt);
@@ -205,7 +198,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, co
     KernelRBF<T> rbf;
     ParamSelLooGPRegr<T> loogp;
 
-    T* work = new T[t+1];
+    T* work = new T[t+t+1];
 
     GurlsOptionsList* paramsel_rbf = new GurlsOptionsList("paramsel");
     nestedOpt->addOpt("paramsel", paramsel_rbf);
@@ -223,20 +216,24 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X_OMR, co
 
 
 //        opt.kernel = kernel_rbf(X,y,opt);
-        GurlsOptionsList* rbf_kernel = rbf.execute(X_OMR, Y_OMR, *nestedOpt);
+        GurlsOptionsList* rbf_kernel = rbf.execute(X, Y, *nestedOpt);
 
         nestedOpt->removeOpt("kernel");
         nestedOpt->addOpt("kernel", rbf_kernel);
 
 //        paramsel = paramsel_loogpregr(X,y,opt);
-        GurlsOptionsList* paramsel_loogp = loogp.execute(X_OMR, Y_OMR, opt);
+        GurlsOptionsList* paramsel_loogp = loogp.execute(X, Y, opt);
 
 //        perf(i,:,:) = paramsel.perf;
         gMat2D<T> &perf_mat = paramsel_loogp->getOptValue<OptMatrix<gMat2D<T> > >("perf"); // nlambda x t
 
         T* perf_it = perf + i;
         for(int j=0; j<nlambda; ++j, perf_it += nsigma)
-            *perf_it = sumv(perf_mat.getData() + (j*t), t, work);
+        {
+            getRow(perf_mat.getData(), perf_mat.rows(), perf_mat.cols(), j, work);
+
+            *perf_it = sumv(work, t, work+t);
+        }
 
 //        guesses(i,:) = paramsel.guesses;
         gMat2D<T> &guesses_mat = paramsel_loogp->getOptValue<OptMatrix<gMat2D<T> > >("guesses"); // nlambda x 1

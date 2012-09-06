@@ -100,7 +100,7 @@ OptMatrix<gMat2D<T> >* PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>&
     gMat2D<T>* Z = new gMat2D<T>(K.rows(), C.cols());
 
 
-    dot(K.getData(), C.getData(), Z->getData(), K.rows(), K.cols(), C.rows(), C.cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasRowMajor);
+    dot(K.getData(), C.getData(), Z->getData(), K.rows(), K.cols(), C.rows(), C.cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasColMajor);
 
     return new OptMatrix<gMat2D<T> >(*Z);
 }

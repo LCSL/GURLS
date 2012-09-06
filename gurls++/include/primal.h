@@ -85,12 +85,11 @@ OptMatrix<gMat2D<T> >* PredPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T
 {
     if (opt.hasOpt("optimizer"))
     {
-        const GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
-        const gMat2D<T>& W = OptMatrix< gMat2D<T> >::dynacast(optimizer->getOpt("W"))->getValue();
+        const gMat2D<T>& W = opt.getOptValue<OptMatrix<gMat2D<T> > >("optimizer.W");
 
         gMat2D<T>* Z = new gMat2D<T>(X.rows(), W.cols());
-        *Z = 0;
-        dot(X, W, *Z);
+
+        dot(X.getData(), W.getData(), Z->getData(), X.rows(), X.cols(), W.rows(), W.cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasColMajor);
 
         return new OptMatrix<gMat2D<T> >(*Z);
     }

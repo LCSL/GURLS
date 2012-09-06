@@ -74,19 +74,13 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
+GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
-
 //    [n,T]  = size(y);
-    const unsigned long n = Y_OMR.rows();
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long n = Y.rows();
+    const unsigned long t = Y.cols();
 
-    const unsigned long d = X_OMR.cols();
+    const unsigned long d = X.cols();
 
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
@@ -216,7 +210,7 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, con
     T* guesses_median = new T[nlambda];
 
     const unsigned long nholdouts = static_cast<unsigned long>(opt.getOptAsNumber("nholdouts"));
-    T* work = new T[std::max(nholdouts, t+1)];
+    T* work = new T[std::max(nholdouts, t+t+1)];
 
 //    for i = 1:opt.nsigma
     for(int i=0; i<nsigma; ++i)
@@ -230,27 +224,31 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X_OMR, con
 
 
 //        opt.kernel = kernel_rbf(X,y,opt);
-        GurlsOptionsList* rbf_kernel = rbf.execute(X_OMR, Y_OMR, *nestedOpt);
+        GurlsOptionsList* rbf_kernel = rbf.execute(X, Y, *nestedOpt);
 
         nestedOpt->removeOpt("kernel");
         nestedOpt->addOpt("kernel", rbf_kernel);
 
 
 //        paramsel = paramsel_hogpregr(X,y,opt);
-        GurlsOptionsList* paramsel_hogp = hogp.execute(X_OMR, Y_OMR, *nestedOpt);
+        GurlsOptionsList* paramsel_hogp = hogp.execute(X, Y, *nestedOpt);
 
 
 //        PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',opt.nlambda*T,nh),2),T,opt.nlambda)';
         gMat2D<T> &perf_mat = paramsel_hogp->getOptValue<OptMatrix<gMat2D<T> > >("perf"); //nholdouts x nlambda*t
-        median(perf_mat.getData(), perf_mat.cols(), perf_mat.rows(), 2, perf_median, work); //inverted parameters because perf_mat is in row-major order
+        median(perf_mat.getData(), perf_mat.rows(), perf_mat.cols(), 1, perf_median, work);
 
         T* perf_it = perf + i;
         for(int j=0; j<nlambda; ++j, perf_it += nsigma)
-            *perf_it = sumv(perf_median + (j*t), t, work);
+        {
+            getRow(perf_median, nlambda, t, j, work);
+
+            *perf_it = sumv(work, t, work+t);
+        }
 
 //        guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
         gMat2D<T> &guesses_mat = paramsel_hogp->getOptValue<OptMatrix<gMat2D<T> > >("guesses"); // nholdouts x nlambda
-        median(guesses_mat.getData(), guesses_mat.cols(), guesses_mat.rows(), 2, guesses_median, work); //inverted parameters because guesses_mat is in row-major order
+        median(guesses_mat.getData(), guesses_mat.rows(), guesses_mat.cols(), 1, guesses_median, work);
         copy(guesses+i, guesses_median, nlambda, nsigma, 1);
 
         delete paramsel_hogp;

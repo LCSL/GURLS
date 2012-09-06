@@ -35,114 +35,110 @@ const std::string gMat2D<T>::Equal = "==";
 // IMPLEMENTATION OF TEMPLATE FUNCTIONS
 
 template <typename T>
-gMat2D<T>::gMat2D(unsigned long r, unsigned long c) : numcols(c), numrows(r) {
+gMat2D<T>::gMat2D(unsigned long r, unsigned long c) : numcols(c), numrows(r)
+{
     this->alloc(r*c);
 }
 
 // WARNING - HERE WE MAY BE USING A TROUBLESOME VERSION OF 'SET'
 template <typename T>
-gMat2D<T>::gMat2D(T* buf, unsigned long r, unsigned long c,  bool owner) : numcols(c), numrows(r) {
-    if (owner) {
+gMat2D<T>::gMat2D(T* buf, unsigned long r, unsigned long c,  bool owner) : numcols(c), numrows(r)
+{
+    if(owner)
+    {
         this->alloc(r*c);
         this->set(buf, r*c);
-    } else {
+    }
+    else
+    {
         this->isowner = owner;
         this->data = buf;
-    };
+    }
 }
 
 template <typename T>
-gMat2D<T>::gMat2D(const gMat2D<T>& other) : numcols(other.numcols), numrows(other.numrows) {
+gMat2D<T>::gMat2D(const gMat2D<T>& other) : numcols(other.numcols), numrows(other.numrows)
+{
     this->alloc(other.numrows*other.numcols);
     *this = other;
 }
 
 // WARNING: TO BE DISCUSSED
 template <typename T>
-gMat2D<T>& gMat2D<T>::operator=(const gMat2D<T>& other) {
-    if (this != &other) {
+gMat2D<T>& gMat2D<T>::operator=(const gMat2D<T>& other)
+{
+    if (this != &other)
         this->set(other.data, other.numrows*other.numcols);
-    }
+
     return *this;
 }
 
 template <typename T>
-void gMat2D<T>::submatrix(const gMat2D<T>& other, unsigned long r, unsigned long c) {
-    unsigned long w1 = this->cols();
-    unsigned long w2 = other.cols();
-//    unsigned long size = std::min(w2, w1-c);
-    const T* ptrin = other.getData();
-    int i1, i2;
-    for (int i = 0; i < other.rows() && r+i < this->rows(); ++i) {
-        i1 = (i+r)*w1;
-        i2 = i*w2;
-        for (int j = 0; j < w2 && c+j < w1; ++j) {
-            this->data[i1+j+c] = ptrin[i2+j];
-        }
-    }
+void gMat2D<T>::submatrix(const gMat2D<T>& other, unsigned long r, unsigned long c)
+{
+    const unsigned long cols = std::min(other.numcols, this->numcols-c);
+    const unsigned long rows = std::min(other.numrows, this->numrows-r);
+
+    for(unsigned long i=0; i< cols; ++i)
+        copy(this.data + r +((c+i)*this->numrows), other.data + (i*other.numrows), rows);
 }
 
 template <typename T>
-void gMat2D<T>::transpose(gMat2D <T>& transposed) const {
-    if (this->rows() != transposed.cols() || this->cols() != transposed.rows()) {
+void gMat2D<T>::transpose(gurls::gMat2D<T>& transposed) const
+{
+    if(this->numrows != transposed.numcols || this->numcols != transposed.numrows)
         throw gException(gurls::Exception_Inconsistent_Size);
-    }
-    T* d1 = transposed.getData();
-    T* d0 = this->data;
-    int N = this->cols();
 
-    for (unsigned long c = 0; c < this->cols(); ++c) {
-        for (unsigned long r = 0; r < this->rows(); ++r){
-            *d1++=*(d0+r*N+c);
-        }
-    }
+    gurls::transpose(this->data, this->numrows, this->numcols, transposed.data);
 }
 
-
 template <typename T>
-gMat2D<T> gMat2D<T>::zeros(unsigned long r, unsigned long c) {
+gMat2D<T> gMat2D<T>::zeros(unsigned long r, unsigned long c)
+{
     gMat2D<T> m(r, c);
-    memset(m.data, 0, r*c*sizeof(T));
+
+    gurls::set(m.data, (T)0.0, m.getSize());
+
     return m;
 }
 
 template <typename T>
-gMat2D<T> gMat2D<T>::rand(unsigned long r, unsigned long c) {
+gMat2D<T> gMat2D<T>::rand(unsigned long r, unsigned long c)
+{
     gMat2D<T> m(r, c);
-    T* d = m.getData();
-    for (unsigned long i = 0; i < r*c; i++) {
+    T* d = m.data;
+
+    for (unsigned long i = 0; i < r*c; ++i)
         *d++ = (T)std::rand()/RAND_MAX;
-    }
+
     return m;
 }
 
 template <typename T>
-gMat2D<T> gMat2D<T>::eye(unsigned long n){
+gMat2D<T> gMat2D<T>::eye(unsigned long n)
+{
     gMat2D<T> m = gMat2D<T>::zeros(n,n);
-    T* d = m.getData();
-    T one = static_cast<T>(1.0);
-    for (int i = 0; i < n; i++) {
-        d[i*(n+1)] = one;
-    }
+
+    gurls::set(m.data, (T)1.0, n, n+1);
+
     return m;
 }
 
-
 template <typename T>
-gMat2D<T> gMat2D<T>::diag(gVec<T> diagonal) {
+gMat2D<T> gMat2D<T>::diag(gVec<T>& diagonal)
+{
     unsigned long s = diagonal.getSize();
     gMat2D<T> m = gMat2D<T>::zeros(s,s);
-    T* d = m.getData();
-    for (int i = 0; i < s; i++) {
-        d[i*(s+1)] = diagonal[i];
-    }
+
+    gurls::copy(m.data, diagonal.getData(), s, m.numrows+1, 1);
+
     return m;
 }
 
 
-// WARNING: TO BE DISCUSSED
 template <typename T>
-void gMat2D<T>::resize(unsigned long r, unsigned long c ) {
+void gMat2D<T>::resize(unsigned long r, unsigned long c )
+{
     BaseArray<T>::resize(r*c);
     this->numrows = r;
     this->numcols = c;
@@ -151,15 +147,12 @@ void gMat2D<T>::resize(unsigned long r, unsigned long c ) {
 template <typename T>
 void gMat2D<T>::reshape(unsigned long r, unsigned long c){
 
-    if (r*c != this->size) {
+    if (r*c != this->size)
         throw gException(gurls::Exception_Invalid_Reshape_Arguments);
-    }
+
     this->numcols = c;
     this->numrows = r;
-
 }
-
-
 
 template <typename T>
 gMat2D<T> gMat2D<T>::operator+(T val) const {
@@ -282,7 +275,7 @@ gMat2D<bool>& gMat2D<T>::operator ==(T threshold) const {
     const T* ptr = this->data;
     bool* bptr = w->getData();
 
-    for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+    for(unsigned long int i=0;i<this->size; ++i, ++bptr, ++ptr){
         *bptr = (*ptr == threshold);
     }
     return *w;
@@ -296,7 +289,7 @@ gMat2D<bool>& gMat2D<T>::operator <(T threshold) const {
     const T* ptr = this->data;
     bool* bptr = w->getData();
 
-    for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+    for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
         *bptr = (*ptr < threshold);
     }
     return *w;
@@ -308,7 +301,7 @@ gMat2D<bool>& gMat2D<T>::operator >(T threshold) const {
     const T* ptr = this->data;
     bool* bptr = w->getData();
 
-    for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+    for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
         *bptr = (*ptr > threshold);
     }
     return *w;
@@ -320,7 +313,7 @@ gMat2D<bool>&  gMat2D<T>::operator <=(T threshold) const {
     const T* ptr = this->data;
     bool* bptr = w->getData();
 
-    for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+    for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
         *bptr = (*ptr <= threshold);
     }
     return *w;
@@ -332,7 +325,7 @@ gMat2D<bool>& gMat2D<T>::operator >=(T threshold) const {
     const T* ptr = this->data;
     bool* bptr = w->getData();
 
-    for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+    for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
         *bptr = (*ptr >= threshold);
     }
     return *w;
@@ -347,23 +340,23 @@ gMat2D<bool>& gMat2D<T>::compare(T& threshold, std::string logical_operator) con
     bool* bptr = w->getData();
 
     if ( !logical_operator.compare(GreaterEq)){
-        for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+        for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
             *bptr = *ptr >= threshold;
         }
     } else if (!logical_operator.compare(Greater)){
-        for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+        for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
             *bptr = *ptr > threshold;
         }
     } else if (!logical_operator.compare(LessEq)){
-        for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+        for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
             *bptr = *ptr <= threshold;
         }
     } else if (!logical_operator.compare(Less)){
-        for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+        for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
             *bptr = *ptr < threshold;
         }
     } else if (!logical_operator.compare(Equal)){
-        for(unsigned long int i=0;i<this->size;i++, bptr++, ptr++){
+        for(unsigned long int i=0;i<this->size;++i, ++bptr, ++ptr){
             *bptr = *ptr == threshold;
         }
     }else {
@@ -383,7 +376,7 @@ gVec<T>& gMat2D<T>::where(const gMat2D<bool>& comparison) const {
     T* buf = new T[n0];
     const T* ptr = this->data;
     const bool* bptr = comparison.getData();
-    for(unsigned long int i=0;i<this->size;i++, ptr++, bptr++){
+    for(unsigned long int i=0;i<this->size;++i, ++ptr, ++bptr){
         if (*bptr){
             //*(buf+i) = *ptr;
             *(buf+n1) = *ptr;
@@ -415,19 +408,24 @@ bool gMat2D<T>::allEqualsTo(const T& val)  const {
   * Writes matrix information and data to a stream
   */
 template <typename T>
-std::ostream& operator<<(std::ostream& os, const gMat2D<T>& v) {
-   if (v.rows() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE || v.cols() >= (unsigned long) gurls::MAX_PRINTABLE_SIZE){
+std::ostream& operator<<(std::ostream& os, const gMat2D<T>& v)
+{
+   if (v.rows() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE || v.cols() >= (unsigned long) gurls::MAX_PRINTABLE_SIZE)
+   {
        os << v.what() << std::endl;
        return os;
    }
+
     os << "[";
-    for (unsigned long i = 0; i < v.numrows; ++i){
-        for (unsigned long j = 0; j < v.numcols; ++j) {
-            os << " " << v.data[i*v.numcols+j];
-        }
+    for (unsigned long i = 0; i < v.numrows; ++i)
+    {
+        for (unsigned long j = 0; j < v.numcols; ++j)
+            os << " " << v.data[i+v.numrows*j];
+
         if( i != (v.numrows-1) )
             os << std::endl << " ";
     }
+
     os << " ]";
     os << std::endl;
     return os;
@@ -435,35 +433,43 @@ std::ostream& operator<<(std::ostream& os, const gMat2D<T>& v) {
 
 
 template <typename T>
-void gMat2D<T>::uppertriangular(gMat2D<T>& up) const{
+void gMat2D<T>::uppertriangular(gMat2D<T>& up) const
+{
+    if(up.numrows != this->numrows || up.numcols != this->numcols)
+        throw gException(Exception_Inconsistent_Size);
 
-    T* upptr = up.getData();
-    const T* ptr = this->data;
-    for (unsigned long int i = 0; i < up.rows(); i++){
-        for (unsigned long int j = 0; j < i; j++, ptr++, upptr++){
-            *upptr=0;
-        }
-        for (unsigned long int j = i; j < up.cols(); j++, ptr++, upptr++) {
-            *upptr = *ptr;
-        }
+    T* upptr;
+    const T* ptr;
+
+    for (unsigned long int i = 0; i < up.numcols; ++i)
+    {
+        upptr = up.data + (up.numrows*(up.numcols-i-1));
+        ptr = this->data + this->numrows*(this->numcols-i-1);
+
+        gurls::set(upptr, (T)0.0, i);
+
+        gurls::copy(upptr+i, ptr+i, up.numrows-i);
     }
-
 }
 
 template <typename T>
-void gMat2D<T>::lowertriangular(gMat2D<T>& lo) const {
+void gMat2D<T>::lowertriangular(gMat2D<T>& lo) const
+{
+    if(lo.numrows != this->numrows || lo.numcols != this->numcols)
+        throw gException(Exception_Inconsistent_Size);
 
-    T* upptr = lo.getData();
-    const T* ptr = this->data;
-    for (unsigned long int i = 0; i < lo.rows(); i++){
-        for (unsigned long int j = 0; j <= i; j++, ptr++, upptr++){
-            *upptr = *ptr;
-        }
-        for (unsigned long int j = i+1; j < lo.cols(); j++, ptr++, upptr++) {
-            *upptr=0;
-        }
+    T* loptr;
+    const T* ptr;
+
+    for (unsigned long int i = 0; i < lo.numcols; ++i)
+    {
+        loptr = lo.data + (lo.numrows*(lo.numcols-i-1));
+        ptr = this->data + this->numrows*(this->numcols-i-1);
+
+        gurls::copy(loptr, ptr, lo.numrows-i);
+
+        gurls::set(loptr+lo.numrows-i, (T)0.0, i);
     }
-
 }
 
 
@@ -475,125 +481,168 @@ gMat2D<T>& gMat2D<T>::reciprocal() const {
 }
 
 template <typename T>
-gVec<T>& gMat2D<T>::sum(int order) const {
+gVec<T>* gMat2D<T>::sum(int order) const
+{
     gVec<T> *v;
     unsigned long n;
-    if (order == gurls::COLUMNWISE){
-        n = this->cols();
+
+    switch(order)
+    {
+    case gurls::COLUMNWISE:
+
+        n = this->numcols;
         v = new gVec<T>(n);
-        *v = 0;
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = static_cast<T>((this->operator ()(i)).sum());
-        }
-    }else if (order == gurls::ROWWISE){
-        n = this->rows();
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)(i).sum();
+
+        break;
+    case gurls::ROWWISE:
+
+        n = this->numrows;
         v = new gVec<T>(n);
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = static_cast<T>((this->operator [](i)).sum());
-        }
-    } else {
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)[i].sum();
+
+        break;
+    default:
         throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
-    return *v;
+    return v;
 }
 
 template <typename T>
-gVec<T>& gMat2D<T>::max(int order) {
+gVec<T>* gMat2D<T>::max(int order)
+{
     gVec<T> *v;
     unsigned long n;
-    if (order == gurls::COLUMNWISE){
-        n = this->cols();
+
+    switch(order)
+    {
+    case gurls::COLUMNWISE:
+
+        n = this->numcols;
         v = new gVec<T>(n);
-        *v = 0;
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator ()(i)).max();
-        }
-    }else if (order == gurls::ROWWISE){
-        n = this->rows();
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)(i).max();
+
+        break;
+    case gurls::ROWWISE:
+
+        n = this->numrows;
         v = new gVec<T>(n);
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator [](i)).max();
-        }
-    } else {
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)[i].max();
+
+        break;
+    default:
         throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
-    return *v;
+    return v;
 }
 
 template <typename T>
-gVec<T>& gMat2D<T>::min(int order) {
+gVec<T>* gMat2D<T>::min(int order)
+{
     gVec<T> *v;
     unsigned long n;
-    if (order == gurls::COLUMNWISE){
-        n = this->cols();
+
+    switch(order)
+    {
+    case gurls::COLUMNWISE:
+
+        n = this->numcols;
         v = new gVec<T>(n);
-        *v = 0;
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator ()(i)).min();
-        }
-    }else if (order == gurls::ROWWISE){
-        n = this->rows();
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)(i).min();
+
+        break;
+    case gurls::ROWWISE:
+
+        n = this->numrows;
         v = new gVec<T>(n);
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator [](i)).min();
-        }
-    } else {
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)[i].min();
+
+        break;
+    default:
         throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
-    return *v;
-}
-
-
-
-template <typename T>
-gVec<T>& gMat2D<T>::argmax(int order) {
-    gVec<T> *v;
-    unsigned long n;
-    if (order == gurls::COLUMNWISE){
-        n = this->cols();
-        v = new gVec<T>(n);
-        *v = 0;
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator ()(i)).argmax();
-        }
-    }else if (order == gurls::ROWWISE){
-        n = this->rows();
-        v = new gVec<T>(n);
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator [](i)).argmax();
-        }
-    } else {
-        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
-    }
-
-    return *v;
+    return v;
 }
 
 template <typename T>
-gVec<T>& gMat2D<T>::argmin(int order) {
+gVec<T>* gMat2D<T>::argmax(int order)
+{
     gVec<T> *v;
     unsigned long n;
-    if (order == gurls::COLUMNWISE){
-        n = this->cols();
+
+    switch(order)
+    {
+    case gurls::COLUMNWISE:
+
+        n = this->numcols;
         v = new gVec<T>(n);
-        *v = 0;
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator ()(i)).argmin();
-        }
-    }else if (order == gurls::ROWWISE){
-        n = this->rows();
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)(i).argmax();
+
+        break;
+    case gurls::ROWWISE:
+
+        n = this->numrows;
         v = new gVec<T>(n);
-        for (unsigned long i = 0; i < n; i++){
-            v->at(i) = (this->operator [](i)).argmin();
-        }
-    } else {
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)[i].argmax();
+
+        break;
+    default:
         throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
     }
 
-    return *v;
+    return v;
+}
+
+template <typename T>
+gVec<T>* gMat2D<T>::argmin(int order)
+{
+    gVec<T> *v;
+    unsigned long n;
+
+    switch(order)
+    {
+    case gurls::COLUMNWISE:
+
+        n = this->numcols;
+        v = new gVec<T>(n);
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)(i).argmin();
+
+        break;
+    case gurls::ROWWISE:
+
+        n = this->numrows;
+        v = new gVec<T>(n);
+
+        for (unsigned long i = 0; i < n; ++i)
+            v->at(i) = (*this)[i].argmin();
+
+        break;
+    default:
+        throw gException(gurls::Exception_Illegal_Argument_Value+" -> order must be either gurls::COLUMNWISE or gurls::ROWWISE.");
+    }
+
+    return v;
 }
 
 template <typename T>

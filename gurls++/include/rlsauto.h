@@ -78,25 +78,25 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList* RLSAuto<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, const GurlsOptionsList& opt)
+GurlsOptionsList* RLSAuto<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
     //[n,d] = size(X);
-    const unsigned long n = X_OMR.rows();
-    const unsigned long d = X_OMR.cols();
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
 
 //     if (n > d) % Do primal
     if(n > d)
     {
         //    cfr = rls_primal(X, y, opt);
         RLSPrimal<T> rlsprimal;
-        return rlsprimal.execute(X_OMR, Y_OMR, opt);
+        return rlsprimal.execute(X, Y, opt);
     }
 //  else % Do dual
     else
     {
         //      cfr = rls_dual(X, y, opt);
         RLSDual<T> rlsdual;
-        return rlsdual.execute(X_OMR, Y_OMR, opt);
+        return rlsdual.execute(X, Y, opt);
     }
 }
 

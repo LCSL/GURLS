@@ -53,10 +53,11 @@
 #include <cstring>
 #include <cmath>
 #include <cfloat>
+#include <cassert>
+#include <sstream>
+#include <algorithm>
 
 #include "exports.h"
-#include "gmat2d.h"
-#include "gvec.h"
 #include "exceptions.h"
 
 #ifdef _WIN32
@@ -110,29 +111,28 @@ T dot(const gVec<T>& x, const gVec<T>& y);
   * If x is a vector of length N, then the output is an N-by-N matrix whose columns (or rows) are copies of x.
   */
 template <typename T>
-gMat2D<T> repmat(const gVec<T>& x, unsigned long n, bool transpose = false){
+gMat2D<T> repmat(const gVec<T>& x, unsigned long n, bool transpose = false)
+{
+    gMat2D<T> A;
 
-    T dataA[n*x.size()];
-    const T* datax = x.getData();
-    unsigned long rows, cols;
+    const T* dataX = x.getData();
+    const unsigned long len = x.getSize();
 
-    if(transpose){
-        rows = n;
-        cols = x.getSize();
-        for(int i = 0; i < n; i++) {
-            memcpy(dataA+i*cols, datax, cols);
-        }
-    }else {
-        rows = x.size();
-        cols = n;
-        for(int i = 0; i<rows; i++) {
-            for(int j = 0; j < cols; j++) {
-                *(dataA+i*cols+j) = *(datax+i);
-            }
-        }
+    if(transpose)
+    {
+        A.resize(n, len);
+
+        for(int i = 0; i < n; ++i)
+            copy(A.getData() + i, dataX, len, n, 1);
+    }
+    else
+    {
+        A.resize(len, n);
+
+        for(int i = 0; i < n; ++i)
+            copy(A.getData() + (i*len), dataX, len);
     }
 
-    gMat2D<T> A(dataA, rows, cols, true);
     return A;
 }
 
@@ -174,28 +174,28 @@ void svd(const gMat2D<T>& A, gMat2D<T>& U, gVec<T>& W, gMat2D<T>& Vt);
   * Implements the computation of the eigenvalues of A using the LAPACK routine
   * SGEEV with default computation of the right eigenvectors.
  */
-template <typename T>
-void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& Wr, gVec<T>& Wi);
+//template <typename T>
+//void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& Wr, gVec<T>& Wi);
 
 /**
   * Implements the computation of the eigenvalues of A using the LAPACK routine
   * SGEEV with default computation of the right eigenvectors.
   */
-template <typename T>
-void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& W);
+//template <typename T>
+//void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& W);
 
 
 /**
   * Implements the computation of the eigenvalues of A
   */
-template <typename T>
-void eig(const gMat2D<T>& A, gVec<T>& Wr, gVec<T>& Wi);
+//template <typename T>
+//void eig(const gMat2D<T>& A, gVec<T>& Wr, gVec<T>& Wi);
 
 /**
   * Implements the computation of the eigenvalues of A
   */
-template <typename T>
-void eig(const gMat2D<T>& A, gVec<T>& W);
+//template <typename T>
+//void eig(const gMat2D<T>& A, gVec<T>& W);
 
 
 /**
@@ -1318,7 +1318,7 @@ void randperm(const unsigned long n, T* seq, bool generate = true, unsigned long
   * \param rows number of rows of the input matrix
   * \param cols number of columns of the input matrix
   * \param row_index index of the row to be extracted
-  * \param row vector containing the extracted row. Length must be equals to \c cols
+  * \param row vector containing the extracted row. Length must be equal to \c cols
   */
 template<typename T>
 void getRow(const T* M, const int rows, const int cols, const int row_index , T* row)

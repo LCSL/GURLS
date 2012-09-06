@@ -75,13 +75,10 @@ public:
 };
 
 template<typename T>
-GurlsOptionsList *KernelRBF<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt) throw(gException)
+GurlsOptionsList *KernelRBF<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt) throw(gException)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    const int xr = X_OMR.rows();
-    const int xc = X_OMR.cols();
+    const int xr = X.rows();
+    const int xc = X.cols();
 
 
 //    if ~isfield(opt.kernel,'distance')
@@ -96,7 +93,7 @@ GurlsOptionsList *KernelRBF<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>&
 
     if(opt.hasOpt("kernel"))
     {
-        const GurlsOptionsList* opt_kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+        const GurlsOptionsList* opt_kernel = opt.getOptAs<GurlsOptionsList>("kernel");
 
         if(opt_kernel->hasOpt("distance"))
             oldDistance = true;
@@ -104,9 +101,7 @@ GurlsOptionsList *KernelRBF<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>&
 
     if(oldDistance)
     {
-        const GurlsOptionsList* opt_kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-
-        const gMat2D<T> &opt_dist = OptMatrix<gMat2D<T> >::dynacast(opt_kernel->getOpt("distance"))->getValue();
+        const gMat2D<T> &opt_dist = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.distance");
 
         dist = new gMat2D<T>(opt_dist);
     }
@@ -125,8 +120,7 @@ GurlsOptionsList *KernelRBF<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>&
 
     kernel->addOpt("distance", new OptMatrix<gMat2D<T> >(*dist));
 
-    const GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    double sigma = paramsel->getOptAsNumber("sigma");
+    double sigma = opt.getOptValue<OptNumber>("paramsel.sigma");
 
     const int len = xr*xr;
     gMat2D<T> *K = new gMat2D<T>(dist->getData(), xr, xr, true);
