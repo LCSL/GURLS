@@ -16,8 +16,8 @@ if(CMAKE_COMPILER_IS_GNUCC OR MSVC)
 
         find_package(MKL)
 
-		include_directories(${MKL_INCLUDE_DIRS})
-		link_directories(${MKL_LIBRARY_DIRS})
+        include_directories(${MKL_INCLUDE_DIRS})
+        link_directories(${MKL_LIBRARY_DIRS})
         add_definitions( ${MKL_DEFINITIONS})
 
         set(BLAS_LIBRARIES "")
@@ -137,8 +137,14 @@ else(BUILD_SHARED_LIBS)
     set(LIB_TYPE STATIC)
 endif(BUILD_SHARED_LIBS)
 
-#add_definitions( -Wall )
+add_definitions( -Wall )
 
+
+#set(BUILD_DEPRECATED ON CACHE BOOL "Build deprecated functions and classes")
+
+#if(BUILD_DEPRECATED)
+#    add_definitions(-DGURLS_DEPRECATED)
+#endif(BUILD_DEPRECATED)
 
 add_library(${GURLSLIBRARY} ${LIB_TYPE} ${gurls_headers} ${gurls_sources} )
 target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
@@ -193,10 +199,10 @@ endif(BUILD_MISC)
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-	add_custom_target(doc
-		${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-		COMMENT "Generating API documentation with Doxygen" VERBATIM
-		)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+    add_custom_target(doc
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen" VERBATIM
+        )
 endif(DOXYGEN_FOUND)
