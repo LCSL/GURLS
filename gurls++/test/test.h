@@ -71,52 +71,6 @@ void check_matrix(gurls::gMat2D<T>& result, gurls::gMat2D<T>& reference)
 }
 
 template<typename T>
-gMat2D<T> * readMatrix(const std::string &fileName, bool ROWM = true )
-{
-    std::vector<std::vector< double > > matrix;
-    std::ifstream in(fileName.c_str());
-
-    if(!in.is_open())
-        throw gurls::gException("Cannot open file " + fileName);
-
-    unsigned long rows = 0;
-    unsigned long cols = 0;
-
-    std::string line;
-    while (std::getline(in, line))
-    {
-        std::istringstream ss(line);
-        std::vector<double> tf;
-        std::copy(std::istream_iterator<double>(ss), std::istream_iterator<double>(), std::back_inserter(tf));
-
-        matrix.push_back(tf);
-        ++rows;
-    }
-    in.close();
-
-    if(matrix.empty())
-        cols = 0;
-    else
-        cols = matrix[0].size();
-
-    gMat2D<T> *ret =  new gMat2D<T>(rows, cols);
-    T* buffer = ret->getData();
-
-    for(unsigned long i=0; i<rows; ++i)
-    {
-        for(unsigned long j=0; j<cols; ++j)
-        {
-            if(ROWM)
-                buffer[i*cols+j]= static_cast<T>(matrix[i][j]);
-            else
-                buffer[j*rows+i]= static_cast<T>(matrix[i][j]);
-        }
-    }
-
-    return ret;
-}
-
-template<typename T>
 GurlsOption* openFile(std::string fileName, OptTypes type)
 {
     std::ifstream file(fileName.c_str());
@@ -181,8 +135,11 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
     case MatrixOption:
     case VectorOption:
         file.close();
-        return new OptMatrix<gMat2D<T> >(*(readMatrix<T>(fileName, false)));
-
+        {
+            gMat2D<T>* mat = new gMat2D<T>();
+            mat->readCSV(fileName, true);
+            return new OptMatrix<gMat2D<T> >(*mat);
+        }
     case GenericOption:
     case OptListOption:
     case TaskSequenceOption:
@@ -342,8 +299,11 @@ public:
 
         path dataPath = this->dataDir / this->task;
 
-        X = readMatrix<T>(data.X, false);
-        Y = readMatrix<T>(data.Y, false);
+        X = new gMat2D<T>();
+        X->readCSV(data.X, true);
+
+        Y = new gMat2D<T>();
+        Y->readCSV(data.Y, true);
 
         opt = new gurls::GurlsOptionsList("Testdata");
 

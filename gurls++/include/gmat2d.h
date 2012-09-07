@@ -520,6 +520,11 @@ public:
       */
     void load(const std::string& fileName);
 
+    /**
+      * Read the matrix from a CSV file
+      */
+    void readCSV(const std::string& fileName, bool colMajor = true);
+
 };
 
 }

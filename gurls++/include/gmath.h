@@ -174,28 +174,28 @@ void svd(const gMat2D<T>& A, gMat2D<T>& U, gVec<T>& W, gMat2D<T>& Vt);
   * Implements the computation of the eigenvalues of A using the LAPACK routine
   * SGEEV with default computation of the right eigenvectors.
  */
-//template <typename T>
-//void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& Wr, gVec<T>& Wi);
+template <typename T>
+void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& Wr, gVec<T>& Wi);
 
 /**
   * Implements the computation of the eigenvalues of A using the LAPACK routine
   * SGEEV with default computation of the right eigenvectors.
   */
-//template <typename T>
-//void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& W);
+template <typename T>
+void eig(const gMat2D<T>& A, gMat2D<T>& V, gVec<T>& W);
 
 
 /**
   * Implements the computation of the eigenvalues of A
   */
-//template <typename T>
-//void eig(const gMat2D<T>& A, gVec<T>& Wr, gVec<T>& Wi);
+template <typename T>
+void eig(const gMat2D<T>& A, gVec<T>& Wr, gVec<T>& Wi);
 
 /**
   * Implements the computation of the eigenvalues of A
   */
-//template <typename T>
-//void eig(const gMat2D<T>& A, gVec<T>& W);
+template <typename T>
+void eig(const gMat2D<T>& A, gVec<T>& W);
 
 
 /**

@@ -276,67 +276,84 @@ GURLS_EXPORT void svd(const gMat2D<float>& A, gMat2D<float>& U, gVec<float>& W, 
 /**
   * Specialized version of eig for float matrices/vectors
   */
-//template <>
-//GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>& Wi)
-//{
-//    if (A.cols() != A.rows())
-//        throw gException("The input matrix A must be squared");
+template <>
+GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>& Wi)
+{
+    if (A.cols() != A.rows())
+        throw gException("The input matrix A must be squared");
 
+    float* Atmp = new float[A.getSize()];
+    copy(Atmp, A.getData(), A.getSize());
 
-//    char jobvl = 'N', jobvr = 'V';
-//    int n = A.cols(), lda = A.cols(), ldvl = 1, ldvr = A.cols();
-//    int info, lwork = 4*n;
-//    float* work = new float[lwork];
+    char jobvl = 'N', jobvr = 'V';
+    int n = A.cols(), lda = A.cols(), ldvl = 1, ldvr = A.cols();
+    int info, lwork = 4*n;
+    float* work = new float[lwork];
 
-//    gMat2D<float> Atmp = A;
-//    gMat2D<float> Vtmp = V;
+    sgeev_(&jobvl, &jobvr, &n, Atmp, &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, V.getData(), &ldvr, work, &lwork, &info);
 
-//    sgeev_(&jobvl, &jobvr, &n, Atmp.getData(), &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, Vtmp.getData(), &ldvr, work, &lwork, &info);
-//    Vtmp.transpose(V);
+    delete[] Atmp;
+    delete[] work;
 
-//    delete[] work;
-//}
-
-/**
-  * Specialized version of eig for float matrices/vectors
-  */
-//template <>
-//GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W)
-//{
-//    gVec<float> tmp(W.getSize());
-//    tmp = 0;
-
-//    eig(A, V, W, tmp);
-//}
+    if(info != 0)
+    {
+        std::stringstream str;
+        str << "Eigenvalues/eigenVectors computation failed, error code " << info << ";" << std::endl;
+        throw gException(str.str());
+    }
+}
 
 /**
   * Specialized version of eig for float matrices/vectors
   */
-//template <>
-//GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi)
-//{
-//    if (A.cols() != A.rows())
-//        throw gException("The input matrix A must be squared");
+template <>
+GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W)
+{
+    gVec<float> tmp(W.getSize());
+    tmp = 0;
 
-//    char jobvl = 'N', jobvr = 'N';
-//    int n = A.cols(), lda = A.cols(), ldvl = 1, ldvr = 1;
-//    int info, lwork = 4*n;
-//    float* work = new float[lwork];
-
-//    sgeev_(&jobvl, &jobvr, &n, const_cast<gMat2D<float>&>(A).getData(), &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, NULL, &ldvr, work, &lwork, &info);
-
-//    delete[] work;
-//}
+    eig(A, V, W, tmp);
+}
 
 /**
   * Specialized version of eig for float matrices/vectors
   */
-//template <>
-//GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W)
-//{
-//    gVec<float> tmp = W;
-//    eig(A, W, tmp);
-//}
+template <>
+GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi)
+{
+    if (A.cols() != A.rows())
+        throw gException("The input matrix A must be squared");
+
+    float* Atmp = new float[A.getSize()];
+    copy(Atmp, A.getData(), A.getSize());
+
+    char jobvl = 'N', jobvr = 'N';
+    int n = A.cols(), lda = A.cols(), ldvl = 1, ldvr = 1;
+    int info, lwork = 4*n;
+    float* work = new float[lwork];
+
+    sgeev_(&jobvl, &jobvr, &n, Atmp, &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, NULL, &ldvr, work, &lwork, &info);
+
+    delete[] Atmp;
+    delete[] work;
+
+    if(info != 0)
+    {
+        std::stringstream str;
+        str << "Eigenvalues/eigenVectors computation failed, error code " << info << ";" << std::endl;
+        throw gException(str.str());
+    }
+}
+
+/**
+  * Specialized version of eig for float matrices/vectors
+  */
+template <>
+GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W)
+{
+    gVec<float> tmp = W;
+    eig(A, W, tmp);
+}
 
 
 /**

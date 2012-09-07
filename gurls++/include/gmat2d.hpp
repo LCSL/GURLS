@@ -715,6 +715,45 @@ void gMat2D<T>::save(const std::string& fileName) const
     outstream.close();
 }
 
+template <typename T>
+void gMat2D<T>::readCSV(const std::string& fileName, bool colMajor)
+{
+    std::vector<std::vector< T > > matrix;
+    std::ifstream in(fileName.c_str());
 
+    if(!in.is_open())
+        throw gurls::gException("Cannot open file " + fileName);
+
+    unsigned long rows = 0;
+    unsigned long cols = 0;
+
+    std::string line;
+    while (std::getline(in, line))
+    {
+        std::istringstream ss(line);
+        std::vector<T> tf;
+        std::copy(std::istream_iterator<T>(ss), std::istream_iterator<T>(), std::back_inserter(tf));
+
+        matrix.push_back(tf);
+        ++rows;
+    }
+    in.close();
+
+    if(!matrix.empty())
+        cols = matrix[0].size();
+
+    this->resize(rows, cols);
+
+    if(colMajor)
+    {
+        for(unsigned long i=0; i<rows; ++i)
+            gurls::copy(this->data + i, &(*(matrix[i].begin())), cols, rows, 1);
+    }
+    else
+    {
+        for(unsigned long i=0; i<rows; ++i)
+            gurls::copy(this->data + i*cols, &(*(matrix[i].begin())), rows);
+    }
+}
 
 }

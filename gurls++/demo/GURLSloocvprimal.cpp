@@ -59,13 +59,6 @@ using namespace std;
 typedef double T; ///< Data type of the matrices elements
 
 /**
-  * Builds a matrix reading elements from a text file in CSV format Parameter \a ROWM indicates
-  * whether to load the matrix in row major order or in column major one.
-  */
-template<typename T>
-gMat2D<T> * readFile(const std::string &fileName, bool ROWM = true );
-
-/**
   * Main function
   */
 int main(int argc, char *argv[])
@@ -91,13 +84,13 @@ int main(int argc, char *argv[])
 
     try
     {
-        gMat2D<T> *Xtr, *Xte, *ytr, *yte;
+        gMat2D<T> Xtr, Xte, ytr, yte;
 
         // load data from file
-        Xtr = readFile<T>(xtr_file);
-        Xte = readFile<T>(xte_file);
-        ytr = readFile<T>(ytr_file);
-        yte = readFile<T>(yte_file);
+        Xtr.readCSV(xtr_file);
+        Xte.readCSV(xte_file);
+        ytr.readCSV(ytr_file);
+        yte.readCSV(yte_file);
 
         // specify the task sequence
         OptTaskSequence *seq = new OptTaskSequence();
@@ -137,10 +130,10 @@ int main(int argc, char *argv[])
         string jobId1("two");
 
         // run gurls for training
-        G.run(*Xtr, *ytr, *opt, jobId0);
+        G.run(Xtr, ytr, *opt, jobId0);
 
         // run gurls for testing
-        G.run(*Xte, *yte, *opt, jobId1);
+        G.run(Xte, yte, *opt, jobId1);
 
     }
     catch (gException& e)
@@ -151,48 +144,4 @@ int main(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 
-}
-
-template<typename T>
-gMat2D<T> * readFile(const std::string &fileName, bool ROWM )
-{
-    std::vector<std::vector< T > > matrix;
-    std::ifstream in(fileName.c_str());
-
-    int rows = 0;
-    int cols = 0;
-    gMat2D<T> *g;
-
-    if(!in.is_open())
-        throw gurls::gException("Cannot open file " + fileName);
-
-    std::string line;
-    while (std::getline(in, line))
-    {
-        std::istringstream ss(line);
-        std::vector< T > tf;
-        std::copy(std::istream_iterator< T >(ss), std::istream_iterator< T >(), std::back_inserter(tf));
-
-        matrix.push_back(tf);
-        ++rows;
-    }
-    in.close();
-
-    cols = matrix[0].size();
-
-    g =  new gMat2D< T >(rows, cols);
-    T* buffer = g->getData();
-
-    for(int i=0; i<rows; ++i)
-    {
-        for(int j=0; j<cols; ++j)
-        {
-            if(ROWM)
-                buffer[i*cols+j]= matrix[i][j];
-            else
-                buffer[j*rows+i]= matrix[i][j];
-        }
-    }
-
-    return g;
 }

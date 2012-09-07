@@ -91,13 +91,6 @@ using namespace std;
 typedef float T;
 //typedef double T;
 
-const int d = 8;
-const int Ntrain = 10;
-const int Ntest = 261;
-const int t = 4;
-const int Nsquared = 10;
-const T tolerance = static_cast<T>(1e-4);
-
 
 int main(int argc, char *argv[])
 {
@@ -108,7 +101,8 @@ int main(int argc, char *argv[])
     cout << fixed << right << endl;
 
     string input_folder("../data");
-    if (argc < 2){
+    if (argc < 2)
+    {
         cout << "========================================================================================"<< endl
              << " WARNING: No input folder provided. " << endl
              << " Using the default option: \'" << input_folder <<  "\'" << endl
@@ -116,28 +110,19 @@ int main(int argc, char *argv[])
              << " " << argv[0]
              << " <path-to-a-valid-input-folder>" << endl
              << "========================================================================================" << endl << endl;
-    }else {
-        input_folder = argv[1];
     }
+    else
+        input_folder = argv[1];
 
 
-    try{
-        gMat2D<T> Xtr(Ntrain,d), Xte(Ntest,d), ytr(Ntrain, t), yte(Ntest, t);
-        ifstream ifile((input_folder+"/Xtr.txt").c_str());
-        for (int s = 0; s < Ntrain*d; s++) ifile >> *(Xtr.getData() + s);
-        ifile.close();
+    try
+    {
+        gMat2D<T> Xtr, Xte, ytr, yte;
 
-        ifile.open((input_folder+"/Xte.txt").c_str());
-        for (int s = 0; s < Ntest*d; s++) ifile >> *(Xte.getData() + s);
-        ifile.close();
-
-        ifile.open((input_folder+"/ytr.txt").c_str());
-        for (int s = 0; s < Ntrain*t; s++) ifile >> *(ytr.getData() + s);
-        ifile.close();
-
-        ifile.open((input_folder+"/yte.txt").c_str());
-        for (int s = 0; s < Ntest*t; s++) ifile >> *(yte.getData() + s);
-        ifile.close();
+        Xtr.readCSV(input_folder+"/Xtr.txt");
+        Xte.readCSV(input_folder+"/Xte.txt");
+        ytr.readCSV(input_folder+"/ytr.txt");
+        yte.readCSV(input_folder+"/yte.txt");
 
 //        cout << "Xtr = " << endl << Xtr << endl;
 //        cout << "Xte = " << endl << Xte << endl;
@@ -154,8 +139,6 @@ int main(int argc, char *argv[])
         seq->addTask("perf:macroavg");
 
         opt.addOpt("seq", seq);
-        opt.addOpt("epochs", new OptNumber(4.0));
-
 
         GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
@@ -194,15 +177,6 @@ int main(int argc, char *argv[])
 
         std::cout << opt << std::endl;
 
-        //        std::cout << "ytr= " << std::endl << ytr  << std::endl
-        //                  << "B = " << std::endl << B << std::endl;
-
-//        gMat2D<T> yest(ytr.rows(), ytr.cols());
-
-        //        dot(X,  opt.getOpt("W"))
-        //                  << "yest = " << std::endl <<  << std::endl;
-
-        //cout << opt << endl;
 
 //        std::ofstream oparstream("par1.txt");
 //        oarchive oparar(oparstream);
@@ -218,7 +192,8 @@ int main(int argc, char *argv[])
 //        std::cout << *s1 << std::endl;
 
     }
-    catch (gException& e){
+    catch (gException& e)
+    {
         cout << e.getMessage() << endl;
         return -1;
     }
