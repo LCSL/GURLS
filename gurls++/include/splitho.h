@@ -122,11 +122,8 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
     gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(nSplits, n);
     unsigned long* indices = m_indices->getData();
 
-//    T* indices = new T[nSplits*n];
-
     int count_tr;
     int count_va;
-//    T* order = new T[n];
 
 //    for state = 1:nSplits,
     for(int state=0; state<nSplits; ++state)

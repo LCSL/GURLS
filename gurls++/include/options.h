@@ -83,6 +83,13 @@ enum OptTypes	{GenericOption, StringOption, NumberOption,
  * options.
  */
 
+class GURLS_EXPORT Functor
+{
+public:
+    virtual double operator()(const double *v, int n) = 0;
+    virtual float operator()(const float *v, int n) = 0;
+};
+
 /**
  * Computes the mean value of a vector \c v of lenght \c n
  */
@@ -97,6 +104,33 @@ T mean(const T *v, int n)
     return m/n;
 }
 
+//class GURLS_EXPORT Mean : public Functor
+//{
+//public:
+
+//    double operator()(const double *v, int n)
+//    {
+//        return mean<double>(v, n);
+//    }
+
+//    float operator()(const float *v, int n)
+//    {
+//        return mean<float>(v, n);
+//    }
+
+//protected:
+//    template <typename T>
+//    T mean(const T *v, int n)
+//    {
+//        T m = (T)0.0;
+
+//        for (int i = 0; i < n; ++i, ++v)
+//            m += *v;
+
+//        return m/n;
+//    }
+//};
+
 /**
  * Computes the smallest element in a vector \c v of lenght \c n
  */
@@ -106,6 +140,21 @@ T min(const T *v, int n)
     return (*std::min_element(v,v+n));
 }
 
+//class GURLS_EXPORT Min : public Functor
+//{
+//public:
+//    double operator()(const double *v, int n)
+//    {
+//        return *std::min_element(v,v+n);
+//    }
+
+//    float operator()(const float *v, int n)
+//    {
+//        return *std::min_element(v,v+n);
+//    }
+//};
+
+
 /**
  * Computes the largest element in a vector \c v of lenght \c n
  */
@@ -114,6 +163,20 @@ T max(const T *v, int n)
 {
     return (*std::max_element(v,v+n));
 }
+
+//class GURLS_EXPORT Max : public Functor
+//{
+//public:
+//    double operator()(const double *v, int n)
+//    {
+//        return *std::max_element(v,v+n);
+//    }
+
+//    float operator()(const float *v, int n)
+//    {
+//        return *std::max_element(v,v+n);
+//    }
+//};
 
 /**
  * Computes the median value of a vector \c v of lenght \c n
@@ -129,6 +192,33 @@ T median(const T *v, int n)
     else
         return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
 }
+
+//class GURLS_EXPORT Median : public Functor
+//{
+//public:
+//    double operator()(const double *v, int n)
+//    {
+//        return median(v,n);
+//    }
+
+//    float operator()(const float *v, int n)
+//    {
+//        return median(v,n);
+//    }
+
+//protected:
+//    template <typename T>
+//    T median(const T *v, int n)
+//    {
+//        std::vector<T> vd(v, v+n);
+//        sort(vd.begin(), vd.end());
+
+//        if(n%2)
+//            return *(vd.begin()+vd.size()/2);
+//        else
+//            return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
+//    }
+//};
 
 
 /**
@@ -719,21 +809,34 @@ public:
 #pragma warning(disable : 4251)
 #endif
 
+
 /**
   * \ingroup Settings
   * \brief OptFunction is an option representing a pointer to a generic function
-  * double (*function)(double* , int) operating over an array of floating point numbers.
+  * T (*function)(T* , int) operating over an array of floating point numbers.
   */
 class GURLS_EXPORT OptFunction: public GurlsOption
 {
 private:
     std::string name; ///< Function name
+//    Functor *f;
 
 public:
     /**
       * Constructor from a fuction name
       */
-    OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name) {}
+    OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name)
+    {
+//        setValue(func_name);
+    }
+
+    /**
+      * Destructor
+      */
+    ~OptFunction()
+    {
+//        delete f;
+    }
 
     /**
       * Copies the option values from an existing \ref OptFunction
@@ -741,10 +844,22 @@ public:
     OptFunction& operator=(const OptFunction& other);
 
     /**
-      * Copies the option values from a string representing a function name
+      * Sets the option value from a string representing a supported function name
       */
-    void setValue(std::string func_name) {
+    void setValue(std::string func_name)
+    {
         name = func_name;
+
+//        if(func_name == "mean")
+//            f = new Mean();
+//        else if(func_name == "min")
+//            f = new Min();
+//        else if(func_name == "max")
+//            f = new Max();
+//        else if(func_name == "median")
+//            f = new Median();
+//        else
+//            throw gException(Exception_Unknown_Function);
     }
 
     /**
@@ -756,36 +871,25 @@ public:
       * Executes the function over a buffer of length n, returning the result
       */
     template<typename T>
-    T getValue(T* array, int n)
-    {
-        if(!name.compare("mean"))
-            return mean(array, n);
-        if(!name.compare("min"))
-            return min(array, n);
-        if(!name.compare("max"))
-            return max(array, n);
-        if(!name.compare("median"))
-            return median(array, n);
-
-        throw gException(gurls::Exception_Unknown_Function);
-    }
-
-    /**
-      * Executes the function over a buffer of length n, returning the result
-      */
-    template<typename T>
     T getValue(T* array, int n) const
     {
-        if(!name.compare("mean"))
-            return mean(array, n);
-        if(!name.compare("min"))
-            return min(array, n);
-        if(!name.compare("max"))
-            return max(array, n);
-        if(!name.compare("median"))
-            return median(array, n);
+//        return (*f)(array, n);
 
-        throw gException(gurls::Exception_Unknown_Function);
+        double v;
+        if (!name.compare("mean")){
+            v = mean(array, n);
+        } else if(!name.compare("min")){
+            v = min(array, n);
+        } else if(!name.compare("max")){
+            v = max(array, n);
+        } else if(!name.compare("median")){
+            v = median(array, n);
+        } else {
+            v = std::numeric_limits<double>::signaling_NaN();
+            throw gException(gurls::Exception_Unknown_Function);
+        }
+        return v;
+
     }
 
     /**
@@ -839,6 +943,7 @@ public:
     void load(Archive & ar, const unsigned int /* file_version */){
         ar & this->type;
         ar & this->name;
+//        setValue(this->name);
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -871,7 +976,7 @@ public:
     /**
       * Returns the element type for the matrix
       */
-    MatrixType getMatrixType()
+    MatrixType getMatrixType() const
     {
         return matType;
     }

@@ -144,7 +144,7 @@ GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os){
 
 GURLS_EXPORT std::ostream& OptFunction::operator<<(std::ostream& os){
     os << "Pointer to the function <" << this->getName()
-       << "> whose signature is: double (*func)(double*, int)" ;
+       << "> whose signature is: T (*func)(T*, int)" ;
     return os;
 }
 

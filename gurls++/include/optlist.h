@@ -259,7 +259,7 @@ public:
     {
         const GurlsOption* toCopy = from.getOpt(key);
 
-        GurlsOption* newOpt;
+        GurlsOption* newOpt = NULL;
 
         switch(toCopy->getType())
         {
@@ -281,9 +281,25 @@ public:
         case MatrixOption:
         case VectorOption:
         {
-            const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
-            gMat2D<T>* newMat = new gMat2D<T>(mat);
-            newOpt = new OptMatrix<gMat2D<T> >(*newMat);
+           const OptMatrixBase* base = dynamic_cast<const OptMatrixBase*>(toCopy);
+
+            if(base == NULL)
+                throw gException(Exception_Illegal_Dynamic_Cast);
+
+            if(base->getMatrixType() == OptMatrixBase::ULONG)
+            {
+                const gMat2D<unsigned long> & mat = OptMatrix<gMat2D<unsigned long> >::dynacast(toCopy)->getValue();
+
+                gMat2D<unsigned long>* newMat = new gMat2D<unsigned long>(mat);
+                newOpt = new OptMatrix<gMat2D<unsigned long> >(*newMat);
+            }
+            else
+            {
+                const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
+                gMat2D<T>* newMat = new gMat2D<T>(mat);
+                newOpt = new OptMatrix<gMat2D<T> >(*newMat);
+            }
+
         }
             break;
         case OptListOption:
@@ -309,7 +325,6 @@ public:
             break;
         case TaskIDOption:
         case GenericOption:
-            newOpt = NULL;
             break;
         }
 

@@ -74,14 +74,11 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
     if(usedefopt){
 
         //		opt.combineclasses = @mean; % How to combine performance measure per class (mean/median/min/max?)
-        //this->table["combineclasses"] = new OptFunction("mean", mean);
         (*table)["combineclasses"] = new OptFunction("mean");
 
         (*table)["name"] = new OptString(ExpName);
         (*table)["plotstr"] = new OptString(ExpName);
 
-        //		WARNING: THE FILE EXTENSION AND THE POSSIBILITY TO SAVE
-        //		THE EXPERIMENTS HAVE NOT BEEN IMPLEMENTED YET
 #ifdef USE_BINARY_ARCHIVES
         (*table)["savefile"] = new OptString(ExpName.append(".bin"));
 #else
@@ -91,10 +88,9 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
         // ================================================== Algorithm options
 
         //		opt.kernel.type = 'rbf';
-        //(*table)["singlelambda"] = new OptFunction("median", median);
-        //(*table)["singlelambda"] = new OptFunction("median", median);
         (*table)["singlelambda"] = new OptFunction("median");
         (*table)["predbagmethod"] = new OptString("vote");
+
         // NOTE: lambda is searched between
         // [min(eig_r, opt.smallnumber), eig_1],
         // where r = rank, eig_1 = max eig val.
@@ -131,7 +127,7 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
         (*table)["verbose"] = new OptNumber(1);
 
         // ======================================================= Version info
-        (*table)["version"] = new OptString("0.1");
+        (*table)["version"] = new OptString("1.0");
 
     }
 

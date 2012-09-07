@@ -269,8 +269,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*C));
 
 
-        gMat2D<T>* W;
-
+        gMat2D<T>* W = NULL;
 
         if(linearKernel)
         {
