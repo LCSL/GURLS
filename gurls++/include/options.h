@@ -93,132 +93,97 @@ public:
 /**
  * Computes the mean value of a vector \c v of lenght \c n
  */
-template <typename T>
-T mean(const T *v, int n)
+class GURLS_EXPORT Mean : public Functor
 {
-    T m = (T)0.0;
+public:
 
-    for (int i = 0; i < n; ++i, ++v)
-        m += *v;
+    double operator()(const double *v, int n)
+    {
+        return mean<double>(v, n);
+    }
 
-    return m/n;
-}
+    float operator()(const float *v, int n)
+    {
+        return mean<float>(v, n);
+    }
 
-//class GURLS_EXPORT Mean : public Functor
-//{
-//public:
+protected:
+    template <typename T>
+    T mean(const T *v, int n)
+    {
+        T m = (T)0.0;
 
-//    double operator()(const double *v, int n)
-//    {
-//        return mean<double>(v, n);
-//    }
+        for (int i = 0; i < n; ++i, ++v)
+            m += *v;
 
-//    float operator()(const float *v, int n)
-//    {
-//        return mean<float>(v, n);
-//    }
-
-//protected:
-//    template <typename T>
-//    T mean(const T *v, int n)
-//    {
-//        T m = (T)0.0;
-
-//        for (int i = 0; i < n; ++i, ++v)
-//            m += *v;
-
-//        return m/n;
-//    }
-//};
+        return m/n;
+    }
+};
 
 /**
  * Computes the smallest element in a vector \c v of lenght \c n
  */
-template <typename T>
-T min(const T *v, int n)
+class GURLS_EXPORT Min : public Functor
 {
-    return (*std::min_element(v,v+n));
-}
+public:
+    double operator()(const double *v, int n)
+    {
+        return *std::min_element(v,v+n);
+    }
 
-//class GURLS_EXPORT Min : public Functor
-//{
-//public:
-//    double operator()(const double *v, int n)
-//    {
-//        return *std::min_element(v,v+n);
-//    }
-
-//    float operator()(const float *v, int n)
-//    {
-//        return *std::min_element(v,v+n);
-//    }
-//};
+    float operator()(const float *v, int n)
+    {
+        return *std::min_element(v,v+n);
+    }
+};
 
 
 /**
  * Computes the largest element in a vector \c v of lenght \c n
  */
-template <typename T>
-T max(const T *v, int n)
+class GURLS_EXPORT Max : public Functor
 {
-    return (*std::max_element(v,v+n));
-}
+public:
+    double operator()(const double *v, int n)
+    {
+        return *std::max_element(v,v+n);
+    }
 
-//class GURLS_EXPORT Max : public Functor
-//{
-//public:
-//    double operator()(const double *v, int n)
-//    {
-//        return *std::max_element(v,v+n);
-//    }
-
-//    float operator()(const float *v, int n)
-//    {
-//        return *std::max_element(v,v+n);
-//    }
-//};
+    float operator()(const float *v, int n)
+    {
+        return *std::max_element(v,v+n);
+    }
+};
 
 /**
  * Computes the median value of a vector \c v of lenght \c n
  */
-template <typename T>
-T median(const T *v, int n)
+class GURLS_EXPORT Median : public Functor
 {
-    std::vector<T> vd(v, v+n);
-    sort(vd.begin(), vd.end());
+public:
+    double operator()(const double *v, int n)
+    {
+        return median(v,n);
+    }
 
-    if(n%2)
-        return *(vd.begin()+vd.size()/2);
-    else
-        return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
-}
+    float operator()(const float *v, int n)
+    {
+        return median(v,n);
+    }
 
-//class GURLS_EXPORT Median : public Functor
-//{
-//public:
-//    double operator()(const double *v, int n)
-//    {
-//        return median(v,n);
-//    }
+protected:
+    template <typename T>
+    T median(const T *v, int n)
+    {
+        std::vector<T> vd(v, v+n);
+        sort(vd.begin(), vd.end());
 
-//    float operator()(const float *v, int n)
-//    {
-//        return median(v,n);
-//    }
-
-//protected:
-//    template <typename T>
-//    T median(const T *v, int n)
-//    {
-//        std::vector<T> vd(v, v+n);
-//        sort(vd.begin(), vd.end());
-
-//        if(n%2)
-//            return *(vd.begin()+vd.size()/2);
-//        else
-//            return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
-//    }
-//};
+        if(n%2)
+            return *(vd.begin()+vd.size()/2);
+        else
+            return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
+    }
+};
 
 
 /**
@@ -817,17 +782,17 @@ public:
   */
 class GURLS_EXPORT OptFunction: public GurlsOption
 {
-private:
+protected:
     std::string name; ///< Function name
-//    Functor *f;
+    Functor *f;       ///< Pointer to the functor containing the function to be called
 
 public:
     /**
       * Constructor from a fuction name
       */
-    OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name)
+    OptFunction(std::string func_name): GurlsOption(FunctionOption)
     {
-//        setValue(func_name);
+        setValue(func_name);
     }
 
     /**
@@ -835,31 +800,17 @@ public:
       */
     ~OptFunction()
     {
-//        delete f;
+        delete f;
     }
 
     /**
       * Copies the option values from an existing \ref OptFunction
       */
-    OptFunction& operator=(const OptFunction& other);
-
-    /**
-      * Sets the option value from a string representing a supported function name
-      */
-    void setValue(std::string func_name)
+    OptFunction& operator=(const OptFunction& other)
     {
-        name = func_name;
-
-//        if(func_name == "mean")
-//            f = new Mean();
-//        else if(func_name == "min")
-//            f = new Min();
-//        else if(func_name == "max")
-//            f = new Max();
-//        else if(func_name == "median")
-//            f = new Median();
-//        else
-//            throw gException(Exception_Unknown_Function);
+        delete f;
+        this->setValue(other.name);
+        return *this;
     }
 
     /**
@@ -873,23 +824,7 @@ public:
     template<typename T>
     T getValue(T* array, int n) const
     {
-//        return (*f)(array, n);
-
-        double v;
-        if (!name.compare("mean")){
-            v = mean(array, n);
-        } else if(!name.compare("min")){
-            v = min(array, n);
-        } else if(!name.compare("max")){
-            v = max(array, n);
-        } else if(!name.compare("median")){
-            v = median(array, n);
-        } else {
-            v = std::numeric_limits<double>::signaling_NaN();
-            throw gException(gurls::Exception_Unknown_Function);
-        }
-        return v;
-
+        return (*f)(array, n);
     }
 
     /**
@@ -900,12 +835,12 @@ public:
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptFunction
       */
-    static OptFunction* dynacast(GurlsOption* opt) {
-        if (opt->isA(FunctionOption) ){
+    static OptFunction* dynacast(GurlsOption* opt)
+    {
+        if (opt->isA(FunctionOption) )
             return static_cast<OptFunction*>(opt);
-        } else {
+        else
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-        }
     }
 
     /**
@@ -913,11 +848,10 @@ public:
       */
     static const OptFunction* dynacast(const GurlsOption* opt)
     {
-        if (opt->isA(FunctionOption) ){
+        if (opt->isA(FunctionOption) )
             return static_cast<const OptFunction*>(opt);
-        } else {
+        else
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-        }
     }
 
     /**
@@ -931,7 +865,8 @@ public:
       * Serializes the option to a generic archive
       */
     template<class Archive>
-    void save(Archive & ar, const unsigned int /* file_version */) const{
+    void save(Archive & ar, const unsigned int /* file_version */) const
+    {
         ar & this->type;
         ar & this->name;
     }
@@ -940,13 +875,37 @@ public:
       * Deserializes the option from a generic archive
       */
     template<class Archive>
-    void load(Archive & ar, const unsigned int /* file_version */){
+    void load(Archive & ar, const unsigned int /* file_version */)
+    {
         ar & this->type;
         ar & this->name;
-//        setValue(this->name);
+
+        delete f;
+        setValue(this->name);
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+protected:
+
+        /**
+          * Sets the option value from a string representing a supported function name
+          */
+        void setValue(std::string func_name)
+        {
+            name = func_name;
+
+            if(func_name == "mean")
+                f = new Mean();
+            else if(func_name == "min")
+                f = new Min();
+            else if(func_name == "max")
+                f = new Max();
+            else if(func_name == "median")
+                f = new Median();
+            else
+                throw gException(Exception_Unknown_Function);
+        }
 };
 
 
