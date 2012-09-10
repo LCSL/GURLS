@@ -117,7 +117,7 @@ public:
     /**
       * Returns a squared matrix initialized in the diagonal with values from \c diagonal
       */
-    static gMat2D<T> diag(gVec<T> diagonal);
+    static gMat2D<T> diag(gVec<T> &diagonal);
 
     /**
       * Returns a n-by-n identity matrix
@@ -144,13 +144,11 @@ public:
       */
     unsigned long rows() const {return numrows; }
 
-    // The current implementation Uses the LU decomposition
-    //T det();
-
     /**
       * Sets all elements of the matrix to the value specified in \c val
       */
-    gMat2D<T>& operator=(const T& val) {
+    gMat2D<T>& operator=(const T& val)
+    {
         return static_cast<gMat2D<T>&>(this->BaseArray<T>::operator=(val));
     }
 
@@ -172,22 +170,31 @@ public:
     /**
       * Returns a vector containing the linearized matrix
       */
-    gVec<T> asvector() const {
+    gVec<T> asvector() const
+    {
         return gVec<T>(this->data, this->size, true);
     }
 
     /**
       * Returns a vector containing the elements at the i-th row
       */
-    gVec<T> operator[](unsigned long i) const {
-        return gVec<T>(this->data+i*this->numcols, this->numcols, true);
+    gVec<T> operator[](unsigned long i) const
+    {
+        gVec<T> ret(this->numcols);
+        gurls::getRow(this->data, this->numrows, this->numcols, i, ret.getData());
+
+        return ret;
     }
 
     /**
       * Returns a vector containing the elements at the i-th row
       */
-    gVec<T> operator[](unsigned long i) {
-        return gVec<T>(this->data+i*this->numcols, this->numcols, false);
+    gVec<T> operator[](unsigned long i)
+    {
+        gVec<T> ret(this->numcols);
+        gurls::getRow(this->data, this->numrows, this->numcols, i, ret.getData());
+
+        return ret;
     }
 
     //-------------------------------------------------------------------------
@@ -197,7 +204,7 @@ public:
       */
     T& operator() (unsigned long row, unsigned long col)
     {
-        return this->data[this->cols()*row + col];
+        return this->data[ row + this->numrows*col];
     }
 
     /**
@@ -205,12 +212,7 @@ public:
       */
     gVec<T> operator() (unsigned long i)
     {
-        gVec<T> v(this->numrows);
-        for(unsigned long j=0;j<this->numrows;j++)
-        {
-            v[j]=this->data[this->cols()*j+i];
-        }
-        return v;
+        return gVec<T>(this->data+(i*this->numrows), this->numrows, true);
     }
 
     /**
@@ -218,51 +220,42 @@ public:
       */
     gVec<T> operator() (unsigned long i) const
     {
-        gVec<T> v(this->numrows);
-        for(unsigned long j=0;j<this->numrows;j++)
-        {
-            v[j]=this->data[this->cols()*j+i];
-        }
-        return v;
+        return gVec<T>(this->data+(i*this->numrows), this->numrows, true);
     }
 
     /**
       * Sets the elements at the i-th row
       */
-    void setRow(gVec<T>& vec, unsigned long i){
-        T* ptr = this->data+this->numcols*i;
-        T* ptr_end = this->data+this->numcols*(i+1);
-        T* v_ptr = vec.getData();
-        while (ptr != ptr_end){
-            *ptr++ = *v_ptr++;
-        }
-        return;
+    void setRow(gVec<T>& vec, unsigned long i)
+    {
+        if(vec.getSize() != this->numcols)
+            throw gException(Exception_Inconsistent_Size);
+
+        gurls::copy(this->data+i, vec.getData(), this->numcols, this->numrows, 1);
     }
 
     /**
       * Sets the elements at the i-th columns
       */
-    void setColumn(gVec<T>& vec, unsigned long i){
-        for(int j=0;j<this->numrows;j++)
-        {
-            this->data[this->cols()*j+i]=vec[j];
-        }
+    void setColumn(gVec<T>& vec, unsigned long i)
+    {
+        if(vec.getSize() != this->numrows)
+            throw gException(Exception_Inconsistent_Size);
+
+        gurls::copy(this->data+(i*this->numrows), vec.getData(), this->numrows, 1, 1, 1, 1, 1, 1, 1);
     }
 
     /**
       * Sets the elements on the matrix diagonal
       */
-    void setDiag(gVec<T>& vec){
+    void setDiag(gVec<T>& vec)
+    {
         unsigned long int k = std::min(this->numcols, this->numrows);
-        if (vec.getSize() < k) {
-            throw gException("The lenght of the vector must be at least equal to the minimum dimension of the matrix");
-        }
-        T* ptr = this->data;
-        T* ptrVec = vec.getData();
 
-        for(unsigned long int j = 0; j < k; j++, ptrVec++, ptr+=(this->numcols+1)){
-            *ptr = *ptrVec;
-        }
+        if (vec.getSize() < k)
+            throw gException("The lenght of the vector must be at least equal to the minimum dimension of the matrix");
+
+        gurls::copy(this->data, vec.getData(), std::min(vec.getSize(), k), this->numrows+1, 1);
     }
 
     /**
@@ -385,11 +378,6 @@ public:
     template <typename U>
     friend void dot(const gMat2D<U>&, const gVec<U>&, gVec<U>&);
 
-    // ================= TO BE DISCUSSED =======================
-//    template <typename U>
-//    gMat2D<U> repmat(const gVec<U>&, unsigned long, bool);
-    // =========================================================
-
     /**
       * Clears the lower triangle of a matrix
       */
@@ -463,14 +451,12 @@ public:
     /**
       * Returns a string description of the matrix
       */
-    virtual std::string what() const {
-        std::stringstream v("gMat2D:");
-        v << std::string(" (");
-        v << this->rows() ;
-        v << std::string(" x ");
-        v << this->cols();
-        v <<std::string(") matrix of type ");
-        v << typeid(T).name();
+    virtual std::string what() const
+    {
+        std::stringstream v;
+        v << "gMat2D: (" << this->numrows;
+        v << " x " << this->numcols;
+        v << ") matrix of type " << typeid(T).name();
         return v.str();
     }
 
@@ -482,31 +468,31 @@ public:
       * Returns a vector containing the smallest elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>& min(int order);
+    gVec<T>* min(int order);
 
     /**
       * Returns a vector containing the largest elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>& max(int order);
+    gVec<T>* max(int order);
 
     /**
       * Returns a vector containing the smallest elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>& argmin(int order);
+    gVec<T>* argmin(int order);
 
     /**
       * Returns a vector containing the largest elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>& argmax(int order);
+    gVec<T>* argmax(int order);
 
     /**
       * Returns a vector containing the sums of the elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>& sum(int order) const;
+    gVec<T>* sum(int order) const;
 
     friend class boost::serialization::access;
 
@@ -533,6 +519,11 @@ public:
       * Deserializes the matrix from file
       */
     void load(const std::string& fileName);
+
+    /**
+      * Read the matrix from a CSV file
+      */
+    void readCSV(const std::string& fileName, bool colMajor = true);
 
 };
 

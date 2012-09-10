@@ -111,9 +111,9 @@ GURLS_EXPORT std::ostream& OptNumber::operator<<(std::ostream& os) {
 }
 
 GURLS_EXPORT std::ostream& OptStringList::operator<<(std::ostream& os){
-    std::vector<std::string>& V = this->getValue();
-    std::vector<std::string>::iterator it = V.begin();
-    std::vector<std::string>::iterator end = V.end();
+    const std::vector<std::string>& V = this->getValue();
+    std::vector<std::string>::const_iterator it = V.begin();
+    std::vector<std::string>::const_iterator end = V.end();
 
     os << "(";
     if(!V.empty())
@@ -144,7 +144,7 @@ GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os){
 
 GURLS_EXPORT std::ostream& OptFunction::operator<<(std::ostream& os){
     os << "Pointer to the function <" << this->getName()
-       << "> whose signature is: double (*func)(double*, int)" ;
+       << "> whose signature is: T (*func)(T*, int)" ;
     return os;
 }
 
@@ -163,35 +163,6 @@ GURLS_EXPORT std::ostream& OptTaskSequence::operator<<(std::ostream& os){
 
     return os;
 }
-
-
-double mean(double* v, int n) {
-    double m = 0.0;
-    for (int i = 0; i < n; i++){
-        m+=*v++;
-    }
-    return m/n;
-}
-
-double min(double* v, int n){
-    double* m = std::min_element(v,v+n);
-    return *m;
-}
-
-double max(double* v, int n){
-    double* m = std::max_element(v,v+n);
-    return *m;
-}
-
-double median(double* v, int n){
-    std::vector<double> vd(v, v+n);
-    sort(vd.begin(), vd.end());
-    if(n%2)
-        return *(vd.begin()+vd.size()/2);
-    else
-        return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
-}
-
 
 bool OptTaskSequence::isValid(const std::string & str, std::string& type, std::string& name) {
     size_t found = str.find(gurls::TASKDESC_SEPARATOR);

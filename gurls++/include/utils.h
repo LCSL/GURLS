@@ -81,7 +81,7 @@ public:
  * \return average precision
  */
 template <typename T>
-double precrec_driver(T* out, T* gt, unsigned long N)
+double precrec_driver(const T* out, const T* gt, const unsigned long N)
 {
     std::multimap<T, T, LtCompare<T> > data;
 
@@ -165,17 +165,14 @@ double precrec_driver(T* out, T* gt, unsigned long N)
  *  - acc_avg = average accuracy across iterations
  */
 template <typename T>
-void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
+GurlsOptionsList* rls_pegasos_driver(const T* X, const T* bY, const GurlsOptionsList& opt,
                         const int X_rows, const int X_cols,
                         const int bY_rows, const int bY_cols)
 {
-
     //  lambda = opt.singlelambda(opt.paramsel.lambdas);
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
+    const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+    T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
-//            %% Inputs
 
 //            [n,d] = size(X);
     const int n = X_rows;
@@ -184,20 +181,20 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
 //            [T] = size(bY,2);
     const int t = bY_cols;
 
-//            %% Initialization
+
 //            cfr = opt.cfr;
 
 //            W = cfr.W; %dxT
-    GurlsOptionsList* optimizer = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+    const GurlsOptionsList* optimizer = opt.getOptAs<GurlsOptionsList>("optimizer");
 
-    gMat2D<T> &W_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("W"))->getValue();
-    gMat2D<T> W(W_mat.cols(), W_mat.rows());
-    W_mat.transpose(W);
+    const gMat2D<T> &W_mat = optimizer->getOptValue<OptMatrix<gMat2D<T> > >("W");
+    gMat2D<T> *W = new gMat2D<T>(W_mat.rows(), W_mat.cols());
+    copy(W->getData(), W_mat.getData(), W_mat.getSize());
 
 //            W_sum = cfr.W_sum;
-    gMat2D<T> &W_sum_mat = OptMatrix<gMat2D<T> >::dynacast(optimizer->getOpt("W_sum"))->getValue();
-    gMat2D<T> W_sum(W_sum_mat.cols(), W_sum_mat.rows());
-    W_sum_mat.transpose(W_sum);
+    const gMat2D<T> &W_sum_mat = optimizer->getOptValue<OptMatrix<gMat2D<T> > >("W_sum");
+    gMat2D<T> *W_sum = new gMat2D<T>(W_sum_mat.rows(), W_sum_mat.cols());
+    copy(W_sum->getData(), W_sum_mat.getData(), W_sum_mat.getSize());
 
 //            count = cfr.count;
     int count = static_cast<int>(optimizer->getOptAsNumber("count"));
@@ -236,7 +233,7 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
         getRow(X, n, d, idx, xt);
 
 //                y_hat = (xt*W); %1xT
-        dot(xt, W.getData(), y_hat, 1, d, d, t, 1, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+        dot(xt, W->getData(), y_hat, 1, d, d, t, 1, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
 //                r = bY(idx,:) - y_hat; %1xT
         getRow(bY, bY_rows, t, idx, r);
@@ -249,16 +246,16 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
 //                W = (1 - lambda*eta)*W + eta*xt'*r; %dxT
         const T coeff = (T)1.0 - (lambda*eta);
 
-        scal(W_size, coeff, W.getData(), 1);
+        scal(W_size, coeff, W->getData(), 1);
 
         dot(xt, r, xtr, d, 1, 1, t, d, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-        axpy(W_size, eta, xtr, 1, W.getData(), 1);
+        axpy(W_size, eta, xtr, 1, W->getData(), 1);
 
 //                %% Projection onto the ball with radius sqrt(T/lambda)
 //                nW = norm(W,'fro'); %Frobenius norm
 
-        T tmp = dot(W_size, W.getData(), 1, W.getData(), 1);
+        T tmp = dot(W_size, W->getData(), 1, W->getData(), 1);
         T  nW = sqrt(tmp);
 
 
@@ -267,14 +264,14 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
         {
             //                    W = (W/nW)*sqrt(T/lambda);
             set(xtr, (T)0.0, W_size);
-            axpy(W_size, thr/nW, W.getData(), 1, xtr, 1);
-            copy(W.getData(), xtr, W_size);
+            axpy(W_size, thr/nW, W->getData(), 1, xtr, 1);
+            copy(W->getData(), xtr, W_size);
         }
 
 //                %% Averaging
 
 //                W_sum = W_sum + W;
-        axpy(W_size, (T)1.0, W.getData(), 1, W_sum.getData(), 1);
+        axpy(W_size, (T)1.0, W->getData(), 1, W_sum->getData(), 1);
 
 //                count = count + 1;
         ++count;
@@ -296,46 +293,31 @@ void rls_pegasos_driver(const T* X, const T* bY, GurlsOptionsList& opt,
     delete[] r;
     delete[] xtr;
 
-    //            cfr.W = W;
-    //     W.transpose(*W_mat);
+    GurlsOptionsList* ret = new GurlsOptionsList("optimizer");
 
-    //            cfr.W_last = W;
-    //     if(opt.hasOpt("W_last"))
-    //     {
-    //         GurlsOption *W_last_opt = opt.getOpt("W_last");
-    //         gMat2D<T> *W_last = &(OptMatrix<gMat2D<T> >::dynacast(W_last_opt))->getValue();
-    //         copy(W_last->getData(), W_mat->getData(), W_size);
-    //     }
-    //     else
-    //     {
-    //         gMat2D<T> *W_last = new gMat2D<T>(*W_mat);
-    //         opt.addOpt("W_last", new OptMatrix<gMat2D<T> >(*W_last));
-    //     }
+//            cfr.W = W;
+    ret->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
-    W.transpose(W_mat);
-    //            cfr.W_sum = W_sum;
-    W_sum.transpose(W_sum_mat);
+//            cfr.W_last = W;
 
-    //            cfr.count = count;
-    optimizer->removeOpt("count");
-    optimizer->addOpt("count", new OptNumber(count));
+//            cfr.W_sum = W_sum;
+    ret->addOpt("W_sum", new OptMatrix<gMat2D<T> >(*W_sum));
 
-    //            cfr.iter = iter;
-    optimizer->removeOpt("iter");
-    optimizer->addOpt("iter", new OptNumber(iter));
+//            cfr.count = count;
+    ret->addOpt("count", new OptNumber(count));
+
+//            cfr.iter = iter;
+    ret->addOpt("iter", new OptNumber(iter));
 
     //	cfr.C = [];
-    optimizer->removeOpt("C");
     gMat2D<T>* emptyC = new gMat2D<T>();
-    optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
+    ret->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
 
     //	cfr.X = [];
-    optimizer->removeOpt("X");
     gMat2D<T>* emptyX = new gMat2D<T>();
-    optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+    ret->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
 
-    opt.removeOpt("optimizer", false);
-    opt.addOpt("optimizer",optimizer);
+    return ret;
 
 }
 

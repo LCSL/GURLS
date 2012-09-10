@@ -75,77 +75,54 @@ public:
      *  - C = matrix of coefficient vectors of dual rls estimator for each class
      *  - X = empty matrix
      */
-   void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+   GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 
 template <typename T>
-void RLSDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
    //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-//    std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
-   GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-   std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-   T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
+   const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+   T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
-   gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-   X_OMR.transpose(X);
+   const GurlsOptionsList* kernel = opt.getOptAs<GurlsOptionsList>("kernel");
+   const gMat2D<T>& K_mat = kernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
 
-   gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-   Y_OMR.transpose(Y);
-
-
-   GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-   GurlsOption *K_opt = kernel->getOpt("K");
-
-//    if (K_opt->getDataID() != typeid(T))
-//        return;
-
-   gMat2D<T> *K_mat = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
-   gMat2D<T> K(K_mat->cols(), K_mat->rows());
-   K_mat->transpose(K);
+   T* K = new T[K_mat.getSize()];
+   copy(K, K_mat.getData(), K_mat.getSize());
 
     //n = size(opt.kernel.K,1);
-   const long n = K_mat->rows();
+   const long n = K_mat.rows();
 
    //T = size(y,2);
-   const long t = Y_OMR.cols();
+   const long t = Y.cols();
 
 
 //    std::cout << "Solving dual RLS... " << std::endl;
 
     const T coeff = n*static_cast<T>(lambda);
     long i=0;
-    for(T* it = K.getData(); i<n; ++i, it+=n+1)
+    for(T* it = K; i<n; ++i, it+=n+1)
         *it += coeff;
 
 
    std::set<T*> garbage;
 
-//    bool retX = false;
-   T* retC = NULL;
-//   T* retX = NULL;
-   int retC_rows = 0;
-   int retC_cols = 0;
+   gMat2D<T>* retC = NULL;
 
    try // Try solving it with cholesky first.
    {
-
 //        R = chol(K);
-        T* R = cholesky(K.getData(), n, n);
+        T* R = cholesky(K, n, n);
         garbage.insert(R);
 
 //        cfr.C = R\(R'\y);
-        retC_rows = Y_OMR.rows();
-        retC_cols = t;
+        retC = new gMat2D<T>(Y.rows(), t);
 
-        retC = new T[retC_rows*retC_cols];
-        garbage.insert(retC);
-
-        copy(retC, Y.getData(), Y.getSize());
-        mldivide_squared(R, retC, n, n, retC_rows, retC_cols, CblasTrans);
-        mldivide_squared(R, retC, n, n, retC_rows, retC_cols, CblasNoTrans);
-
+        copy(retC->getData(), Y.getData(), Y.getSize());
+        mldivide_squared(R, retC->getData(), n, n, retC->rows(), retC->cols(), CblasTrans);
+        mldivide_squared(R, retC->getData(), n, n, retC->rows(), retC->cols(), CblasNoTrans);
 
         delete[] R;
         garbage.erase(R);
@@ -157,6 +134,9 @@ void RLSDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOp
 
        garbage.clear();
 
+       if(retC != NULL)
+           delete retC;
+
 
 //           [Q,L,V] = svd(K);
 //           Q = double(Q);
@@ -166,21 +146,20 @@ void RLSDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOp
        int L_len;
        int V_rows, V_cols;
 
-       svd(K.getData(), Q, L, V, n, n, Q_rows, Q_cols, L_len, V_rows, V_cols);
+       svd(K, Q, L, V, n, n, Q_rows, Q_cols, L_len, V_rows, V_cols);
 
 
 //           cfr.C = rls_eigen(Q,L,y,lambda,n);
+       retC = new gMat2D<T>(Q_rows, Y.cols());
 
-       retC_rows = Q_rows;
-       retC_cols = Y_OMR.cols();
-
-       retC = new T[retC_rows*retC_cols];
-       rls_eigen(Q, L, Y.getData(), retC, lambda, n, Q_rows, Q_cols, L_len, Y_OMR.rows(), Y_OMR.cols());
+       rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, Q_rows, Q_cols, L_len, Y.rows(), Y.cols());
 
        delete [] Q;
        delete [] L;
        delete [] V;
    }
+
+   delete[] K;
 
    GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
 
@@ -188,14 +167,8 @@ void RLSDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOp
    if(kernel->getOptAsString("type") == "linear")
    {
 //           cfr.W = X'*cfr.C;
-       T* retW  = new T[X_OMR.cols()*retC_cols];
-       dot(X.getData(), retC, retW, X_OMR.rows(), X_OMR.cols(), retC_rows, retC_cols, X_OMR.cols(), retC_cols, CblasTrans, CblasNoTrans, CblasColMajor);
-
-       gMat2D<T> tmp(retW, retC_cols, X_OMR.cols(), false);
-       gMat2D<T>* W = new gMat2D<T>(X_OMR.cols(), retC_cols);
-       tmp.transpose(*W);
-
-       delete[] retW;
+       gMat2D<T>* W  = new gMat2D<T>(X.cols(), retC->cols());
+       dot(X.getData(), retC->getData(), W->getData(), X.rows(), X.cols(), retC->rows(), retC->cols(), W->rows(), W->cols(), CblasTrans, CblasNoTrans, CblasColMajor);
 
        optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
@@ -207,6 +180,7 @@ void RLSDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOp
        gMat2D<T>* emptyX = new gMat2D<T>();
        optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
 
+       delete retC;
    }
    else
    {
@@ -215,22 +189,14 @@ void RLSDual<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOp
        optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*emptyW));
 
 //           cfr.C = retC;
-       gMat2D<T> tmp(retC, retC_cols, retC_rows, false);
-       gMat2D<T>* C = new gMat2D<T>(retC_rows, retC_cols);
-       tmp.transpose(*C);
-
-       optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*C));
+       optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*retC));
 
 //           cfr.X = X;
-       gMat2D<T>* optX = new gMat2D<T>(X_OMR);
+       gMat2D<T>* optX = new gMat2D<T>(X);
        optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*optX));
-
    }
 
-    opt.removeOpt("optimizer", false);
-    opt.addOpt("optimizer",optimizer);
-
-    delete[] retC;
+    return optimizer;
 }
 
 }

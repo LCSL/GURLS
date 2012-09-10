@@ -80,77 +80,63 @@ public:
      *  - alpha
      *  - X
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt);
 };
 
 
 template <typename T>
-void RLSGPRegr<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
     //    noise = opt.singlelambda(opt.paramsel.lambdas);
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> nls = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    T noiselevel = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(nls.data(), nls.size()));
-
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
+    const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+    T noiselevel = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
 
-    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
+    const gMat2D<T> &K_mat = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.K");
 
-    gMat2D<T> &K_mat = OptMatrix<gMat2D<T> >::dynacast(kernel->getOpt("K"))->getValue();
-    gMat2D<T> K(K_mat.cols(), K_mat.rows());
-    K_mat.transpose(K);
+    T* K = new T[K_mat.getSize()];
+    copy(K, K_mat.getData(), K_mat.getSize());
 
     //n = size(opt.kernel.K,1);
     const unsigned long n = K_mat.rows();
 
     //T = size(y,2);
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long t = Y.cols();
 
 
     //    cfr.L = chol(opt.kernel.K + noise^2*eye(n));
     const T coeff = std::pow(noiselevel, 2);
     unsigned long i=0;
-    for(T* it = K.getData(); i<n; ++i, it += n+1)
+    for(T* it = K; i<n; ++i, it += n+1)
         *it += coeff;
 
-    T* retL = cholesky(K.getData(), n, n);
+    T* retL = cholesky(K, n, n);
 
     //    cfr.alpha = cfr.L\(cfr.L'\y);
-    T* retalpha = new T[n*t];
-    copy(retalpha, Y.getData(), Y.getSize());
+    gMat2D<T>* alpha = new gMat2D<T>(n, t);
+    copy(alpha->getData(), Y.getData(), Y.getSize());
 
-    mldivide_squared(retL, retalpha, n, n, n, t, CblasTrans);
-    mldivide_squared(retL, retalpha, n, n, n, t, CblasNoTrans);
-
+    mldivide_squared(retL, alpha->getData(), n, n, n, t, CblasTrans);
+    mldivide_squared(retL, alpha->getData(), n, n, n, t, CblasNoTrans);
 
 
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
 
 //           optimizer.L = L;
     gMat2D<T>* L = new gMat2D<T>(n, n);
-    transpose(retL, n, n, L->getData());
+    copy(L->getData(), retL, L->getSize());
     optimizer->addOpt("L", new OptMatrix<gMat2D<T> >(*L));
+
     delete[] retL;
 
 //           optimizer.alpha = alpha;
-    gMat2D<T>* alpha = new gMat2D<T>(n, t);
-    transpose(retalpha, n, t, alpha->getData());
     optimizer->addOpt("alpha", new OptMatrix<gMat2D<T> >(*alpha));
-    delete[] retalpha;
 
 //    cfr.X = X;
-    gMat2D<T>* optX = new gMat2D<T>(X_OMR);
+    gMat2D<T>* optX = new gMat2D<T>(X);
     optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*optX));
 
-
-    opt.removeOpt("optimizer");
-    opt.addOpt("optimizer",optimizer);
-
+    return optimizer;
 }
 
 }

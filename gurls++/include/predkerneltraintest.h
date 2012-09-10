@@ -75,49 +75,38 @@ public:
      * \return adds to opt the field predkernel, which is a list with at least the field K containing the kernel matrix
      */
 
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
 template<typename T>
-void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *PredKernelTrainTest<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt) throw(gException)
 {
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
+    const GurlsOptionsList* optimizer = opt.getOptAs<GurlsOptionsList>("optimizer");
 
-    GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-    GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
+    std::string kernelType = opt.getOptValue<OptString>("kernel.type");
 
-    std::string kernelType = kernel->getOptAsString("type");
-
-    OptMatrix<gMat2D<T> >* rls_X_opt = OptMatrix<gMat2D<T> >::dynacast(rls->getOpt("X"));
-    gMat2D<T>& rls_X_mat = rls_X_opt->getValue();
+    const gMat2D<T>& rls_X = optimizer->getOptValue<OptMatrix<gMat2D<T> > >("X");
 
 
-    if(X_OMR.cols() != rls_X_mat.cols())
+    const unsigned long xr = X.rows();
+    const unsigned long xc = X.cols();
+    const unsigned long rls_xr = rls_X.rows();
+
+    if(xc != rls_X.cols())
         throw gException(Exception_Inconsistent_Size);
-
-
-    const int xr = X_OMR.rows();
-    const int xc = X_OMR.cols();
-    const int rls_xr = rls_X_mat.rows();
-
-    gMat2D<T> rls_X(xc, rls_xr);
-    rls_X_mat.transpose(rls_X);
 
 
     GurlsOptionsList* predkernel = new GurlsOptionsList("predkernel");
     predkernel->addOpt("type", kernelType);
 
-    gMat2D<T>* K_m;
+    gMat2D<T>* K;
 
     if(kernelType == "rbf")
     {
-        GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-
-        double sigma = paramsel->getOptAsNumber("sigma");
+        double sigma = opt.getOptValue<OptNumber>("paramsel.sigma");
 
 //                opt.predkernel.distance = distance(X',opt.rls.X');
-        gMat2D<T> dist(rls_xr, xr);
+        gMat2D<T> *dist = new gMat2D<T>(xr, rls_xr);
 
         T* Xt = new T[xc*xr];
         T* rls_Xt = new T[xc*rls_xr];
@@ -125,31 +114,28 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
         transpose(X.getData(), xr, xc, Xt);
         transpose(rls_X.getData(), rls_xr, xc, rls_Xt);
 
-        distance(Xt, rls_Xt, xc, xr, rls_xr, dist.getData());
+        distance(Xt, rls_Xt, xc, xr, rls_xr, dist->getData());
 
         delete[] Xt;
         delete[] rls_Xt;
 
 //                fk.distance = opt.predkernel.distance;
-        gMat2D<T>* dist_m = new gMat2D<T>(xr, rls_xr);
-        dist.transpose(*dist_m);
+        predkernel->addOpt("distance", new OptMatrix<gMat2D<T> > (*dist));
 
-        predkernel->addOpt("distance", new OptMatrix<gMat2D<T> > (*dist_m));
 
+        K = new gMat2D<T>(xr, rls_xr);
+        copy(K->getData(), dist->getData(), dist->getSize());
 
 //            fk.K = exp(-(opt.predkernel.distance)/(opt.paramsel.sigma^2));
-        scal(dist.getSize(), (T)(-1.0/pow(sigma, 2)), dist.getData(), 1);
-        exp(dist.getData(), dist.getSize());
+        scal(K->getSize(), (T)(-1.0/pow(sigma, 2)), K->getData(), 1);
+        exp(K->getData(), K->getSize());
 
-        K_m = new gMat2D<T>(xr, rls_xr);
-        dist.transpose(*K_m);
-
-        if(!rls->hasOpt("L"))
+        if(!optimizer->hasOpt("L"))
         {
             gMat2D<T> *Ktest = new gMat2D<T>(xr, 1);
             set(Ktest->getData(), (T)1.0, xr);
 
-            opt.addOpt("Ktest", new OptMatrix<gMat2D<T> >(*Ktest));
+            predkernel->addOpt("Ktest", new OptMatrix<gMat2D<T> >(*Ktest));
         }
 
     }
@@ -160,8 +146,8 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
         std::string testKernel = opt.getOptAsString("testKernel");
 
 //            fk.K = K_tetr;
-        K_m = new gMat2D<T>();
-        K_m->load(testKernel);
+        K = new gMat2D<T>();
+        K->load(testKernel);
 
     }
 
@@ -169,22 +155,22 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
     {
         const T epsilon = std::numeric_limits<T>::epsilon();
 
-        gMat2D<T> K(rls_xr, xr);
-        T* Kbuf = K.getData();
-        set(Kbuf, (T)0.0, K.getSize());
+        K = new gMat2D<T>(xr, rls_xr);
+        T* Kbuf = K->getData();
+        set(Kbuf, (T)0.0, K->getSize());
 
 //            for i = 1:size(X,1)
-        for(int i=0; i<xr; ++i)
+        for(unsigned long i=0; i<xr; ++i)
         {
 //                for j = 1:size(opt.rls.X,1)
-            for(int j=0; j<rls_xr; ++j)
+            for(unsigned long j=0; j<rls_xr; ++j)
             {
 
 //                    fk.K(i,j) = sum(...
 //                                    ( (X(i,:) - opt.rls.X(j,:)).^2 ) ./ ...
 //                                    ( 0.5*(X(i,:) + opt.rls.X(j,:)) + eps));
                 T sum = 0;
-                for(int k=0; k< xc; ++k)
+                for(unsigned long k=0; k< xc; ++k)
                 {
                     const T X_ik = X.getData()[i+(xr*k)];
                     const T rlsX_jk = rls_X.getData()[j+(rls_xr*k)];
@@ -196,18 +182,15 @@ void PredKernelTrainTest<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y,
             }
         }
 
-        K_m = new gMat2D<T>(xr, rls_xr);
-        K.transpose(*K_m);
-
     }
 
     else
         throw gException(Exception_Required_Parameter_Missing);
 
-    predkernel->addOpt("K", new OptMatrix<gMat2D<T> > (*K_m));
+    predkernel->addOpt("K", new OptMatrix<gMat2D<T> > (*K));
 
 
-    opt.addOpt("predkernel", predkernel);
+    return predkernel;
 }
 
 }

@@ -57,29 +57,6 @@
 
 namespace gurls {
 
-//class Kernel
-//{
-//private:
-//	string name;
-//	vector<string> parNames;
-//	vector<double> parValues;
-
-//public:
-//	Kernel(string n = "") : name(n) { }
-//	template <typename T>
-//	void evaluate( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z) {
-//		/* Empty method. The method should have been pure virtual	but templates may not be virtual. */
-//	} ;
-
-//	virtual string getName() {
-//		return this->name;
-//	}
-
-//	virtual void setName(string n) {
-//		this->name = n;
-//	}
-
-//};
 
 template<typename T>
 class KernelLinear;
@@ -107,7 +84,7 @@ public:
      *
      * \return adds the field kernel to opt
      */
-    virtual void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * \ingroup Exceptions
@@ -117,19 +94,19 @@ public:
     class BadKernelCreation : public std::logic_error
     {
     public:
-		/**
-		 * Exception constructor.
-		 */
+        /**
+         * Exception constructor.
+         */
         BadKernelCreation(std::string type)
             : logic_error("Cannot create type " + type) {}
     };
 
-	/**
-	 * Factory function returning a pointer to the newly created object.
-	 *
-	 * \warning The returned pointer is a plain, un-managed pointer. The calling
-	 * function is responsible of deallocating the object.
-	 */
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
     static Kernel<T> *factory(const std::string& id) throw(BadKernelCreation)
     {
         if(id == "linear")
@@ -142,20 +119,6 @@ public:
             throw BadKernelCreation(id);
     }
 };
-
-
-//class LinearKernel : public Kernel
-//{
-//private:
-//	LinearKernel(string n = "") { };
-//	template <typename T>
-//	void evaluate ( const gMat2D< T >& X1, const gMat2D< T >& X2 , gMat2D< T > Z ){
-//		gMat2D< T >
-//		dot(X1, X2, Z);
-//	}
-
-//};
-
 
 }
 

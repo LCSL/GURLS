@@ -118,7 +118,7 @@ namespace gurls {
     public:
 
         /**
-         * Execution options for a GURLS tasks
+         * Execution options for a GURLS task
          */
         enum Action {ignore, compute, computeNsave, load, remove};
 
@@ -212,7 +212,10 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         }
 
 
-        std::vector <double> process_time(seq->size(), 0.0);
+//        std::vector <double> process_time(seq->size(), 0.0);
+        gMat2D<T>* process_time_vector = new gMat2D<T>(1, seq->size());
+        T *process_time = process_time_vector->getData();
+        set(process_time, (T)0.0, seq->size());
 
         //%for i = 1:numel(opt.process) % Go by the length of process.
         //opt.time{jobid} = struct;
@@ -249,35 +252,68 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
                 begin = boost::posix_time::microsec_clock::local_time();
 
-                if (!reg1.compare("optimizer")) {
+                if (!reg1.compare("optimizer"))
+                {
                     taskOpt = Optimizer<T>::factory(reg2);
-                    taskOpt->execute(X, y, opt);
-                }else if (!reg1.compare("paramsel")) {
+                    GurlsOption* ret = taskOpt->execute(X, y, opt);
+                    opt.removeOpt("optimizer");
+                    opt.addOpt("optimizer", ret);
+                }
+                else if (!reg1.compare("paramsel"))
+                {
                     taskParSel = ParamSelection<T>::factory(reg2);
-                    taskParSel->execute(X, y, opt);
-                }else if (!reg1.compare("pred")) {
+                    GurlsOption* ret = taskParSel->execute(X, y, opt);
+                    opt.removeOpt("paramsel");
+                    opt.addOpt("paramsel", ret);
+                }
+                else if (!reg1.compare("pred"))
+                {
                     taskPrediction = Prediction<T>::factory(reg2);
-                    taskPrediction->execute(X, y, opt);
-                }else if (!reg1.compare("perf")) {
+                    GurlsOption* ret = taskPrediction->execute(X, y, opt);
+                    opt.removeOpt("pred");
+                    opt.addOpt("pred", ret);
+                }
+                else if (!reg1.compare("perf"))
+                {
                     taskPerformance = Performance<T>::factory(reg2);
-                    taskPerformance->execute(X, y, opt);
-                }else if (!reg1.compare("kernel")) {
+                    GurlsOption* ret = taskPerformance->execute(X, y, opt);
+                    opt.removeOpt("perf");
+                    opt.addOpt("perf", ret);
+                }
+                else if (!reg1.compare("kernel"))
+                {
                     taskKernel = Kernel<T>::factory(reg2);
-                    taskKernel->execute(X, y, opt);
-                }else if (!reg1.compare("norm")) {
+                    GurlsOption* ret = taskKernel->execute(X, y, opt);
+                    opt.removeOpt("kernel");
+                    opt.addOpt("kernel", ret);
+                }
+                else if (!reg1.compare("norm"))
+                {
                     taskNorm = Norm<T>::factory(reg2);
                     gMat2D<T>* X1 = taskNorm->execute(X, y, opt);
                     delete X1;
                     throw gException("Unused return value");
-                }else if (!reg1.compare("split")) {
+                }
+                else if (!reg1.compare("split"))
+                {
                     taskSplit = Split<T>::factory(reg2);
-                    taskSplit->execute(X, y, opt);
-                }else if (!reg1.compare("predkernel")) {
+                    GurlsOption* ret = taskSplit->execute(X, y, opt);
+                    opt.removeOpt("split");
+                    opt.addOpt("split", ret);
+                }
+                else if (!reg1.compare("predkernel"))
+                {
                     taskPredKernel = PredKernel<T>::factory(reg2);
-                    taskPredKernel->execute(X, y, opt);
-                }else if (!reg1.compare("conf")) {
+                    GurlsOption* ret = taskPredKernel->execute(X, y, opt);
+                    opt.removeOpt("predkernel");
+                    opt.addOpt("predkernel", ret);
+                }
+                else if (!reg1.compare("conf"))
+                {
                     taskConfidence = Confidence<T>::factory(reg2);
-                    taskConfidence->execute(X, y, opt);
+                    GurlsOption* ret = taskConfidence->execute(X, y, opt);
+                    opt.removeOpt("conf");
+                    opt.addOpt("conf", ret);
                 }
 
 //                fun = reg1;
@@ -288,7 +324,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 end = boost::posix_time::microsec_clock::local_time();
                 diff = end-begin;
 
-                process_time[i] = ((double)diff.total_milliseconds())/1000.0;
+                process_time[i] = ((T)diff.total_milliseconds())/1000.0;
 
                 //		fName = [reg{1} '_' reg{2}];
                 //		fun = str2func(fName);
@@ -331,7 +367,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
         }
 
-        timelist->addOpt(processid, new OptNumberList(process_time));
+//        timelist->addOpt(processid, new OptNumberList(process_time));
+        timelist->addOpt(processid, new OptMatrix<gMat2D<T> >(*process_time_vector));
 
         //fprintf('\nSave cycle...\n');
         //% Delete whats not necessary

@@ -84,7 +84,7 @@ public:
      *
      * \return adds the field pred to opt
      */
-    virtual void execute( const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+    virtual GurlsOption* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * \ingroup Exceptions

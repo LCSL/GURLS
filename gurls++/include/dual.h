@@ -79,46 +79,30 @@ public:
      * \return adds the following field to opt:
      *  - pred = matrix of predicted labels
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    OptMatrix<gMat2D<T> >* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+OptMatrix<gMat2D<T> >* PredDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
-
     if(opt.hasOpt("kernel"))
     {
-        GurlsOptionsList* kernel = GurlsOptionsList::dynacast(opt.getOpt("kernel"));
-
-        if(kernel->getOptAsString("type") == "linear")
+        if(opt.getOptValue<OptString>("kernel.type") == "linear")
         {
             PredPrimal<T> pred;
             return pred.execute(X, Y, opt);
         }
     }
 
+    const gMat2D<T> &K = opt.getOptValue<OptMatrix<gMat2D<T> > >("predkernel.K");
+    const gMat2D<T> &C = opt.getOptValue<OptMatrix<gMat2D<T> > >("optimizer.C");
 
-    GurlsOptionsList* predkernel = GurlsOptionsList::dynacast(opt.getOpt("predkernel"));
-    GurlsOption *K_opt = predkernel->getOpt("K");
-    gMat2D<T> *K = &(OptMatrix<gMat2D<T> >::dynacast(K_opt))->getValue();
-
-
-    GurlsOptionsList* rls = GurlsOptionsList::dynacast(opt.getOpt("optimizer"));
-    GurlsOption *C_opt = rls->getOpt("C");
-    gMat2D<T> *C = &(OptMatrix<gMat2D<T> >::dynacast(C_opt))->getValue();
+    gMat2D<T>* Z = new gMat2D<T>(K.rows(), C.cols());
 
 
-    gMat2D<T>* Z = new gMat2D<T>(K->rows(), C->cols());
-    //set(Z->getData(), (T)0.0, Z->getSize());
+    dot(K.getData(), C.getData(), Z->getData(), K.rows(), K.cols(), C.rows(), C.cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-
-    dot(K->getData(), C->getData(), Z->getData(), K->rows(), K->cols(), C->rows(), C->cols(), Z->rows(), Z->cols(), CblasNoTrans, CblasNoTrans, CblasRowMajor);
-
-    if(opt.hasOpt("pred"))
-        opt.removeOpt("pred");
-
-     opt.addOpt("pred", new OptMatrix<gMat2D<T> >(*Z));
-
+    return new OptMatrix<gMat2D<T> >(*Z);
 }
 
 }

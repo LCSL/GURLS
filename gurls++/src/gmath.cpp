@@ -51,11 +51,10 @@ namespace gurls {
   * Specialized version of dot for float vectors
   */
 template <>
-GURLS_EXPORT float dot(const gVec<float>& x, const gVec<float>& y) {
-
-    if ( x.getSize() != y.getSize() ) {
+GURLS_EXPORT float dot(const gVec<float>& x, const gVec<float>& y)
+{
+    if ( x.getSize() != y.getSize() )
         throw gException(gurls::Exception_Inconsistent_Size);
-    }
 
     int n = x.getSize();
     int incr = 1;
@@ -67,17 +66,16 @@ GURLS_EXPORT float dot(const gVec<float>& x, const gVec<float>& y) {
   * Specialized version of dot for float vectors
   */
 template <>
-GURLS_EXPORT double dot(const gVec<double>& x, const gVec<double>& y) {
+GURLS_EXPORT double dot(const gVec<double>& x, const gVec<double>& y)
+{
 
-    if ( x.getSize() != y.getSize() ) {
+    if ( x.getSize() != y.getSize() )
         throw gException(gurls::Exception_Inconsistent_Size);
-    }
 
     int n = x.getSize();
     int incr = 1;
 
     return ddot_(&n, const_cast<double*>(x.getData()), &incr, const_cast<double*>(y.getData()), &incr);
-
 }
 
 
@@ -86,27 +84,28 @@ GURLS_EXPORT double dot(const gVec<double>& x, const gVec<double>& y) {
   * Specialized version of dot for float matrices
   */
 template <>
-GURLS_EXPORT void dot(const gMat2D<float>& A, const gMat2D<float>& B, gMat2D<float>& C) {
+GURLS_EXPORT void dot(const gMat2D<float>& A, const gMat2D<float>& B, gMat2D<float>& C)
+{
 
     dot(A.getData(), B.getData(), C.getData(),
         A.rows(), A.cols(),
         B.rows(), B.cols(),
         C.rows(), C.cols(),
-        CblasNoTrans, CblasNoTrans, CblasRowMajor);
+        CblasNoTrans, CblasNoTrans, CblasColMajor);
 }
 
 /**
   * Specialized version of dot for float matrices
   */
 template <>
-GURLS_EXPORT void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<double>& C) {
+GURLS_EXPORT void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<double>& C)
+{
 
     dot(A.getData(), B.getData(), C.getData(),
         A.rows(), A.cols(),
         B.rows(), B.cols(),
         C.rows(), C.cols(),
-        CblasNoTrans, CblasNoTrans, CblasRowMajor);
-
+        CblasNoTrans, CblasNoTrans, CblasColMajor);
 }
 
 
@@ -116,8 +115,8 @@ GURLS_EXPORT void dot(const gMat2D<double>& A, const gMat2D<double>& B, gMat2D<d
   * Specialized version of dot for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void dot(const gMat2D<float>& A, const gVec<float>& x, gVec<float>& y){
-
+GURLS_EXPORT void dot(const gMat2D<float>& A, const gVec<float>& x, gVec<float>& y)
+{
     if ( (A.cols() != x.getSize()) ||  (A.rows() != y.getSize()))
         throw gException(Exception_Inconsistent_Size);
 
@@ -126,16 +125,15 @@ GURLS_EXPORT void dot(const gMat2D<float>& A, const gVec<float>& x, gVec<float>&
     float alpha = 1.0f;
     float beta = 0.0f;
 
-    char transA = 'T';  // row major matrix
+    char transA = 'N';
 
-    int m = A.cols();   // row major matrix
-    int n = A.rows();   // row major matrix
-    int lda = m;        // row major matrix
+    int m = A.rows();
+    int n = A.cols();
+    int lda = m;
     int inc = 1;
 
     sgemv_(&transA, &m, &n, &alpha, const_cast<float*>(A.getData()), &lda,
-          const_cast<float*>(x.getData()), &inc, &beta,
-          y.getData(), &inc);
+          const_cast<float*>(x.getData()), &inc, &beta, y.getData(), &inc);
 }
 
 /**
@@ -149,14 +147,14 @@ GURLS_EXPORT void dot(const gMat2D<double>& A, const gVec<double>& x, gVec<doubl
 
 
     // y = alpha*A*x + beta*y
-    double alpha = 1.0f;
-    double beta = 0.0f;
+    double alpha = 1.0;
+    double beta = 0.0;
 
-    char transA = 'T';  // row major matrix
+    char transA = 'N';
 
-    int m = A.cols();   // row major matrix
-    int n = A.rows();   // row major matrix
-    int lda = m;        // row major matrix
+    int m = A.rows();
+    int n = A.cols();
+    int lda = m;
     int inc = 1;
 
     dgemv_(&transA, &m, &n, &alpha, const_cast<double*>(A.getData()), &lda,
@@ -169,27 +167,31 @@ GURLS_EXPORT void dot(const gMat2D<double>& A, const gVec<double>& x, gVec<doubl
   * Specialized version of lu for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void lu(gMat2D<float>& A, gVec<int>& pv) {
+GURLS_EXPORT void lu(gMat2D<float>& A, gVec<int>& pv)
+{
+    unsigned int k = std::min(A.cols(), A.rows());
 
-    unsigned int k = std::min<unsigned int>(A.cols(), A.rows());
-    if (pv.getSize() != k) {
+    if (pv.getSize() != k)
         throw gException("The lenghth of pv must be equal to the minimun dimension of A");
-    }
+
     int info;
     int m = A.rows();
     int n = A.cols();
-    int lda = A.cols();
+    int lda = A.rows();
+
     sgetrf_(&m, &n, A.getData(), &lda, pv.getData(), &info);
 
+    if(info <0)
+        throw gException("LU factorization failed");
 }
 
 /**
   * Specialized version of lu for float matrices
   */
 template <>
-GURLS_EXPORT void lu(gMat2D<float>& A) {
-
-    gVec<int> pv(std::min<int>(A.cols(), A.rows()));
+GURLS_EXPORT void lu(gMat2D<float>& A)
+{
+    gVec<int> pv(std::min(A.cols(), A.rows()));
     lu(A, pv);
 }
 
@@ -197,192 +199,119 @@ GURLS_EXPORT void lu(gMat2D<float>& A) {
   * Specialized version of inv for float matrices
   */
 template <>
-GURLS_EXPORT void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgorithm alg){
+GURLS_EXPORT void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgorithm alg)
+{
     Ainv = A;
-    int k = std::min<int>(Ainv.cols(), Ainv.rows());
+    int k = std::min(Ainv.cols(), Ainv.rows());
+
     int info;
     int* ipiv = new int[k];
+
     int m = Ainv.rows();
     int n = Ainv.cols();
-    int lda = Ainv.cols();
-    float* work = new float[n];
+    int lda = Ainv.rows();
 
     sgetrf_(&m, &n, Ainv.getData(), &lda, ipiv, &info);
 
+    float* work = new float[n];
+
     sgetri_(&m, Ainv.getData(), &lda, ipiv, work, &n, &info);
+
     delete[] ipiv;
     delete[] work;
 }
 
 
+template<>
+float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND);
+
 /**
   * Specialized version of pinv for float matrices
   */
 template <>
-GURLS_EXPORT void pinv(const gMat2D<float>& A, gMat2D<float>& Ainv, float RCOND){
+GURLS_EXPORT void pinv(const gMat2D<float>& A, gMat2D<float>& Ainv, float RCOND)
+{
+    int r, c;
+    float* inv = gurls::pinv<float>(A.getData(), A.rows(), A.cols(), r, c, &RCOND);
 
-    /*
+    Ainv.resize(r, c);
+    gurls::copy(Ainv.getData(), inv, r*c);
 
-subroutine SGELSS 	( 	INTEGER  	M,
-  INTEGER  	N,
-  INTEGER  	NRHS,
-  REAL,dimension( lda, * )  	A,
-  INTEGER  	LDA,
-  REAL,dimension( ldb, * )  	B,
-  INTEGER  	LDB,
-  REAL,dimension( * )  	S,
-  REAL  	RCOND,
-  INTEGER  	RANK,
-  REAL,dimension( * )  	WORK,
-  INTEGER  	LWORK,
-  INTEGER  	INFO
- )
-
-*/
-
-    int M = A.rows();
-    int N = A.cols();
-
-    // The following step is required because we are currently storing
-    // the matrices using a column-major order while LAPACK's
-    // routines require row-major ordering
-    float* a = new float[M*N];
-    const float* ptr_A = A.getData();
-    float* ptr_a = a;
-    for (int j = 0; j < N ; j++){
-        for (int i = 0; i < M ; i++){
-            *ptr_a++ = *(ptr_A+i*N+j);
-        }
-    }
-    int LDA = M;
-    int LDB = std::max(M, N);
-    int NRHS = LDB;
-
-    float *b = new float[LDB*NRHS], *b_ptr = b;
-    for (int i = 0; i < LDB*NRHS; i++){
-        *b_ptr++=0.f;
-    }
-    b_ptr = b;
-    for (int i = 0; i < std::min(LDB, NRHS); i++, b_ptr+=(NRHS+1)){
-        *b_ptr = 1.f;
-    }
-
-    float* S = new float[std::min(M,N)];
-    float condnum = 0.f; // The condition number of A in the 2-norm = S(1)/S(min(m,n)).
-
-    if (RCOND < 0){
-        RCOND = 0.f;
-    }
-    int RANK = -1; // std::min(M,N);
-    int LWORK = -1; //2 * (3*LDB + std::max( 2*std::min(M,N), LDB));
-    float* WORK = new float[1];
-    /*
-   INFO:
-   = 0:	successful exit
-   < 0:	if INFO = -i, the i-th argument had an illegal value.
-   > 0:	the algorithm for computing the SVD failed to converge;
-     if INFO = i, i off-diagonal elements of an intermediate
-     bidiagonal form did not converge to zero.
-   */
-    int INFO;
-
-    /* Query and allocate the optimal workspace */
-    /*int res = */sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
-    LWORK = static_cast<int>(WORK[0]);
-    delete [] WORK;
-    WORK = new float[LWORK];
-
-    /*res = */sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &RCOND, &RANK, WORK, &LWORK, &INFO);
-    // TODO: check INFO on exit
-    condnum = S[0]/(S[std::min(M, N)]-1);
-
-
-//    gMat2D<float> *tmp = new gMat2D<float>(b, LDB, LDB, false);
-
-    float *ainv = new float[N*M];
-    float* ptr_b = ainv;
-    float* ptr_B = b;
-    for (int i = 0; i < N ; i++){
-        for (int j = 0; j < M ; j++){
-            *(ptr_b+i*M+j) = *(ptr_B+j*NRHS+i);
-        }
-    }
-    Ainv = * new gMat2D<float>(ainv, N, M, true);
-
-//	gMat2D<float> *tmp = new gMat2D<float>(b, LDB, NRHS, false);
-//	gMat2D<float> *tmp1 = new gMat2D<float>(NRHS, LDB);
-//	tmp->transpose(*tmp1);
-//	Ainv = * new gMat2D<float>(tmp1->getData(), N, M, true);
-//	std::cout << "A = " << std::endl << A << std::endl;
-//	std::cout << "pinv(A) = " << std::endl << Ainv << std::endl;
-    delete [] S;
-    delete [] WORK;
-    delete [] a;
-//	delete tmp, tmp1;
-    delete [] b;
+    delete[] inv;
 }
 
 /**
   * Specialized version of svd for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void svd(const gMat2D<float>& A, gMat2D<float>& U, gVec<float>& W, gMat2D<float>& Vt) {
+GURLS_EXPORT void svd(const gMat2D<float>& A, gMat2D<float>& U, gVec<float>& W, gMat2D<float>& Vt)
+{
+    float* Ubuf;
+    float* Sbuf;
+    float* Vtbuf;
 
-    char jobu = 'S', jobvt = 'S';
-    int m = A.rows();
-    int n = A.cols();
-    int k = std::min<int>(m, n);
+    int Urows, Ucols;
+    int Slen;
+    int Vtrows, Vtcols;
 
-    if ((int)W.getSize() < k) {
-        throw gException("The length of vector W must be at least equal to the minimum dimension of the input matrix A");
-    }
-    if ((int)U.rows() < m || (int)U.cols() < k) {
-        throw gException("Please check the dimensions of the matrix U where to store the singular vectors");
-    }
-    if ((int)Vt.rows() < k || (int)Vt.cols() < n) {
-        throw gException("Please check the dimensions of the matrix Vt where to store the rigth singular vectors");
-    }
+    gurls::svd(A.getData(), Ubuf, Sbuf, Vtbuf,
+             A.rows(), A.cols(),
+             Urows, Ucols, Slen, Vtrows, Vtcols);
 
-    int lda = A.cols();
-    int ldu = U.cols();
-    int ldvt = Vt.cols();
-    int info, lwork = std::max<int>(3*k+std::max<int>(m,n), 5*k);
-    float* work = new float[lwork];
-    float* copy = new float[m*n];
-    A.asarray(copy, m*n);
-    sgesvd_(&jobu, &jobvt, &n, &m, copy, &lda, W.getData(), Vt.getData(), &ldvt, U.getData(), &ldu, work, &lwork, &info);
-    delete[] work;
-    delete[] copy;
+
+    U.resize(Urows, Ucols);
+    copy(U.getData(), Ubuf, U.getSize());
+
+    W.resize(Slen);
+    copy(W.getData(), Sbuf, Slen);
+
+    Vt.resize(Vtrows, Vtcols);
+    copy(Vt.getData(), Vtbuf, Vt.getSize());
+
+    delete [] Ubuf;
+    delete [] Sbuf;
+    delete [] Vtbuf;
 }
 
 /**
   * Specialized version of eig for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>& Wi) {
-
-    if (A.cols() != A.rows()) {
+GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& Wr, gVec<float>& Wi)
+{
+    if (A.cols() != A.rows())
         throw gException("The input matrix A must be squared");
-    }
+
+    float* Atmp = new float[A.getSize()];
+    copy(Atmp, A.getData(), A.getSize());
 
     char jobvl = 'N', jobvr = 'V';
     int n = A.cols(), lda = A.cols(), ldvl = 1, ldvr = A.cols();
     int info, lwork = 4*n;
     float* work = new float[lwork];
-    gMat2D<float> Atmp = A;
-    gMat2D<float> Vtmp = V;
-    sgeev_(&jobvl, &jobvr, &n, Atmp.getData(), &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, Vtmp.getData(), &ldvr, work, &lwork, &info);
-    Vtmp.transpose(V);
+
+    sgeev_(&jobvl, &jobvr, &n, Atmp, &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, V.getData(), &ldvr, work, &lwork, &info);
+
+    delete[] Atmp;
     delete[] work;
+
+    if(info != 0)
+    {
+        std::stringstream str;
+        str << "Eigenvalues/eigenVectors computation failed, error code " << info << ";" << std::endl;
+        throw gException(str.str());
+    }
 }
 
 /**
   * Specialized version of eig for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W){
+GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W)
+{
     gVec<float> tmp(W.getSize());
     tmp = 0;
+
     eig(A, V, W, tmp);
 }
 
@@ -390,25 +319,38 @@ GURLS_EXPORT void eig(const gMat2D<float>& A, gMat2D<float>& V, gVec<float>& W){
   * Specialized version of eig for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi) {
-
-    if (A.cols() != A.rows()) {
+GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& Wr, gVec<float>& Wi)
+{
+    if (A.cols() != A.rows())
         throw gException("The input matrix A must be squared");
-    }
+
+    float* Atmp = new float[A.getSize()];
+    copy(Atmp, A.getData(), A.getSize());
 
     char jobvl = 'N', jobvr = 'N';
     int n = A.cols(), lda = A.cols(), ldvl = 1, ldvr = 1;
     int info, lwork = 4*n;
     float* work = new float[lwork];
-    sgeev_(&jobvl, &jobvr, &n, const_cast<gMat2D<float>&>(A).getData(), &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, NULL, &ldvr, work, &lwork, &info);
+
+    sgeev_(&jobvl, &jobvr, &n, Atmp, &lda, Wr.getData(), Wi.getData(), NULL, &ldvl, NULL, &ldvr, work, &lwork, &info);
+
+    delete[] Atmp;
     delete[] work;
+
+    if(info != 0)
+    {
+        std::stringstream str;
+        str << "Eigenvalues/eigenVectors computation failed, error code " << info << ";" << std::endl;
+        throw gException(str.str());
+    }
 }
 
 /**
   * Specialized version of eig for float matrices/vectors
   */
 template <>
-GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W){
+GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W)
+{
     gVec<float> tmp = W;
     eig(A, W, tmp);
 }
@@ -418,30 +360,15 @@ GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W){
   * Specialized version of cholesky for float matrices
   */
 template <>
-GURLS_EXPORT void cholesky(const gMat2D<float>& A, gMat2D<float>& L, bool upper){
+GURLS_EXPORT void cholesky(const gMat2D<float>& A, gMat2D<float>& L, bool upper)
+{
 
-    typedef float T;
-    L = A;
+    float* chol = cholesky<float>(A.getData(), A.rows(), A.cols(), upper);
 
-    int LDA = A.rows();
-    int n = A.cols();
-    char UPLO = upper? 'U' : 'L';
-    int info;
+    copy(L.getData(), chol, A.getSize());
 
-    spotrf_(&UPLO,&n, L.getData(),&LDA,&info);
-
-    // This is required because we adopted a column major order to store the
-    // data into matrices
-    gMat2D<T> tmp(L.rows(), L.cols());
-    if (!upper){
-        L.uppertriangular(tmp);
-    } else {
-        L.lowertriangular(tmp);
-    }
-    tmp.transpose(L);
-
+    delete [] chol;
 }
-
 
 /**
   * Specialized version of set for float buffers
@@ -590,12 +517,12 @@ GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int&
     int INFO;
 
     /* Query and allocate the optimal workspace */
-    int res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
     LWORK = static_cast<int>(WORK[0]);
     delete [] WORK;
     WORK = new float[LWORK];
 
-    res = sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
 
     // TODO: check INFO on exit
     //condnum = S[0]/(S[std::min(M, N)]-1);

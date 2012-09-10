@@ -68,39 +68,36 @@ public:
      * \return adds the following fields to opt:
      *  - confidence = array containing the confidence score for each row of the field pred of opt.
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
 template<typename T>
-void ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt) throw(gException)
 {
     //   out = struct;
     //   [n,k] = size(opt.pred);
+    const gMat2D<T> &pred = opt.getOptValue<OptMatrix<gMat2D<T> > >("pred");
 
-    GurlsOption *pred_opt = opt.getOpt("pred");
-    gMat2D<T> pred_mat = (OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
+    const unsigned long n = pred.rows();
+    const unsigned long t = pred.cols();
 
-    const int n = pred_mat.rows();
-    const int t = pred_mat.cols();
-
-    gMat2D<T> y_pred(t, n);
-    pred_mat.transpose(y_pred);
-
-    T* expscoresTranspose = y_pred.getData();
 
 //      out.confidence = opt.pred;
 //      out.confidence = sort(out.confidence,2,'descend');
 //      out.confidence = out.confidence(:,1) - out.confidence(:,2);
+
+    const T* expscores = pred.getData();
 
     gMat2D<T> *conf = new gMat2D<T>(n,1);
     T* confidence = conf->getData();
 
     T* rowT = new T[t];
 
-    for(int i=0; i<n; ++i)
+    for(unsigned long i=0; i<n; ++i)
     {
-        getRow(expscoresTranspose, n, t, i, rowT);
+        getRow(expscores, n, t, i, rowT);
         std::sort(rowT,rowT+t);
+
         confidence[i] = rowT[t-1]-rowT[t-2];
     }
 
@@ -108,7 +105,8 @@ void ConfGap<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, GurlsOp
 
     GurlsOptionsList* ret = new GurlsOptionsList("confidence");
     ret->addOpt("confidence", new OptMatrix<gMat2D<T> >(*conf));
-    opt.addOpt("conf", ret);
+
+    return ret;
 }
 
 }

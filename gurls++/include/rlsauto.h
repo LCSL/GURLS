@@ -74,29 +74,29 @@ public:
       *  - C = empty matrix
       *  - X = empty matrix
       */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt);
 };
 
 template <typename T>
-void RLSAuto<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSAuto<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
     //[n,d] = size(X);
-    const unsigned long n = X_OMR.rows();
-    const unsigned long d = X_OMR.cols();
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
 
 //     if (n > d) % Do primal
     if(n > d)
     {
         //    cfr = rls_primal(X, y, opt);
         RLSPrimal<T> rlsprimal;
-        rlsprimal.execute(X_OMR, Y_OMR, opt);
+        return rlsprimal.execute(X, Y, opt);
     }
 //  else % Do dual
     else
     {
         //      cfr = rls_dual(X, y, opt);
         RLSDual<T> rlsdual;
-        rlsdual.execute(X_OMR, Y_OMR, opt);
+        return rlsdual.execute(X, Y, opt);
     }
 }
 

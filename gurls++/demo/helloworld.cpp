@@ -55,13 +55,6 @@
 using namespace gurls;
 
 /**
-  * Builds a matrix reading elements from a text file in CSV format Parameter \a ROWM indicates
-  * whether to load the matrix in row major order or in column major one.
-  */
-template<typename T>
-gMat2D<T> *readFile(const std::string &fileName, bool ROWM = true );
-
-/**
   * Main function
   */
 int main(int argc, char* argv[])
@@ -74,7 +67,7 @@ int main(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
-    gMat2D<T> *Xtr, *Xte, *ytr, *yte;
+    gMat2D<T> Xtr, Xte, ytr, yte;
 
     std::string XtrFileName = std::string(argv[1]) + "Xtr.txt";
     std::string ytrFileName = std::string(argv[1]) + "ytr_onecolumn.txt";
@@ -84,23 +77,23 @@ int main(int argc, char* argv[])
     try
     {
         //load the training data
-        Xtr = readFile<T>(XtrFileName);
-        ytr = readFile<T>(ytrFileName);
+        Xtr.readCSV(XtrFileName);
+        ytr.readCSV(ytrFileName);
 
         //load the test data
-        Xte = readFile<T>(XteFileName);
-        yte = readFile<T>(yteFileName);
+        Xte.readCSV(XteFileName);
+        yte.readCSV(yteFileName);
 
 
         //train the classifer
-        GurlsOptionsList* opt = gurls_train(*Xtr, *ytr);
+        GurlsOptionsList* opt = gurls_train(Xtr, ytr);
 
         //predict the labels for the test set and asses prediction accuracy
-        gurls_test(*Xte, *yte, *opt);
+        gurls_test(Xte, yte, *opt);
 
 
         const gMat2D<T>& acc = OptMatrix<gMat2D<T> >::dynacast(opt->getOpt("acc"))->getValue();
-        const int max = static_cast<int>(*std::max_element(ytr->getData(), ytr->getData()+ytr->getSize()));
+        const int max = static_cast<int>(*std::max_element(ytr.getData(), ytr.getData()+ytr.getSize()));
         const int accs = acc.getSize();
 
         std::cout.precision(4);
@@ -124,48 +117,4 @@ int main(int argc, char* argv[])
         std::cout << e.getMessage() << std::endl;
         return EXIT_FAILURE;
     }
-}
-
-template<typename T>
-gMat2D<T> * readFile(const std::string &fileName, bool ROWM)
-{
-    std::vector<std::vector< T > > matrix;
-    std::ifstream in(fileName.c_str());
-
-    int rows = 0;
-    int cols = 0;
-    gMat2D<T> *g;
-
-    if(!in.is_open())
-        throw gurls::gException("Cannot open file " + fileName);
-
-    std::string line;
-    while (std::getline(in, line))
-    {
-        std::istringstream ss(line);
-        std::vector< T > tf;
-        std::copy(std::istream_iterator< T >(ss), std::istream_iterator< T >(), std::back_inserter(tf));
-
-        matrix.push_back(tf);
-        ++rows;
-    }
-    in.close();
-
-    cols = matrix[0].size();
-
-    g =  new gMat2D< T >(rows, cols);
-    T* buffer = g->getData();
-
-    for(int i=0; i<rows; ++i)
-    {
-        for(int j=0; j<cols; ++j)
-        {
-            if(ROWM)
-                buffer[i*cols+j]= matrix[i][j];
-            else
-                buffer[j*rows+i]= matrix[i][j];
-        }
-    }
-
-    return g;
 }

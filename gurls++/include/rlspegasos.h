@@ -83,34 +83,28 @@ public:
      *  - acc_avg = average accuracy across iterations
      *
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt);
 };
 
 
 template <typename T>
-void RLSPegasos<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, GurlsOptionsList& opt)
+GurlsOptionsList* RLSPegasos<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)
 {
     //	lambda = opt.singlelambda(opt.paramsel.lambdas);
-    //    std::vector<double> ll = OptNumberList::dynacast(opt.getOpt("lambdas"))->getValue();
-    GurlsOptionsList* paramsel = GurlsOptionsList::dynacast(opt.getOpt("paramsel"));
-    std::vector<double> ll = OptNumberList::dynacast(paramsel->getOpt("lambdas"))->getValue();
-    T lambda = static_cast<T>((OptFunction::dynacast(opt.getOpt("singlelambda")))->getValue(&(*(ll.begin())), ll.size()));
-
-    gMat2D<T> X(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(X);
-
-    gMat2D<T> Y(Y_OMR.cols(), Y_OMR.rows());
-    Y_OMR.transpose(Y);
+    const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+    T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
 
     //   [n,d] = size(X);
-    const unsigned long n = X_OMR.rows();
-    const unsigned long d = X_OMR.cols();
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
 
     //   T = size(bY,2);
-    const unsigned long t = Y_OMR.cols();
+    const unsigned long t = Y.cols();
+
 
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
+
     //   opt.cfr.W = zeros(d,T);
     gMat2D<T>* W = new gMat2D<T>(d,t);
     set(W->getData(), (T)0.0, d*t);
@@ -138,7 +132,21 @@ void RLSPegasos<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurl
     //   % Run mulitple epochs
     //   for i = 1:opt.epochs,
     int epochs = static_cast<int>(opt.getOptAsNumber("epochs"));
-    opt.addOpt("optimizer",optimizer);
+
+    GurlsOptionsList* tmp_opt = new GurlsOptionsList("opt");
+
+    GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
+    tmp_opt->addOpt("paramsel", tmp_paramsel);
+
+    gMat2D<T>* ret_lambdas = new gMat2D<T>(ll);
+    tmp_paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*ret_lambdas));
+
+
+    OptFunction* tmp_singlelambda = new OptFunction(opt.getOptAs<OptFunction>("singlelambda")->getName());
+    tmp_opt->addOpt("singlelambda", tmp_singlelambda);
+
+    tmp_opt->addOpt("optimizer", optimizer);
+
     for(int i=0; i<epochs; ++i)
     {
         //       if opt.cfr.count == 0
@@ -147,9 +155,16 @@ void RLSPegasos<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurl
         //       end
 
         //       opt.cfr = rls_pegasos_singlepass(X, bY, opt);
-        rls_pegasos_driver(X.getData(), Y.getData(), opt, n, d, Y_OMR.rows(), t);
+        GurlsOptionsList* result = rls_pegasos_driver(X.getData(), Y.getData(), *tmp_opt, n, d, Y.rows(), t);
+
+        tmp_opt->removeOpt("optimizer");
+        tmp_opt->addOpt("optimizer", result);
 
     }
+
+    optimizer = tmp_opt->getOptAs<GurlsOptionsList>("optimizer");
+    tmp_opt->removeOpt("optimizer", false);
+    delete tmp_opt;
 
     //   cfr = opt.cfr;
 
@@ -159,11 +174,13 @@ void RLSPegasos<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& Y_OMR, Gurl
     if(eq(count, (T)0.0))
         throw gException(Exception_Illegal_Argument_Value);
 
+    W = &(optimizer->getOptValue<OptMatrix<gMat2D<T> > >("W"));
+    W_sum = &(optimizer->getOptValue<OptMatrix<gMat2D<T> > >("W_sum"));
+
     set(W->getData(), (T)0.0, W->getSize());
     axpy(W->getSize(), (T)(1.0/count), W_sum->getData(), 1, W->getData(), 1);
 
-    //     opt.removeOpt("optimizer", false);
-    //     opt.addOpt("optimizer",optimizer);
+    return optimizer;
 }
 
 }

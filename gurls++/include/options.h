@@ -56,6 +56,8 @@
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
+#include <boost/serialization/vector.hpp>
+
 
 /**
   * \ingroup Settings
@@ -81,10 +83,107 @@ enum OptTypes	{GenericOption, StringOption, NumberOption,
  * options.
  */
 
-GURLS_EXPORT double mean(double* v, int n);     ///< Computes the mean value of a vector \c v of lenght \c n
-GURLS_EXPORT double min(double* v, int n);      ///< Computes the smallest element in a vector \a v of lenght \c n
-GURLS_EXPORT double max(double* v, int n);      ///< Computes the largest element in a vector \c v of lenght \c n
-GURLS_EXPORT double median(double* v, int n);   ///< Computes the median value of a vector \c v of lenght \c n
+class GURLS_EXPORT Functor
+{
+public:
+    virtual double operator()(const double *v, int n) = 0;
+    virtual float operator()(const float *v, int n) = 0;
+};
+
+/**
+ * Computes the mean value of a vector \c v of lenght \c n
+ */
+class GURLS_EXPORT Mean : public Functor
+{
+public:
+
+    double operator()(const double *v, int n)
+    {
+        return mean<double>(v, n);
+    }
+
+    float operator()(const float *v, int n)
+    {
+        return mean<float>(v, n);
+    }
+
+protected:
+    template <typename T>
+    T mean(const T *v, int n)
+    {
+        T m = (T)0.0;
+
+        for (int i = 0; i < n; ++i, ++v)
+            m += *v;
+
+        return m/n;
+    }
+};
+
+/**
+ * Computes the smallest element in a vector \c v of lenght \c n
+ */
+class GURLS_EXPORT Min : public Functor
+{
+public:
+    double operator()(const double *v, int n)
+    {
+        return *std::min_element(v,v+n);
+    }
+
+    float operator()(const float *v, int n)
+    {
+        return *std::min_element(v,v+n);
+    }
+};
+
+
+/**
+ * Computes the largest element in a vector \c v of lenght \c n
+ */
+class GURLS_EXPORT Max : public Functor
+{
+public:
+    double operator()(const double *v, int n)
+    {
+        return *std::max_element(v,v+n);
+    }
+
+    float operator()(const float *v, int n)
+    {
+        return *std::max_element(v,v+n);
+    }
+};
+
+/**
+ * Computes the median value of a vector \c v of lenght \c n
+ */
+class GURLS_EXPORT Median : public Functor
+{
+public:
+    double operator()(const double *v, int n)
+    {
+        return median(v,n);
+    }
+
+    float operator()(const float *v, int n)
+    {
+        return median(v,n);
+    }
+
+protected:
+    template <typename T>
+    T median(const T *v, int n)
+    {
+        std::vector<T> vd(v, v+n);
+        sort(vd.begin(), vd.end());
+
+        if(n%2)
+            return *(vd.begin()+vd.size()/2);
+        else
+            return (*(vd.begin()+vd.size()/2) + *((vd.begin()+vd.size()/2)-1) )/2;
+    }
+};
 
 
 /**
@@ -125,7 +224,7 @@ public:
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == GenericOption); }
+    virtual bool isA(OptTypes id) const { return (id == GenericOption); }
 
     /**
       * Returns the identifier of the option type
@@ -161,6 +260,8 @@ private:
 
 public:
 
+    typedef std::string ValueType;
+
     /**
       * Empty constructor
       */
@@ -174,7 +275,7 @@ public:
     /**
       * Constructor from a string
       */
-    OptString(std::string& str): GurlsOption(StringOption),value(str){}
+    OptString(const std::string& str): GurlsOption(StringOption),value(str){}
 
     /**
       * Copies the opt values from an existing \ref OptString
@@ -206,9 +307,14 @@ public:
     std::string& getValue() { return value;}
 
     /**
+      * Returns the string value
+      */
+    const std::string& getValue() const { return value;}
+
+    /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == StringOption); }
+    virtual bool isA(OptTypes id) const { return (id == StringOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptString
@@ -216,6 +322,17 @@ public:
     static OptString* dynacast(GurlsOption* opt) {
         if (opt->isA(StringOption) ){
             return static_cast<OptString*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptString
+      */
+    static const OptString* dynacast(const GurlsOption* opt) {
+        if (opt->isA(StringOption) ){
+            return static_cast<const OptString*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
@@ -264,6 +381,8 @@ private:
 
 public:
 
+    typedef std::vector<std::string> ValueType;
+
     /**
       * Empty constructor
       */
@@ -274,7 +393,7 @@ public:
     /**
       * Constructor from a vector of strings
       */
-    OptStringList(std::vector<std::string>& vec): GurlsOption(StringListOption){
+    OptStringList(const std::vector<std::string>& vec): GurlsOption(StringListOption){
         value = new std::vector<std::string>(vec.begin(), vec.end());
     }
 
@@ -317,12 +436,12 @@ public:
     /**
       * Returns the vector of strings
       */
-    std::vector<std::string>& getValue() { return *value;}
+    const std::vector<std::string>& getValue() const { return *value;}
 
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == StringListOption); }
+    virtual bool isA(OptTypes id) const { return (id == StringListOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptStringList
@@ -330,6 +449,17 @@ public:
     static OptStringList* dynacast(GurlsOption* opt) {
         if (opt->isA(StringListOption) ){
             return static_cast<OptStringList*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptStringList
+      */
+    static const OptStringList* dynacast(const GurlsOption* opt) {
+        if (opt->isA(StringListOption) ){
+            return static_cast<const OptStringList*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
@@ -388,6 +518,8 @@ private:
 
 public:
 
+    typedef double ValueType;
+
     /**
       * Empty constructor
       */
@@ -422,12 +554,12 @@ public:
     /**
       * Returns the option value
       */
-    double& getValue() {return value;}
+    const double& getValue() const {return value;}
 
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == NumberOption); }
+    virtual bool isA(OptTypes id) const { return (id == NumberOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptNumber
@@ -435,6 +567,17 @@ public:
     static OptNumber* dynacast(GurlsOption* opt) {
         if (opt->isA(NumberOption) ){
             return static_cast<OptNumber*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptNumber
+      */
+    static const OptNumber* dynacast(const GurlsOption* opt) {
+        if (opt->isA(NumberOption) ){
+            return static_cast<const OptNumber*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
@@ -468,6 +611,8 @@ public:
 
 };
 
+//#ifdef GURLS_DEPRECATED
+
 /**
   * \ingroup Settings
   * \brief OptNumberList is an option containing a list of
@@ -480,6 +625,8 @@ private:
 
 public:
 
+    typedef std::vector<double> ValueType;
+
     /**
       * Empty constructor
       */
@@ -490,7 +637,7 @@ public:
     /**
       * Constructor from a vector of double
       */
-    OptNumberList(std::vector<double>& vec): GurlsOption(NumberListOption){
+    OptNumberList(const std::vector<double>& vec): GurlsOption(NumberListOption){
         value = new std::vector<double>(vec.begin(), vec.end());
     }
 
@@ -514,7 +661,10 @@ public:
       */
     OptNumberList& operator=(const OptNumberList& other);
 
-//    ~OptNumberList(){}
+    ~OptNumberList()
+    {
+        delete value;
+    }
 
     /**
       * Copies the option values from a vector of double
@@ -536,9 +686,14 @@ public:
     std::vector<double>& getValue() { return *value;}
 
     /**
+      * Returns the vector of double inside the option
+      */
+    const std::vector<double>& getValue() const { return *value;}
+
+    /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == NumberListOption); }
+    virtual bool isA(OptTypes id) const { return (id == NumberListOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptNumberList
@@ -546,6 +701,18 @@ public:
     static OptNumberList* dynacast(GurlsOption* opt) {
         if (opt->isA(NumberListOption) ){
             return static_cast<OptNumberList*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptNumberList
+      */
+    static const OptNumberList* dynacast(const GurlsOption* opt)
+    {
+        if (opt->isA(NumberListOption) ){
+            return static_cast<const OptNumberList*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
@@ -589,39 +756,61 @@ public:
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 
-};
+}
+//#ifdef __GNUC__
+//    __attribute__ ((deprecated))
+//#endif
+;
+
+//#ifdef _WIN32
+//#pragma deprecated( OptNumberList )
+//#endif
+
+//#endif
+
 
 #ifdef _WIN32
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif
 
+
 /**
   * \ingroup Settings
   * \brief OptFunction is an option representing a pointer to a generic function
-  * double (*function)(double* , int) operating over an array of floating point numbers.
+  * T (*function)(T* , int) operating over an array of floating point numbers.
   */
 class GURLS_EXPORT OptFunction: public GurlsOption
 {
-private:
+protected:
     std::string name; ///< Function name
+    Functor *f;       ///< Pointer to the functor containing the function to be called
 
 public:
     /**
       * Constructor from a fuction name
       */
-    OptFunction(std::string func_name): GurlsOption(FunctionOption), name(func_name) {}
+    OptFunction(std::string func_name): GurlsOption(FunctionOption)
+    {
+        setValue(func_name);
+    }
+
+    /**
+      * Destructor
+      */
+    ~OptFunction()
+    {
+        delete f;
+    }
 
     /**
       * Copies the option values from an existing \ref OptFunction
       */
-    OptFunction& operator=(const OptFunction& other);
-
-    /**
-      * Copies the option values from a string representing a function name
-      */
-    void setValue(std::string func_name) {
-        name = func_name;
+    OptFunction& operator=(const OptFunction& other)
+    {
+        delete f;
+        this->setValue(other.name);
+        return *this;
     }
 
     /**
@@ -632,38 +821,37 @@ public:
     /**
       * Executes the function over a buffer of length n, returning the result
       */
-    double getValue(double* array, int n) {
-        double v;
-        //*v = (*value)(array,n);
-        if (!name.compare("mean")){
-            v = mean(array, n);
-        } else if(!name.compare("min")){
-            v = min(array, n);
-        } else if(!name.compare("max")){
-            v = max(array, n);
-        } else if(!name.compare("median")){
-            v = median(array, n);
-        } else {
-            v = std::numeric_limits<double>::signaling_NaN();
-            throw gException(gurls::Exception_Unknown_Function);
-        }
-        return v;
+    template<typename T>
+    T getValue(T* array, int n) const
+    {
+        return (*f)(array, n);
     }
 
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == FunctionOption); }
+    virtual bool isA(OptTypes id) const { return (id == FunctionOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptFunction
       */
-    static OptFunction* dynacast(GurlsOption* opt) {
-        if (opt->isA(FunctionOption) ){
+    static OptFunction* dynacast(GurlsOption* opt)
+    {
+        if (opt->isA(FunctionOption) )
             return static_cast<OptFunction*>(opt);
-        } else {
+        else
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptFunction
+      */
+    static const OptFunction* dynacast(const GurlsOption* opt)
+    {
+        if (opt->isA(FunctionOption) )
+            return static_cast<const OptFunction*>(opt);
+        else
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
     }
 
     /**
@@ -677,7 +865,8 @@ public:
       * Serializes the option to a generic archive
       */
     template<class Archive>
-    void save(Archive & ar, const unsigned int /* file_version */) const{
+    void save(Archive & ar, const unsigned int /* file_version */) const
+    {
         ar & this->type;
         ar & this->name;
     }
@@ -686,12 +875,37 @@ public:
       * Deserializes the option from a generic archive
       */
     template<class Archive>
-    void load(Archive & ar, const unsigned int /* file_version */){
+    void load(Archive & ar, const unsigned int /* file_version */)
+    {
         ar & this->type;
         ar & this->name;
+
+        delete f;
+        setValue(this->name);
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+protected:
+
+        /**
+          * Sets the option value from a string representing a supported function name
+          */
+        void setValue(std::string func_name)
+        {
+            name = func_name;
+
+            if(func_name == "mean")
+                f = new Mean();
+            else if(func_name == "min")
+                f = new Min();
+            else if(func_name == "max")
+                f = new Max();
+            else if(func_name == "median")
+                f = new Median();
+            else
+                throw gException(Exception_Unknown_Function);
+        }
 };
 
 
@@ -721,7 +935,7 @@ public:
     /**
       * Returns the element type for the matrix
       */
-    MatrixType getMatrixType()
+    MatrixType getMatrixType() const
     {
         return matType;
     }
@@ -742,6 +956,7 @@ private:
     Matrix& value;  ///< Option value
 
 public:
+    typedef Matrix ValueType;
 
     /**
       * Empty constructor
@@ -792,9 +1007,14 @@ public:
     Matrix& getValue() { return value;}
 
     /**
+      * Returns the matrix
+      */
+    const Matrix& getValue() const { return value;}
+
+    /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == MatrixOption); }
+    virtual bool isA(OptTypes id) const { return (id == MatrixOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptMatrix
@@ -802,6 +1022,17 @@ public:
     static OptMatrix* dynacast(GurlsOption* opt) {
         if (opt->isA(MatrixOption) ){
             return static_cast<OptMatrix*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptMatrix
+      */
+    static const OptMatrix* dynacast(const GurlsOption* opt) {
+        if (opt->isA(MatrixOption) ){
+            return static_cast<const OptMatrix*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }
@@ -893,6 +1124,8 @@ private:
 
 public:
 
+    typedef std::vector<std::string> ValueType;
+
     /**
       * Empty constructor
       */
@@ -911,9 +1144,17 @@ public:
     /**
       * Constructor from a string, builds a 1-size vector of strings
       */
-    OptTaskSequence(std::string& str): GurlsOption(TaskSequenceOption){
+    OptTaskSequence(const std::string& str): GurlsOption(TaskSequenceOption){
         tasks = new std::vector<std::string>();
         tasks->push_back(str);
+    }
+
+    /**
+      * Constructor from a string vector
+      */
+    OptTaskSequence(const std::vector<std::string>& data): GurlsOption(TaskSequenceOption)
+    {
+        tasks = new std::vector<std::string>(data);
     }
 
     /**
@@ -934,14 +1175,12 @@ public:
     /**
       * Returns the tasks sequence
       */
-    std::vector<std::string>& getValue() {
-        return *tasks;
-    }
+    const std::vector<std::string>& getValue() const { return *tasks; }
 
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) { return (id == TaskSequenceOption); }
+    virtual bool isA(OptTypes id) const { return (id == TaskSequenceOption); }
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptTaskSequence
@@ -949,6 +1188,17 @@ public:
     static OptTaskSequence* dynacast(GurlsOption* opt) {
         if (opt->isA(TaskSequenceOption) ){
             return static_cast<OptTaskSequence*>(opt);
+        } else {
+            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+        }
+    }
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptTaskSequence
+      */
+    static const OptTaskSequence* dynacast(const GurlsOption* opt) {
+        if (opt->isA(TaskSequenceOption) ){
+            return static_cast<const OptTaskSequence*>(opt);
         } else {
             throw gException(gurls::Exception_Illegal_Dynamic_Cast);
         }

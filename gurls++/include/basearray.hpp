@@ -199,14 +199,16 @@ const T& BaseArray<T>::min() const {
 }
 
 template <typename T>
-double BaseArray<T>::sum() const{
+T BaseArray<T>::sum() const{
+
     T* ptr = this->data;
     T* endptr = this->data+this->size;
 
-    double sum = 0.0;
-    while(ptr != endptr){
+    T sum = (T)0.0;
+
+    while(ptr != endptr)
         sum+=*ptr++;
-    }
+
     return sum;
 }
 

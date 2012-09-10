@@ -72,22 +72,21 @@ public:
      *  - lambdas(=1.0)
      *  - sigma(=1.0)
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-void ParamSelFixSigLam<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)
+GurlsOptionsList *ParamSelFixSigLam<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt)
 {
     GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");
-    OptNumberList* lambda = new OptNumberList();
-    lambda->add(1.0);
-    paramsel->addOpt("lambdas", lambda);
-    double sigma = 1.0;
-    paramsel->addOpt("sigma", new OptNumber( sigma ));
 
-    opt.addOpt("paramsel", paramsel);
+    gMat2D<T> *lambda = new gMat2D<T>(1,1);
+    lambda->getData()[0] = (T)1.0;
+    paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambda));
 
+    paramsel->addOpt("sigma", new OptNumber( 1.0 ));
 
+    return paramsel;
 }
 
 }

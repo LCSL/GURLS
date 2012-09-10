@@ -69,19 +69,15 @@ public:
      *  - type = "chisquared"
      *  - K = the kernel matrix
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-void KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *KernelChisquared<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList &/*opt*/) throw(gException)
 {
-    gMat2D<T> Xt(X_OMR.cols(), X_OMR.rows());
-    X_OMR.transpose(Xt);
+    const int n = X.rows();
+    const int t = X.cols();
 
-    const int n = X_OMR.rows();
-    const int t = X_OMR.cols();
-
-    T* X = Xt.getData();
 
     gMat2D<T>* K_m = new gMat2D<T>(n, n);
     T* K = K_m->getData();
@@ -97,8 +93,8 @@ void KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/
             T sum = 0;
             for(int k=0; k< t; ++k)
             {
-                const T X_ik = X[i+(n*k)];
-                const T X_jk = X[j+(n*k)];
+                const T X_ik = X.getData()[i+(n*k)];
+                const T X_jk = X.getData()[j+(n*k)];
 
                 sum += pow(X_ik - X_jk, 2) / static_cast<T>(((0.5*(X_ik + X_jk)) + epsilon));
             }
@@ -113,7 +109,7 @@ void KernelChisquared<T>::execute(const gMat2D<T>& X_OMR, const gMat2D<T>& /*Y*/
     kernel->addOpt("type", "chisquared");
     kernel->addOpt("K", new OptMatrix<gMat2D<T> >(*K_m));
 
-    opt.addOpt("kernel", kernel);
+    return kernel;
 }
 
 }

@@ -164,16 +164,16 @@ int main(int argc, char *argv[])
 
         cout << "B = " << endl << B << endl;
 
-        std::cout << "min(B) COLUMNWISE = " << endl << B.min(gurls::COLUMNWISE).asMatrix(false) << endl;
-        std::cout << "argmin(B) COLUMNWISE = " << endl << B.argmin(gurls::COLUMNWISE).asMatrix(false) << endl;
-        std::cout << "min(B) ROWWISE = " << endl << B.min(gurls::ROWWISE).asMatrix(true) << endl;
-        std::cout << "argmin(B) ROWWISE = " << endl << B.argmin(gurls::ROWWISE).asMatrix(true) << endl;
-        std::cout << "max(B) COLUMNWISE = " << endl << B.max(gurls::COLUMNWISE).asMatrix(false) << endl;
-        std::cout << "argmax(B) COLUMNWISE = " << endl << B.argmax(gurls::COLUMNWISE).asMatrix(false) << endl;
-        std::cout << "max(B) ROWWISE = " << endl << B.max(gurls::ROWWISE).asMatrix(true) << endl;
-        std::cout << "argmax(B) ROWWISE = " << endl << B.argmax(gurls::ROWWISE).asMatrix(true) << endl;
-        std::cout << "sum(B), COLUMNWISE = " << endl << B.sum(gurls::COLUMNWISE).asMatrix(false) << endl;
-        std::cout << "sum(B) ROWWISE = " << endl << B.sum(gurls::ROWWISE).asMatrix(true) << endl;
+        std::cout << "min(B) COLUMNWISE = " << endl << B.min(gurls::COLUMNWISE)->asMatrix(false) << endl;
+        std::cout << "argmin(B) COLUMNWISE = " << endl << B.argmin(gurls::COLUMNWISE)->asMatrix(false) << endl;
+        std::cout << "min(B) ROWWISE = " << endl << B.min(gurls::ROWWISE)->asMatrix(true) << endl;
+        std::cout << "argmin(B) ROWWISE = " << endl << B.argmin(gurls::ROWWISE)->asMatrix(true) << endl;
+        std::cout << "max(B) COLUMNWISE = " << endl << B.max(gurls::COLUMNWISE)->asMatrix(false) << endl;
+        std::cout << "argmax(B) COLUMNWISE = " << endl << B.argmax(gurls::COLUMNWISE)->asMatrix(false) << endl;
+        std::cout << "max(B) ROWWISE = " << endl << B.max(gurls::ROWWISE)->asMatrix(true) << endl;
+        std::cout << "argmax(B) ROWWISE = " << endl << B.argmax(gurls::ROWWISE)->asMatrix(true) << endl;
+        std::cout << "sum(B), COLUMNWISE = " << endl << B.sum(gurls::COLUMNWISE)->asMatrix(false) << endl;
+        std::cout << "sum(B) ROWWISE = " << endl << B.sum(gurls::ROWWISE)->asMatrix(true) << endl;
 
         assert(((B.compare(thres,gMat2D<T>::Less))+(B.compare(thres,gMat2D<T>::GreaterEq))).allEqualsTo(true));
 

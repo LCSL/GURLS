@@ -69,30 +69,25 @@ The scores are converted in probabilities using the Boltzman distribution.
      * \return adds the following fields to opt:
      *  - confidence = array containing the confidence score for each row of the field pred of opt.
      */
-    void execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
 template<typename T>
-void ConfBoltzman<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList *ConfBoltzman<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt) throw(gException)
 {
     //   out = struct;
     //   [n,k] = size(opt.pred);
-    GurlsOption *pred_opt = opt.getOpt("pred");
-    gMat2D<T> &pred_mat = (OptMatrix<gMat2D<T> >::dynacast(pred_opt))->getValue();
+    const gMat2D<T> &pred = opt.getOptValue<OptMatrix<gMat2D<T> > >("pred");
 
-    const int n = pred_mat.rows();
-    const int t = pred_mat.cols();
+    const unsigned long n = pred.rows();
+    const unsigned long t = pred.cols();
 
-    gMat2D<T> y_pred(t, n);
-    pred_mat.transpose(y_pred);
 
-    T* expscoresTranspose = y_pred.getData();
-
-//    out = struct;
-//    [n,k] = size(opt.pred);
 //    expscores = exp(opt.pred);
 //    expscores = expscores./(sum(expscores,2)*ones(1,k));
 //    [out.confidence, out.labels] = max(expscores,[],2);
+
+    const T* expscores = pred.getData();
 
     T sum;
     T* work = new T[t+1];
@@ -105,9 +100,9 @@ void ConfBoltzman<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, Gu
     T* labels = lab->getData();
 
     //TODO optmize search of two maxes
-    for(int i=0; i<n; ++i)
+    for(unsigned long i=0; i<n; ++i)
     {
-        getRow(expscoresTranspose, n, t, i, rowT);
+        getRow(expscores, n, t, i, rowT);
         exp(rowT, t);
 
         sum = sumv(rowT, t, work);
@@ -126,8 +121,7 @@ void ConfBoltzman<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& /*Y*/, Gu
     ret->addOpt("confidence", new OptMatrix<gMat2D<T> >(*conf));
     ret->addOpt("labels", new OptMatrix<gMat2D<T> >(*lab));
 
-    opt.addOpt("conf", ret);
-
+    return ret;
 }
 
 }

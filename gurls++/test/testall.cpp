@@ -70,7 +70,6 @@ const path yeastDataPath( path(std::string(GURLS_DATA_DIR))/path("yeast"));
 //    fixture.checkResults("split");
 //}
 
-
 BOOST_AUTO_TEST_CASE(TestParamSelSiglam)
 {
     Data data(yeastDataPath, "paramselsiglam", true);
@@ -214,6 +213,7 @@ BOOST_AUTO_TEST_CASE(TestParamSelHoDual_gausskernel)
     fixture.checkResults("paramsel");
 }
 
+
 //BOOST_AUTO_TEST_CASE(TestParamSelHoPrimalr)
 //{
 //    Data data(yeastDataPath, "paramselhoprimalr", true);
@@ -294,6 +294,7 @@ BOOST_AUTO_TEST_CASE(TestRLSDual_gausskernel)
 }
 
 
+
 //BOOST_AUTO_TEST_CASE(TestRLSPrimalr)
 //{
 //    Data data(yeastDataPath, "rlsprimalr", true);
@@ -332,6 +333,7 @@ BOOST_AUTO_TEST_CASE(TestRLSDual_gausskernel)
 
 //    fixture.checkResults("optimizer");
 //}
+
 
 
 BOOST_AUTO_TEST_CASE(TestPredKernelTrainTest_chisquaredkernel)
