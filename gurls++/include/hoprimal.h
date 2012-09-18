@@ -232,9 +232,11 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
         subMatrixFromRows(X.getData(), x_rows, d, va, n-last, xx.getData());
         subMatrixFromRows(Y.getData(), n, t, va, n-last, yy.getData());
 
+        T* work = new T[d*(d+1)];
+
         for(int i=0; i<tot; ++i)
         {
-            rls_eigen(Q, L, Qty, W->getData(), guesses[i], last, d, d, d, d, t);
+            rls_eigen(Q, L, Qty, W->getData(), guesses[i], last, d, d, d, d, t, work);
 
             OptMatrix<gMat2D<T> > *ret_pred = primal.execute(xx, yy, *nestedOpt);
 
@@ -252,14 +254,16 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
         delete [] va;
         delete [] tr;
+        delete [] work;
 
         //[dummy,idx] = max(ap,[],1);
-        T* work = NULL;
+        work = NULL;
         unsigned long* idx = new unsigned long[t];
         indicesOfMax(ap, tot, t, idx, work, 1);
 
         //vout.lambdas_round{nh} = guesses(idx);
-        T* lambdas_nh = copyLocations(idx, guesses, t, tot);
+        T* lambdas_nh = new T[t];
+        copyLocations(idx, guesses, t, tot, lambdas_nh);
 
         copy(lambdas_round+nh, lambdas_nh, t, nholdouts, 1);
 

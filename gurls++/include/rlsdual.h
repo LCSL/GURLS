@@ -114,8 +114,9 @@ GurlsOptionsList* RLSDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, co
    try // Try solving it with cholesky first.
    {
 //        R = chol(K);
-        T* R = cholesky(K, n, n);
+        T* R = new T[n*n];
         garbage.insert(R);
+        cholesky(K, n, n, R);
 
 //        cfr.C = R\(R'\y);
         retC = new gMat2D<T>(Y.rows(), t);
@@ -152,8 +153,10 @@ GurlsOptionsList* RLSDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, co
 //           cfr.C = rls_eigen(Q,L,y,lambda,n);
        retC = new gMat2D<T>(Q_rows, Y.cols());
 
-       rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, Q_rows, Q_cols, L_len, Y.rows(), Y.cols());
+       T* work = new T[L_len*(Q_rows+1)];
+       rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, Q_rows, Q_cols, L_len, Y.rows(), Y.cols(), work);
 
+       delete [] work;
        delete [] Q;
        delete [] L;
        delete [] V;

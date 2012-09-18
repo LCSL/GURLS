@@ -119,8 +119,9 @@ GurlsOptionsList* RLSPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, 
             *it += coeff;
 
         //		R = chol(K);
-        T* R = cholesky(K, d, d);
+        T* R = new T[d*d];
         garbage.insert(R);
+        cholesky(K, d, d, R);
 
         //		cfr.W = R\(R'\Xty);
         W = new gMat2D<T>(d, Yd);
@@ -155,9 +156,11 @@ GurlsOptionsList* RLSPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, 
 
 //            % regularization is done inside rls_eigen
         W = new gMat2D<T>(Q_rows, Yd);
-        rls_eigen(Q, L, QtXtY, W->getData(), lambda, n, Q_rows, Q_cols, L_len, Q_cols, Yd);
+        T* work = new T[L_len*(Q_rows+1)];
+        rls_eigen(Q, L, QtXtY, W->getData(), lambda, n, Q_rows, Q_cols, L_len, Q_cols, Yd, work);
 
         delete [] QtXtY;
+        delete [] work;
 
         delete [] Q;
         delete [] L;

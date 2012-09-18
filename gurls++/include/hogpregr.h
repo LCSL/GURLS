@@ -268,7 +268,8 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
         indicesOfMax(perf, tot, t, idx, work, 1);
 
 //        vout.lambdas_round{nh} = guesses(idx);
-        T* lambdas_nh = copyLocations(idx, guesses, t, tot);
+        T* lambdas_nh = new T[t];
+        copyLocations(idx, guesses, t, tot, lambdas_nh);
         copy(lambdas_round + nh, lambdas_nh, t, nholdouts, 1);
         delete [] lambdas_nh;
 

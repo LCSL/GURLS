@@ -527,20 +527,19 @@ void dot(const T* A, const T* B, T* C,
   * \param rows number of rows of the input matrix
   * \param cols number of columns of the input matrix
   * \param upper whether to store the upper or the lower triangle of the result matrix
-  * \return Cholesky factorization of the input matrix
+  * \param resyult Cholesky factorization of the input matrix
   */
 template<typename T>
-T* cholesky(const T* matrix, const int rows, const int cols, bool upper = true)
+void cholesky(const T* matrix, const int rows, const int cols, T* result, bool upper = true)
 {
-    T* ret = new T[rows*cols];
-    copy(ret, matrix, rows*cols);
+    copy(result, matrix, rows*cols);
 
     int LDA = rows;
     int nc = cols;
     char UPLO = upper? 'U':'L';
     int info;
 
-    potrf_(&UPLO, &nc, ret, &LDA, &info);
+    potrf_(&UPLO, &nc, result, &LDA, &info);
 
     if(info != 0)
     {
@@ -549,9 +548,7 @@ T* cholesky(const T* matrix, const int rows, const int cols, bool upper = true)
         throw gException(str.str());
     }
 
-    clearLowerTriangular(ret, rows, cols);
-
-    return ret;
+    clearLowerTriangular(result, rows, cols);
 }
 
 /**
@@ -580,19 +577,15 @@ void setReciprocal(T* matrix, const int len)
   *
   * \param vector input vector
   * \param len vector length
-  * \return a len-by-len matrix with vector on the diagonal
+  * \param result On exit it contains a len-by-len matrix with vector on the diagonal
   */
 template <typename T>
-T* diag(T* vector, const int len)
+void diag(T* vector, const int len, T* result)
 {
-    T* ret = new T[len*len];
-
     const T zero = static_cast<T>(0.0);
 
-    set(ret, zero, len*len);
-    copy(ret, vector, len, len+1, 1);
-
-    return ret;
+    set(result, zero, len*len);
+    copy(result, vector, len, len+1, 1);
 }
 
 /**
@@ -836,13 +829,12 @@ void argmin(const T* A, unsigned long* result, const int A_rows, const int A_col
  * \param src input vector
  * \param locs_len length of the indices vector
  * \param src_len length of the input vector
- * \return subvector containing elements of the input vector whose index is contained into \c locs
+ * \param result on exit it contains a subvector with all elements of the input vector whose index is contained into \c locs
  */
 template <typename T>
-T* copyLocations(const unsigned long* locs, const T* src, const int locs_len, const int src_len)
+void copyLocations(const unsigned long* locs, const T* src, const int locs_len, const int src_len, T* result)
 {
-    T* v = new T[locs_len];
-    T* ptr_v = v;
+    T* ptr_v = result;
 
     int val;
     for(const unsigned long* l_it = locs, *l_end=locs+locs_len; l_it != l_end; ++l_it, ++ptr_v)
@@ -853,8 +845,6 @@ T* copyLocations(const unsigned long* locs, const T* src, const int locs_len, co
 
         *ptr_v = src[val];
     }
-
-    return v;
 }
 
 /**
@@ -890,12 +880,41 @@ void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const
              const int L_length,
              const int Qty_rows, const int Qty_cols)//  throw (gException)
 {
+    T* work = new T [(Q_rows+1)*L_length];
+
+    rls_eigen(Q, L, Qty, C, lambda, n, Q_rows, Q_cols, L_length, Qty_rows, Qty_cols, work);
+
+    delete [] work;
+}
+
+/**
+  * Computes RLS estimator given the singular value decomposition of the kernel matrix
+  *
+  * \param Q eigenvectors of the kernel matrix
+  * \param L eigenvalues of the kernel matrix
+  * \param Qty result of the matrix multiplication of the transpose of Q times the labels vector Y \f$(Q^T Y)\f$
+  * \param C on exit contains the rls coefficients matrix
+  * \param lambda regularization parameter
+  * \param n number of training samples
+  * \param Q_rows number of rows of the matrix Q
+  * \param Q_cols number of columns of the matrix Q
+  * \param L_length number of elements of the vector L
+  * \param Qty_rows number of rows of the matrix Qty
+  * \param Qty_cols number of columns of the matrix Qty
+  * \param work Work buffer of length L_length*(Q_rows+1)
+  */
+template<typename T>
+void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const int n,
+             const int Q_rows, const int Q_cols,
+             const int L_length,
+             const int Qty_rows, const int Qty_cols, T* work)//  throw (gException)
+{
     //function C = rls_eigen(Q,L,QtY,lambda,n)
 
     //sQ = size(Q,1); -> Q_rows
 
     //L = L + n*lambda;
-    T* L1 = new T[L_length];
+    T* L1 = work; // size L_length
 
     set(L1, n*lambda , L_length);
 
@@ -905,7 +924,7 @@ void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const
     setReciprocal(L1, L_length);
 
     //L = spdiags(L,0,sQ,sQ);
-    T* QL = new T[Q_rows*L_length];
+    T* QL = work+L_length; // size Q_rows*L_length
 
     copy(QL, Q, Q_rows*Q_cols);
     for(int i=0; i< Q_cols; ++i)
@@ -915,8 +934,6 @@ void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const
     //C = (Q*L)*QtY;
     dot(QL, Qty, C, Q_rows, L_length, Qty_rows, Qty_cols, Q_rows, Qty_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-    delete[] L1;
-    delete[] QL;
 }
 
 /**

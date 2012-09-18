@@ -259,16 +259,12 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
 
 
 //    vout.noises = 	guesses(idx);
-    T* noises = copyLocations(idx, guesses, t, tot);
+    gMat2D<T> *lambdas = new gMat2D<T>(1, t);
+    copyLocations(idx, guesses, t, tot, lambdas->getData());
 
     delete[] idx;
 
-
-    gMat2D<T> *lambdas = new gMat2D<T>(1, t);
-    copy(lambdas->getData(), noises, t);
     paramsel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambdas));
-
-    delete[] noises;
 
 //    vout.perf = 	perf;
     paramsel->addOpt("perf", new OptMatrix<gMat2D<T> >(*perf_mat));

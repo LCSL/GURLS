@@ -73,18 +73,18 @@ public:
     bool operator()(const T&a, const T&b){ return gurls::lt(a, b);}
 };
 
-
 /**
  * Utility function called by the class PrecisionRecall to evaluate the average precision through precision and recall.
  *
  * \param out vector of predicted labels
  * \param gt vector of true labels
  * \param N size of out and gt
+ * \param work Work buffer of length 4*N
  *
  * \return average precision
  */
 template <typename T>
-double precrec_driver(const T* out, const T* gt, const unsigned long N)
+double precrec_driver(const T* out, const T* gt, const unsigned long N, T* work)
 {
     std::multimap<T, T, LtCompare<T> > data;
 
@@ -95,10 +95,10 @@ double precrec_driver(const T* out, const T* gt, const unsigned long N)
     typename std::multimap<T, T, LtCompare<T> >::iterator end = data.end();
 
 
-    T* tp = new T[N];
-    T* fp = new T[N];
-    T* prec = new T[N];
-    T* rec = new T[N];
+    T* tp = work;
+    T* fp = tp+N;
+    T* prec = fp+N;
+    T* rec = prec+N;
 
     unsigned long tpcumsum = 0;
     unsigned long fpcumsum = 0;
@@ -141,12 +141,28 @@ double precrec_driver(const T* out, const T* gt, const unsigned long N)
         t += incr;
     }
 
-    delete [] tp;
-    delete [] fp;
-    delete [] prec;
-    delete [] rec;
-
     return ap/((T)stepsNumber);
+}
+
+/**
+ * Utility function called by the class PrecisionRecall to evaluate the average precision through precision and recall.
+ *
+ * \param out vector of predicted labels
+ * \param gt vector of true labels
+ * \param N size of out and gt
+ *
+ * \return average precision
+ */
+template <typename T>
+double precrec_driver(const T* out, const T* gt, const unsigned long N)
+{
+    T* work = new T[4*N];
+
+    double ret = precrec_driver(out, gt, N, work);
+
+    delete [] work;
+
+    return ret;
 }
 
 /**
@@ -725,6 +741,22 @@ void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
                     const int Q_rows, const int Q_cols,
                     const int L_length, const int lambda_length)
 {
+
+    T* work = new T[(Q_rows*Q_cols)+L_length];
+
+    GInverseDiagonal(Q, L, lambda, Z, Q_rows, Q_cols, L_length, lambda_length, work);
+
+    delete [] work;
+}
+
+/**
+  *
+  */
+template<typename T>
+void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
+                    const int Q_rows, const int Q_cols,
+                    const int L_length, const int lambda_length, T* work)
+{
     //function Z = GInverseDiagonal( Q, L, lambda )
 
     //n = size(Q, 1); -> Q_rows
@@ -734,12 +766,10 @@ void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
 
     //D = Q.^(2);
     const int Q_size = Q_rows*Q_cols;
-    T* D = new T[Q_size];
-    //copy(D, Q, Q_size, 1, 1);
+    T* D = work;// size Q_size
     mult(Q, Q, D, Q_size);
 
-    T* d = new T[L_length];
-//    T* Dd = new T[Q_rows /* *1 */];
+    T* d = work+Q_size; // size L_length
 
     //for i = 1 : t
     for(int i=0; i<lambda_length; ++i)
@@ -755,8 +785,6 @@ void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
         gemv(CblasNoTrans, Q_rows, Q_cols, (T)1.0, D, Q_cols, d, 1, (T)0.0, Z+(i*lambda_length), 1);
     }
 
-    delete[] d;
-    delete[] D;
 }
 
 }

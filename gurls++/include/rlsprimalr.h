@@ -129,8 +129,10 @@ GurlsOptionsList* RLSPrimalr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y,
 
 //    cfr.W = rls_eigen(Q, L, Xty, lambda,d);
     gMat2D<T>* W = new gMat2D<T>(d,Yd);
-    rls_eigen(Q, L, Xty, W->getData(), lambda, d, d, d, d, d, Yd);
+    T* work = new T[d*(d+1)];
+    rls_eigen(Q, L, Xty, W->getData(), lambda, d, d, d, d, d, Yd, work);
 
+    delete [] work;
     delete [] Xty;
     delete [] Q;
     delete [] L;
