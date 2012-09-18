@@ -59,8 +59,8 @@
   * \ingroup Settings
   * \file
   */
-
-namespace gurls {
+namespace gurls
+{
 
 
 /**
@@ -70,7 +70,7 @@ namespace gurls {
 enum OptTypes	{GenericOption, StringOption, NumberOption,
                  StringListOption, NumberListOption, FunctionOption,
                  MatrixOption, VectorOption,
-                OptListOption, TaskSequenceOption, TaskIDOption, OptArrayOption};
+                OptListOption, TaskSequenceOption, TaskIDOption, OptArrayOption, ProcessOption};
 
 
 
@@ -82,10 +82,10 @@ enum OptTypes	{GenericOption, StringOption, NumberOption,
   * of strings holding the names of the specific procedures that
   * have to be performed.
   *
-  * The instances of the GURLSOPTION class hold information about
+  * The instances of the GurlsOption class hold information about
   * the type (one of the elements in the OptTypes enumeration),
   * while the value related to each specific option is stored using
-  * the attributes of the subclasses of GURLSOPTION.
+  * the attributes of the subclasses of GurlsOption.
   */
 class GURLS_EXPORT GurlsOption
 {
@@ -226,7 +226,7 @@ public:
   */
 class GURLS_EXPORT OptStringList: public GurlsOption
 {
-private:
+protected:
     std::vector<std::string>* value; ///< Vector of strings containing the option value
 
 public:
@@ -292,6 +292,21 @@ public:
       * Writes the option to a stream
       */
     virtual std::ostream& operator<<(std::ostream& os);
+
+    /**
+      * Removes all contents in the list
+      */
+    void clear();
+
+    /**
+      * Adds a string to the list
+      */
+    OptStringList& operator<<(std::string& str);
+
+    /**
+      * Adds a string to the list
+      */
+    OptStringList& operator<<(const char* str);
 
 };
 
@@ -452,7 +467,17 @@ public:
       */
     virtual std::ostream& operator<<(std::ostream& os);
 
+    /**
+      * Removes all contents in the list
+      */
+    void clear();
+
+    /**
+      * Adds a string to the list
+      */
+    OptNumberList& operator<<(double& d);
 }
+
 //#ifdef __GNUC__
 //    __attribute__ ((deprecated))
 //#endif
@@ -475,11 +500,9 @@ static const std::string TASKDESC_SEPARATOR(":");
   * \brief OptTaskSequence is an option containing
   * a sequence of task that forms a pipeline
   */
-class GURLS_EXPORT OptTaskSequence: public GurlsOption
+class GURLS_EXPORT OptTaskSequence: public OptStringList
 {
 protected:
-    std::vector<std::string>* tasks; ///< Vector of tasks
-
     /**
       * Parses a string cheching if it's a valid task string, in the form "<task_desc>TASKDESC_SEPARATOR<task_name>"
       */
@@ -487,7 +510,7 @@ protected:
 
 public:
 
-    typedef std::vector<std::string> ValueType;
+    typedef OptStringList::ValueType ValueType;
 
     /**
       * Empty constructor
@@ -502,7 +525,7 @@ public:
     /**
       * Constructor from a string, builds a 1-size vector of strings
       */
-    OptTaskSequence(const std::string& str);
+    OptTaskSequence(std::string &str);
 
     /**
       * Constructor from a string vector
@@ -514,22 +537,10 @@ public:
       */
     OptTaskSequence& operator=(const OptTaskSequence& other);
 
-    ~OptTaskSequence();
-
     /**
       * Adds a new task string to the sequence
       */
     void addTask(const std::string newtask);
-
-    /**
-      * Returns the tasks sequence
-      */
-    const std::vector<std::string>& getValue() const;
-
-    /**
-      * Copies the option values from a vector of strings
-      */
-    void setValue(const std::vector<std::string> newvalue);
 
     /**
       * Checks if the option has the given type
@@ -554,7 +565,95 @@ public:
     /**
       * Returns the number of tasks into the sequence
       */
-    long size();
+    unsigned long size();
+
+};
+
+/**
+  * \ingroup Settings
+  * \brief OptProcess is an option containing
+  * a sequence of actions that form a Gurls process
+  */
+class GURLS_EXPORT OptProcess: public GurlsOption
+{
+public:
+    /**
+     * Execution options for a GURLS task
+     */
+    enum Action {ignore, compute, computeNsave, load, remove};
+
+    typedef std::vector<Action> ValueType;
+
+protected:
+
+    ValueType* value;   ///< Option value
+
+    /**
+     * Used to map enum values to their names
+     */
+    static std::vector<std::string>& actionNames();
+
+public:
+
+    /**
+      * Empty constructor
+      */
+    OptProcess();
+
+    /**
+      * Constructor from an existing OptProcess
+      */
+    OptProcess(const OptProcess& other);
+
+    /**
+      * Destructor
+      */
+    ~OptProcess();
+
+    /**
+      * Adds a new action into the process
+      */
+    void addAction(const Action action);
+
+    /**
+      * Adds a new action into the process
+      */
+    OptProcess& operator<<(const Action action);
+
+    /**
+      * Returns the option's value
+      */
+    const ValueType& getValue() const;
+
+    /**
+      * Gets the element at a given position in the sequence
+      */
+    Action operator[](unsigned long index);
+
+    /**
+      * Removes all actions
+      */
+    void clear();
+
+    /**
+      * Returns the number of actions into the process
+      */
+    unsigned long size();
+
+    /**
+      * Checks if the option has the given type
+      */
+    virtual bool isA(OptTypes id) const;
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptProcess
+      */
+    static OptProcess* dynacast(GurlsOption* opt);
+
+    /**
+      * Tries to cast a pointer to a generic option to a pointer to an \ref OptProcess
+      */
+    static const OptProcess* dynacast(const GurlsOption* opt);
 
     /**
       * Writes the option to a stream

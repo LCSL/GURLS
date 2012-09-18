@@ -252,6 +252,9 @@ void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
     case FunctionOption:
         newOpt = new OptFunction(OptFunction::dynacast(toCopy)->getName());
         break;
+    case ProcessOption:
+        newOpt = new OptProcess(*OptProcess::dynacast(toCopy));
+        break;
     case MatrixOption:
     case VectorOption:
     {

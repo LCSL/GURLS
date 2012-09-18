@@ -77,31 +77,19 @@ namespace gurls
         GurlsOptionsList* opt = new GurlsOptionsList("quickanddirty", true);
 
         OptTaskSequence *seq = new OptTaskSequence();
-        seq->addTask("kernel:linear");
-        seq->addTask("paramsel:loocvdual");
-        seq->addTask("optimizer:rlsdual");
-        seq->addTask("pred:dual");
-        seq->addTask("perf:macroavg");
+        *seq << "kernel:linear" << "paramsel:loocvdual" << "optimizer:rlsdual" << "pred:dual" << "perf:macroavg";
 
         opt->addOpt("seq", seq);
 
         GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
-        std::vector<double> process1;
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::ignore);
-        process1.push_back(GURLS::ignore);
-        process->addOpt("one", new OptNumberList(process1));
+        OptProcess* process1 = new OptProcess();
+        *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore;
+        process->addOpt("one", process1);
 
-        std::vector<double> process2;
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::computeNsave);
-        process2.push_back(GURLS::computeNsave);
-        process->addOpt("two", new OptNumberList(process2));
+        OptProcess* process2 = new OptProcess();
+        *process2 << GURLS::load << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave;
+        process->addOpt("two", process2);
 
         opt->addOpt("processes", process);
 

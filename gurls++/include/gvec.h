@@ -50,8 +50,6 @@
 #include <sstream>
 #include <typeinfo>
 
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/split_member.hpp>
 
 #include "basearray.h"
 #include "gmath.h"

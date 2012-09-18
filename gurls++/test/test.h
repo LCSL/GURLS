@@ -144,6 +144,7 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
     case GenericOption:
     case OptListOption:
     case TaskSequenceOption:
+    case ProcessOption:
     case TaskIDOption:
         file.close();
         throw "Unsupported option";
@@ -211,6 +212,7 @@ void checkOptions(GurlsOption& result, GurlsOption& reference)
 
     case GenericOption:
     case OptListOption:
+    case ProcessOption:
     case TaskSequenceOption:
     case TaskIDOption:
         throw "Unsupported option";

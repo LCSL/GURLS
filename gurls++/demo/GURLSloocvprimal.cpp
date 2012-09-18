@@ -94,30 +94,20 @@ int main(int argc, char *argv[])
 
         // specify the task sequence
         OptTaskSequence *seq = new OptTaskSequence();
-        seq->addTask("paramsel:loocvprimal");
-        seq->addTask("optimizer:rlsprimal");
-        seq->addTask("pred:primal");
-        seq->addTask("perf:macroavg");
-        seq->addTask("perf:precrec");
+        *seq << "paramsel:loocvprimal" << "optimizer:rlsprimal" << "pred:primal" << "perf:macroavg" << "perf:precrec";
+
 
         GurlsOptionsList * process = new GurlsOptionsList("processes", false);
+
         // defines instructions for training process
-        std::vector<double> process1;
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::ignore);
-        process1.push_back(GURLS::ignore);
-        process1.push_back(GURLS::ignore);
-        process->addOpt("one", new OptNumberList(process1));
+        OptProcess* process1 = new OptProcess();
+        *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore << GURLS::ignore;
+        process->addOpt("one", process1);
 
         // defines instructions for testing process
-        std::vector<double> process2;
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::computeNsave);
-        process2.push_back(GURLS::computeNsave);
-        process2.push_back(GURLS::computeNsave);
-        process->addOpt("two", new OptNumberList(process2));
+        OptProcess* process2 = new OptProcess();
+        *process2 << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
+        process->addOpt("two", process2);
 
         // build an options' structure
         GurlsOptionsList* opt = new GurlsOptionsList("GURLSlooprimal", true);

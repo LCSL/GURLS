@@ -94,26 +94,21 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X, const gMa
     GurlsOptionsList* tmp = new GurlsOptionsList("tmp", true);
 
     OptTaskSequence *seq = new OptTaskSequence();
-    seq->addTask("split:ho");
-    seq->addTask("kernel:linear");
-    seq->addTask("paramsel:hodual");
-    seq->addTask("optimizer:rlsdual");
+    GurlsOptionsList * process = new GurlsOptionsList("processes", false);
+    OptProcess* process1 = new OptProcess();
+
+    *seq << "split:ho" << "kernel:linear" << "paramsel:hodual" << "optimizer:rlsdual";
+    *process1 << GURLS::compute << GURLS::compute << GURLS::computeNsave << GURLS::computeNsave;
+
     tmp->addOpt("seq", seq);
+
+    process->addOpt("one", process1);
+    tmp->addOpt("processes", process);
+
 
     tmp->addOpt("hoperf", opt.getOptAsString("hoperf"));
     tmp->addOpt("singlelambda", new OptFunction(OptFunction::dynacast(opt.getOpt("singlelambda"))->getName()));
 
-
-    GurlsOptionsList * process = new GurlsOptionsList("processes", false);
-
-    std::vector<double> process1;
-    process1.push_back(GURLS::compute);
-    process1.push_back(GURLS::compute);
-    process1.push_back(GURLS::computeNsave);
-    process1.push_back(GURLS::computeNsave);
-    process->addOpt("one", new OptNumberList(process1));
-
-    tmp->addOpt("processes", process);
 
     GURLS g;
 

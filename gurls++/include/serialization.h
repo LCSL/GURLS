@@ -121,6 +121,9 @@ void save(Archive & ar, const gurls::OptArray & opt, const unsigned int version)
         case gurls::TaskSequenceOption:
             ar & (*static_cast<gurls::OptTaskSequence*>(opt0));
             break;
+        case gurls::ProcessOption:
+            ar & (*static_cast<gurls::OptProcess*>(opt0));
+            break;
         case gurls::OptListOption:
             ar & (*static_cast<gurls::GurlsOptionsList*>(opt0));
             break;
@@ -229,6 +232,13 @@ void load(Archive &ar, gurls::OptArray &t, const unsigned int)
             t.push_back(opt);
             break;
         }
+        case gurls::ProcessOption:
+        {
+            gurls::OptProcess* opt = new gurls::OptProcess();
+            ar & (*opt);
+            t.push_back(opt);
+            break;
+        }
         case gurls::OptListOption:
         {
             gurls::GurlsOptionsList* opt = new gurls::GurlsOptionsList("", false);
@@ -325,6 +335,9 @@ void save(Archive & ar, const gurls::GurlsOptionsList& opt, const unsigned int /
         }
         case gurls::TaskSequenceOption:
             ar & (*static_cast<gurls::OptTaskSequence*>(opt0));
+            break;
+        case gurls::ProcessOption:
+            ar & (*static_cast<gurls::OptProcess*>(opt0));
             break;
         case gurls::OptListOption:
             ar & (*static_cast<gurls::GurlsOptionsList*>(opt0));
@@ -436,6 +449,13 @@ void load(Archive & ar, gurls::GurlsOptionsList& opt, const unsigned int /* file
             opt.addOpt(name, tmp);
             break;
         }
+        case gurls::ProcessOption:
+        {
+            gurls::OptProcess* tmp = new gurls::OptProcess();
+            ar & (*tmp);
+            opt.addOpt(name, tmp);
+            break;
+        }
         case gurls::OptListOption:
         {
             gurls::GurlsOptionsList* tmp = new gurls::GurlsOptionsList("", false);
@@ -525,18 +545,29 @@ void load_vector_opt(Archive & ar, OptType& opt, const unsigned int /* file_vers
     int n = 0;
     ar & n;
 
-    typedef typename OptType::ValueType ValueType;
-    ValueType value;
+    opt.clear();
 
+    typedef typename OptType::ValueType ValueType;
     typename ValueType::value_type tmp;
 
     for(int i = 0; i < n; ++i)
     {
         ar & tmp;
-        value.push_back(tmp);
+        opt << tmp;
     }
 
-    opt.setValue(value);
+//    typedef typename OptType::ValueType ValueType;
+//    ValueType value;
+
+//    typename ValueType::value_type tmp;
+
+//    for(int i = 0; i < n; ++i)
+//    {
+//        ar & tmp;
+//        value.push_back(tmp);
+//    }
+
+//    opt.setValue(value);
 }
 
 
@@ -628,6 +659,25 @@ void load(Archive & ar, gurls::OptTaskSequence& opt, const unsigned int file_ver
     load_vector_opt<Archive, gurls::OptTaskSequence>(ar, opt, file_version);
 }
 
+
+/**
+  * Serializes an OptProcess to a generic archive
+  */
+template<class Archive>
+void save(Archive & ar, const gurls::OptProcess& opt, const unsigned int file_version)
+{
+    save_vector_opt<Archive, gurls::OptProcess>(ar, opt, file_version);
+}
+
+/**
+  * Deserializes an OptProcess from a generic archive
+  */
+template<class Archive>
+void load(Archive & ar, gurls::OptProcess& opt, const unsigned int file_version)
+{
+    load_vector_opt<Archive, gurls::OptProcess>(ar, opt, file_version);
+}
+
 } // namespace serialization
 } // namespace boost
 
@@ -637,6 +687,7 @@ BOOST_SERIALIZATION_SPLIT_FREE(gurls::OptFunction)
 BOOST_SERIALIZATION_SPLIT_FREE(gurls::OptStringList)
 BOOST_SERIALIZATION_SPLIT_FREE(gurls::OptNumberList)
 BOOST_SERIALIZATION_SPLIT_FREE(gurls::OptTaskSequence)
+BOOST_SERIALIZATION_SPLIT_FREE(gurls::OptProcess)
 
 
 #endif // _GURLS_OPTSERIALIZATION_H_

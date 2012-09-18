@@ -106,23 +106,25 @@ GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os)
     return os;
 }
 
-GURLS_EXPORT std::ostream& OptTaskSequence::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptProcess::operator<<(std::ostream& os)
 {
-    std::vector<std::string>::iterator it = tasks->begin();
-    std::vector<std::string>::iterator end = tasks->end();
+    os << "( ";
 
-    os << "(";
-    if(!tasks->empty())
-        os << (*it++);
+    if(!value->empty())
+    {
+        ValueType::iterator end = value->end();
+        --end;
 
-    while( it != end)
-        os << ", " << (*it++);
-    os << ")";
+        for(ValueType::iterator it = value->begin(); it != end; ++it)
+            os << actionNames()[*it] << ", ";
+
+        os << actionNames()[*end];
+     }
+
+    os << " )";
 
     return os;
 }
-
-
 
 GurlsOption::GurlsOption(OptTypes t):type(t) {}
 
@@ -166,50 +168,32 @@ bool OptTaskSequence::isValid(const std::string & str, std::string& type, std::s
     return true;
 }
 
-OptTaskSequence::OptTaskSequence():GurlsOption(TaskSequenceOption)
+OptTaskSequence::OptTaskSequence():OptStringList()
 {
-    tasks = new std::vector<std::string>();
+    type = TaskSequenceOption;
 }
 
-OptTaskSequence::OptTaskSequence(const char *str): GurlsOption(TaskSequenceOption)
+OptTaskSequence::OptTaskSequence(const char *str)
 {
-    tasks = new std::vector<std::string>();
-    tasks->push_back(str);
+    type = TaskSequenceOption;
+
+    value = new ValueType();
+    value->push_back(str);
 }
 
-OptTaskSequence::OptTaskSequence(const std::string& str): GurlsOption(TaskSequenceOption)
+OptTaskSequence::OptTaskSequence(std::string& str): OptStringList(str)
 {
-    tasks = new std::vector<std::string>();
-    tasks->push_back(str);
+    type = TaskSequenceOption;
 }
 
-OptTaskSequence::OptTaskSequence(const std::vector<std::string> &data): GurlsOption(TaskSequenceOption)
+OptTaskSequence::OptTaskSequence(const std::vector<std::string> &data): OptStringList(data)
 {
-    tasks = new std::vector<std::string>(data);
-}
-
-OptTaskSequence::~OptTaskSequence()
-{
-    tasks->clear();
-    delete tasks;
+    type = TaskSequenceOption;
 }
 
 void OptTaskSequence::addTask(const std::string newtask)
 {
-    tasks->push_back(newtask);
-}
-
-const std::vector<std::string>& OptTaskSequence::getValue() const
-{
-    return *tasks;
-}
-
-void OptTaskSequence::setValue(const std::vector<std::string> newvalue)
-{
-    tasks->clear();
-    delete tasks;
-
-    tasks = new std::vector<std::string>(newvalue.begin(), newvalue.end());
+    add(newtask);
 }
 
 bool OptTaskSequence::isA(OptTypes id) const
@@ -235,15 +219,14 @@ const OptTaskSequence *OptTaskSequence::dynacast(const GurlsOption *opt)
 
 void OptTaskSequence::getTaskAt(int index, string &taskdesc, string &taskname)
 {
-    if (!isValid((*tasks)[index], taskdesc, taskname))
+    if (!isValid((*value)[index], taskdesc, taskname))
         throw new gException(gurls::Exception_Invalid_TaskSequence);
 }
 
-long OptTaskSequence::size()
+unsigned long OptTaskSequence::size()
 {
-    return tasks->size();
+    return value->size();
 }
-
 
 
 
@@ -320,6 +303,17 @@ const OptNumberList *OptNumberList::dynacast(const GurlsOption *opt)
     throw gException(gurls::Exception_Illegal_Dynamic_Cast);
 }
 
+void OptNumberList::clear()
+{
+    value->clear();
+}
+
+OptNumberList& OptNumberList::operator<<(double& d)
+{
+    value->push_back(d);
+
+    return *this;
+}
 
 
 OptNumber::OptNumber(): GurlsOption(NumberOption), value(0.0) {}
@@ -433,6 +427,26 @@ const OptStringList* OptStringList::dynacast(const GurlsOption* opt)
     throw gException(gurls::Exception_Illegal_Dynamic_Cast);
 }
 
+void OptStringList::clear()
+{
+    value->clear();
+}
+
+OptStringList &OptStringList::operator <<(std::string & str)
+{
+    value->push_back(str);
+
+    return *this;
+}
+
+OptStringList &OptStringList::operator <<(const char* str)
+{
+    value->push_back(str);
+
+    return *this;
+}
+
+
 
 
 OptString::OptString(): GurlsOption(StringOption), value(""){}
@@ -485,6 +499,95 @@ const OptString* OptString::dynacast(const GurlsOption* opt)
 {
     if (opt->isA(StringOption) )
         return static_cast<const OptString*>(opt);
+
+    throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+}
+
+
+
+
+
+std::vector<std::string> &OptProcess::actionNames()
+{
+    static std::vector<std::string> ret;
+
+    if(ret.empty())
+    {
+        ret.push_back("Ignore");
+        ret.push_back("Compute");
+        ret.push_back("ComputeNsave");
+        ret.push_back("Load");
+        ret.push_back("Remove");
+    }
+
+    return ret;
+}
+
+OptProcess::OptProcess():GurlsOption(ProcessOption)
+{
+    value = new ValueType();
+}
+
+OptProcess::OptProcess(const OptProcess& other):GurlsOption(ProcessOption)
+{
+    value = new ValueType(other.value->begin(), other.value->end());
+}
+
+OptProcess::~OptProcess()
+{
+    value->clear();
+    delete value;
+}
+
+void OptProcess::addAction(const Action action)
+{
+    value->push_back(action);
+}
+
+OptProcess& OptProcess::operator<<(const Action action)
+{
+    value->push_back(action);
+
+    return *this;
+}
+
+const OptProcess::ValueType& OptProcess::getValue() const
+{
+    return *value;
+}
+
+OptProcess::Action OptProcess::operator[](unsigned long index)
+{
+    return (*value)[index];
+}
+
+void OptProcess::clear()
+{
+    value->clear();
+}
+
+unsigned long OptProcess::size()
+{
+    return value->size();
+}
+
+bool OptProcess::isA(OptTypes id) const
+{
+    return (id == ProcessOption);
+}
+
+OptProcess* OptProcess::dynacast(GurlsOption* opt)
+{
+    if (opt->isA(ProcessOption) )
+        return static_cast<OptProcess*>(opt);
+
+    throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+}
+
+const OptProcess* OptProcess::dynacast(const GurlsOption* opt)
+{
+    if (opt->isA(ProcessOption) )
+        return static_cast<const OptProcess*>(opt);
 
     throw gException(gurls::Exception_Illegal_Dynamic_Cast);
 }
