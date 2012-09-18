@@ -971,10 +971,11 @@ T* compare(const T* vector1, const T* vector2, const int size, bool(*pred)(T,T))
     T* ret = new T[size];
     T* r_it = ret;
 
+    const T zero = static_cast<T>(0.0);
+    const T one = static_cast<T>(1.0);
+
     for(const T *v1_it = vector1, *v2_it = vector2; v1_it != v1_end; ++v1_it, ++v2_it, ++r_it)
-    {
-        *r_it = static_cast<T>((*pred)(*v1_it, *v2_it)? 1.0: 0.0);
-    }
+        *r_it = (*pred)(*v1_it, *v2_it)? one: zero;
 
     return ret;
 }
@@ -1000,10 +1001,11 @@ T* compare(const T* vector, const T thr, const int size, bool(*pred)(T,T))
     T* ret = new T[size];
     T* r_it = ret;
 
+    const T zero = static_cast<T>(0.0);
+    const T one = static_cast<T>(1.0);
+
     for(const T *v1_it = vector; v1_it != v1_end; ++v1_it, ++r_it)
-    {
-        *r_it = (*pred)(*v1_it, thr)? (T)1.0: (T)0.0;
-    }
+        *r_it = (*pred)(*v1_it, thr)? one: zero;
 
     return ret;
 }

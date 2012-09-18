@@ -145,7 +145,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-    nestedOpt->copyOpt<T>("kernel", opt);
+    nestedOpt->copyOpt("kernel", opt);
 
     nestedOpt->addOpt("predkernel", new GurlsOptionsList("predkernel"));
 
@@ -358,7 +358,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
     if(opt.hasOpt("paramsel"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("paramsel", opt);
+        tmp_opt->copyOpt("paramsel", opt);
 
         paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
         tmp_opt->removeOpt("paramsel", false);

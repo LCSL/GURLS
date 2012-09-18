@@ -53,14 +53,11 @@
 #include "gmat2d.h"
 #include "gvec.h"
 #include "options.h"
+#include "optarray.h"
 #include "exceptions.h"
-
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/split_member.hpp>
 
 
 namespace gurls {
-
 
 
 #ifdef _WIN32
@@ -75,12 +72,14 @@ namespace gurls {
   */
 class GURLS_EXPORT GurlsOptionsList: public GurlsOption
 {
+public:
+    typedef std::map<std::string, GurlsOption* > ValueType;
+
 private:
-    std::string name;                               ///< Option name
-    std::map<std::string, GurlsOption* >* table;    ///< Options list, indexed by name
+    std::string name;   ///< Option name
+    ValueType* table;   ///< Options list, indexed by name
 
 public:
-
 
     /**
       * Constructor. Builds an optionlist with a name and optionally a set of default options
@@ -90,12 +89,10 @@ public:
       */
     GurlsOptionsList(std::string ExpName, bool usedefopt = false);
 
-
     /**
       * Destructor
       */
     ~GurlsOptionsList();
-
 
     /**
       * Adds a generic option to the list indexed with a specified key
@@ -161,7 +158,12 @@ public:
     /**
       * Returns the list name
       */
-    std::string getName() const {return this->name;}
+    std::string getName() const;
+
+    /**
+      * Returns the entire map
+      */
+    const ValueType& getValue() const;
 
     /**
       * Sets the list name
@@ -181,7 +183,7 @@ public:
     /**
       * Checks if the list has an option mapped with a specified key
       */
-    bool hasOpt(std::string key) const {return table->count(key)>0;}
+    bool hasOpt(std::string key) const;
 
     /**
       * Removes the option mapped with a specified key
@@ -194,52 +196,27 @@ public:
     /**
       * Checks if the option has the given type
       */
-    virtual bool isA(OptTypes id) const { return (id == OptListOption); }
+    virtual bool isA(OptTypes id) const;
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref GurlsOptionsList
       */
-    static GurlsOptionsList* dynacast(GurlsOption* opt) {
-        if (opt->isA(OptListOption) ){
-            return static_cast<GurlsOptionsList*>(opt);
-        } else {
-            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-        }
-    }
+    static GurlsOptionsList* dynacast(GurlsOption* opt);
 
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref GurlsOptionsList
       */
-    static const GurlsOptionsList* dynacast(const GurlsOption* opt)
-    {
-        if (opt->isA(OptListOption) ){
-            return static_cast<const GurlsOptionsList*>(opt);
-        } else {
-            throw gException(gurls::Exception_Illegal_Dynamic_Cast);
-        }
-    }
+    static const GurlsOptionsList* dynacast(const GurlsOption* opt);
 
     /**
-      * Returns the number of options on the list
+      * Returns the number of options within the list
       */
-    int size() const {return table->size();}
+    int size() const;
 
     /**
       * Returns a pointer to the idx-th option into the list
       */
-    GurlsOption* operator[] (int idx){
-
-        if ( idx > this->size() ) {
-            throw gException(gurls::Exception_Index_Out_of_Bound);
-        }
-
-        std::map<std::string, GurlsOption* >::iterator itr = table->begin();
-        std::map<std::string, GurlsOption* >::iterator end = table->end();
-        for (int i = 0; itr!=end; ++i, ++itr){
-            /* Do nothing else then following the iterator */
-        }
-        return itr->second;
-    }
+    GurlsOption* operator[] (int idx);
 
     /**
       * Writes a GurlsOptionsList to a stream
@@ -252,86 +229,14 @@ public:
     virtual std::ostream& operator<<(std::ostream& os);
 
     /**
+      * Writes the list to a string
+      */
+    std::string toString();
+
+    /**
       *
       */
-    template<typename T>
-    void copyOpt(std::string key, const GurlsOptionsList &from)
-    {
-        const GurlsOption* toCopy = from.getOpt(key);
-
-        GurlsOption* newOpt = NULL;
-
-        switch(toCopy->getType())
-        {
-        case StringOption:
-            newOpt = new OptString(OptString::dynacast(toCopy)->getValue());
-            break;
-        case NumberOption:
-            newOpt = new OptNumber(OptNumber::dynacast(toCopy)->getValue());
-            break;
-        case StringListOption:
-            newOpt = new OptStringList(OptStringList::dynacast(toCopy)->getValue());
-            break;
-        case NumberListOption:
-            newOpt = new OptNumberList(OptNumberList::dynacast(toCopy)->getValue());
-            break;
-        case FunctionOption:
-            newOpt = new OptFunction(OptFunction::dynacast(toCopy)->getName());
-            break;
-        case MatrixOption:
-        case VectorOption:
-        {
-           const OptMatrixBase* base = dynamic_cast<const OptMatrixBase*>(toCopy);
-
-            if(base == NULL)
-                throw gException(Exception_Illegal_Dynamic_Cast);
-
-            if(base->getMatrixType() == OptMatrixBase::ULONG)
-            {
-                const gMat2D<unsigned long> & mat = OptMatrix<gMat2D<unsigned long> >::dynacast(toCopy)->getValue();
-
-                gMat2D<unsigned long>* newMat = new gMat2D<unsigned long>(mat);
-                newOpt = new OptMatrix<gMat2D<unsigned long> >(*newMat);
-            }
-            else
-            {
-                const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
-                gMat2D<T>* newMat = new gMat2D<T>(mat);
-                newOpt = new OptMatrix<gMat2D<T> >(*newMat);
-            }
-
-        }
-            break;
-        case OptListOption:
-        {
-            const GurlsOptionsList* toCopy_list = GurlsOptionsList::dynacast(toCopy);
-
-            GurlsOptionsList* list = new GurlsOptionsList(toCopy_list->name);
-
-            std::map<std::string, GurlsOption* >::const_iterator it, end;
-
-            list->removeOpt("Name");
-
-            for(it = toCopy_list->table->begin(), end = toCopy_list->table->end(); it != end; ++it)
-                list->copyOpt<T>(it->first, *toCopy_list);
-
-            list->setName(list->getOptAsString("Name"));
-
-            newOpt = list;
-        }
-            break;
-        case TaskSequenceOption:
-            newOpt = new OptTaskSequence(OptTaskSequence::dynacast(toCopy)->getValue());
-            break;
-        case TaskIDOption:
-        case GenericOption:
-            break;
-        }
-
-        if(newOpt != NULL)
-            addOpt(key, newOpt);
-    }
-
+    void copyOpt(std::string key, const GurlsOptionsList &from);
 
     /**
       * Serializes the list to file
@@ -342,164 +247,6 @@ public:
       * Deserializes the list from file
       */
     void load(const std::string& fileName);
-
-    friend class boost::serialization::access;
-
-    /**
-      * Serializes the option to a generic archive
-      */
-    template<class Archive>
-    void save(Archive & ar, const unsigned int /* file_version */) const{
-        ar & this->type;
-        ar & this->name;
-        int n = table->size();
-        int type = -1;
-        ar & n;
-        std::map<std::string, GurlsOption* >::const_iterator itr = table->begin();
-        std::map<std::string, GurlsOption* >::const_iterator end = table->end();
-        for (int i = 0; itr!=end; ++i, ++itr){
-            std::string s = itr->first;
-            ar & s;
-            GurlsOption* opt0 = itr->second;
-            type = opt0->getType();
-            ar & type;
-//			std::cout << " ° " << s << ": " << type << std::endl;
-            if (type == StringOption){
-                OptString* opt = static_cast<OptString*>(opt0);
-                ar & (*opt);
-            } else if (type == StringListOption){
-                OptStringList* opt = static_cast<OptStringList*>(opt0);
-                ar & (*opt);
-            } else if (type == NumberOption){
-                OptNumber* opt = static_cast<OptNumber*>(opt0);
-                ar & (*opt);
-            } else if (type == NumberListOption){
-                OptNumberList* opt = static_cast<OptNumberList*>(opt0);
-                ar & (*opt);
-            } else if (type == FunctionOption){
-                OptFunction* opt = static_cast<OptFunction*>(opt0);
-                ar & (*opt);
-            } else if (type == MatrixOption) {
-
-                OptMatrixBase* optM = static_cast<OptMatrixBase*>(opt0);
-                OptMatrixBase::MatrixType matType = optM->getMatrixType();
-
-                ar & matType;
-
-                switch(matType)
-                {
-                    case OptMatrixBase::FLOAT:
-                        ar & *(static_cast<OptMatrix<gMat2D<float> >*>(optM));
-                        break;
-                    case OptMatrixBase::DOUBLE:
-                        ar & *(static_cast<OptMatrix<gMat2D<double> >*>(optM));
-                        break;
-                    case OptMatrixBase::ULONG:
-                        ar & *(static_cast<OptMatrix<gMat2D<unsigned long> >*>(optM));
-                        break;
-                    default:
-                        throw gException(Exception_Unsupported_MatrixType);
-                }
-
-            } else if (type == TaskSequenceOption) {
-                OptTaskSequence* opt = static_cast<OptTaskSequence*>(opt0);
-                ar & (*opt);
-            } else if (type == OptListOption){
-                GurlsOptionsList* opt = GurlsOptionsList::dynacast(opt0);
-                ar & (*opt);
-            } else {
-                // AN EXCEPTION SHOULD BE RAISED
-            }
-
-
-            //ar & (*opt);
-//			std::cout << " done." << std::endl;
-        }
-    }
-
-    /**
-      * Deserializes the option from a generic archive
-      */
-    template<class Archive>
-    void load(Archive & ar, const unsigned int /* file_version */){
-        ar & this->type;
-        ar & this->name;
-        removeOpt("Name");
-        int n = 0;
-        int type = -1;
-        ar & n;
-        //GurlsOption* opt;
-        for (int i = 0; i<n; ++i){
-            //GurlsOption* opt;
-            std::string s;
-            ar & s;
-            ar & type;
-            if (type == StringOption){
-                OptString* opt = new OptString();
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else if (type == StringListOption){
-                OptStringList* opt = new OptStringList();
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else if (type == NumberOption){
-                OptNumber* opt = new OptNumber();
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else if (type == NumberListOption){
-                OptNumberList* opt = new OptNumberList();
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else if (type == FunctionOption){
-                OptFunction* opt = new OptFunction("");
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else if (type == MatrixOption) {
-
-                OptMatrixBase::MatrixType matType;
-                ar & matType;
-
-                OptMatrixBase* opt;
-
-                switch(matType)
-                {
-                    case OptMatrixBase::FLOAT:
-                        opt = new OptMatrix<gMat2D<float> >();
-                        ar & *(static_cast<OptMatrix<gMat2D<float> >*>(opt));
-                        break;
-                    case OptMatrixBase::DOUBLE:
-                        opt = new OptMatrix<gMat2D<double> >();
-                        ar & *(static_cast<OptMatrix<gMat2D<double> >*>(opt));
-                        break;
-                    case OptMatrixBase::ULONG:
-                        opt = new OptMatrix<gMat2D<unsigned long> >();
-                        ar & *(static_cast<OptMatrix<gMat2D<unsigned long> >*>(opt));
-                        break;
-                    default:
-                        throw gException(Exception_Unsupported_MatrixType);
-                }
-
-                this->addOpt(s, opt);
-
-            } else if (type == TaskSequenceOption) {
-                OptTaskSequence* opt = new OptTaskSequence();
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else if (type == OptListOption){
-                GurlsOptionsList* opt = new GurlsOptionsList("tmp", false);
-                ar & (*opt);
-                this->addOpt(s, opt);
-            } else {
-                // AN EXCEPTION SHOULD BE RAISED
-            }
-
-            //ar & (*opt);
-            //this->addOpt(s, opt);
-        }
-        this->setName(this->name);
-    }
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
-
 
 };
 

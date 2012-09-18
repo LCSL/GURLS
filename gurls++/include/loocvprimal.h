@@ -53,6 +53,8 @@
 
 #include "options.h"
 #include "optlist.h"
+#include "optmatrix.h"
+
 #include "gmat2d.h"
 #include "gvec.h"
 #include "gmath.h"
@@ -332,7 +334,7 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         if(opt.hasOpt("paramsel"))
         {
             GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-            tmp_opt->copyOpt<T>("paramsel", opt);
+            tmp_opt->copyOpt("paramsel", opt);
 
             paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
             tmp_opt->removeOpt("paramsel", false);

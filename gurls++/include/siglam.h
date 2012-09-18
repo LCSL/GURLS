@@ -106,9 +106,9 @@ GurlsOptionsList* ParamSelSiglam<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 //    }
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-    nestedOpt->copyOpt<T>("nlambda", opt);
-    nestedOpt->copyOpt<T>("hoperf", opt);
-    nestedOpt->copyOpt<T>("smallnumber", opt);
+    nestedOpt->copyOpt("nlambda", opt);
+    nestedOpt->copyOpt("hoperf", opt);
+    nestedOpt->copyOpt("smallnumber", opt);
 
     GurlsOptionsList* kernel = new GurlsOptionsList("kernel");
     kernel->addOpt("type", "rbf");
@@ -120,7 +120,7 @@ GurlsOptionsList* ParamSelSiglam<T>::execute(const gMat2D<T>& X, const gMat2D<T>
     if(opt.hasOpt("paramsel"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("paramsel", opt);
+        tmp_opt->copyOpt("paramsel", opt);
 
         paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
         tmp_opt->removeOpt("paramsel", false);

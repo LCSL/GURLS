@@ -55,6 +55,9 @@
 #include "gmat2d.h"
 
 #include "optlist.h"
+#include "optfunction.h"
+#include "optmatrix.h"
+
 #include "primal.h"
 #include "macroavg.h"
 

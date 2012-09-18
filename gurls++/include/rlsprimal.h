@@ -45,6 +45,9 @@
 
 #include "optimization.h"
 
+#include "optmatrix.h"
+#include "optfunction.h"
+
 #include <set>
 
 namespace gurls {

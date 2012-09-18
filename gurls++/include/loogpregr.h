@@ -132,7 +132,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
         *tr_it = i;
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-    nestedOpt->copyOpt<T>("singlelambda", opt);
+    nestedOpt->copyOpt("singlelambda", opt);
 
 
     gMat2D<T>* tmpK = new gMat2D<T>(tr_size, tr_size);
@@ -238,7 +238,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
     if(opt.hasOpt("paramsel"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("paramsel", opt);
+        tmp_opt->copyOpt("paramsel", opt);
 
         paramsel = tmp_opt->getOptAs<GurlsOptionsList>("paramsel");
         tmp_opt->removeOpt("paramsel", false);

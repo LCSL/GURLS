@@ -47,6 +47,7 @@
 
 #include "utils.h"
 #include "gvec.h"
+#include "optmatrix.h"
 
 #include "float.h"
 
@@ -97,7 +98,7 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
     if(opt.hasOpt("perf"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("perf", opt);
+        tmp_opt->copyOpt("perf", opt);
 
         perf = GurlsOptionsList::dynacast(tmp_opt->getOpt("perf"));
         tmp_opt->removeOpt("perf", false);

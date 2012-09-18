@@ -56,6 +56,9 @@
 #include "gmat2d.h"
 #include "optlist.h"
 #include "options.h"
+#include "optarray.h"
+#include "optfunction.h"
+#include "optmatrix.h"
 
 #include "linearkernel.h"
 #include "rbfkernel.h"
@@ -174,7 +177,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         {
             loadOpt->load(saveFile);
         }
-        catch(gException &)
+        catch(gException & ex)
         {
             delete loadOpt;
             loadOpt = NULL;

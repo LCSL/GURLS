@@ -140,6 +140,7 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
             mat->readCSV(fileName, true);
             return new OptMatrix<gMat2D<T> >(*mat);
         }
+    case OptArrayOption:
     case GenericOption:
     case OptListOption:
     case TaskSequenceOption:
@@ -194,6 +195,19 @@ void checkOptions(GurlsOption& result, GurlsOption& reference)
     case VectorOption:
         check_matrix(OptMatrix<gMat2D<T> >::dynacast(&result)->getValue(), OptMatrix<gMat2D<T> >::dynacast(&reference)->getValue());
         break;
+
+    case OptArrayOption:
+    {
+        OptArray& res = *(OptArray::dynacast(&result));
+        OptArray& ref = *(OptArray::dynacast(&reference));
+
+        BOOST_REQUIRE_EQUAL(res.size(), ref.size());
+
+        for(unsigned long i=0; i< res.size(); ++i)
+            checkOptions<T>(*(res[i]), *(ref[i]));
+
+        break;
+    }
 
     case GenericOption:
     case OptListOption:

@@ -52,6 +52,7 @@
 #include "gmath.h"
 #include "options.h"
 #include "optlist.h"
+#include "optmatrix.h"
 
 #include "pred.h"
 

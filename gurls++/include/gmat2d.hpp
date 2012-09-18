@@ -647,28 +647,32 @@ gVec<T>* gMat2D<T>::argmin(int order)
 
 template <typename T>
 template<class Archive>
-void gMat2D<T>::save(Archive & ar, const unsigned int /* file_version */) const{
+void gMat2D<T>::save(Archive & ar, const unsigned int /* file_version */) const
+{
     ar & this->numrows & this->numcols & this->isowner;
+
     T* ptr = this->data;
     T* ptr_end = this->data+(this->numrows*this->numcols);
-    while (ptr!=ptr_end){
+
+    while (ptr!=ptr_end)
         ar & *ptr++;
-    }
 }
 
 template <typename T>
 template<class Archive>
-void gMat2D<T>::load(Archive & ar, const unsigned int /* file_version */){
+void gMat2D<T>::load(Archive & ar, const unsigned int /* file_version */)
+{
     ar & this->numrows;
     ar & this->numcols;
     ar & this->isowner;
+
     this->size = this->numrows*this->numcols;
     this->data = new T[this->size];
     T* ptr = this->data;
     T* ptr_end = this->data+this->size;
-    while (ptr!=ptr_end){
+
+    while (ptr!=ptr_end)
         ar & *ptr++;
-    }
 }
 
 template <typename T>
