@@ -13,6 +13,9 @@ opt.kernel.type = 'rbf';
 opt.singlelambda = @median; % give the function for combining your lambdas; could be max, min or mean, for instance.
 opt.smallnumber = 1e-8; % lambda is searched between [min(eig_r, opt.smallnumber), eig_1], where r = rank, eig_1 = max eig val.
 
+%% Random SVD options
+opt.eig_percentage = 5; %percentage of eigenvectors to be used in the randomized SVD
+
 %% GD Options
 
 opt.gd.method = 0; % standard gradient descent

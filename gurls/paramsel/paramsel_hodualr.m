@@ -50,18 +50,19 @@ for nh = 1:opt.nholdouts
 
 	[n,T]  = size(y(tr,:));
 	
-	if strcmp(opt.kernel.type,'linear')
-		d = size(X(tr,:),2);
-        r = min(n,d);
-    else
-        r = n;
-	end
+% 	if strcmp(opt.kernel.type,'linear')
+% 		d = size(X(tr,:),2);
+%         r = min(n,d);
+%     else
+%         r = n;
+% 	end
 	
-	[Q,L,U] = tygert_svd(opt.kernel.K(tr,tr),n);
+    k = round(opt.eig_percentage*n/100);
+	[Q,L,U] = tygert_svd(opt.kernel.K(tr,tr),k);
 	Q = double(Q);
 	L = double(diag(L));
-	
-	guesses = paramsel_lambdaguesses(L, r, n, opt);
+    r = size(Q,2);
+	guesses = paramsel_lambdaguesses(L,r, n, opt);
 	tot = opt.nlambda;
 	ap = zeros(tot,T);
 	

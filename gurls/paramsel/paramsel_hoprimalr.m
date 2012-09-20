@@ -50,8 +50,9 @@ for nh = 1:opt.nholdouts
 	
 	K = X(tr,:)'*X(tr,:);
 	
-	
-	[Q,L,U] = tygert_svd(K,d); % dxd matrix
+	k = round(opt.eig_percentage*d/100);
+
+	[Q,L,U] = tygert_svd(K,k); % dxd matrix
 	Q = double(Q);
 	L = double(diag(L));
 	

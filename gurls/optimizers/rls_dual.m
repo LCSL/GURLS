@@ -45,7 +45,7 @@ catch
 	[Q,L,V] = svd(K);
 	Q = double(Q);
 	L = double(diag(L));
-	cfr.C = rls_eigen(Q,L,y,lambda,n);
+	cfr.C = rls_eigen(Q,L,Q'*y,lambda,n);
 end	
 
 if strcmp(opt.kernel.type, 'linear')

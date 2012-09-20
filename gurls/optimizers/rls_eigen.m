@@ -14,11 +14,11 @@ function C = rls_eigen(Q,L,QtY,lambda,n)
 % OUTPUT:
 % -C: rls coefficient vector
 
-sQ = size(Q,1);		
 L = L + n*lambda;
 L = L.^(-1);
-% L = spdiags(L,0,sQ,sQ);
-sL = length(L);
-L = spdiags(L,0,sL,sQ);
+
+% sL = length(L);
+% L = spdiags(L,0,sL,sL);
+L = diag(L);
 
 C = (Q*L)*QtY;

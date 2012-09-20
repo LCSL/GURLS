@@ -121,8 +121,8 @@ end
 fprintf('\nSave cycle...\n');
 % Delete whats not necessary
 for i = 1:numel(process)
-	fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
 	reg = regexp(seq{i},':','split');
+	fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
 	switch process(i)
 		case {CSV, LDF}
 			fprintf('\tsaving..\n');

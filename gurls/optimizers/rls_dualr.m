@@ -40,11 +40,12 @@ T = size(y,2);
 
 K = opt.kernel.K + (n*lambda)*eye(n);
 
-[Q,L,V] = tygert_svd(K);
+k = round(opt.eig_percentage*n/100);
+[Q,L,V] = tygert_svd(K,k);
 Q = double(Q);
 L = double(diag(L));
 
-cfr.C = rls_eigen(Q, L, y, lambda,n);
+cfr.C = rls_eigen(Q, L, Q'*y, lambda,n);
 
 if strcmp(opt.kernel.type, 'linear')
 	cfr.W = X'*cfr.C;
