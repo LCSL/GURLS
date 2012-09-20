@@ -134,8 +134,9 @@ namespace gurls
         const gMat2D<T>& pred_mat = OptMatrix<gMat2D<T> >::dynacast(opt.getOpt("pred"))->getValue();
 
         gMat2D<T>* yhat = new gMat2D<T>(1, pred_mat.rows());
-        T* work = NULL;
-        maxValues(pred_mat.getData(), pred_mat.cols(), pred_mat.rows(), yhat->getData(), work, 1); //inverted, pred is in row major order
+        T* work = new T[pred_mat.getSize()];
+        maxValues(pred_mat.getData(), pred_mat.rows(), pred_mat.cols(), yhat->getData(), work, 2);
+        delete[] work;
         opt.addOpt("yhat", new OptMatrix<gMat2D<T> >(*yhat));
 
 

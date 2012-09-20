@@ -328,6 +328,8 @@ GurlsOptionsList* rls_pegasos_driver(const T* X, const T* bY, const GurlsOptions
 //            cfr.iter = iter;
     ret->addOpt("iter", new OptNumber(iter));
 
+    ret->addOpt("t0", new OptNumber(t0));
+
     //	cfr.C = [];
     gMat2D<T>* emptyC = new gMat2D<T>();
     ret->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));

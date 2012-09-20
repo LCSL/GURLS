@@ -172,7 +172,6 @@ GurlsOptionsList* RLSDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, co
 //           cfr.W = X'*cfr.C;
        gMat2D<T>* W  = new gMat2D<T>(X.cols(), retC->cols());
        dot(X.getData(), retC->getData(), W->getData(), X.rows(), X.cols(), retC->rows(), retC->cols(), W->rows(), W->cols(), CblasTrans, CblasNoTrans, CblasColMajor);
-
        optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
 //           cfr.C = [];

@@ -159,7 +159,6 @@ GurlsOptionsList* RLSPegasos<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y,
 
         tmp_opt->removeOpt("optimizer");
         tmp_opt->addOpt("optimizer", result);
-
     }
 
     optimizer = tmp_opt->getOptAs<GurlsOptionsList>("optimizer");
