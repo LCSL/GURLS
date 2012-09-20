@@ -153,10 +153,14 @@ GurlsOptionsList* RLSDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, co
 //           cfr.C = rls_eigen(Q,L,y,lambda,n);
        retC = new gMat2D<T>(Q_rows, Y.cols());
 
+       T* Qty = new T[Q_cols*Y.cols()];
+       dot(Q, Y.getData(), Qty, Q_rows, Q_cols, Y.rows(), Y.cols(), Q_cols, Y.cols(), CblasTrans, CblasNoTrans, CblasColMajor);
+
        T* work = new T[L_len*(Q_rows+1)];
-       rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, Q_rows, Q_cols, L_len, Y.rows(), Y.cols(), work);
+       rls_eigen(Q, L, Qty, retC->getData(), lambda, n, Q_rows, Q_cols, L_len, Q_cols, Y.cols(), work);
 
        delete [] work;
+       delete [] Qty;
        delete [] Q;
        delete [] L;
        delete [] V;

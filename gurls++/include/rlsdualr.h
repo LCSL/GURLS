@@ -112,13 +112,21 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, c
     T *Q = new T[n*n];
     T *L = new T[n];
     T *V = NULL;
-    random_svd(K, n, n, Q, L, V, n);
+
+//    k = round(opt.eig_percentage*n/100);
+    T k = gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0);
+    random_svd(K, n, n, Q, L, V, k);
 
 
     gMat2D<T> *retC = new gMat2D<T>(n,t);
     T* work = new T[n*(n+1)];
-    rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, n, n, n, Y.rows(), t, work);
 
+    T* Qty = new T[n*Y.cols()];
+    dot(Q, Y.getData(), Qty, n, n, Y.rows(), Y.cols(), n, Y.cols(), CblasTrans, CblasNoTrans, CblasColMajor);
+
+    rls_eigen(Q, L, Qty, retC->getData(), lambda, n, n, n, n, n, t, work);
+
+    delete [] Qty;
     delete [] work;
     delete [] Q;
     delete [] L;

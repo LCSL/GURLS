@@ -97,7 +97,7 @@ protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
-    virtual void eig_function(T* A, T* L, int A_rows_cols);
+    virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long n, const GurlsOptionsList &opt);
 };
 
 
@@ -113,7 +113,7 @@ protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
-    virtual void eig_function(T* A, T* L, int A_rows_cols);
+    virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long n, const GurlsOptionsList &opt);
 };
 
 
@@ -121,16 +121,17 @@ protected:
 
 
 template<typename T>
-void ParamSelHoDual<T>::eig_function(T* A, T* L, int A_rows_cols)
+void ParamSelHoDual<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long , const GurlsOptionsList &)
 {
     eig_sm(A, L, A_rows_cols);
 }
 
 template<typename T>
-void ParamSelHoDualr<T>::eig_function(T* A, T* L, int A_rows_cols)
+void ParamSelHoDualr<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long n, const GurlsOptionsList &opt)
 {
     T* V = NULL;
-    random_svd(A, A_rows_cols, A_rows_cols, A, L, V, A_rows_cols);
+    T k = gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0);
+    random_svd(A, A_rows_cols, A_rows_cols, A, L, V, k);
 }
 
 template <typename T>
@@ -210,7 +211,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         copy_submatrix(Q, K.getData(), k_rows, last, last, tr, tr);
 
         T *L = new T[last];
-        eig_function(Q, L, last);
+        eig_function(Q, L, last, n, opt);
 
         unsigned long r = last;
 

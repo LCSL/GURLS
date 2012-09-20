@@ -95,7 +95,7 @@ protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
-    virtual void eig_function(T* A, T* L, int A_rows_cols);
+    virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt);
 };
 
 
@@ -111,7 +111,7 @@ protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
-    virtual void eig_function(T* A, T* L, int A_rows_cols);
+    virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt);
 };
 
 
@@ -119,16 +119,17 @@ protected:
 
 
 template<typename T>
-void ParamSelHoPrimal<T>::eig_function(T* A, T* L, int A_rows_cols)
+void ParamSelHoPrimal<T>::eig_function(T* A, T* L, int A_rows_cols,unsigned long , const GurlsOptionsList &)
 {
     eig_sm(A, L, A_rows_cols);
 }
 
 template<typename T>
-void ParamSelHoPrimalr<T>::eig_function(T* A, T* L, int A_rows_cols)
+void ParamSelHoPrimalr<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt)
 {
     T* V = NULL;
-    random_svd(A, A_rows_cols, A_rows_cols, A, L, V, A_rows_cols);
+    T k = gurls::round((opt.getOptAsNumber("eig_percentage")*d)/100.0);
+    random_svd(A, A_rows_cols, A_rows_cols, A, L, V, A_rows_cols, k);
 }
 
 template <typename T>
@@ -204,7 +205,7 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
         dot(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
 
-        eig_function(Q, L, d);
+        eig_function(Q, L, d, d, opt);
 
         unsigned long miN = std::min(d,last);
         T* guesses = lambdaguesses(L, d, miN,last, tot, (T)(opt.getOptAsNumber("smallnumber")));

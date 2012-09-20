@@ -118,6 +118,7 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
 //        (*table)["nsigma"] =  new OptNumber(25);
         (*table)["nlambda"] = new OptNumber(20);
         (*table)["nsigma"] =  new OptNumber(10);
+        (*table)["opt.eig_percentage"] = new OptNumber(5);
 
 
     // ======================================================== Pegasos option
