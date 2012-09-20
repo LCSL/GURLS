@@ -57,7 +57,7 @@ for nh = 1:opt.nholdouts
 	L = double(diag(L));
 	
 	QtXtY = Q'*(X(tr,:)'*y(tr,:));
-	guesses = paramsel_lambdaguesses(L, d, n, opt);
+	guesses = paramsel_lambdaguesses(L, k, n, opt);
 	
 	tot = opt.nlambda;
 	ap = zeros(tot,T);
