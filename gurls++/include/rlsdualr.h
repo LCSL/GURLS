@@ -116,8 +116,10 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, c
 
 
     gMat2D<T> *retC = new gMat2D<T>(n,t);
-    rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, n, n, n, Y.rows(), t);
+    T* work = new T[n*(n+1)];
+    rls_eigen(Q, L, Y.getData(), retC->getData(), lambda, n, n, n, n, Y.rows(), t, work);
 
+    delete [] work;
     delete [] Q;
     delete [] L;
 

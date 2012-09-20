@@ -47,6 +47,7 @@
 
 #include "utils.h"
 #include "gvec.h"
+#include "optmatrix.h"
 
 namespace gurls {
 
@@ -91,7 +92,7 @@ GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T
     if(opt.hasOpt("perf"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("perf", opt);
+        tmp_opt->copyOpt("perf", opt);
 
         perf = GurlsOptionsList::dynacast(tmp_opt->getOpt("perf"));
         tmp_opt->removeOpt("perf", false);
@@ -113,6 +114,8 @@ GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T
     gMat2D<T>* ap_mat = new gMat2D<T>(1, cols);
     T* ap = ap_mat->getData();
 
+    T* work = new T[4*rows];
+
 //    T = size(y,2);
 //    for t = 1:T,
     for(int i=0; i<cols; ++i)
@@ -120,10 +123,12 @@ GurlsOptionsList* PerfPrecRec<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T
 //        p.ap(t) = precrec_driver(y_pred(:,t), y_true(:,t),0);
 //        p.forho(t) = p.ap(t);
 
-        ap[i] = precrec_driver(y_pred.getData()+(i*rows), y_true+(i*rows), rows);
+        ap[i] = precrec_driver(y_pred.getData()+(i*rows), y_true+(i*rows), rows, work);
 
 //        p.forplot(t) = p.ap(t);
     }
+
+    delete [] work;
 
     OptMatrix<gMat2D<T> >* ap_opt = new OptMatrix<gMat2D<T> >(*ap_mat);
     perf->addOpt("ap", ap_opt);

@@ -68,28 +68,11 @@
 #include "utils.h"
 
 
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-
-#include <boost/serialization/base_object.hpp>
-
-
-#ifdef  USE_BINARY_ARCHIVES
-typedef boost::archive::binary_iarchive iarchive;
-typedef boost::archive::binary_oarchive oarchive;
-#else
-typedef boost::archive::text_iarchive iarchive;
-typedef boost::archive::text_oarchive oarchive;
-#endif
-
-
 using namespace gurls;
 using namespace std;
 
-typedef float T;
-//typedef double T;
+//typedef float T;
+typedef double T;
 
 
 int main(int argc, char *argv[])
@@ -131,34 +114,19 @@ int main(int argc, char *argv[])
         GurlsOptionsList opt("ExampleExperiment", true);
 
         OptTaskSequence *seq = new OptTaskSequence();
-        seq->addTask("paramsel:siglam");
-        seq->addTask("kernel:rbf");
-        seq->addTask("optimizer:rlsdual");
-        seq->addTask("predkernel:traintest");
-        seq->addTask("pred:dual");
-        seq->addTask("perf:macroavg");
-
+        *seq << "paramsel:fixsiglam" << "kernel:rbf" << "optimizer:rlsdual" << "predkernel:traintest" << "pred:dual" << "perf:macroavg";
         opt.addOpt("seq", seq);
+
 
         GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
-        std::vector<double> process1;
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::computeNsave);
-        process1.push_back(GURLS::ignore);
-        process1.push_back(GURLS::ignore);
-        process1.push_back(GURLS::ignore);
-        process->addOpt("one", new OptNumberList(process1));
+        OptProcess* process1 = new OptProcess();
+        *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore << GURLS::ignore;
+        process->addOpt("one", process1);
 
-        std::vector<double> process2;
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::load);
-        process2.push_back(GURLS::computeNsave);
-        process2.push_back(GURLS::computeNsave);
-        process2.push_back(GURLS::computeNsave);
-        process->addOpt("two", new OptNumberList(process2));
+        OptProcess* process2 = new OptProcess();
+        *process2 << GURLS::load << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
+        process->addOpt("two", process2);
 
         opt.addOpt("processes", process);
 
@@ -177,18 +145,9 @@ int main(int argc, char *argv[])
 
         std::cout << opt << std::endl;
 
-
-//        std::ofstream oparstream("par1.txt");
-//        oarchive oparar(oparstream);
-//        oparar << opt;
-//        oparstream.close();
-
-//        std::ifstream iparstream("par1.txt");
-//        iarchive iparar(iparstream);
+//        opt.save("par1.txt");
 //        GurlsOptionsList *s1 = new GurlsOptionsList("dummy", false);
-//        iparar >> *s1;
-//        iparstream.close();
-
+//        s1->load("par1.txt");
 //        std::cout << *s1 << std::endl;
 
     }

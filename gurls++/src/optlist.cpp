@@ -47,7 +47,9 @@
 #include <vector>
 
 #include "options.h"
+#include "optfunction.h"
 #include "optlist.h"
+#include "serialization.h"
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
@@ -56,22 +58,23 @@ using namespace std;
 
 namespace gurls{
 
-void GurlsOptionsList::setName(std::string newname){
-
+void GurlsOptionsList::setName(std::string newname)
+{
     this->name = newname;
     this->table->erase("Name");
     this->table->insert(pair<std::string, GurlsOption*> ("Name", new OptString(newname)));
 }
 
-GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOption(OptListOption), name(ExpName){
-
+GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOption(OptListOption), name(ExpName)
+{
     string key ("Name");
     GurlsOption* value;
     value = new OptString(ExpName);
     table = new std::map<std::string, GurlsOption* >();
     table->insert( pair<std::string,GurlsOption*>(key, value) );
 
-    if(usedefopt){
+    if(usedefopt)
+    {
 
         //		opt.combineclasses = @mean; % How to combine performance measure per class (mean/median/min/max?)
         (*table)["combineclasses"] = new OptFunction("mean");
@@ -135,7 +138,8 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
 
 GurlsOptionsList::~GurlsOptionsList()
 {
-    std::map<std::string, GurlsOption* >::iterator it, end;
+    ValueType::iterator it, end;
+
     for(it = table->begin(), end = table->end(); it != end; ++it)
         delete (it->second);
 
@@ -143,8 +147,14 @@ GurlsOptionsList::~GurlsOptionsList()
     delete table;
 }
 
-void GurlsOptionsList::printAll(){
+void GurlsOptionsList::printAll()
+{
     std::cout << *this;
+}
+
+bool GurlsOptionsList::hasOpt(string key) const
+{
+    return table->count(key)>0;
 }
 
 void GurlsOptionsList::removeOpt(string key, bool deleteMembers)
@@ -157,31 +167,167 @@ void GurlsOptionsList::removeOpt(string key, bool deleteMembers)
         table->erase(key);
     }
 }
-std::ostream& GurlsOptionsList::operator<<(std::ostream& os){
+
+bool GurlsOptionsList::isA(OptTypes id) const
+{
+    return (id == OptListOption);
+}
+
+GurlsOptionsList *GurlsOptionsList::dynacast(GurlsOption *opt)
+{
+    if (opt->isA(OptListOption) )
+       return static_cast<GurlsOptionsList*>(opt);
+
+    throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+}
+
+const GurlsOptionsList *GurlsOptionsList::dynacast(const GurlsOption *opt)
+{
+    if (opt->isA(OptListOption) )
+        return static_cast<const GurlsOptionsList*>(opt);
+
+    throw gException(gurls::Exception_Illegal_Dynamic_Cast);
+}
+
+int GurlsOptionsList::size() const
+{
+    return table->size();
+}
+
+GurlsOption *GurlsOptionsList::operator [](int idx)
+{
+    if ( idx >= this->size() )
+        throw gException(gurls::Exception_Index_Out_of_Bound);
+
+    ValueType::iterator itr = table->begin();
+
+    for (int i = 0; i<idx; ++i, ++itr){}    // Do nothing else then following the iterator
+
+    return itr->second;
+}
+
+std::ostream& GurlsOptionsList::operator<<(std::ostream& os)
+{
     return os << *this;
+}
+
+string GurlsOptionsList::toString()
+{
+    std::stringstream stream;
+    stream << (*this);
+
+    return stream.str();
+}
+
+template<typename T>
+GurlsOption* copyOptMatrix(const GurlsOption* toCopy)
+{
+    const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
+
+    gMat2D<T>* newMat = new gMat2D<T>(mat);
+    return new OptMatrix<gMat2D<T> >(*newMat);
+}
+
+void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
+{
+
+    const GurlsOption* toCopy = from.getOpt(key);
+
+    GurlsOption* newOpt = NULL;
+
+    switch(toCopy->getType())
+    {
+    case StringOption:
+        newOpt = new OptString(OptString::dynacast(toCopy)->getValue());
+        break;
+    case NumberOption:
+        newOpt = new OptNumber(OptNumber::dynacast(toCopy)->getValue());
+        break;
+    case StringListOption:
+        newOpt = new OptStringList(OptStringList::dynacast(toCopy)->getValue());
+        break;
+    case NumberListOption:
+        newOpt = new OptNumberList(OptNumberList::dynacast(toCopy)->getValue());
+        break;
+    case FunctionOption:
+        newOpt = new OptFunction(OptFunction::dynacast(toCopy)->getName());
+        break;
+    case ProcessOption:
+        newOpt = new OptProcess(*OptProcess::dynacast(toCopy));
+        break;
+    case MatrixOption:
+    case VectorOption:
+    {
+       const OptMatrixBase* base = dynamic_cast<const OptMatrixBase*>(toCopy);
+
+        if(base == NULL)
+            throw gException(Exception_Illegal_Dynamic_Cast);
+
+        switch(base->getMatrixType())
+        {
+            case OptMatrixBase::ULONG:
+                newOpt = copyOptMatrix<unsigned long>(toCopy);
+                break;
+            case OptMatrixBase::FLOAT:
+                newOpt = copyOptMatrix<float>(toCopy);
+                break;
+            case OptMatrixBase::DOUBLE:
+                newOpt = copyOptMatrix<double>(toCopy);
+                break;
+        }
+    }
+        break;
+    case OptListOption:
+    {
+        const GurlsOptionsList* toCopy_list = GurlsOptionsList::dynacast(toCopy);
+
+        GurlsOptionsList* list = new GurlsOptionsList(toCopy_list->name);
+
+        ValueType::const_iterator it, end;
+
+        list->removeOpt("Name");
+
+        for(it = toCopy_list->table->begin(), end = toCopy_list->table->end(); it != end; ++it)
+            list->copyOpt(it->first, *toCopy_list);
+
+        list->setName(list->getOptAsString("Name"));
+
+        newOpt = list;
+    }
+        break;
+    case OptArrayOption:
+        newOpt = new OptArray(*OptArray::dynacast(toCopy));
+        break;
+    case TaskSequenceOption:
+        newOpt = new OptTaskSequence(OptTaskSequence::dynacast(toCopy)->getValue());
+        break;
+    case TaskIDOption:
+    case GenericOption:
+        break;
+    }
+
+    if(newOpt != NULL)
+        addOpt(key, newOpt);
 }
 
 /**
   * Writes a GurlsOptionsList to a stream
   */
-GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt) {
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt)
+{
     std::map<std::string, GurlsOption* >::iterator it;
-    GurlsOption* current;
-    os << std::endl
-       << "~~~~~~~ GurlsOptionList: " << opt.getName()
-       << std::endl;
-    for (it = opt.table->begin(); it != opt.table->end(); it++){
-        current = (*it).second;
-        os << "\t[ " << (*it).first << " ] = ";
-        current->operator <<(os);
-        os << endl;
-    }
+
+    os << std::endl << "~~~~~~~ GurlsOptionList: " << opt.getName() << std::endl;
+
+    for (it = opt.table->begin(); it != opt.table->end(); ++it)
+        os << "\t[ " << it->first << " ] = " << *(it->second) << endl;
+
     os << "~~~~~~~";
     return os;
 }
 
-bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value){
-
+bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value)
+{
     if(hasOpt(key))
         throw gException(Exception_Parameter_Already_Definied + " (" + key + ")");
 
@@ -189,8 +335,8 @@ bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value){
     return true;
 }
 
-bool GurlsOptionsList::addOpt(std::string key, std::string value){
-
+bool GurlsOptionsList::addOpt(std::string key, std::string value)
+{
     if(hasOpt(key))
         throw gException(Exception_Parameter_Already_Definied + " (" + key + ")");
 
@@ -240,6 +386,16 @@ const GurlsOption* GurlsOptionsList::getOpt(std::string key) const
 std::string GurlsOptionsList::getOptAsString(std::string key) const
 {
     return getOptValue<OptString>(key);
+}
+
+string GurlsOptionsList::getName() const
+{
+    return this->name;
+}
+
+const GurlsOptionsList::ValueType &GurlsOptionsList::getValue() const
+{
+    return *table;
 }
 
 double GurlsOptionsList::getOptAsNumber(std::string key) const

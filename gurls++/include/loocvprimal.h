@@ -53,6 +53,8 @@
 
 #include "options.h"
 #include "optlist.h"
+#include "optmatrix.h"
+
 #include "gmat2d.h"
 #include "gvec.h"
 #include "gmath.h"
@@ -173,8 +175,20 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         garbage.insert(den);
 //        garbage.insert(Le);
 
-        T* tmpvec, *tmp1;
-
+        T* tmpvec = new T[xc];
+        garbage.insert(tmpvec);
+        T* tmp1 = new T[xr*t];
+        garbage.insert(tmp1);
+        T* LL = new T[xc*xc];
+        garbage.insert(LL);
+        tmp = new T[xc*t];
+        garbage.insert(tmp);
+        T* num = new T[xr*t];
+        garbage.insert(num);
+        T* row = new T[xc];
+        garbage.insert(row);
+        T* num_div_den = new T[n];
+        garbage.insert(num_div_den);
 
         GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
 
@@ -189,49 +203,30 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         gMat2D<T>* perf = new gMat2D<T>(tot, t);
         T* ap = perf->getData();
 
+
         //	for i = 1:tot
         for(int s = 0; s < tot; ++s)
         {
 
             //		LL = L + (n*guesses(i));
-            tmpvec = new T[xc];
-            garbage.insert(tmpvec);
             set(tmpvec, n*guesses[s] , xc);
             axpy(xc, (T)1.0, L, 1, tmpvec, 1);
 
             //		LL = LL.^(-1)
             setReciprocal(tmpvec, xc);
             //		LL = diag(LL);
-            T* LL = diag(tmpvec, xc);
-            garbage.insert(LL);
+            diag(tmpvec, xc, LL);
 
-            delete[] tmpvec;
-            garbage.erase(tmpvec);
-
-            // TODO WARNING: salvare tempo e memoria evitando di inizializzare
-            // ad ogni passo
 
             //		num = y - LEFT*LL*RIGHT;
-            tmp = new T[xc*t];
-            garbage.insert(tmp);
-            dot(LL, RIGHT, tmp, xc, xc, xc, t, xc, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-            tmp1 = new T[xr*t];
-            garbage.insert(tmp1);
+            dot(LL, RIGHT, tmp, xc, xc, xc, t, xc, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
             dot(LEFT, tmp, tmp1, xr, xc, xc, t, xr, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-            delete[] tmp;
-            garbage.erase(tmp);
-
-            T* num = new T[xr*t];
-            garbage.insert(num);
 
             copy(num, Y.getData(), xr*t);
             axpy(xr*t, (T)-1.0, tmp1, 1, num, 1);
 
-
-            delete[] tmp1;
-            garbage.erase(tmp1);
 
             // den = zeros(n,1);
             set(den, (T)0.0, n);
@@ -240,11 +235,6 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
             //			den(j) = 1-LEFT(j,:)*LL*right(:,j);
             //		end
 
-            tmp = new T[xc];
-            garbage.insert(tmp);
-
-            T* row = new T[xc];
-            garbage.insert(row);
 
             for (unsigned long j = 0; j < n; ++j)
             {
@@ -256,19 +246,11 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
                 den[j] =  ((T) 1.0) - dot (xc, row, 1, tmp, 1);
             }
 
-            delete[] row;
-            garbage.erase(row);
-            delete[] tmp;
-            garbage.erase(tmp);
-            delete[] LL;
-            garbage.erase(LL);
-
-
 
     //        opt.pred = zeros(n,T);
 //            set(pred->getData(), (T)0.0, pred_size);
 
-            T* num_div_den = new T[n];
+
 
     //        for t = 1:T
             for(unsigned long j = 0; j< t; ++j)
@@ -280,8 +262,6 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
                 axpy(n, (T)-1.0, num_div_den, 1, pred->getData()+(n*j), 1);
             }
 
-            delete [] num_div_den;
-
     //        opt.perf = opt.hoperf([],y,opt);
             const gMat2D<T> dummy;
             GurlsOptionsList* perf = perfClass->execute(dummy, Y, *nestedOpt);
@@ -292,9 +272,23 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
             copy(ap+s, forho_vec.getData(), forho_vec.getSize(), tot, 1);
 
             delete perf;
-            delete[] num;
-            garbage.erase(num);
         }
+
+
+        delete[] row;
+        garbage.erase(row);
+        delete[] num;
+        garbage.erase(num);
+        delete[] tmp;
+        garbage.erase(tmp);
+        delete[] tmp1;
+        garbage.erase(tmp1);
+        delete[] tmpvec;
+        garbage.erase(tmpvec);
+        delete[] LL;
+        garbage.erase(LL);
+        delete [] num_div_den;
+        garbage.erase(num_div_den);
 
         delete nestedOpt;
         delete[] L;
@@ -316,23 +310,17 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         indicesOfMax(ap, tot, t, idx, work, 1);
 
         //vout.lambdas = 	guesses(idx);
-        T* lambdas = copyLocations(idx, guesses, t, tot);
+        gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
+        copyLocations(idx, guesses, t, tot, LAMBDA->getData());
 
         delete[] idx;
-
-
-        gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
-        copy(LAMBDA->getData(), lambdas, t);
-
-        delete[] lambdas;
-
 
         GurlsOptionsList* paramsel;
 
         if(opt.hasOpt("paramsel"))
         {
             GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-            tmp_opt->copyOpt<T>("paramsel", opt);
+            tmp_opt->copyOpt("paramsel", opt);
 
             paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
             tmp_opt->removeOpt("paramsel", false);

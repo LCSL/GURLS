@@ -84,10 +84,10 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
 
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-    nestedOpt->copyOpt<T>("nlambda", opt);
-    nestedOpt->copyOpt<T>("nholdouts", opt);
-    nestedOpt->copyOpt<T>("hoperf", opt);
-    nestedOpt->copyOpt<T>("split", opt);
+    nestedOpt->copyOpt("nlambda", opt);
+    nestedOpt->copyOpt("nholdouts", opt);
+    nestedOpt->copyOpt("hoperf", opt);
+    nestedOpt->copyOpt("split", opt);
 
 
 //    if ~isfield(opt,'kernel')
@@ -100,7 +100,7 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
         nestedOpt->addOpt("kernel", kernel);
     }
     else
-        nestedOpt->copyOpt<T>("kernel", opt);
+        nestedOpt->copyOpt("kernel", opt);
 
     GurlsOptionsList* kernel = nestedOpt->getOptAs<GurlsOptionsList>("kernel");
 
@@ -152,7 +152,7 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
         delete [] distLinearized;
     }
     else
-        nestedOpt->copyOpt<T>("sigmamin", opt);
+        nestedOpt->copyOpt("sigmamin", opt);
 
 
 //    if ~isfield(opt,'sigmamax')
@@ -163,7 +163,7 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
         nestedOpt->addOpt("sigmamax", new OptNumber(sqrt(sigmaMax)));
     }
     else
-        nestedOpt->copyOpt<T>("sigmamax", opt);
+        nestedOpt->copyOpt("sigmamax", opt);
 
 
 

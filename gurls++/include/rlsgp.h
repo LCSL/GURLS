@@ -110,7 +110,8 @@ GurlsOptionsList* RLSGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, 
     for(T* it = K; i<n; ++i, it += n+1)
         *it += coeff;
 
-    T* retL = cholesky(K, n, n);
+    T* retL = new T[n*n];
+    cholesky(K, n, n, retL);
 
     //    cfr.alpha = cfr.L\(cfr.L'\y);
     gMat2D<T>* alpha = new gMat2D<T>(n, t);

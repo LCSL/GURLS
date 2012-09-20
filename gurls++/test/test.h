@@ -140,9 +140,11 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
             mat->readCSV(fileName, true);
             return new OptMatrix<gMat2D<T> >(*mat);
         }
+    case OptArrayOption:
     case GenericOption:
     case OptListOption:
     case TaskSequenceOption:
+    case ProcessOption:
     case TaskIDOption:
         file.close();
         throw "Unsupported option";
@@ -195,8 +197,22 @@ void checkOptions(GurlsOption& result, GurlsOption& reference)
         check_matrix(OptMatrix<gMat2D<T> >::dynacast(&result)->getValue(), OptMatrix<gMat2D<T> >::dynacast(&reference)->getValue());
         break;
 
+    case OptArrayOption:
+    {
+        OptArray& res = *(OptArray::dynacast(&result));
+        OptArray& ref = *(OptArray::dynacast(&reference));
+
+        BOOST_REQUIRE_EQUAL(res.size(), ref.size());
+
+        for(unsigned long i=0; i< res.size(); ++i)
+            checkOptions<T>(*(res[i]), *(ref[i]));
+
+        break;
+    }
+
     case GenericOption:
     case OptListOption:
+    case ProcessOption:
     case TaskSequenceOption:
     case TaskIDOption:
         throw "Unsupported option";

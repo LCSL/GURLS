@@ -91,29 +91,29 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X, const gMa
     const unsigned long n = X.rows();
     const unsigned long t = X.cols();
 
-    GurlsOptionsList* tmp = new GurlsOptionsList("tmp", true);
+    GurlsOptionsList* tmp = new GurlsOptionsList("ParamSelCalibrateSGD", true);
 
     OptTaskSequence *seq = new OptTaskSequence();
-    seq->addTask("split:ho");
-    seq->addTask("kernel:linear");
-    seq->addTask("paramsel:hodual");
-    seq->addTask("optimizer:rlsdual");
+    GurlsOptionsList * process = new GurlsOptionsList("processes", false);
+    OptProcess* process1 = new OptProcess();
+
+    *seq << "split:ho" << "kernel:linear" << "paramsel:hodual" << "optimizer:rlsdual";
+    *process1 << GURLS::compute << GURLS::compute << GURLS::computeNsave << GURLS::computeNsave;
+
     tmp->addOpt("seq", seq);
+
+    process->addOpt("one", process1);
+    tmp->addOpt("processes", process);
+
+
+    if(tmp->hasOpt("hoperf"))
+        tmp->removeOpt("hoperf");
+    if(tmp->hasOpt("singlelambda"))
+        tmp->removeOpt("singlelambda");
 
     tmp->addOpt("hoperf", opt.getOptAsString("hoperf"));
     tmp->addOpt("singlelambda", new OptFunction(OptFunction::dynacast(opt.getOpt("singlelambda"))->getName()));
 
-
-    GurlsOptionsList * process = new GurlsOptionsList("processes", false);
-
-    std::vector<double> process1;
-    process1.push_back(GURLS::compute);
-    process1.push_back(GURLS::compute);
-    process1.push_back(GURLS::computeNsave);
-    process1.push_back(GURLS::computeNsave);
-    process->addOpt("one", new OptNumberList(process1));
-
-    tmp->addOpt("processes", process);
 
     GURLS g;
 
@@ -171,7 +171,7 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X, const gMa
     if(opt.hasOpt("paramsel"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("paramsel", opt);
+        tmp_opt->copyOpt("paramsel", opt);
 
         paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
         tmp_opt->removeOpt("paramsel", false);
@@ -192,8 +192,8 @@ GurlsOptionsList *ParamSelCalibrateSGD<T>::execute(const gMat2D<T>& X, const gMa
 
 //    params.W = opt.rls.W;
     GurlsOptionsList* rls = tmp->getOptAs<GurlsOptionsList>("optimizer");
-    rls->removeOpt("W", false);
     paramsel->addOpt("W", rls->getOpt("W"));
+    rls->removeOpt("W", false);
 
     delete tmp;
     delete[] lambdas;

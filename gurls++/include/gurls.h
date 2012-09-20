@@ -56,6 +56,9 @@
 #include "gmat2d.h"
 #include "optlist.h"
 #include "options.h"
+#include "optarray.h"
+#include "optfunction.h"
+#include "optmatrix.h"
 
 #include "linearkernel.h"
 #include "rbfkernel.h"
@@ -120,7 +123,15 @@ namespace gurls {
         /**
          * Execution options for a GURLS task
          */
-        enum Action {ignore, compute, computeNsave, load, remove};
+//        enum Action {ignore, compute, computeNsave, load, remove};
+
+        typedef OptProcess::Action Action;
+
+        static const Action ignore = OptProcess::ignore;
+        static const Action compute = OptProcess::compute;
+        static const Action computeNsave = OptProcess::computeNsave;
+        static const Action load = OptProcess::load;
+        static const Action remove = OptProcess::remove;
 
         /**
          * Implements a GURLS process and stores results of each GULRS task in opt.
@@ -134,12 +145,14 @@ namespace gurls {
         template <typename T>
         void run(const gMat2D<T>& X, const gMat2D<T>& y,
                  GurlsOptionsList& opt, std::string processid);
+
 };
 
 
 template <typename T>
 void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
-                GurlsOptionsList& opt, std::string processid){
+                GurlsOptionsList& opt, std::string processid)
+{
 
     boost::posix_time::ptime begin, end;
     boost::posix_time::time_duration diff;
@@ -162,9 +175,11 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         if (!processes.hasOpt(processid))
             throw gException(Exception_Gurls_Invalid_ProcessID);
 
-        std::vector<double> process = OptNumberList::dynacast( processes.getOpt(processid) )->getValue();
+//        std::vector<double> process = OptNumberList::dynacast( processes.getOpt(processid) )->getValue();
+        OptProcess* process = processes.getOptAs<OptProcess>(processid);
 
-        if ((long)process.size() != seq->size())
+//        if ((long)process.size() != seq->size())
+        if ( process->size() != seq->size())
             throw gException(gurls::Exception_Gurls_Inconsistent_Processes_Number);
 
         const std::string saveFile = opt.getOptAsString("savefile");
@@ -174,7 +189,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         {
             loadOpt->load(saveFile);
         }
-        catch(gException &)
+        catch(gException & ex)
         {
             delete loadOpt;
             loadOpt = NULL;
@@ -223,12 +238,12 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
         std::string reg1;
         std::string reg2;
-        std::string fun("");
+//        std::string fun("");
         std::cout << std::endl
                   <<"####### New task sequence... "
                   << std::endl;
 
-        for (int i = 0; i < seq->size(); ++i)
+        for (unsigned long i = 0; i < seq->size(); ++i)
         {
             seq->getTaskAt(i, reg1, reg2);
 
@@ -237,8 +252,9 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
             std::cout.flush();
 
 
-            switch ( static_cast<int>(process[i]) ) {
-
+//            switch ( static_cast<int>(process[i]) )
+            switch( (*process)[i] )
+            {
             case GURLS::ignore:
                 std::cout << " ignored." << std::endl;
                 break;
@@ -393,13 +409,13 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         bool save = false;
 
         std::cout << std::endl << "Save cycle..." << std::endl;
-        for (int i = 0; i < seq->size(); ++i)
+        for (unsigned long i = 0; i < seq->size(); ++i)
         {
             seq->getTaskAt(i, reg1, reg2);
             std::cout << "\t" << "[Task " << i << ": " << reg1 << "]: " << reg2 << "... ";
             std::cout.flush();
 
-            switch ( static_cast<int>(process[i]) )
+            switch ( (*process)[i] )
             {
             case GURLS::ignore:
             case GURLS::compute:

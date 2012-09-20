@@ -69,10 +69,10 @@ int main(int argc, char* argv[])
 
     gMat2D<T> Xtr, Xte, ytr, yte;
 
-    std::string XtrFileName = std::string(argv[1]) + "Xtr.txt";
-    std::string ytrFileName = std::string(argv[1]) + "ytr_onecolumn.txt";
-    std::string XteFileName = std::string(argv[1]) + "Xte.txt";
-    std::string yteFileName = std::string(argv[1]) + "yte_onecolumn.txt";
+    std::string XtrFileName = std::string(argv[1]) + "/Xtr.txt";
+    std::string ytrFileName = std::string(argv[1]) + "/ytr_onecolumn.txt";
+    std::string XteFileName = std::string(argv[1]) + "/Xte.txt";
+    std::string yteFileName = std::string(argv[1]) + "/yte_onecolumn.txt";
 
     try
     {
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
         gurls_test(Xte, yte, *opt);
 
 
-        const gMat2D<T>& acc = OptMatrix<gMat2D<T> >::dynacast(opt->getOpt("acc"))->getValue();
+        const gMat2D<T>& acc = opt->getOptValue<OptMatrix<gMat2D<T> > >("acc");
         const int max = static_cast<int>(*std::max_element(ytr.getData(), ytr.getData()+ytr.getSize()));
         const int accs = acc.getSize();
 

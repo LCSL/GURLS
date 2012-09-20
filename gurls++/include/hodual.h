@@ -145,7 +145,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-    nestedOpt->copyOpt<T>("kernel", opt);
+    nestedOpt->copyOpt("kernel", opt);
 
     nestedOpt->addOpt("predkernel", new GurlsOptionsList("predkernel"));
 
@@ -279,10 +279,12 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
             optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
         }
 
+        T* work = new T[last*(last+1)];
+
         for(int i=0; i<tot; ++i)
         {
             // 	opt.rls.C = rls_eigen(Q,L,QtY,guesses(i),ntr);
-            rls_eigen(Q, L, Qty, C->getData(), guesses[i], last, last, last, last, last, t);
+            rls_eigen(Q, L, Qty, C->getData(), guesses[i], last, last, last, last, last, t, work);
 
             if(linearKernel)
             {
@@ -316,18 +318,20 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         delete [] Q;
         delete [] Qty;
         delete [] L;
+        delete [] work;
 
         delete xx;
         delete yy;
 
         //[dummy,idx] = max(ap,[],1);
-        T* work = NULL;
+        work = NULL;
         unsigned long* idx = new unsigned long[t];
         indicesOfMax(ap, tot, t, idx, work, 1);
 
 
         //vout.lambdas_round{nh} = guesses(idx);
-        T* lambdas_nh = copyLocations(idx, guesses, t, tot);
+        T* lambdas_nh = new T[t];
+        copyLocations(idx, guesses, t, tot, lambdas_nh);
 
         copy(lambdas_round +nh, lambdas_nh, t, nholdouts, 1);
 
@@ -358,7 +362,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
     if(opt.hasOpt("paramsel"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("paramsel", opt);
+        tmp_opt->copyOpt("paramsel", opt);
 
         paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
         tmp_opt->removeOpt("paramsel", false);

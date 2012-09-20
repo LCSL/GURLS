@@ -154,11 +154,12 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     T* C_div_Z = new T[qrows];
     T* C = new T[qrows*qcols];
     T* Z = new T[qrows];
+    T* work = new T[std::max((qrows+1)*l_length, (qrows*qcols)+l_length)];
 
     for(int i = 0; i < tot; ++i)
     {
-        rls_eigen(Q, L, Qty, C, guesses[i], n, qrows, qcols, l_length, qcols, t);
-        GInverseDiagonal(Q, L, guesses+i, Z, qrows, qcols, l_length, 1);
+        rls_eigen(Q, L, Qty, C, guesses[i], n, qrows, qcols, l_length, qcols, t, work);
+        GInverseDiagonal(Q, L, guesses+i, Z, qrows, qcols, l_length, 1, work);
 
         for(unsigned long j = 0; j< t; ++j)
         {
@@ -181,6 +182,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     }
 
     delete nestedOpt;
+    delete[] work;
     delete [] C;
     delete [] Z;
     delete [] C_div_Z;
@@ -190,18 +192,13 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     //delete[] Q;
 
     unsigned long* idx = new unsigned long[t];
-    T* work = NULL;
+    work = NULL;
     indicesOfMax(ap, tot, t, idx, work, 1);
 
-    T* lambdas = copyLocations(idx, guesses, t, tot);
+    gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
+    copyLocations(idx, guesses, t, tot, LAMBDA->getData());
 
     delete[] idx;
-
-
-    gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
-    copy(LAMBDA->getData(), lambdas, t);
-
-    delete[] lambdas;
 
 
     GurlsOptionsList* paramsel;
@@ -209,7 +206,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     if(opt.hasOpt("paramsel"))
     {
         GurlsOptionsList* tmp_opt = new GurlsOptionsList("tmp");
-        tmp_opt->copyOpt<T>("paramsel", opt);
+        tmp_opt->copyOpt("paramsel", opt);
 
         paramsel = GurlsOptionsList::dynacast(tmp_opt->getOpt("paramsel"));
         tmp_opt->removeOpt("paramsel", false);

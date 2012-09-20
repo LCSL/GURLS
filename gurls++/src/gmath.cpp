@@ -362,12 +362,7 @@ GURLS_EXPORT void eig(const gMat2D<float>& A, gVec<float>& W)
 template <>
 GURLS_EXPORT void cholesky(const gMat2D<float>& A, gMat2D<float>& L, bool upper)
 {
-
-    float* chol = cholesky<float>(A.getData(), A.rows(), A.cols(), upper);
-
-    copy(L.getData(), chol, A.getSize());
-
-    delete [] chol;
+    cholesky<float>(A.getData(), A.rows(), A.cols(), L.getData(), upper);
 }
 
 /**

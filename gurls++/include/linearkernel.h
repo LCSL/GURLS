@@ -46,6 +46,7 @@
 
 #include "kernel.h"
 #include "gmath.h"
+#include "optmatrix.h"
 
 namespace gurls {
 
