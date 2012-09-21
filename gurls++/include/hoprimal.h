@@ -95,7 +95,7 @@ protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
-    virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt);
+    unsigned long eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt, unsigned long last);
 };
 
 
@@ -111,7 +111,7 @@ protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
-    virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt);
+    unsigned long eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt, unsigned long last);
 };
 
 
@@ -119,17 +119,21 @@ protected:
 
 
 template<typename T>
-void ParamSelHoPrimal<T>::eig_function(T* A, T* L, int A_rows_cols,unsigned long , const GurlsOptionsList &)
+unsigned long ParamSelHoPrimal<T>::eig_function(T* A, T* L, int A_rows_cols,unsigned long d, const GurlsOptionsList &, unsigned long last)
 {
     eig_sm(A, L, A_rows_cols);
+
+    return std::min(d,last);
 }
 
 template<typename T>
-void ParamSelHoPrimalr<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt)
+unsigned long ParamSelHoPrimalr<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long d, const GurlsOptionsList &opt, unsigned long )
 {
     T* V = NULL;
     T k = gurls::round((opt.getOptAsNumber("eig_percentage")*d)/100.0);
     random_svd(A, A_rows_cols, A_rows_cols, A, L, V, A_rows_cols, k);
+
+    return static_cast<unsigned long>(k);
 }
 
 template <typename T>
@@ -205,10 +209,9 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
         dot(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
 
-        eig_function(Q, L, d, d, opt);
+        unsigned long k = eig_function(Q, L, d, d, opt, last);
 
-        unsigned long miN = std::min(d,last);
-        T* guesses = lambdaguesses(L, d, miN,last, tot, (T)(opt.getOptAsNumber("smallnumber")));
+        T* guesses = lambdaguesses(L, d, k, last, tot, (T)(opt.getOptAsNumber("smallnumber")));
 
         T* ap = new T[tot*t];
 

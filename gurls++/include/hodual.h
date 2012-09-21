@@ -98,6 +98,8 @@ protected:
      * Auxiliary method used to call the right eig/svd function for this class
      */
     virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long n, const GurlsOptionsList &opt);
+
+    virtual unsigned long getRank(unsigned long last, unsigned long n, unsigned long d, bool linearKernel, const GurlsOptionsList &opt);
 };
 
 
@@ -114,8 +116,9 @@ protected:
      * Auxiliary method used to call the right eig/svd function for this class
      */
     virtual void eig_function(T* A, T* L, int A_rows_cols, unsigned long n, const GurlsOptionsList &opt);
-};
 
+    virtual unsigned long getRank(unsigned long last, unsigned long n, unsigned long d, bool linearKernel, const GurlsOptionsList &opt);
+};
 
 
 
@@ -132,6 +135,21 @@ void ParamSelHoDualr<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long
     T* V = NULL;
     T k = gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0);
     random_svd(A, A_rows_cols, A_rows_cols, A, L, V, k);
+}
+
+template<typename T>
+unsigned long ParamSelHoDual<T>::getRank(unsigned long last, unsigned long , unsigned long d, bool linearKernel, const GurlsOptionsList &)
+{
+    if(linearKernel)
+        return std::min<unsigned long> (last,d);
+    else
+        return last;
+}
+
+template<typename T>
+unsigned long ParamSelHoDualr<T>::getRank(unsigned long , unsigned long n, unsigned long , bool , const GurlsOptionsList &opt)
+{
+    return static_cast<unsigned long>(gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0));
 }
 
 template <typename T>
@@ -213,11 +231,9 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         T *L = new T[last];
         eig_function(Q, L, last, n, opt);
 
-        unsigned long r = last;
+        unsigned long r = getRank(last, n, d, linearKernel, opt);
 
-        if(linearKernel)
-            r = std::min< unsigned long > (last,d);
-        else
+        if(!linearKernel)
         {
             // 	opt.predkernel.K = opt.kernel.K(va,tr);%nva x ntr
             gMat2D<T>* predK = new gMat2D<T>(n-last, last);
