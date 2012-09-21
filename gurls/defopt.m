@@ -51,3 +51,7 @@ opt.version = 1.0;
 opt.epochs = 4;
 opt.subsize = 50;
 opt.calibfile = 'foo';
+
+%% Random features options
+opt.randfeats.D = 500;
+opt.randfeats.samplesize = 100;
