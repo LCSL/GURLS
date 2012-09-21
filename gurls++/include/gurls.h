@@ -419,11 +419,11 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
             {
             case GURLS::ignore:
             case GURLS::compute:
-            case GURLS::load:
             case GURLS::remove:
                 std::cout << "not saved" << std::endl;
                 opt.removeOpt(reg1);
                 break;
+            case GURLS::load:
             case GURLS::computeNsave:
                 std::cout << " saving" << std::endl;
                 save = true;
