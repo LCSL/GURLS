@@ -61,8 +61,7 @@ for nh = 1:opt.nholdouts
 	[Q,L,U] = tygert_svd(opt.kernel.K(tr,tr),k);
 	Q = double(Q);
 	L = double(diag(L));
-    r = size(Q,2);
-	guesses = paramsel_lambdaguesses(L,r, n, opt);
+	guesses = paramsel_lambdaguesses(L,k, n, opt);
 	tot = opt.nlambda;
 	ap = zeros(tot,T);
 	
