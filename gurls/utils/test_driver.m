@@ -174,7 +174,12 @@ end
 
 function []  = savevar(var,filename,typesfile)
     if isnumeric(var)
-        dlmwrite(filename,var,'delimiter',' ','precision','%1.11e');
+        if strmatch('split-indices',filename) || strmatch('split-lasts',filename)
+            var = cast(var, 'uint32');
+            dlmwrite(filename,var,'delimiter',' ');
+        else
+            dlmwrite(filename,var,'delimiter',' ','precision','%1.11e');
+        end
         if and(strmatch('paramsel-lambdas',filename),sum(size(var)>1)==1)
             vartype = 'numberlist';
         elseif all(size(var)==1)
