@@ -114,11 +114,11 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
         (*table)["nholdouts"] = new OptNumber(1);
         (*table)["hoproportion"] = new OptNumber(0.2);
         (*table)["hoperf"] = new OptString("macroavg");
-//        (*table)["nlambda"] = new OptNumber(100);
-//        (*table)["nsigma"] =  new OptNumber(25);
-        (*table)["nlambda"] = new OptNumber(20);
-        (*table)["nsigma"] =  new OptNumber(10);
-        (*table)["opt.eig_percentage"] = new OptNumber(5);
+        (*table)["nlambda"] = new OptNumber(100);
+        (*table)["nsigma"] =  new OptNumber(25);
+//        (*table)["nlambda"] = new OptNumber(20);
+//        (*table)["nsigma"] =  new OptNumber(10);
+        (*table)["eig_percentage"] = new OptNumber(5);
 
 
     // ======================================================== Pegasos option
