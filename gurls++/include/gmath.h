@@ -56,6 +56,7 @@
 #include <cassert>
 #include <sstream>
 #include <algorithm>
+#include <limits>
 
 #include "exports.h"
 #include "exceptions.h"
@@ -1133,7 +1134,7 @@ T* lambdaguesses(const T* eigvals, const int len, const int r, const int n, cons
     delete[] tmp;
 
     T thr1 = std::min(lmin, minl*lmax);
-    T thr2 = 200*static_cast<T>(sqrt(DBL_EPSILON));
+    T thr2 = 200*static_cast<T>(sqrt(std::numeric_limits<T>::epsilon()));
 
     lmin = std::max(thr1, thr2);
 
