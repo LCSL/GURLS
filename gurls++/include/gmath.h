@@ -334,8 +334,8 @@ void copy_submatrix(T* dst, const T* src, const int src_Rows, const int sizeRows
   for (int j = 0; j < sizeCols; j++)
     for (int i = 0; i < sizeRows; i++)
     {
-      dst[t] = src[ indices_rows[i] + indices_cols[j]*src_Rows ];
-      ++t;
+        dst[t] = src[ indices_rows[i] + indices_cols[j]*src_Rows ];
+        ++t;
     }
 }
 
@@ -926,8 +926,10 @@ void rls_eigen(const T* Q, const T* L, const T* Qty, T* C, const T lambda, const
 
     // L = diag(L)
     T* QL = work+L_length; // size Q_rows*L_length
-    diag(L1, L_length, QL);
 
+    copy(QL, Q, Q_rows*Q_cols);
+    for(int i=0; i< Q_cols; ++i)
+        scal(Q_rows, L1[i], QL+(Q_rows*i), 1);
 
     //C = (Q*L)*QtY;
     dot(QL, Qty, C, Q_rows, L_length, Qty_rows, Qty_cols, Q_rows, Qty_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
