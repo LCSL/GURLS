@@ -55,6 +55,7 @@
 #include "gmat2d.h"
 #include "gvec.h"
 #include "gmath.h"
+#include "utils.h"
 
 #include "paramsel.h"
 #include "perf.h"
@@ -172,13 +173,13 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
 
 //        opt.perf = opt.hoperf([],y,opt);
         const gMat2D<T> dummy;
-        GurlsOptionsList* perf = perfClass->execute(dummy, Y, *nestedOpt);
+        GurlsOptionsList* perf_opt = perfClass->execute(dummy, Y, *nestedOpt);
 
-        gMat2D<T> &forho_vec = perf->getOptValue<OptMatrix<gMat2D<T> > >("forho");
+        gMat2D<T> &forho_vec = perf_opt->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
         copy(ap+i, forho_vec.getData(), t, tot, 1);
 
-        delete perf;
+        delete perf_opt;
     }
 
     delete nestedOpt;
@@ -194,6 +195,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     unsigned long* idx = new unsigned long[t];
     work = NULL;
     indicesOfMax(ap, tot, t, idx, work, 1);
+
 
     gMat2D<T> *LAMBDA = new gMat2D<T>(1, t);
     copyLocations(idx, guesses, t, tot, LAMBDA->getData());
