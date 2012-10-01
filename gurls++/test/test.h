@@ -250,6 +250,7 @@ public:
         defaults.push_back(PairType("nholdouts.txt", NumberOption));
         defaults.push_back(PairType("hoproportion.txt", NumberOption));
         defaults.push_back(PairType("smallnumber.txt", NumberOption));
+        defaults.push_back(PairType("eig_percentage.txt", NumberOption));
     }
 
     typedef std::pair<std::string, OptTypes> PairType;

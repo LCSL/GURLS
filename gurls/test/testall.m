@@ -16,6 +16,7 @@ dlmwrite('nsigma.txt',5);
 dlmwrite('nholdouts.txt',1);
 dlmwrite('hoproportion.txt',0.2);
 dlmwrite('smallnumber.txt',1e-8,'precision','%1.11e');
+dlmwrite('eig_percentage.txt',5);
 fid = fopen('hoperf.txt','w');
 fprintf(fid,'macroavg');
 fclose(fid);

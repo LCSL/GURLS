@@ -10,6 +10,7 @@ function [] = test_driver(task,dirname,opt)
     opt.nholdouts = load('nholdouts.txt');
     opt.hoproportion = load('hoproportion.txt');
     opt.smallnumber = load('smallnumber.txt');
+    opt.eig_percentage = load('eig_percentage.txt');
     tmp = importdata('singlelambda.txt');
     opt.singlelambda = str2func(tmp{1});
     tmp = importdata('hoperf.txt');
@@ -108,15 +109,11 @@ function opt = addopt(opt,optfield,allfiles,dirname,typesfile)
         end
         for i =1:length(filesin);
             varin = importdata([dirname '/' filesin{i}]);
-            if and(strmatch('paramsel-lambdas',filesin{i}),sum(size(varin)>1)==1)
-                vartype = 'numberlist';
-            elseif iscell(varin); 
+            if iscell(varin); 
                 varin = varin{1}; 
                 vartype = 'string';
             elseif all(size(varin)==1)
                 vartype = 'number';
-%             elseif sum(size(varin)>1)==1
-%                 vartype = 'numberlist';
             else
                 vartype = 'matrix';
             end
@@ -174,18 +171,14 @@ end
 
 function []  = savevar(var,filename,typesfile)
     if isnumeric(var)
-        if strmatch('split-indices',filename) || strmatch('split-lasts',filename)
+        if or(size(strfind(filename, 'split-indices'), 2) > 0, size(strfind(filename, 'split-lasts'), 2) > 0)
             var = cast(var, 'uint32');
             dlmwrite(filename,var,'delimiter',' ');
         else
             dlmwrite(filename,var,'delimiter',' ','precision','%1.11e');
         end
-        if and(strmatch('paramsel-lambdas',filename),sum(size(var)>1)==1)
-            vartype = 'numberlist';
-        elseif all(size(var)==1)
+        if all(size(var)==1)
             vartype = 'number';
-%         elseif sum(size(var)>1)==1
-%             vartype = 'numberlist';
         else
             vartype = 'matrix';
         end
