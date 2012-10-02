@@ -60,18 +60,20 @@ namespace gurls{
 
 void GurlsOptionsList::setName(std::string newname)
 {
-    this->name = newname;
-    this->table->erase("Name");
-    this->table->insert(pair<std::string, GurlsOption*> ("Name", new OptString(newname)));
+    name = newname;
+    if(hasOpt("Name"))
+    {
+        delete (*table)["Name"];
+        table->erase("Name");
+    }
+    (*table)["Name"] = new OptString(newname);
 }
 
 GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOption(OptListOption), name(ExpName)
 {
-    string key ("Name");
-    GurlsOption* value;
-    value = new OptString(ExpName);
     table = new std::map<std::string, GurlsOption* >();
-    table->insert( pair<std::string,GurlsOption*>(key, value) );
+
+    (*table)["Name"] = new OptString(ExpName);
 
     if(usedefopt)
     {

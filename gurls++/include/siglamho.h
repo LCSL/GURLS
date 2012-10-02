@@ -303,6 +303,7 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
     delete [] perf;
     delete [] perf_median;
     delete [] guesses_median;
+    delete nestedOpt;
 
 
     paramsel->removeOpt("sigma");

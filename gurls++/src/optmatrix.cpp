@@ -7,7 +7,7 @@ namespace gurls
   * OptMatrix empty constructor for float elements
   */
 template <>
-GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<float>(2,2)))
+GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<float>()))
 {
     this->matType = FLOAT;
 }
@@ -25,7 +25,7 @@ GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(gMat2D<float>& m): OptMatrixB
   * OptMatrix empty constructor for double elements
   */
 template <>
-GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<double>(2,2)))
+GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<double>()))
 {
     this->matType = DOUBLE;
 }
@@ -43,7 +43,7 @@ GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(gMat2D<double>& m): OptMatri
   * OptMatrix empty constructor for unsigned long elements
   */
 template <>
-GURLS_EXPORT OptMatrix <gMat2D<unsigned long> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<unsigned long>(2,2)))
+GURLS_EXPORT OptMatrix <gMat2D<unsigned long> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<unsigned long>()))
 {
     this->matType = ULONG;
 }

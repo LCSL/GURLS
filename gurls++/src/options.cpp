@@ -451,7 +451,7 @@ OptStringList &OptStringList::operator <<(const char* str)
 
 OptString::OptString(): GurlsOption(StringOption), value(""){}
 
-OptString::OptString(const char* str): GurlsOption(StringOption),value(str){}
+//OptString::OptString(const char* str): GurlsOption(StringOption),value(str){}
 
 OptString::OptString(const std::string& str): GurlsOption(StringOption),value(str){}
 

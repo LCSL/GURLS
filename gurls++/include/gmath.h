@@ -1450,24 +1450,24 @@ T eucl_dist(const T* A, const T* B, const int len, T* work)
 template<typename T>
 void pdist(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D)
 {
-//    int d_len = N*(N-1)/2;
     T* work = new T[P];
     T* rowN = new T[P];
     T* rowNPlusOne = new T[P];
-    //D = new T[d_len];
-    int cont = 0;
-    for(int i=0;i<N;i++)
+    T* D_it = D;
+
+    for(int i=0; i<N-1; ++i)
     {
-        copy< T >(rowN,A + i,P,1,N);
-        //    getRow< T >(A,N,P,i,rowN);
-        for(int j=i+1;j<N;j++)
+        getRow(A, N, P, i, rowN);
+
+        for(int j=i+1; j<N; ++j)
         {
-            copy< T >(rowNPlusOne,A + j,P,1,N);
-            //      getRow< T >(A,N,P,j,rowNPlusOne);
-            D[cont] = eucl_dist<T>(rowN,rowNPlusOne,P, work);
-            cont++;
+            getRow(A, N, P, j, rowNPlusOne);
+
+            *D_it = eucl_dist(rowN,rowNPlusOne,P, work);
+            ++D_it;
         }
     }
+
     delete [] work;
     delete [] rowN;
     delete [] rowNPlusOne;
@@ -1488,32 +1488,36 @@ void squareform(const T* A, const int N/*A_rows*/, const int P/*A_cols*/, T* D, 
 {
     if(d_cols!=1)
     {
-        //D = new T[N*N];
         T* work = new T[P];
         T* rowN = new T[P];
         T* rowNPlusOne = new T[P];
-        for(int i=0;i<N;i++)
+
+        set(D, (T)0.0, N, N+1); // zeroes the diagonal
+
+        for(int i=0; i<N; ++i)
         {
-            copy< T >(rowN,A + i,P,1,N);
-            for(int j=0;j<=N;j++)
+            copy(D+(i*N), D+i, i, 1, N); // copy from the other side
+
+            if(i+1 < N)
             {
-                if(i!=j)
+                getRow(A, N, P, i, rowN);
+
+                for(int j=i+1; j<N; ++j)
                 {
-                    copy< T >(rowNPlusOne,A + j,P,1,N);
-                    D[j + i*N] = eucl_dist< T >(rowN,rowNPlusOne,P, work);
+                    getRow(A, N, P, j, rowNPlusOne);
+                    D[j + i*N] = eucl_dist(rowN, rowNPlusOne, P, work);
                 }
-                else
-                    D[j + i*N]=0;
             }
         }
+
         delete [] work;
         delete [] rowN;
         delete [] rowNPlusOne;
+
     }
     else
     {
-        //   D = new T[N*(N-1)/2];
-        pdist<T>(A, N, P, D);
+        pdist(A, N, P, D);
     }
 }
 

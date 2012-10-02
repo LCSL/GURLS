@@ -157,7 +157,7 @@ public:
     /**
       * Constructor from a char buffer
       */
-    OptString(const char* str);
+//    OptString(const char* str);
 
     /**
       * Constructor from a string

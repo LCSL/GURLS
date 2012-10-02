@@ -377,6 +377,7 @@ public:
         delete X;
         delete Y;
         delete opt;
+        delete res;
     }
 
     void runTask()

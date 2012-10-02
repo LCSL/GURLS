@@ -188,6 +188,8 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
         if(perClass_length < cols)
             set(acc+perClass_length, (T)1.0, cols-perClass_length);
 
+        delete[] perClass;
+
     }
 
     OptMatrix<gMat2D<T> >* acc_opt = new OptMatrix<gMat2D<T> >(*acc_mat);

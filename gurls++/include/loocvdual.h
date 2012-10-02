@@ -188,6 +188,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     delete [] Z;
     delete [] C_div_Z;
     delete perfClass;
+    delete [] Qty;
 
     delete[] L;
     //delete[] Q;

@@ -275,6 +275,8 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         }
 
 
+        delete perfClass;
+
         delete[] row;
         garbage.erase(row);
         delete[] num;
@@ -301,6 +303,8 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         garbage.erase(right);
         delete[] den;
         garbage.erase(den);
+        delete [] LOOSQE;
+        garbage.erase(LOOSQE);
 //        delete[] Le;
 //        garbage.erase(Le);
 

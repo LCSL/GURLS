@@ -96,7 +96,7 @@ public:
     /**
       * Empty constructor
       */
-    OptMatrix(): OptMatrixBase () , value (*(new Matrix(2,2)))
+    OptMatrix(): OptMatrixBase () , value (*(new Matrix()))
     {
         throw gException(Exception_Unsupported_MatrixType);
     }

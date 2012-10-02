@@ -274,6 +274,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskOpt->execute(X, y, opt);
                     opt.removeOpt("optimizer");
                     opt.addOpt("optimizer", ret);
+
+                    delete taskOpt;
                 }
                 else if (!reg1.compare("paramsel"))
                 {
@@ -281,6 +283,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskParSel->execute(X, y, opt);
                     opt.removeOpt("paramsel");
                     opt.addOpt("paramsel", ret);
+
+                    delete taskParSel;
                 }
                 else if (!reg1.compare("pred"))
                 {
@@ -288,6 +292,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskPrediction->execute(X, y, opt);
                     opt.removeOpt("pred");
                     opt.addOpt("pred", ret);
+
+                    delete taskPrediction;
                 }
                 else if (!reg1.compare("perf"))
                 {
@@ -295,6 +301,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskPerformance->execute(X, y, opt);
                     opt.removeOpt("perf");
                     opt.addOpt("perf", ret);
+
+                    delete taskPerformance;
                 }
                 else if (!reg1.compare("kernel"))
                 {
@@ -302,6 +310,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskKernel->execute(X, y, opt);
                     opt.removeOpt("kernel");
                     opt.addOpt("kernel", ret);
+
+                    delete taskKernel;
                 }
                 else if (!reg1.compare("norm"))
                 {
@@ -309,6 +319,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     gMat2D<T>* X1 = taskNorm->execute(X, y, opt);
                     delete X1;
                     throw gException("Unused return value");
+
+                    delete taskNorm;
                 }
                 else if (!reg1.compare("split"))
                 {
@@ -316,6 +328,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskSplit->execute(X, y, opt);
                     opt.removeOpt("split");
                     opt.addOpt("split", ret);
+
+                    delete taskSplit;
                 }
                 else if (!reg1.compare("predkernel"))
                 {
@@ -323,6 +337,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskPredKernel->execute(X, y, opt);
                     opt.removeOpt("predkernel");
                     opt.addOpt("predkernel", ret);
+
+                    delete taskPredKernel;
                 }
                 else if (!reg1.compare("conf"))
                 {
@@ -330,6 +346,8 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                     GurlsOption* ret = taskConfidence->execute(X, y, opt);
                     opt.removeOpt("conf");
                     opt.addOpt("conf", ret);
+
+                    delete taskConfidence;
                 }
 
 //                fun = reg1;

@@ -290,6 +290,7 @@ GurlsOptionsList* ParamSelSiglam<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
     delete [] work;
     delete [] perf;
+    delete nestedOpt;
 
     // M = sum(LOOSQE,3); % sum over classes
     //
