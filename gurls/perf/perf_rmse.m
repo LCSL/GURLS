@@ -14,10 +14,9 @@ if isfield (opt,'perf')
 	p = opt.perf; % lets not overwrite existing performance measures.
 		      % unless they have the same name
 end
-
 T 		= size(y,2);
 n 		= size(y,1);
 diff 		= opt.pred - y;
-p.rmse 		= norm(diff,'fro') / sqrt(n);
+p.rmse		= sqrt(sum(diff.^2,1));
 p.forho 	= -p.rmse;
 p.forplot 	= p.rmse;
