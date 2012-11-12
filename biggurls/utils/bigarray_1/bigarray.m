@@ -878,9 +878,9 @@ case '()'
 
     for i = 1 : ni
         if i == last
-            if isequal(ids.subs{i}, ':'), error('must supply indices for dimension %u', last); end
+            if (ischar(ids.subs{i}) & isequal(ids.subs{i}, ':')), error('must supply indices for dimension %u', last); end
         else
-            if ~isequal(ids.subs{i}, ':'), error('can only supply indices for dimension %u', last); end
+            if ( ~ischar(ids.subs{i}) & ~isequal(ids.subs{i}, ':')), error('can only supply indices for dimension %u', last); end
         end
     end
 
