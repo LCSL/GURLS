@@ -65,7 +65,7 @@ public:
      * \param Y labels matrix
      * \param opt not udes
      *
-     * \return adds the field kernel to opt, where kernel has the following fields:
+     * \return kernel, a GurslOptionList with the following fields:
      *  - type = "chisquared"
      *  - K = the kernel matrix
      */

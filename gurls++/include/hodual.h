@@ -86,7 +86,7 @@ public:
      *  - split (settable with the class Split and its subclasses)
      *  - kernel (settable with the class Kernel and its subclasses)
      *
-     * \return adds the following fields to opt:
+     * \return paramsel, a GurlsOptionList with the following fields:
      *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - forho = matrix of validation accuracies for each lambda guess and for each class

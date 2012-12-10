@@ -68,7 +68,8 @@ public:
      * \param Y not used
      * \param opt not used
      *
-     * \return adds the field lambdas(=1.0) to opt
+     * \return paramsel, a GurlsOptionList with the following fields:
+     * -lambdas (=1.0)
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };

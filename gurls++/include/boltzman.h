@@ -66,8 +66,9 @@ The scores are converted in probabilities using the Boltzman distribution.
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \return adds the following fields to opt:
+     * \return ret, a GurlsOptionList with the following fields:
      *  - confidence = array containing the confidence score for each row of the field pred of opt.
+	 *  - labels = array containing predicted class for each row of the field pred of opt.
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };

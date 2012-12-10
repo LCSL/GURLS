@@ -98,7 +98,7 @@ public:
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the different required fields based on the sub-class
-     * \return adds the fields rls to opt
+     * \return a GurlsOptionList
      */
 
     virtual GurlsOption* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;

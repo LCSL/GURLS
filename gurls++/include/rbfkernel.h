@@ -67,7 +67,7 @@ public:
      * \param opt options with the following fields:
      *  - paramsel (list with the required field sigma, settable with the class ParamSelection and its subclasses Siglam and SiglamHo)
      *
-     * \return adds the field kernel to opt, where kernel has the following fields:
+     * \return kernel, a GurslOptionList with the following fields:
      *  - type = "rbf"
      *  - K = the kernel matrix
      */

@@ -20,4 +20,3 @@ for i = 1:n;
     pred.vars(i) = v'*v;
 end
 pred.vars = opt.predkernel.Ktest - pred.vars;
-

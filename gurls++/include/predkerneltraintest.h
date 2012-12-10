@@ -72,7 +72,7 @@ public:
      *  - testkernel (only if opt.kernel.type is 'load')
      *  - paramsel (list with the field sigma, required, only if opt.kernel.type is 'rbf', and settable with the class ParamSel and its subclasses SigLam and SiglamHo)
      *
-     * \return adds to opt the field predkernel, which is a list with at least the field K containing the kernel matrix
+     * \return predkernel GurlsOptionsList with at least the field K containing the kernel matrix
      */
 
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);

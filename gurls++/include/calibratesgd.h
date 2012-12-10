@@ -74,7 +74,7 @@ public:
      *  - singlelambda (default)
      *  - nlambda (default)
      *
-     * \return adds the following fields to opt:
+     * \return paramsel, a GurlsOptionList with the following fields:
      *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
      *  - W = RLS coefficient vector
      */
