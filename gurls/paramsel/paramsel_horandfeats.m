@@ -1,6 +1,9 @@
 function [vout] = paramsel_horandfeats(X,y,opt)
 % paramsel_horandfeat(X,Y,OPT)
-% Performs parameter selection when the primal formulation of RLS is used.
+% Performs parameter selection when the Random Features approach to RLS is used: 
+%   Ali Rahimi, Ben Recht;
+%   Random Features for Large-Scale Kernel Machines;
+%   in Neural Information Processing Systems (NIPS) 2007.
 % The hold-out approach is used. 
 % The performance measure specified by opt.hoperf is maximized.
 %
@@ -14,7 +17,7 @@ function [vout] = paramsel_horandfeats(X,y,opt)
 %		- nlambda
 %		- smallnumber
 %		- hoperf
-%       	- nholdouts
+%       - nholdouts
 %
 %   For more information on standard OPT fields
 %   see also defopt

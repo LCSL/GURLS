@@ -2,8 +2,10 @@ function [kernel] = kernel_randfeats(X, y, opt)
 % kernel_linear(X,Y,OPT)
 % Computes the Kernel matrix for a linear model.		
 % Instead of using real features, the kernel is based on random
-% projections. See the following paper for details.
-%
+% projections. See the following paper for details:
+%   Ali Rahimi, Ben Recht;
+%   Random Features for Large-Scale Kernel Machines;
+%   in Neural Information Processing Systems (NIPS) 2007.
 %
 % INPUTS:
 % -X: input data matrix
