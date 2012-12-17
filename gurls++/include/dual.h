@@ -76,8 +76,7 @@ public:
      *  - C, X, W (settable with the class Optimizers and its subclasses RLSDual)
      *  - predkernel (required only if the subfield type of Kernel is different than "linear", and settable with the class PredKernel and its subclasses PredKernelTrainTest)
      *
-     * \return adds the following field to opt:
-     *  - pred = matrix of predicted labels
+     * \return pred matrix of predicted labels
      */
     OptMatrix<gMat2D<T> >* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };

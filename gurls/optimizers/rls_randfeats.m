@@ -2,10 +2,10 @@ function [cfr] = rls_randfeats (X, y, opt)
 
 % rls_primalRF(X,y,opt)
 % computes a classifier for the primal formulation of RLS using the Random
-% Features proposed by Rahimi and Recht: 
-% 
-% Random Features for Large-Scale Kernel Machines, Ali Rahimi, Ben Recht,
-% in Neural Information Processing Systems (NIPS) 2007. (pdf) 
+% Features approach proposed in: 
+%   Ali Rahimi, Ben Recht;
+%   Random Features for Large-Scale Kernel Machines;
+%   in Neural Information Processing Systems (NIPS) 2007.
 %
 % The regularization parameter is set to the one found in opt.paramsel.
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.

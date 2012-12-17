@@ -75,8 +75,7 @@ public:
      * \param opt options with the following:
      *  - optimizer (settable with the class Optimizers and its subclasses)
      *
-     * \return adds the following fields to opt:
-     *  - pred = matrix of predicted labels
+     * \return pred matrix of predicted labels
      */
    OptMatrix<gMat2D<T> >* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };

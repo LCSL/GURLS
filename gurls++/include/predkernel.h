@@ -68,7 +68,7 @@ public:
      * \param Y not used
      * \param opt options with the different required fields based on the sub-class
      *
-     * \return adds the field predkernel to opt:
+     * \return a GurlsOptionList
      */
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 

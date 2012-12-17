@@ -69,8 +69,9 @@ public:
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \return adds to opt the field perf wich is a list containing the following fields (if opt already contains perf than adds to it the following fields):
-     *  - rmse = root mean square error
+	 * \return perf, a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
+     *  - rmse = root mean square error for each class/task
+	 *  - forho = -rmse
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };

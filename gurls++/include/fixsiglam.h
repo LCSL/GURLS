@@ -68,7 +68,7 @@ public:
      * \param Y not used
      * \param opt not used
      *
-     * \return adds the following fields to opt:
+     * \return paramsel, a GurlsOptionList with the following fields:
      *  - lambdas(=1.0)
      *  - sigma(=1.0)
      */

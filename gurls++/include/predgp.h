@@ -72,7 +72,7 @@ public:
      *  - L, alpha (settable with the class Optimizers and its subclasses RLSGP)
      *  - predkernel (settable with the class PredKernel and its subclasses PredKernelTrainTest, must contain the fields K and Ktest)
      *
-     * \return adds to opt the field pred which contains the following fields:
+     * \return pred GurlsOptionList with the following fields:
      *  - means = matrix of output means
      *  - covs = matrix of output covariances
      */

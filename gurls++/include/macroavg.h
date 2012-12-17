@@ -70,10 +70,9 @@ public:
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \return adds the following fields to opt:
+     * \return perf, a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
      *  - acc = array of prediction accuracy for each class
      *  - forho = acc
-     *  - forplot = acc
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 

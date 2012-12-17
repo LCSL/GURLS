@@ -76,7 +76,9 @@ public:
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \return adds the fields confidence to opt
+     * \return ret, a GurlsOptionList with the following fields:
+     *  - confidence = array containing the confidence score for each row of the field pred of opt.
+	 *  - labels = array containing predicted class for each row of the field pred of opt.
      */
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 

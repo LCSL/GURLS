@@ -69,7 +69,20 @@ class ParamSelLooGPRegr: public ParamSelection<T>{
 
 public:
     /**
+     * Performs parameter selection for Gaussian Process regression.
+     * The leave-one-out approach is used.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - nlambda (default)
+     *  - hoperf (default)
+     *  - split (settable with the class Split and its subclasses)
+     *  - kernel (settable with the class Kernel and its subclasses)
      *
+     * \return paramsel, a GurlsOptionList with the following fields:
+     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
+     *  - guesses = array of guesses for the regularization parameter lambda
+     *  - forho = matrix of validation accuracies for each lambda guess and for each class
      */
    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };

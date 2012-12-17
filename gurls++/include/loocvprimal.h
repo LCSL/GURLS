@@ -85,7 +85,7 @@ public:
      * \param opt options with the following default fields:
      *  - nlambda (default)
      *  - smallnumber
-     * \return adds the following fields to opt:
+     * \return paramsel, a GurlsOptionList with the following fields:
      *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - acc = matrix of validation accuracies for each lambda guess and for each class
