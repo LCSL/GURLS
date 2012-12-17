@@ -56,7 +56,8 @@
 #include "gvec.h"
 #include "gmath.h"
 
-namespace gurls {
+namespace gurls
+{
 
 template <typename T>
 class ParamSelLoocvPrimal;
@@ -104,14 +105,28 @@ template <typename T>
 class ParamSelSiglamHoGPRegr;
 
 /**
+ * \ingroup Exceptions
+ *
+ * \brief BadParamSelectionCreation is thrown when \ref factory tries to generate an unknown parameter selection method
+ */
+class BadParamSelectionCreation : public std::logic_error
+{
+public:
+    /**
+     * Exception constructor.
+     */
+    BadParamSelectionCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
  * \ingroup ParameterSelection
  * \brief ParamSelection is the class that implements parameter selection
  */
-
 template <typename T>
 class ParamSelection
 {
 public:
+
     /**
      * Implements the selection of the regularization parameter(s)
      * \param X input data matrix
@@ -119,23 +134,7 @@ public:
      * \param opt options with the different required fields based on the sub-class
      * \return a GurlsOptionList
      */
-
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
-
-    /**
-     * \ingroup Exceptions
-     *
-     * \brief BadParamSelectionCreation is thrown when \ref factory tries to generate an unknown parameter selection method
-     */
-    class BadParamSelectionCreation : public std::logic_error
-    {
-    public:
-        /**
-         * Exception constructor.
-         */
-      BadParamSelectionCreation(std::string type)
-      : logic_error("Cannot create type " + type) {}
-    };
 
     /**
      * Factory function returning a pointer to the newly created object.
@@ -145,37 +144,37 @@ public:
      */
     static ParamSelection<T>* factory(const std::string& id) throw(BadParamSelectionCreation)
     {
-      if(id == "loocvprimal")
-        return new ParamSelLoocvPrimal<T>;
-      else if(id == "loocvdual")
-        return new ParamSelLoocvDual<T>;
-      else if(id == "fixlambda")
-        return new ParamSelFixLambda<T>;
-      else if(id == "calibratesgd")
-        return new ParamSelCalibrateSGD<T>;
-      else if(id == "siglam")
-        return new ParamSelSiglam<T>;
-      else if(id == "siglamho")
-        return new ParamSelSiglamHo<T>;
-      else if(id == "hodual")
-        return new ParamSelHoDual<T>;
-      else if(id == "hodualr")
-        return new ParamSelHoDualr<T>;
-      else if(id == "hoprimal")
-        return new ParamSelHoPrimal<T>;
-      else if(id == "hoprimalr")
-        return new ParamSelHoPrimalr<T>;
-      else if(id == "fixsiglam")
-        return new ParamSelFixSigLam<T>;
-      else if(id == "loogpregr")
-        return new ParamSelLooGPRegr<T>;
-      else if(id == "hogpregr")
-        return new ParamSelHoGPRegr<T>;
-      else if(id == "siglamloogpregr")
-        return new ParamSelSiglamLooGPRegr<T>;
-      else if(id == "siglamhogpregr")
-        return new ParamSelSiglamHoGPRegr<T>;
-      else
+        if(id == "loocvprimal")
+            return new ParamSelLoocvPrimal<T>;
+        if(id == "loocvdual")
+            return new ParamSelLoocvDual<T>;
+        if(id == "fixlambda")
+            return new ParamSelFixLambda<T>;
+        if(id == "calibratesgd")
+            return new ParamSelCalibrateSGD<T>;
+        if(id == "siglam")
+            return new ParamSelSiglam<T>;
+        if(id == "siglamho")
+            return new ParamSelSiglamHo<T>;
+        if(id == "hodual")
+            return new ParamSelHoDual<T>;
+        if(id == "hodualr")
+            return new ParamSelHoDualr<T>;
+        if(id == "hoprimal")
+            return new ParamSelHoPrimal<T>;
+        if(id == "hoprimalr")
+            return new ParamSelHoPrimalr<T>;
+        if(id == "fixsiglam")
+            return new ParamSelFixSigLam<T>;
+        if(id == "loogpregr")
+            return new ParamSelLooGPRegr<T>;
+        if(id == "hogpregr")
+            return new ParamSelHoGPRegr<T>;
+        if(id == "siglamloogpregr")
+            return new ParamSelSiglamLooGPRegr<T>;
+        if(id == "siglamhogpregr")
+            return new ParamSelSiglamHoGPRegr<T>;
+
         throw BadParamSelectionCreation(id);
     }
 };

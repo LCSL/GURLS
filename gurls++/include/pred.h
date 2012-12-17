@@ -56,7 +56,8 @@
 #include "optlist.h"
 
 
-namespace gurls {
+namespace gurls
+{
 
 template <typename T>
 class PredPrimal;
@@ -68,14 +69,28 @@ template <typename T>
 class PredGPRegr;
 
 /**
+ * \ingroup Exceptions
+ *
+ * \brief BadPredictionCreation is thrown when \ref factory tries to generate an unknown prediction method
+ */
+class BadPredictionCreation : public std::logic_error
+{
+public:
+    /**
+     * Exception constructor.
+     */
+    BadPredictionCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
  * \ingroup Prediction
  * \brief Prediction is the class that computes predictions
  */
-
 template <typename T>
 class Prediction
 {
 public:
+
     /**
      * Computes predictions of the classifier stored in the field rls of opt on the samples passed in the X matrix.
      * \param X input data matrix
@@ -87,21 +102,6 @@ public:
     virtual GurlsOption* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
-     * \ingroup Exceptions
-     *
-     * \brief BadPredictionCreation is thrown when \ref factory tries to generate an unknown prediction method
-     */
-    class BadPredictionCreation : public std::logic_error
-    {
-    public:
-        /**
-         * Exception constructor.
-         */
-        BadPredictionCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-
-    /**
      * Factory function returning a pointer to the newly created object.
      *
      * \warning The returned pointer is a plain, un-managed pointer. The calling
@@ -111,12 +111,12 @@ public:
     {
         if(id == "primal")
             return new PredPrimal<T>;
-        else if(id == "dual")
+        if(id == "dual")
             return new PredDual<T>;
-        else if(id == "gpregr")
+        if(id == "gpregr")
             return new PredGPRegr<T>;
-        else
-            throw BadPredictionCreation(id);
+
+        throw BadPredictionCreation(id);
     }
 
 };

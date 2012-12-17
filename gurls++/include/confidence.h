@@ -46,7 +46,8 @@
 #include <stdexcept>
 #include "optlist.h"
 
-namespace gurls {
+namespace gurls
+{
 
 template<typename T>
 class ConfBoltzman;
@@ -61,10 +62,23 @@ template<typename T>
 class ConfMaxScore;
 
 /**
+ * \ingroup Exceptions
+ *
+ * \brief BadConfidenceCreation is thrown when \ref factory tries to generate an unknown confidence method
+ */
+class BadConfidenceCreation : public std::logic_error
+{
+public:
+    /**
+     * Exception constructor.
+     */
+    BadConfidenceCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
  * \ingroup Confidence
  * \brief Confidence is the class that computes a confidence score for the predicted labels
  */
-
 template<typename T>
 class Confidence
 {
@@ -78,24 +92,9 @@ public:
      *
      * \return ret, a GurlsOptionList with the following fields:
      *  - confidence = array containing the confidence score for each row of the field pred of opt.
-	 *  - labels = array containing predicted class for each row of the field pred of opt.
+     *  - labels = array containing predicted class for each row of the field pred of opt.
      */
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
-
-    /**
-     * \ingroup Exceptions
-     *
-     * \brief BadConfidenceCreation is thrown when \ref factory tries to generate an unknown confidence method
-     */
-    class BadConfidenceCreation : public std::logic_error
-    {
-    public:
-        /**
-         * Exception constructor.
-         */
-        BadConfidenceCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
 
     /**
      * Factory function returning a pointer to the newly created object.
@@ -107,14 +106,13 @@ public:
     {
         if(id == "boltzman")
             return new ConfBoltzman<T>;
-        else if(id == "boltzmangap")
+        if(id == "boltzmangap")
             return new ConfBoltzmanGap<T>;
-        else if(id == "gap")
+        if(id == "gap")
                 return new ConfGap<T>;
-        else if(id == "maxscore")
+        if(id == "maxscore")
             return new ConfMaxScore<T>;
-        else
-            throw BadConfidenceCreation(id);
+        throw BadConfidenceCreation(id);
     }
 };
 

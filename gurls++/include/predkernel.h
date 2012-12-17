@@ -47,21 +47,37 @@
 #include "gmat2d.h"
 #include "optlist.h"
 
-namespace gurls {
+namespace gurls
+{
 
 template<typename T>
 class PredKernelTrainTest;
 
 /**
+ * \ingroup Exceptions
+ *
+ * \brief BadPredKernelCreation is thrown when \ref factory tries to generate an unknown prediction kernel
+ */
+class BadPredKernelCreation : public std::logic_error
+{
+public:
+
+    /**
+     * Exception constructor.
+     */
+    BadPredKernelCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
  * \ingroup PredKernels
  * \brief PredKernel is the class that computes the kernel matrix for prediction
  */
-
 template<typename T>
 class PredKernel
 {
 public:
-   /**
+
+    /**
      * Computes the kernel matrix necessary for predicting the labels associated to X
      *
      * \param X input data matrix
@@ -73,21 +89,6 @@ public:
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
-     * \ingroup Exceptions
-     *
-     * \brief BadPredKernelCreation is thrown when \ref factory tries to generate an unknown prediction kernel
-     */
-    class BadPredKernelCreation : public std::logic_error
-    {
-    public:
-        /**
-         * Exception constructor.
-         */
-        BadPredKernelCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-
-    /**
      * Factory function returning a pointer to the newly created object.
      *
      * \warning The returned pointer is a plain, un-managed pointer. The calling
@@ -97,8 +98,8 @@ public:
     {
         if(id == "traintest")
             return new PredKernelTrainTest<T>;
-        else
-            throw BadPredKernelCreation(id);
+
+        throw BadPredKernelCreation(id);
     }
 };
 

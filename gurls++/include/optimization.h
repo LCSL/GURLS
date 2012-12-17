@@ -58,11 +58,8 @@
 #include "gmath.h"
 #include "exceptions.h"
 
-namespace gurls {
-
-    /**
-     * \brief Optimizer is a class that implements a Regularized Least Square algorithm
-     */
+namespace gurls
+{
 
 template <typename T>
 class RLSAuto;
@@ -85,14 +82,29 @@ class RLSPegasos;
 template <typename T>
 class RLSGPRegr;
 
-    /**
-     * \brief Optimizer is a class that implements a Regularized Least Square algorithm
-     */
+/**
+ * \ingroup Exceptions
+ *
+ * \brief BadOptimizerCreation is thrown when \ref factory tries to generate an unknown optimizer
+ */
+class BadOptimizerCreation : public std::logic_error
+{
+public:
 
+    /**
+     * Exception constructor.
+     */
+    BadOptimizerCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
+ * \brief Optimizer is a class that implements a Regularized Least Square algorithm
+ */
 template <typename T>
 class Optimizer
 {
 public:
+
     /**
      * Implements a Regularized Least Square algorithm
      * \param X input data matrix
@@ -100,23 +112,7 @@ public:
      * \param opt options with the different required fields based on the sub-class
      * \return a GurlsOptionList
      */
-
     virtual GurlsOption* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
-    ~Optimizer(){}
-
-    /**
-     * \ingroup Exceptions
-     *
-     * \brief BadOptimizerCreation is thrown when \ref factory tries to generate an unknown optimizer
-     */
-    class BadOptimizerCreation : public std::logic_error {
-    public:
-        /**
-         * Exception constructor.
-         */
-      BadOptimizerCreation(std::string type)
-      : logic_error("Cannot create type " + type) {}
-    };
 
     /**
      * Factory function returning a pointer to the newly created object.
@@ -128,19 +124,19 @@ public:
     {
       if(id == "rlsauto")
         return new RLSAuto<T>;
-      else if(id == "rlsprimal")
+      if(id == "rlsprimal")
         return new RLSPrimal<T>;
-      else if(id == "rlsprimalr")
+      if(id == "rlsprimalr")
         return new RLSPrimalr<T>;
-      else if(id == "rlsdual")
+      if(id == "rlsdual")
         return new RLSDual<T>;
-      else if(id == "rlsdualr")
+      if(id == "rlsdualr")
         return new RLSDualr<T>;
-      else if(id == "rlspegasos")
+      if(id == "rlspegasos")
         return new RLSPegasos<T>;
-      else if(id == "rlsgpregr")
+      if(id == "rlsgpregr")
         return new RLSGPRegr<T>;
-      else
+
         throw BadOptimizerCreation(id);
     }
 };

@@ -56,7 +56,8 @@
 #include "optlist.h"
 
 
-namespace gurls {
+namespace gurls
+{
 
 template <typename T>
 class PerfMacroAvg;
@@ -68,15 +69,29 @@ template <typename T>
 class PerfRmse;
 
 /**
+ * \ingroup Exceptions
+ *
+ * \brief BadPerformanceCreation is thrown when \ref factory tries to generate an unknown performance evaluator
+ */
+class BadPerformanceCreation : public std::logic_error
+{
+public:
+
+    /**
+     * Exception constructor.
+     */
+    BadPerformanceCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
  * \ingroup Performance
  * \brief Performance is the class that evaluates prediction performance
  */
-
-//template <typename Matrix>
 template <typename T>
 class Performance
 {
 public:
+
     /**
      * Evaluates prediction performance
      *
@@ -89,21 +104,6 @@ public:
     virtual GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
-     * \ingroup Exceptions
-     *
-     * \brief BadPerformanceCreation is thrown when \ref factory tries to generate an unknown performance evaluator
-     */
-    class BadPerformanceCreation : public std::logic_error
-    {
-    public:
-        /**
-         * Exception constructor.
-         */
-        BadPerformanceCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
-
-    /**
      * Factory function returning a pointer to the newly created object.
      *
      * \warning The returned pointer is a plain, un-managed pointer. The calling
@@ -113,12 +113,12 @@ public:
     {
         if(id == "precrec")
             return new PerfPrecRec<T>;
-        else if(id == "macroavg")
+        if(id == "macroavg")
             return new PerfMacroAvg<T>;
-    else if(id == "rmse")
+        if(id == "rmse")
             return new PerfRmse<T>;
-        else
-            throw BadPerformanceCreation(id);
+
+        throw BadPerformanceCreation(id);
     }
 
 };

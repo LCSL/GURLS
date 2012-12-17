@@ -55,7 +55,8 @@
 
 #include "optlist.h"
 
-namespace gurls {
+namespace gurls
+{
 
 
 template<typename T>
@@ -68,10 +69,23 @@ template<typename T>
 class KernelChisquared;
 
 /**
+ * \ingroup Exceptions
+ *
+ * \brief BadKernelCreation is thrown when \ref factory tries to generate an unknown kernel
+ */
+class BadKernelCreation : public std::logic_error
+{
+public:
+    /**
+     * Exception constructor.
+     */
+    BadKernelCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
  * \ingroup Kernels
  * \brief Kernel is the class that computes the kernel matrix
  */
-
 template<typename T>
 class Kernel
 {
@@ -86,20 +100,6 @@ public:
      */
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
-    /**
-     * \ingroup Exceptions
-     *
-     * \brief BadKernelCreation is thrown when \ref factory tries to generate an unknown kernel
-     */
-    class BadKernelCreation : public std::logic_error
-    {
-    public:
-        /**
-         * Exception constructor.
-         */
-        BadKernelCreation(std::string type)
-            : logic_error("Cannot create type " + type) {}
-    };
 
     /**
      * Factory function returning a pointer to the newly created object.
@@ -115,8 +115,8 @@ public:
             return new KernelRBF<T>;
         if(id == "chisquared")
             return new KernelChisquared<T>;
-        else
-            throw BadKernelCreation(id);
+
+        throw BadKernelCreation(id);
     }
 };
 
