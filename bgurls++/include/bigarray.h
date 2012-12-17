@@ -69,6 +69,8 @@ netCDF::NcType getNcType<double>();
 template<>
 netCDF::NcType getNcType<unsigned long>();
 
+
+
 template<typename T>
 class BigArray: protected gMat2D<T>
 {
@@ -106,6 +108,14 @@ public:
     }
 
 //    BigArray(const BigArray<T>& other, std::string fileName);
+
+    BigArray<T>& operator= (BigArray<T>& other)
+    {
+        if(!dataFileName.empty())
+            delete dataFile;
+
+        loadNC(other.dataFileName);
+    }
 
     ~BigArray()
     {
