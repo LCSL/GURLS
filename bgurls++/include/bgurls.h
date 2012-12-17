@@ -48,6 +48,7 @@
 #include "bigparamsel_hoprimal.h"
 #include <mpi/mpi.h>
 
+
 namespace gurls
 {
 
@@ -83,8 +84,6 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     double begin, end;
-//    boost::posix_time::ptime begin, end;
-//    boost::posix_time::time_duration diff;
 
     Optimizer<T> *taskOpt;
     ParamSelection<T> *taskParSel;
@@ -106,16 +105,17 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         if (!processes.hasOpt(processid))
             throw gException(Exception_Gurls_Invalid_ProcessID);
 
-//        std::vector<double> process = OptNumberList::dynacast( processes.getOpt(processid) )->getValue();
         OptProcess* process = processes.getOptAs<OptProcess>(processid);
 
-//        if ((long)process.size() != seq->size())
         if ( process->size() != seq->size())
             throw gException(gurls::Exception_Gurls_Inconsistent_Processes_Number);
 
         const std::string saveFile = opt.getOptAsString("savefile");
+        const std::string sharedDir = opt.getOptAsString("shared_dir");
+        const std::string dataExchangeFile = sharedDir + "ret";
 
         GurlsOptionsList* loadOpt = new GurlsOptionsList("load");
+
         try
         {
             loadOpt->load(saveFile);
@@ -128,25 +128,6 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
         GurlsOption* tmpOpt;
 
-        //% Load and copy
-
-        //if exist(opt.savefile) == 2
-        //	t = load(opt.savefile);
-        //	if isfield(t.opt,'time');
-        //		opt.time = t.opt.time;
-        //	end
-        //else
-        //	fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
-        //end
-        //%try
-        //%	t = load(opt.savefile);
-        //%	if isfield(t.opt,'time')
-        //%		opt.time = t.opt.time;
-        //%	end
-        //%catch
-        //%	fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
-        //%end
-
         GurlsOptionsList *timelist;
 
         if (opt.hasOpt("time"))
@@ -158,21 +139,20 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         }
 
 
-//        std::vector <double> process_time(seq->size(), 0.0);
         gMat2D<T>* process_time_vector = new gMat2D<T>(1, seq->size());
         T *process_time = process_time_vector->getData();
         set(process_time, (T)0.0, seq->size());
 
-        //%for i = 1:numel(opt.process) % Go by the length of process.
-        //opt.time{jobid} = struct;
-        //%end
 
         std::string reg1;
         std::string reg2;
-//        std::string fun("");
-        std::cout << std::endl
-                  <<"####### New task sequence... "
-                  << std::endl;
+
+        if(myid == 0)
+        {
+            std::cout << std::endl
+                      <<"####### New task sequence... "
+                      << std::endl;
+        }
 
         gMat2D<T> X_mat;
         gMat2D<T> y_mat;
@@ -183,30 +163,31 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
             y.getMatrix(0, 0, y.rows(), y.cols(), y_mat);
         }
 
+
         for (unsigned long i = 0; i < seq->size(); ++i)
         {
+            MPI_Barrier(MPI_COMM_WORLD);
+
             seq->getTaskAt(i, reg1, reg2);
 
-            std::cout << "\t" << "[Task " << i << ": "
-                      << reg1 << "]: " << reg2 << "... ";
-            std::cout.flush();
+            if(myid == 0)
+            {
+                std::cout << "\t" << "[Task " << i << ": "
+                          << reg1 << "]: " << reg2 << "... ";
+                std::cout.flush();
+            }
 
 
-//            switch ( static_cast<int>(process[i]) )
             switch( (*process)[i] )
             {
             case GURLS::ignore:
-                std::cout << " ignored." << std::endl;
+                if(myid == 0)
+                    std::cout << " ignored." << std::endl;
                 break;
 
             case GURLS::compute:
             case GURLS::computeNsave:
-                // WARNING: we should consider the case in which
-                // the following statements holds true because the
-                // field reg{1} already exists in opt.
-                //	case {CPT, CSV, ~isfield(opt,reg{1})}
 
-//                begin = boost::posix_time::microsec_clock::local_time();
                 begin = MPI_Wtime();
 
                 if (!reg1.compare("optimizer"))
@@ -215,144 +196,236 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                     {
                         taskOpt = Optimizer<T>::factory(reg2);
 
-                        GurlsOption* ret = taskOpt->execute(X_mat, y_mat, opt);
-                        opt.removeOpt("optimizer");
-                        opt.addOpt("optimizer", ret);
+                        GurlsOptionsList* ret = taskOpt->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
 
                         delete taskOpt;
-
-                        MPI_Barrier(MPI_COMM_WORLD);
+                        delete ret;
                     }
-                    else
-                        MPI_Barrier(MPI_COMM_WORLD);
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("optimizer");
+                    ret->load(dataExchangeFile);
+
+                    opt.removeOpt("optimizer");
+                    opt.addOpt("optimizer", ret);
                 }
                 else if (!reg1.compare("paramsel"))
                 {
-                    taskParSel = ParamSelection<T>::factory(reg2);
+                    if(myid == 0)
+                    {
+                        taskParSel = ParamSelection<T>::factory(reg2);
 
-                    GurlsOption* ret = taskParSel->execute(X_mat, y_mat, opt);
+                        GurlsOptionsList* ret = taskParSel->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
+
+                        delete taskParSel;
+                        delete ret;
+                    }
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("paramsel");
+                    ret->load(dataExchangeFile);
+
                     opt.removeOpt("paramsel");
                     opt.addOpt("paramsel", ret);
+                }
+                else if (!reg1.compare("pred"))
+                {
+                    unsigned char isMatrixOption; // old MPI standards doesn't support bool data type
 
-                    delete taskParSel;
+                    if(myid == 0)
+                    {
+                        taskPrediction = Prediction<T>::factory(reg2);
+
+                        GurlsOption* ret = taskPrediction->execute(X_mat, y_mat, opt);
+
+                        isMatrixOption = ret->isA(MatrixOption)? 1 : 0;
+
+                        if(isMatrixOption)
+                            OptMatrix<gMat2D<T> >::dynacast(ret)->getValue().save(dataExchangeFile);
+                        else
+                            GurlsOptionsList::dynacast(ret)->save(dataExchangeFile);
+
+                        delete taskPrediction;
+                        delete ret;
+                    }
+
+                    MPI_Bcast(&isMatrixOption, 1, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOption* ret;
+
+                    if(isMatrixOption)
+                    {
+                        gMat2D<T>* mat = new gMat2D<T>();
+                        mat->load(dataExchangeFile);
+
+                        ret = new OptMatrix<gMat2D<T> >(*mat);
+                    }
+                    else
+                    {
+                        GurlsOptionsList* ret = new GurlsOptionsList("pred");
+                        ret->load(dataExchangeFile);
+                    }
+
+                    opt.removeOpt("pred");
+                    opt.addOpt("pred", ret);
+                }
+                else if (!reg1.compare("perf"))
+                {
+                    if(myid == 0)
+                    {
+                        taskPerformance = Performance<T>::factory(reg2);
+
+                        GurlsOptionsList* ret = taskPerformance->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
+
+                        delete taskPerformance;
+                        delete ret;
+                    }
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("perf");
+                    ret->load(dataExchangeFile);
+
+                    opt.removeOpt("perf");
+                    opt.addOpt("perf", ret);
+
+                }
+                else if (!reg1.compare("kernel"))
+                {
+                    if(myid == 0)
+                    {
+                        taskKernel = Kernel<T>::factory(reg2);
+
+                        GurlsOptionsList* ret = taskKernel->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
+
+                        delete taskKernel;
+                        delete ret;
+                    }
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("kernel");
+                    ret->load(dataExchangeFile);
+
+                    opt.removeOpt("kernel");
+                    opt.addOpt("kernel", ret);
+                }
+                else if (!reg1.compare("norm"))
+                {
+                    if(myid == 0)
+                    {
+                        taskNorm = Norm<T>::factory(reg2);
+
+                        gMat2D<T>* X1 = taskNorm->execute(X_mat, y_mat, opt);
+
+                        delete X1;
+                        delete taskNorm;
+
+                        throw gException("Unused return value");
+
+                    }
+                }
+                else if (!reg1.compare("split"))
+                {
+                    if(myid == 0)
+                    {
+                        taskSplit = Split<T>::factory(reg2);
+
+                        GurlsOptionsList* ret = taskSplit->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
+
+                        delete taskSplit;
+                        delete ret;
+                    }
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("split");
+                    ret->load(dataExchangeFile);
+
+                    opt.removeOpt("split");
+                    opt.addOpt("split", ret);
+                }
+                else if (!reg1.compare("predkernel"))
+                {
+                    if(myid == 0)
+                    {
+                        taskPredKernel = PredKernel<T>::factory(reg2);
+
+                        GurlsOptionsList* ret = taskPredKernel->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
+
+                        delete taskPredKernel;
+                        delete ret;
+                    }
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("predkernel");
+                    ret->load(dataExchangeFile);
+
+                    opt.removeOpt("predkernel");
+                    opt.addOpt("predkernel", ret);
+                }
+                else if (!reg1.compare("conf"))
+                {
+                    if(myid == 0)
+                    {
+                        taskConfidence = Confidence<T>::factory(reg2);
+
+                        GurlsOptionsList* ret = taskConfidence->execute(X_mat, y_mat, opt);
+                        ret->save(dataExchangeFile);
+
+                        delete taskConfidence;
+                        delete ret;
+                    }
+
+                    MPI_Barrier(MPI_COMM_WORLD);
+
+                    GurlsOptionsList* ret = new GurlsOptionsList("conf");
+                    ret->load(dataExchangeFile);
+
+                    opt.removeOpt("conf");
+                    opt.addOpt("conf", ret);
+
                 }
                 else if (!reg1.compare("bigparamsel"))
                 {
                     taskBigParSel = BigParamSelection<T>::factory(reg2);
 
-                    GurlsOption* ret = taskBigParSel->execute(X, y, opt);
+                    GurlsOptionsList* ret = taskBigParSel->execute(X, y, opt);
+
                     opt.removeOpt("paramsel");
                     opt.addOpt("paramsel", ret);
 
-                    delete taskBigParSel;
-                }
-                else if (!reg1.compare("pred"))
-                {
-                    taskPrediction = Prediction<T>::factory(reg2);
-
-                    GurlsOption* ret = taskPrediction->execute(X_mat, y_mat, opt);
-                    opt.removeOpt("pred");
-                    opt.addOpt("pred", ret);
-
-                    delete taskPrediction;
-                }
-                else if (!reg1.compare("perf"))
-                {
-                    taskPerformance = Performance<T>::factory(reg2);
-
-                    GurlsOption* ret = taskPerformance->execute(X_mat, y_mat, opt);
-                    opt.removeOpt("perf");
-                    opt.addOpt("perf", ret);
-
-                    delete taskPerformance;
-                }
-                else if (!reg1.compare("kernel"))
-                {
-                    taskKernel = Kernel<T>::factory(reg2);
-
-                    GurlsOption* ret = taskKernel->execute(X_mat, y_mat, opt);
-                    opt.removeOpt("kernel");
-                    opt.addOpt("kernel", ret);
-
-                    delete taskKernel;
-                }
-                else if (!reg1.compare("norm"))
-                {
-                    taskNorm = Norm<T>::factory(reg2);
-
-                    gMat2D<T>* X1 = taskNorm->execute(X_mat, y_mat, opt);
-                    delete X1;
-                    throw gException("Unused return value");
-
-                    delete taskNorm;
-                }
-                else if (!reg1.compare("split"))
-                {
-                    taskSplit = Split<T>::factory(reg2);
-
-                    GurlsOption* ret = taskSplit->execute(X_mat, y_mat, opt);
-                    opt.removeOpt("split");
-                    opt.addOpt("split", ret);
-
-                    delete taskSplit;
-                }
-                else if (!reg1.compare("predkernel"))
-                {
-                    taskPredKernel = PredKernel<T>::factory(reg2);
-
-                    GurlsOption* ret = taskPredKernel->execute(X_mat, y_mat, opt);
-                    opt.removeOpt("predkernel");
-                    opt.addOpt("predkernel", ret);
-
-                    delete taskPredKernel;
-                }
-                else if (!reg1.compare("conf"))
-                {
-                    taskConfidence = Confidence<T>::factory(reg2);
-
-                    GurlsOption* ret = taskConfidence->execute(X_mat, y_mat, opt);
-                    opt.removeOpt("conf");
-                    opt.addOpt("conf", ret);
-
-                    delete taskConfidence;
                 }
                 else
-                {
                     throw gException(Exception_Invalid_TaskSequence);
-                }
 
-//                fun = reg1;
-//                fun+="_";
-//                fun+=reg2;
-//                opt.addOpt(reg1, new OptString(fun));
 
-//                end = boost::posix_time::microsec_clock::local_time();
-//                diff = end-begin;
 
                 end = MPI_Wtime();
 
                 if(myid == 0)
+                {
                     process_time[i] = (T)(end-begin);
 
-                //		fName = [reg{1} '_' reg{2}];
-                //		fun = str2func(fName);
-                //		tic;
-                //		opt = setfield(opt, reg{1}, fun(X, y, opt));
-                //		opt.time{jobid} = setfield(opt.time{jobid},reg{1}, toc);
-                //		fprintf('\tdone\n');
-                std::cout << " done." << std::endl;
+                    std::cout << " done." << std::endl;
+                }
+
                 break;
 
             case GURLS::load:
-                //	case LDF,
-                //		if exist('t','var') && isfield (t.opt, reg{1})
-                //			opt = setfield(opt, reg{1}, getfield(t.opt, reg{1}));
-                //			fprintf('\tcopied\n');
-                //		else
-                //			fprintf('\tcopy failed\n');
-                //		end
-//                std::cout << " skipped." << std::endl;
 
+                cout << "Load " << myid << "loadopt=" << loadOpt;
                 if(loadOpt == NULL)
                     throw gException("Opt savefile not found");
                 if(!loadOpt->hasOpt(reg1))
@@ -375,31 +448,10 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
         }
 
-//        timelist->addOpt(processid, new OptNumberList(process_time));
-        timelist->addOpt(processid, new OptMatrix<gMat2D<T> >(*process_time_vector));
-
-        //fprintf('\nSave cycle...\n');
-        //% Delete whats not necessary
-        //for i = 1:numel(process)
-        //	fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
-        //	reg = regexp(seq{i},':','split');
-        //	switch process(i)
-        //		case {CSV, LDF}
-        //			fprintf('\tsaving..\n');
-        //		otherwise
-        //			if isfield (opt, reg{1})
-        //				opt = rmfield(opt, reg{1});
-        //				fprintf('\tremoving..\n');
-        //			else
-        //				fprintf('\tnot found..\n');
-        //			end
-        //	end
-        //end
-        //save(opt.savefile, 'opt', '-v7.3');
-        //fprintf('Saving opt in %s\n', opt.savefile);
-
         if(myid == 0)
         {
+            timelist->addOpt(processid, new OptMatrix<gMat2D<T> >(*process_time_vector));
+
             bool save = false;
 
             std::cout << std::endl << "Save cycle..." << std::endl;
@@ -433,6 +485,8 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         }
 
         delete loadOpt;
+
+        MPI_Barrier(MPI_COMM_WORLD);
 
 //    }
 //    catch (gException& gex)

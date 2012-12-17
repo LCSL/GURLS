@@ -253,23 +253,24 @@ int main(int argc, char *argv[])
 
 
         GurlsOptionsList opt("ExampleExperiment", true);
+        opt.addOpt("shared_dir", "/home/bozzo/Desktop/bgurls_shared_dir/");
 
         OptTaskSequence *seq = new OptTaskSequence();
-//        *seq << "paramsel:fixsiglam" << "kernel:rbf" << "optimizer:rlsdual" << "predkernel:traintest" << "pred:dual" << "perf:macroavg";
-        *seq << "bigparamsel:hoprimal";
+        *seq << "paramsel:fixsiglam" << "kernel:rbf" << "optimizer:rlsdual" << "predkernel:traintest" << "pred:dual" << "perf:macroavg";
+//        *seq << "bigparamsel:hoprimal";
         opt.addOpt("seq", seq);
 
 
         GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
         OptProcess* process1 = new OptProcess();
-//        *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore << GURLS::ignore;
-        *process1 << GURLS::computeNsave;
+        *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore << GURLS::ignore;
+//        *process1 << GURLS::computeNsave;
         process->addOpt("one", process1);
 
-//        OptProcess* process2 = new OptProcess();
-//        *process2 << GURLS::load << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
-//        process->addOpt("two", process2);
+        OptProcess* process2 = new OptProcess();
+        *process2 << GURLS::load << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
+        process->addOpt("two", process2);
 
         opt.addOpt("processes", process);
 
@@ -277,20 +278,20 @@ int main(int argc, char *argv[])
 //            std::cout << opt << std::endl;
 
         std::string jobid1("one");
-//        std::string jobid2("two");
+        std::string jobid2("two");
 
         BGURLS G;
 
-//        G.run(Xtr, ytr, opt, jobid1, true);
-        G.run(Xtr, ytr, opt, jobid1, false);
+        G.run(Xtr, ytr, opt, jobid1, true);
+//        G.run(Xtr, ytr, opt, jobid1, false);
 
 //        if(myid ==0)
 //            std::cout << std::endl;
 
-//        G.run(Xte, yte, opt, jobid2, true);
+        G.run(Xte, yte, opt, jobid2, true);
 
-//        if(myid ==0)
-//            std::cout << opt << std::endl;
+        if(myid ==0)
+            std::cout << opt << std::endl;
 
 //        opt.save("par1.txt");
 //        GurlsOptionsList *s1 = new GurlsOptionsList("dummy", false);
