@@ -112,7 +112,7 @@ public:
      * \param opt options with the different required fields based on the sub-class
      * \return a GurlsOptionList
      */
-    virtual GurlsOption* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * Factory function returning a pointer to the newly created object.
