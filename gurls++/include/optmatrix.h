@@ -45,6 +45,10 @@
 
 #include <options.h>
 
+#ifdef _BGURLS
+#include <bigarray.h>
+#endif
+
 namespace gurls
 {
 
@@ -75,9 +79,47 @@ public:
         return matType;
     }
 
+#ifdef _BGURLS
+    /**
+      * Checks if the option contains a BigArray
+      */
+    virtual bool hasBigArray() const = 0;
+#endif
+
+
 protected:
     MatrixType matType; ///< Stores the type of the elements inside the matrix
 };
+
+
+template<class Matrix>
+OptMatrixBase::MatrixType getMatrixCellType()
+{
+    throw gException(Exception_Unsupported_MatrixType);
+}
+
+template<>
+OptMatrixBase::MatrixType getMatrixCellType<gMat2D<float> >();
+
+template<>
+OptMatrixBase::MatrixType getMatrixCellType<gMat2D<double> >();
+
+template<>
+OptMatrixBase::MatrixType getMatrixCellType<gMat2D<unsigned long> >();
+
+#ifdef _BGURLS
+
+template<>
+OptMatrixBase::MatrixType getMatrixCellType<BigArray<float> >();
+
+template<>
+OptMatrixBase::MatrixType getMatrixCellType<BigArray<double> >();
+
+template<>
+OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long> >();
+
+#endif
+
 
 /**
   * \ingroup Settings
@@ -98,7 +140,7 @@ public:
       */
     OptMatrix(): OptMatrixBase () , value (*(new Matrix()))
     {
-        throw gException(Exception_Unsupported_MatrixType);
+        this->matType = getMatrixCellType<Matrix>();
     }
 
     /**
@@ -106,7 +148,7 @@ public:
       */
     OptMatrix(Matrix& m): OptMatrixBase(), value(m)
     {
-        throw gException(Exception_Unsupported_MatrixType);
+        this->matType = getMatrixCellType<Matrix>();
     }
 
     /**
@@ -165,6 +207,16 @@ public:
         return (id == MatrixOption);
     }
 
+#ifdef _BGURLS
+    /**
+      * Checks if the option contains a BigArray
+      */
+    virtual bool hasBigArray() const
+    {
+        return false;
+    }
+#endif
+
     /**
       * Tries to cast a pointer to a generic option to a pointer to an \ref OptMatrix
       */
@@ -194,41 +246,18 @@ public:
 
 };
 
-/**
-  * OptMatrix empty constructor for float elements
-  */
-template <>
-OptMatrix <gMat2D<float> >::OptMatrix();
+#ifdef _BGURLS
 
-/**
-  * OptMatrix constructor for float elements
-  */
 template <>
-OptMatrix <gMat2D<float> >::OptMatrix(gMat2D<float>& m);
+bool OptMatrix<BigArray<float> >::hasBigArray() const;
 
-/**
-  * OptMatrix empty constructor for double elements
-  */
 template <>
-OptMatrix <gMat2D<double> >::OptMatrix();
+bool OptMatrix <BigArray<double> >::hasBigArray() const;
 
-/**
-  * OptMatrix constructor for double elements
-  */
 template <>
-OptMatrix <gMat2D<double> >::OptMatrix(gMat2D<double>& m);
+bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const;
 
-/**
-  * OptMatrix empty constructor for unsigned long elements
-  */
-template <>
-OptMatrix <gMat2D<unsigned long> >::OptMatrix();
-
-/**
-  * OptMatrix constructor for unsigned long elements
-  */
-template <>
-OptMatrix <gMat2D<unsigned long> >::OptMatrix(gMat2D<unsigned long>& m);
+#endif
 
 
 /**

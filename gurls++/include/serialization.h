@@ -101,19 +101,45 @@ void save(Archive & ar, const gurls::OptArray & opt, const unsigned int version)
 
             ar & matType;
 
-            switch(matType)
+#ifdef _BGURLS
+
+            bool bigArray = optM->hasBigArray();
+            ar & bigArray;
+
+            if(bigArray)
             {
-                case gurls::OptMatrixBase::FLOAT:
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(optM));
-                    break;
-                case gurls::OptMatrixBase::DOUBLE:
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(optM));
-                    break;
-                case gurls::OptMatrixBase::ULONG:
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(optM));
-                    break;
-                default:
-                    throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<float> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<double> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<unsigned long> >*>(optM));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
+            }
+            else
+#endif
+            {
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(optM));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
             }
             break;
 
@@ -203,22 +229,51 @@ void load(Archive &ar, gurls::OptArray &t, const unsigned int)
 
             gurls::OptMatrixBase* opt;
 
-            switch(matType)
+#ifdef _BGURLS
+
+            bool bigArray;
+            ar & bigArray;
+
+            if(bigArray)
             {
-                case gurls::OptMatrixBase::FLOAT:
-                    opt = new gurls::OptMatrix<gurls::gMat2D<float> >();
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(opt));
-                    break;
-                case gurls::OptMatrixBase::DOUBLE:
-                    opt = new gurls::OptMatrix<gurls::gMat2D<double> >();
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(opt));
-                    break;
-                case gurls::OptMatrixBase::ULONG:
-                    opt = new gurls::OptMatrix<gurls::gMat2D<unsigned long> >();
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(opt));
-                    break;
-                default:
-                    throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        opt = new gurls::OptMatrix<gurls::BigArray<float> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<float> >*>(opt));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        opt = new gurls::OptMatrix<gurls::BigArray<double> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<double> >*>(opt));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        opt = new gurls::OptMatrix<gurls::BigArray<unsigned long> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<unsigned long> >*>(opt));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
+            }
+            else
+#endif
+            {
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        opt = new gurls::OptMatrix<gurls::gMat2D<float> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(opt));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        opt = new gurls::OptMatrix<gurls::gMat2D<double> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(opt));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        opt = new gurls::OptMatrix<gurls::gMat2D<unsigned long> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(opt));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
             }
 
             t.push_back(opt);
@@ -316,20 +371,47 @@ void save(Archive & ar, const gurls::GurlsOptionsList& opt, const unsigned int /
 
             ar & matType;
 
-            switch(matType)
+#ifdef _BGURLS
+
+            bool bigArray = optM->hasBigArray();
+            ar & bigArray;
+
+            if(bigArray)
             {
-                case gurls::OptMatrixBase::FLOAT:
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(optM));
-                    break;
-                case gurls::OptMatrixBase::DOUBLE:
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(optM));
-                    break;
-                case gurls::OptMatrixBase::ULONG:
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(optM));
-                    break;
-                default:
-                    throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<float> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<double> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<unsigned long> >*>(optM));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
             }
+            else
+#endif
+            {
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(optM));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(optM));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
+            }
+
             break;
 
         }
@@ -420,22 +502,51 @@ void load(Archive & ar, gurls::GurlsOptionsList& opt, const unsigned int /* file
 
             gurls::OptMatrixBase* tmp;
 
-            switch(matType)
+#ifdef _BGURLS
+
+            bool bigArray;
+            ar & bigArray;
+
+            if(bigArray)
             {
-                case gurls::OptMatrixBase::FLOAT:
-                    tmp = new gurls::OptMatrix<gurls::gMat2D<float> >();
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(tmp));
-                    break;
-                case gurls::OptMatrixBase::DOUBLE:
-                    tmp = new gurls::OptMatrix<gurls::gMat2D<double> >();
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(tmp));
-                    break;
-                case gurls::OptMatrixBase::ULONG:
-                    tmp = new gurls::OptMatrix<gurls::gMat2D<unsigned long> >();
-                    ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(tmp));
-                    break;
-                default:
-                    throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        tmp = new gurls::OptMatrix<gurls::BigArray<float> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<float> >*>(tmp));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        tmp = new gurls::OptMatrix<gurls::BigArray<double> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<double> >*>(tmp));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        tmp = new gurls::OptMatrix<gurls::BigArray<unsigned long> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::BigArray<unsigned long> >*>(tmp));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
+            }
+            else
+#endif
+            {
+                switch(matType)
+                {
+                    case gurls::OptMatrixBase::FLOAT:
+                        tmp = new gurls::OptMatrix<gurls::gMat2D<float> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<float> >*>(tmp));
+                        break;
+                    case gurls::OptMatrixBase::DOUBLE:
+                        tmp = new gurls::OptMatrix<gurls::gMat2D<double> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<double> >*>(tmp));
+                        break;
+                    case gurls::OptMatrixBase::ULONG:
+                        tmp = new gurls::OptMatrix<gurls::gMat2D<unsigned long> >();
+                        ar & *(static_cast<gurls::OptMatrix<gurls::gMat2D<unsigned long> >*>(tmp));
+                        break;
+                    default:
+                        throw gurls::gException(gurls::Exception_Unsupported_MatrixType);
+                }
             }
 
             opt.addOpt(name, tmp);
@@ -580,7 +691,16 @@ inline void serialize(Archive& ar, gurls::OptMatrix<gurls::gMat2D<T> >& opt, con
     serialize_opt<Archive, gurls::OptMatrix<gurls::gMat2D<T> > >(ar, opt, file_version);
 }
 
-
+#ifdef _BGURLS
+/**
+  * Serializes and deserializes an OptMatrix to/from a generic archive
+  */
+template<class Archive, typename T>
+inline void serialize(Archive& ar, gurls::OptMatrix<gurls::BigArray<T> >& opt, const unsigned int file_version)
+{
+    serialize_opt<Archive, gurls::OptMatrix<gurls::BigArray<T> > >(ar, opt, file_version);
+}
+#endif
 
 /**
   * Serializes and deserializes an OptString to/from a generic archive

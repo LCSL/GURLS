@@ -3,58 +3,62 @@
 namespace gurls
 {
 
-/**
-  * OptMatrix empty constructor for float elements
-  */
-template <>
-GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<float>()))
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<float> >()
 {
-    this->matType = FLOAT;
+    return OptMatrixBase::FLOAT;
 }
 
-/**
-  * OptMatrix constructor for float elements
-  */
-template <>
-GURLS_EXPORT OptMatrix <gMat2D<float> >::OptMatrix(gMat2D<float>& m): OptMatrixBase(), value(m)
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<double> >()
 {
-    this->matType = FLOAT;
+    return OptMatrixBase::DOUBLE;
 }
 
-/**
-  * OptMatrix empty constructor for double elements
-  */
-template <>
-GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<double>()))
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<unsigned long> >()
 {
-    this->matType = DOUBLE;
+    return OptMatrixBase::ULONG;
 }
 
-/**
-  * OptMatrix constructor for double elements
-  */
-template <>
-GURLS_EXPORT OptMatrix <gMat2D<double> >::OptMatrix(gMat2D<double>& m): OptMatrixBase(), value(m)
+#ifdef _BGURLS
+
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<float> >()
 {
-    this->matType = DOUBLE;
+    return OptMatrixBase::FLOAT;
 }
 
-/**
-  * OptMatrix empty constructor for unsigned long elements
-  */
-template <>
-GURLS_EXPORT OptMatrix <gMat2D<unsigned long> >::OptMatrix(): OptMatrixBase () , value (*(new gMat2D<unsigned long>()))
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<double> >()
 {
-    this->matType = ULONG;
+    return OptMatrixBase::DOUBLE;
 }
 
-/**
-  * OptMatrix constructor for unsigned long elements
-  */
-template <>
-GURLS_EXPORT OptMatrix <gMat2D<unsigned long> >::OptMatrix(gMat2D<unsigned long>& m): OptMatrixBase(), value(m)
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long> >()
 {
-    this->matType = ULONG;
+    return OptMatrixBase::ULONG;
 }
+
+template <>
+GURLS_EXPORT bool OptMatrix <BigArray<float> >::hasBigArray() const
+{
+    return true;
+}
+
+template <>
+GURLS_EXPORT bool OptMatrix <BigArray<double> >::hasBigArray() const
+{
+    return true;
+}
+
+template <>
+GURLS_EXPORT bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const
+{
+    return true;
+}
+
+#endif
 
 }

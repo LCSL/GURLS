@@ -49,6 +49,9 @@
 #include "options.h"
 #include "optfunction.h"
 #include "optlist.h"
+#ifdef _BGURLS
+#include "bigarray.h"
+#endif
 #include "serialization.h"
 
 #include <boost/algorithm/string/split.hpp>
@@ -222,13 +225,22 @@ string GurlsOptionsList::toString()
     return stream.str();
 }
 
-template<typename T>
+//template<typename T>
+//GurlsOption* copyOptMatrix(const GurlsOption* toCopy)
+//{
+//    const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
+
+//    gMat2D<T>* newMat = new gMat2D<T>(mat);
+//    return new OptMatrix<gMat2D<T> >(*newMat);
+//}
+
+template<class MatrixType>
 GurlsOption* copyOptMatrix(const GurlsOption* toCopy)
 {
-    const gMat2D<T> & mat = OptMatrix<gMat2D<T> >::dynacast(toCopy)->getValue();
+    const MatrixType & mat = OptMatrix<MatrixType>::dynacast(toCopy)->getValue();
 
-    gMat2D<T>* newMat = new gMat2D<T>(mat);
-    return new OptMatrix<gMat2D<T> >(*newMat);
+    MatrixType* newMat = new MatrixType(mat);
+    return new OptMatrix<MatrixType >(*newMat);
 }
 
 void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
@@ -266,18 +278,39 @@ void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
         if(base == NULL)
             throw gException(Exception_Illegal_Dynamic_Cast);
 
-        switch(base->getMatrixType())
+#ifdef _BGURLS
+        if(base->hasBigArray())
         {
-            case OptMatrixBase::ULONG:
-                newOpt = copyOptMatrix<unsigned long>(toCopy);
-                break;
-            case OptMatrixBase::FLOAT:
-                newOpt = copyOptMatrix<float>(toCopy);
-                break;
-            case OptMatrixBase::DOUBLE:
-                newOpt = copyOptMatrix<double>(toCopy);
-                break;
+            switch(base->getMatrixType())
+            {
+                case OptMatrixBase::ULONG:
+                    newOpt = copyOptMatrix<BigArray<unsigned long> >(toCopy);
+                    break;
+                case OptMatrixBase::FLOAT:
+                    newOpt = copyOptMatrix<BigArray<float> >(toCopy);
+                    break;
+                case OptMatrixBase::DOUBLE:
+                    newOpt = copyOptMatrix<BigArray<double> >(toCopy);
+                    break;
+            }
         }
+        else
+#endif
+        {
+            switch(base->getMatrixType())
+            {
+                case OptMatrixBase::ULONG:
+                    newOpt = copyOptMatrix<gMat2D<unsigned long> >(toCopy);
+                    break;
+                case OptMatrixBase::FLOAT:
+                    newOpt = copyOptMatrix<gMat2D<float> >(toCopy);
+                    break;
+                case OptMatrixBase::DOUBLE:
+                    newOpt = copyOptMatrix<gMat2D<double> >(toCopy);
+                    break;
+            }
+        }
+
     }
         break;
     case OptListOption:
