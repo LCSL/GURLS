@@ -13,20 +13,23 @@ Table of Contents
 Introduction
 ============
 
-The GRAND UNIFIED LEAST SQUARES toolbox comprises three software packages.
+The GRAND UNIFIED LEAST SQUARES software library comprises the following packages.
 
-- GURLS, a MATLAB software package for training multiclass classifiers based on the
-reguarised least squares algorithm. Datasets that fit into your computer's memory
-should be handled with this package.
+- GURLS, a MATLAB software library for regression and (multiclass) classiﬁcation 
+based on the Regularized Least Squares (RLS) loss function. 
+Datasets that fit into your computer's memory should be handled with this package.
 
--bGURLS (b is for big), a MATLAB software package
-for training linear multiclass classifiers based on the Regularized Least Squares
-(RLS) loss function, it uses a home brewed memory mapped file system and a simple
-distributed task manager to allow for training from very large datasets.
+-bGURLS (b is for big), a MATLAB software library for regression and (multiclass) classiﬁcation 
+based on the Regularized Least Squares (RLS) loss function. 
+It can handle computations with very large matrices by means of memory-mapped storage 
+and a simple distributed task manager.
 
-- gurls++, a C++ standalone implementation of GURLS.
+- GURLS++, a C++ standalone implementation of GURLS.
+
+-bGURLS++, a  C++ standalone implementation of bGURLS, currently under active development.
 
 Documentation
+
 =============
 
 
@@ -42,7 +45,7 @@ Documentation
 	file. GURLS is designed for easy expansion. Give it a try!
 
 - Demos
-	Both GURLS and bGURLS have exstensively commented demos in the "demo"
+	All packages have exstensively commented demos in the "demo"
 	subdirectory of each package. We feel this is the best way to learn how
 	to use these packages.
 
