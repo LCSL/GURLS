@@ -27,7 +27,7 @@ Installation
 
 Open MATLAB and execute:
 
->> run('PACKAGE_ROOT/biggurls/utils/biggurls_install.m');
+>> run('PACKAGEROOT/biggurls/utils/biggurls_install.m');
 
 where PACKAGEROOT is where you unzipped the GURLS package.
 This will compile all the mex files involved and add all the important
