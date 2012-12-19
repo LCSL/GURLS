@@ -15,20 +15,20 @@ Introduction
 ============
 
 GURLS - (Grand Unified Regularized Least Squares) is a MATLAB software package
-for training multiclass classifiers based on the Regularized Least Squares
-(RLS) loss function.
+for regression and (multiclass) classifiers based on the Regularized Least Squares
+(RLS) loss function. GURLS main properties are:
 
 - Automatic parameter selection.
-- Handle massive datasets.
 - Great modularity, each method can be used independently.
 - Wide range of optimization routines.
+- Easy expansion
 
 Installation
 ============
 
 Open MATLAB and execute:
 
->> run('PACKAGE_ROOT/gurls/utils/gurls_install.m');
+>> run('PACKAGEROOT/gurls/utils/gurls_install.m');
 
 where PACKAGEROOT is where you unzipped the GURLS package.
 This will add all the important directories to your path. Run 'savepath' if
