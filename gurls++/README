@@ -21,7 +21,7 @@ for training linear multiclass classifiers based on the Regularized Least Square
 
 - Automatic parameter selection.
 - Great modularity, each method can be used independently.
-- Esay expansion
+- Easy expansion
 
 Installation
 ============
