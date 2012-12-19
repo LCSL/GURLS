@@ -17,13 +17,13 @@ Introduction
 ===========
 
 GURLS++ - (Grand Unified Regularized Least Squares) is a C++ software package
-for training multiclass classifiers based on the Regularized Least Squares
+for regression and (multiclass) classifiers based on the Regularized Least Squares
 (RLS) loss function.
 
 - Automatic parameter selection.
-- Handle massive datasets.
 - Great modularity, each method can be used independently.
 - Wide range of optimization routines.
+- Esay expansion
 
 Installation
 ============
@@ -33,26 +33,26 @@ In the following we assume the the source code of GURLS++ is located at $GURLS_R
 -Installing GURLS++ on Linux 
 
 Below we describe how to build and install GURLS++ on Ubuntu (tested on Ubuntu 10.04). 
-For other distributions, the same packages must be installed with the distribution-speciÞc method. 
+For other distributions, the same packages must be installed with the distribution-speciï¿½c method. 
 		
 1. Install the cmake build system (www.cmake.org/) 
 	$ sudo apt-get install cmake 
 	
 2. Install your favourite Blas/Lapack implementation. Currently we support: 
-	¥ ATLAS: http://math-atlas.sourceforge.net; 
-	¥ AMDÕs ACML: http://developer.amd.com/libraries/acml; 
-	¥ IntelÕs MKL: http://software.intel.com/en-us/articles/intel-mkl; 
-	¥ NetlibÕs reference implementation: http://www.netlib.org/blas and http: //www.netlib.org/lapack/. 
-As an example, to install NetlibÕs Blas and Lapack run the following command: 
+	ï¿½ ATLAS: http://math-atlas.sourceforge.net; 
+	ï¿½ AMDï¿½s ACML: http://developer.amd.com/libraries/acml; 
+	ï¿½ Intelï¿½s MKL: http://software.intel.com/en-us/articles/intel-mkl; 
+	ï¿½ Netlibï¿½s reference implementation: http://www.netlib.org/blas and http: //www.netlib.org/lapack/. 
+As an example, to install Netlibï¿½s Blas and Lapack run the following command: 
 	$ sudo apt-get install libblas-dev libblas3gf liblapack3gf 
 
-3. Install BoostÕs libraries date_time and serialization 
+3. Install Boostï¿½s libraries date_time and serialization 
 	$ sudo apt-get install libboost-serialization1.40.0 
 	libboost-serialization1.40-dev 
 	libboost-date-time1.40.0 libboost-date-time1.40-dev 
 
 4. To link against some Blas and Lapack implementations you may need a fortran 
-   compiler e.g. for NetlibÕs Blas and Lapack: 
+   compiler e.g. for Netlibï¿½s Blas and Lapack: 
 	$ sudo apt-get install gfortran 
 
 5. Create a build directory (e.g. "build") for GURLS++ 
@@ -62,14 +62,14 @@ As an example, to install NetlibÕs Blas and Lapack run the following command:
 	$ cd build 
 	$ ccmake .. 
 The last command will show the CMake interface, which must be used to set the values 
-of some variables used for building and installing GURLS++. See the section ConÞgur- 
+of some variables used for building and installing GURLS++. See the section Conï¿½gur- 
 ing GURLS++ below for more information on these variables and how to set them to 
 appropriate values. 
 
 7. Start GURLS++ building
 	$ make 
 
-8. Install GURLS++ to the path deÞned at conÞguration time 
+8. Install GURLS++ to the path deï¿½ned at conï¿½guration time 
 	$ make install
 
 - Installing GURLS++ on Windows 
@@ -79,23 +79,23 @@ with VS Express 2010 on Windows 7 and with VS Express 2008 on Windows Vista).
 1. Install the CMake build system downloading the installer from http://cmake.org/cmake/resources/software.html. 
 
 2. Install your favourite Blas/Lapack implementation. Currently we support: 
-	¥ ATLAS: http://math-atlas.sourceforge.net; 
-	¥ AMDÕs ACML: http://developer.amd.com/libraries/acml; 
-	¥ IntelÕs MKL: http://software.intel.com/en-us/articles/intel-mkl. 
+	ï¿½ ATLAS: http://math-atlas.sourceforge.net; 
+	ï¿½ AMDï¿½s ACML: http://developer.amd.com/libraries/acml; 
+	ï¿½ Intelï¿½s MKL: http://software.intel.com/en-us/articles/intel-mkl. 
 Under Windows ACML is probably the easiest choice, since they provide the library binaries for free. 
 
-3. Install BoostÕs date_time and serialization libraries following the instructions 
-   on BoostÕs website: http://www.boost.org/doc/libs/1_50_0/more/getting_started/windows.html. 
+3. Install Boostï¿½s date_time and serialization libraries following the instructions 
+   on Boostï¿½s website: http://www.boost.org/doc/libs/1_50_0/more/getting_started/windows.html. 
 
 4. Create a build directory (e.g. $GURLS_ROOT/build) for GURLS++. 
 
 5. Run the CMake GUI. 
    You will have to set the source directory to the root directory holding GURLS++ source 
    code, and the build directory to the directory created at the previous step. 
-   After pressing the conÞgure button, you have to set the values of some variables used for 
-   building and installing GURLS++. See the section ConÞguring GURLS++ below for more 
+   After pressing the conï¿½gure button, you have to set the values of some variables used for 
+   building and installing GURLS++. See the section Conï¿½guring GURLS++ below for more 
    information on these variables and how to set them to appropriate values. After having 
-   configured the build options, press the generate button to create the solution Þle. 
+   configured the build options, press the generate button to create the solution ï¿½le. 
 
 6. Build GURLS++ by opening and building the solution under Visual Studio. 
 
@@ -107,37 +107,37 @@ Configuration
 =============
 The configuration step is carried out using CMake. 
 Using the command-line interface you will be presented with a textual menu, where you 
-can change the values of some variables and conÞgure the building settings accordingly. 
+can change the values of some variables and conï¿½gure the building settings accordingly. 
 
 1. At the beginning no variable is set, and a message EMPTY CACHE is shown. 
 
-2. Press [c] for ÕconÞgureÕ, and CMake will try to determine the correct values for all variables, 
+2. Press [c] for ï¿½conï¿½gureï¿½, and CMake will try to determine the correct values for all variables, 
    such as the location of required libraries. 
 
-3. If CMake does not Þnd some required library, an error message will be displayed. 
+3. If CMake does not ï¿½nd some required library, an error message will be displayed. 
    In this case press [e] to exit help and go to the main screen. 
 
 4. In the main screen you may change a number of variables. Most of them can be left 
    unchanged, but some must be set to appropriate values. The following are the variables 
    whose values should be checked: 
-	¥ BLAS_LAPACK_IMPLEMENTATION. Allows user to specify an implementation of the Blas/Lapack routines. 
+	ï¿½ BLAS_LAPACK_IMPLEMENTATION. Allows user to specify an implementation of the Blas/Lapack routines. 
 	  Available choices are: ACML, ATLAS, MKL, NETLIB (under linux). 
-	  Depending on the choice you make, CMake will try to Þnd the libraries in standard locations in the system. 		  Normally this process should run Þne, however, in case the libraries have been installed 
+	  Depending on the choice you make, CMake will try to ï¿½nd the libraries in standard locations in the system. 		  Normally this process should run ï¿½ne, however, in case the libraries have been installed 
 	  in some non-standard directory, you may have to manually specify their location.
-	¥ USE_BINARY_ARCHIVES. If set to ON, all data structures in GURLS are stored in 
-	  binary (rather than text) Þles, saving storage space and time. 
-	¥ BUILD_DEMO and BUILD_TEST. These two options enable the building of the demo and test programs. 
+	ï¿½ USE_BINARY_ARCHIVES. If set to ON, all data structures in GURLS are stored in 
+	  binary (rather than text) ï¿½les, saving storage space and time. 
+	ï¿½ BUILD_DEMO and BUILD_TEST. These two options enable the building of the demo and test programs. 
 	  You may need to enable the latter if you are interested in expanding GURLS++. 
 	  If so, the directory for BUILD_TEST has to coincide with the directory that will be used 
 	  to perform tests (see Section 4.5 for more details). 
-	¥ CMAKE_INSTALL_PREFIX. This is the path where the library will be installed to. 
+	ï¿½ CMAKE_INSTALL_PREFIX. This is the path where the library will be installed to. 
 
 5. Once all variables have been set, press [c] again, and CMake will check the settings. 
    As in step (3), if something is wrong an error message will be displayed and you will have 
-   to go back to the main screen to tweak the conÞguration. 
+   to go back to the main screen to tweak the conï¿½guration. 
 
-6. When the settings are correct, the option to ÕgenerateÕ the Þles required for the actual build will appear. 
-   Press [g]. CMake will generate the Þles and exit. After the build files (e.g. the Makefile under Linux) 
+6. When the settings are correct, the option to ï¿½generateï¿½ the ï¿½les required for the actual build will appear. 
+   Press [g]. CMake will generate the ï¿½les and exit. After the build files (e.g. the Makefile under Linux) 
    have been generated, you can proceed as explained above. 
    The same procedure outlined above is used when using the GUI of CMake, e.g. under Windows or Mac. 
 
@@ -170,5 +170,7 @@ Documentation
 
 Quick and Dirty
 ===============
-A straightforward example of GURLS uage can be found in helloworld.cpp, which employs the Quick and Dirty utilities
-to train a linear model in the dual space using leave-one-out cross validation on a test set stored in the data subdirectory.
+A straightforward example of GURLS uage can be found in helloworld.cpp, 
+which employs the Quick and Dirty utilities to train a linear model in the dual space 
+using leave-one-out cross validation on a test set stored in the data subdirectory.
+
