@@ -137,9 +137,10 @@ can change the values of some variables and configure the building settings acco
    to go back to the main screen to tweak the configuration. 
 
 6. When the settings are correct, the option to 'generate' the files required for the actual build will appear. 
-   Press [g]. CMake will generate the files and exit. After the build files (e.g. the Makefile under Linux) 
-   have been generated, you can proceed as explained above. 
-   The same procedure outlined above is used when using the GUI of CMake, e.g. under Windows or Mac. 
+   Press [g]. CMake will generate the files and exit. 
+
+After the build files (e.g. the Makefile under Linux) have been generated, you can proceed as explained above. 
+The same procedure outlined above is used when using the GUI of CMake, e.g. under Windows or Mac. 
 
 
 Documentation
