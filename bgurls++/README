@@ -53,8 +53,9 @@ For other distributions, the same packages must be installed with the distributi
 	$ sudo apt-get install libopenmpi-dev openmpi-bin openmpi-doc
 
 5. Build libNetCDF C and C++ libraries
-	Download "The netCDF C library and utilities" and "The netCDF legacy and netCDF-4 C++ libraries"
-	from the official netCDF website (http://www.unidata.ucar.edu/downloads/netcdf/index.jsp) and build them.
+	Download "The netCDF C library and utilities" and "The netCDF legacy and 
+	netCDF-4 C++ libraries" from the official netCDF website 
+	(http://www.unidata.ucar.edu/downloads/netcdf/index.jsp) and build them.
 	Building bGURLS++ using the libNetCDF packages provided by Ubuntu generates compiler errors.
 
 6. To link against some Blas and Lapack implementations you may need a fortran 
