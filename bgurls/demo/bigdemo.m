@@ -2,7 +2,7 @@
 % This script will download over 1 GB of data on your hard drive.
 
 function [] = bigdemo()
-    message = ['This script will donwload over 1 GB of data on your	hard drive, do you wish to continue? (y/[n]) : '];
+    message = ['This script will donwload over 1 GB of data on your    hard drive, do you wish to continue? (y/[n]) : '];
     decision = userinput(message);
 
     if (~decision)
@@ -27,11 +27,12 @@ function [] = bigdemo()
 
     genDSet(dst, fullfile(dst,'ba'));
 
-    %% Set up distributed matrix-matrix multiplications with gdm
+    %% Set up distributed matrix-matrix multiplications (XtX, Xty, XvatXva,Xvatyva) with gdm
 
     bgTrainPrepare(fullfile(dst,'ba'));
 
     %% Actually run distributed matrix-matrix multiplications with gdm (run this on multiple machines after you see the message!!).
+	% builds matrices XtX, Xty, XvatXva, Xvatyva
 
     fprintf('Run this\n\tbgTrainRun(''%s'')\non as many machines as you please\n',fullfile(dst,'ba'));
     bgTrainRun(fullfile(dst,'ba'));
@@ -53,7 +54,7 @@ function [] = bigdemo()
 
     name = fullfile(wpath,'gurls');
     opt = bigdefopt(name);
-    opt.nb_pred = 5;
+    opt.nb_pred = 5; %used to evaluate performance. More info on bigdefopt.m
 
     opt.files.Xva_filename = fullfile(wpath, 'split/Xva');
     opt.files.yva_filename = fullfile(wpath, 'split/yva');
