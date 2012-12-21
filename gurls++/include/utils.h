@@ -61,6 +61,8 @@
 #include "primal.h"
 #include "macroavg.h"
 
+#include <set>
+
 namespace gurls {
 
 /**
@@ -786,6 +788,73 @@ void GInverseDiagonal(const T* Q, const T* L, const T* lambda, T* Z,
 //    Z(:,i) = D*d;
         gemv(CblasNoTrans, Q_rows, Q_cols, (T)1.0, D, Q_cols, d, 1, (T)0.0, Z+(i*lambda_length), 1);
     }
+
+}
+
+template<typename T>
+gMat2D<T>* rls_primal_driver(T* K, const T* Xty, const unsigned long n, const unsigned long d, const unsigned long Yd, const T lambda)
+{
+    gMat2D<T> *W = NULL;
+
+    std::set<T*> garbage;
+
+    try{ // Try solving it with cholesky first.
+
+        const T coeff = n*static_cast<T>(lambda);
+        unsigned long i=0;
+        for(T* it = K; i<d; ++i, it+=d+1)
+            *it += coeff;
+
+        //		R = chol(K);
+        T* R = new T[d*d];
+        garbage.insert(R);
+        cholesky(K, d, d, R);
+
+        //		cfr.W = R\(R'\Xty);
+        W = new gMat2D<T>(d, Yd);
+
+        copy(W->getData(), Xty, W->getSize());
+        mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasTrans);    //(R'\Xty)
+        mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasNoTrans);  //R\(R'\Xty)
+
+        delete[] R;
+        garbage.erase(R);
+    }
+    catch (gException& /*gex*/)
+    {
+
+        for(typename std::set<T*>::iterator it = garbage.begin(); it != garbage.end(); ++it)
+            delete[] (*it);
+
+        if(W != NULL)
+            delete W;
+
+        T *Q, *L, *Vt;
+        int Q_rows, Q_cols;
+        int L_len;
+        int Vt_rows, Vt_cols;
+
+        svd(K, Q, L, Vt, d, d, Q_rows, Q_cols, L_len, Vt_rows, Vt_cols);
+
+//            QtXtY = Q'*Xty;
+        T* QtXtY = new T[Q_cols*Yd];
+        dot(Q, Xty, QtXtY, Q_rows, Q_cols, d, Yd, Q_cols, Yd, CblasTrans, CblasNoTrans, CblasColMajor);
+
+//            % regularization is done inside rls_eigen
+        W = new gMat2D<T>(Q_rows, Yd);
+        T* work = new T[L_len*(Q_rows+1)];
+        rls_eigen(Q, L, QtXtY, W->getData(), lambda, n, Q_rows, Q_cols, L_len, Q_cols, Yd, work);
+
+        delete [] QtXtY;
+        delete [] work;
+
+        delete [] Q;
+        delete [] L;
+        delete [] Vt;
+
+    }
+
+    return W;
 
 }
 

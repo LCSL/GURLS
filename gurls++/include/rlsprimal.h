@@ -48,7 +48,7 @@
 #include "optmatrix.h"
 #include "optfunction.h"
 
-#include <set>
+#include "utils.h"
 
 namespace gurls {
 
@@ -107,73 +107,15 @@ GurlsOptionsList* RLSPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, 
     T* Xty = new T[d*Yd];
     dot(X.getData(), Y.getData(), Xty, n, d, Yn, Yd, d, Yd, CblasTrans, CblasNoTrans, CblasColMajor);
 
-    gMat2D<T> *W = NULL;
 
-    std::set<T*> garbage;
+    gMat2D<T> *W = rls_primal_driver(K, Xty, n, d, Yd, lambda);
 
-    try{ // Try solving it with cholesky first.
-
-        const T coeff = n*static_cast<T>(lambda);
-        int i=0;
-        for(T* it = K; i<d; ++i, it+=d+1)
-            *it += coeff;
-
-        //		R = chol(K);
-        T* R = new T[d*d];
-        garbage.insert(R);
-        cholesky(K, d, d, R);
-
-        //		cfr.W = R\(R'\Xty);
-        W = new gMat2D<T>(d, Yd);
-
-        copy(W->getData(), Xty, W->getSize());
-        mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasTrans);    //(R'\Xty)
-        mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasNoTrans);  //R\(R'\Xty)
-
-        delete[] R;
-        garbage.erase(R);
-
-    }
-    catch (gException& /*gex*/)
-    {
-
-        for(typename std::set<T*>::iterator it = garbage.begin(); it != garbage.end(); ++it)
-            delete[] (*it);
-
-        if(W != NULL)
-            delete W;
-
-        T *Q, *L, *Vt;
-        int Q_rows, Q_cols;
-        int L_len;
-        int Vt_rows, Vt_cols;
-
-        svd(K, Q, L, Vt, d, d, Q_rows, Q_cols, L_len, Vt_rows, Vt_cols);
-
-//            QtXtY = Q'*Xty;
-        T* QtXtY = new T[Q_cols*Yd];
-        dot(Q, Xty, QtXtY, Q_rows, Q_cols, d, Yd, Q_cols, Yd, CblasTrans, CblasNoTrans, CblasColMajor);
-
-//            % regularization is done inside rls_eigen
-        W = new gMat2D<T>(Q_rows, Yd);
-        T* work = new T[L_len*(Q_rows+1)];
-        rls_eigen(Q, L, QtXtY, W->getData(), lambda, n, Q_rows, Q_cols, L_len, Q_cols, Yd, work);
-
-        delete [] QtXtY;
-        delete [] work;
-
-        delete [] Q;
-        delete [] L;
-        delete [] Vt;
-
-    }
+    delete[] K;
+    delete[] Xty;
 
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
 
     optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
-
-    delete[] K;
-    delete[] Xty;
 
     gMat2D<T>* emptyC = new gMat2D<T>();
     optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
