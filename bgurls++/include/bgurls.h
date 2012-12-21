@@ -46,6 +46,17 @@
 #include <bigarray.h>
 
 #include "bigparamsel_hoprimal.h"
+#include "bigparamsel_calibratesgd.h"
+
+#include "bigoptimizer_rlspegasos.h"
+#include "bigoptimizer_rlsprimal.h"
+
+#include "bigperf_macroavg.h"
+
+#include "bigpred_primal.h"
+
+#include "bigsplit_ho.h"
+
 #include <mpi/mpi.h>
 
 

@@ -4,7 +4,7 @@
  * Copyright (C) 2011, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
+ * author:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,56 +39,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-#ifndef _GURLS_BIGHOPRIMAL_H_
-#define _GURLS_BIGHOPRIMAL_H_
-
-
-#include "bigparamsel.h"
-
+#include "bigmath.h"
 
 namespace gurls
 {
 
-/**
- * \ingroup ParameterSelection
- * \brief BigParamSelHoPrimal is the subclass of BigParamSelection that implements hold-out cross validation with the primal formulation of RLS
- */
-template <typename T>
-class BigParamSelHoPrimal: public BigParamSelection<T>
+template<>
+GURLS_EXPORT int MPI_ReduceT(float *sendbuf, float *recvbuf, int count, MPI_Op op, int root, MPI_Comm comm)
 {
+    return MPI_Reduce(sendbuf, recvbuf, count, MPI_FLOAT, op, root, comm);
+}
 
-public:
-
-    /**
-     * Performs parameter selection when the primal formulation of RLS is used.
-     * The hold-out approach is used.
-     * The performance measure specified by opt.hoperf is maximized.
-     * \param X input data bigarray
-     * \param Y labels bigarray
-     * \param opt options with the following:
-     *  - nlambda (default)
-     *  - hoperf (default)
-     *  - smallnumber (default)
-     *  - split (settable with the class Split and its subclasses)
-     *
-     * \return paramsel, a GurlsOptionList with the following fields:
-     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - guesses = array of guesses for the regularization parameter lambda
-     *  - forho = matrix of validation accuracies for each lambda guess and for each class
-     */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
-
-};
-
-template <typename T>
-GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &/*X*/, const BigArray<T> &/*Y*/, const GurlsOptionsList &/*opt*/)
+template<>
+GURLS_EXPORT int MPI_ReduceT(double *sendbuf, double *recvbuf, int count, MPI_Op op, int root, MPI_Comm comm)
 {
-    // TODO
-
-    return new GurlsOptionsList("paramsel");
+    return MPI_Reduce(sendbuf, recvbuf, count, MPI_DOUBLE, op, root, comm);
 }
 
 }
-
-#endif // _GURLS_BIGHOPRIMAL_H_

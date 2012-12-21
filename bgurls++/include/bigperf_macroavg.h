@@ -40,55 +40,49 @@
  */
 
 
-#ifndef _GURLS_BIGHOPRIMAL_H_
-#define _GURLS_BIGHOPRIMAL_H_
+#ifndef _GURLS_BIGMACROAVG_H_
+#define _GURLS_BIGMACROAVG_H_
 
+#include "optlist.h"
+#include "bigperf.h"
+#include "utils.h"
+#include "optmatrix.h"
+#include "bigarray.h"
 
-#include "bigparamsel.h"
-
-
-namespace gurls
-{
+namespace gurls {
 
 /**
- * \ingroup ParameterSelection
- * \brief BigParamSelHoPrimal is the subclass of BigParamSelection that implements hold-out cross validation with the primal formulation of RLS
+ * \ingroup Performance
+ * \brief BigPerfMacroAvg is the sub-class of BigPerformance that evaluates prediction accuracy
  */
+
 template <typename T>
-class BigParamSelHoPrimal: public BigParamSelection<T>
-{
+class BigPerfMacroAvg: public BigPerformance<T>{
 
 public:
-
     /**
-     * Performs parameter selection when the primal formulation of RLS is used.
-     * The hold-out approach is used.
-     * The performance measure specified by opt.hoperf is maximized.
+     * Evaluates the average accuracy per class.
+     *
      * \param X input data bigarray
      * \param Y labels bigarray
      * \param opt options with the following:
-     *  - nlambda (default)
-     *  - hoperf (default)
-     *  - smallnumber (default)
-     *  - split (settable with the class Split and its subclasses)
+     *  - pred (settable with the class Prediction and its subclasses)
      *
-     * \return paramsel, a GurlsOptionList with the following fields:
-     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - guesses = array of guesses for the regularization parameter lambda
-     *  - forho = matrix of validation accuracies for each lambda guess and for each class
+     * \return perf, a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
+     *  - acc = array of prediction accuracy for each class
+     *  - forho = acc
      */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
-
+    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
-template <typename T>
-GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &/*X*/, const BigArray<T> &/*Y*/, const GurlsOptionsList &/*opt*/)
+template<typename T>
+GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList& /*opt*/) throw(gException)
 {
     // TODO
 
-    return new GurlsOptionsList("paramsel");
+    return new GurlsOptionsList("perf");
 }
 
 }
 
-#endif // _GURLS_BIGHOPRIMAL_H_
+#endif //_GURLS_BIGMACROAVG_H_

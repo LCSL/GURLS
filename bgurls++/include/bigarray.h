@@ -100,6 +100,7 @@ public:
     {
         init(fileName, mat.rows(), mat.cols());
         setMatrix(0, 0, mat);
+        flush();
     }
 
     BigArray(const BigArray<T>& other)
@@ -109,19 +110,26 @@ public:
 
 //    BigArray(const BigArray<T>& other, std::string fileName);
 
-    BigArray<T>& operator= (BigArray<T>& other)
-    {
-        if(!dataFileName.empty())
-            delete dataFile;
+//    BigArray<T>& operator= (BigArray<T> other)
+//    {
+//        if(!dataFileName.empty())
+//            delete dataFile;
 
-        loadNC(other.dataFileName);
-    }
+//        loadNC(other.dataFileName);
+
+//        return *this;
+//    }
 
     ~BigArray()
     {
         delete dataFile;
     }
 
+    void flush()
+    {
+        delete dataFile;
+        loadNC(dataFileName);
+    }
 
     unsigned long rows() const
     {
@@ -280,10 +288,15 @@ public:
 
     void setMatrix(unsigned long startingRow, unsigned long startingCol, const gMat2D<T>&value)
     {
+        setMatrix(startingRow, startingCol, value.getData(), value.rows(), value.cols());
+    }
+
+    void setMatrix(unsigned long startingRow, unsigned long startingCol, const T* M, const unsigned long M_rows, const unsigned long M_cols)
+    {
         if(startingRow >= this->numrows || startingCol >= this->numcols)
             throw gException(Exception_Index_Out_of_Bound);
 
-        if(startingRow+value.rows() > this->numrows || startingCol+value.cols() > this->numcols)
+        if(startingRow+M_rows > this->numrows || startingCol+M_cols > this->numcols)
             throw gException(Exception_Index_Out_of_Bound);
 
         std::vector<size_t> start(2), count(2);
@@ -291,10 +304,10 @@ public:
         start[0] = startingCol;
         start[1] = startingRow;
 
-        count[0] = value.cols();
-        count[1] = value.rows();
+        count[0] = M_cols;
+        count[1] = M_rows;
 
-        matrix.putVar(start, count, value.getData());
+        matrix.putVar(start, count, M);
     }
 
     void setColumn (unsigned long col, const gVec<T>& value)
@@ -404,11 +417,11 @@ protected:
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const BigArray<T>& m)
 {
-   if (m.rows() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE || m.cols() >= (unsigned long) gurls::MAX_PRINTABLE_SIZE)
-   {
-       os << m.what() << std::endl;
-       return os;
-   }
+    if (m.rows() >= (unsigned long)gurls::MAX_PRINTABLE_SIZE || m.cols() >= (unsigned long) gurls::MAX_PRINTABLE_SIZE)
+    {
+        os << m.what() << std::endl;
+        return os;
+    }
 
     os << "[";
     for (unsigned long i = 0; i < m.numrows; ++i)

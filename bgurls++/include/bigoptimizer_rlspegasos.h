@@ -40,55 +40,60 @@
  */
 
 
-#ifndef _GURLS_BIGHOPRIMAL_H_
-#define _GURLS_BIGHOPRIMAL_H_
+#ifndef _GURLS_BIGRLSPEGASOS_H_
+#define _GURLS_BIGRLSPEGASOS_H_
+
+#include "bigarray.h"
+#include "bigoptimization.h"
+#include "utils.h"
 
 
-#include "bigparamsel.h"
-
-
-namespace gurls
-{
+namespace gurls {
 
 /**
- * \ingroup ParameterSelection
- * \brief BigParamSelHoPrimal is the subclass of BigParamSelection that implements hold-out cross validation with the primal formulation of RLS
+ * \ingroup Optimization
+ * \brief BigRLSPegasos is the sub-class of BigOptimizer that implements the Pegaosos algorithm
  */
+
 template <typename T>
-class BigParamSelHoPrimal: public BigParamSelection<T>
-{
+class BigRLSPegasos: public BigOptimizer<T>{
 
 public:
-
     /**
-     * Performs parameter selection when the primal formulation of RLS is used.
-     * The hold-out approach is used.
-     * The performance measure specified by opt.hoperf is maximized.
+     * Computes a classifier for the primal formulation of RLS.
+     * The optimization is carried out using a stochastic gradient descent algorithm.
+     * The regularization parameter is set to the one found in the field paramsel of opt.
+     * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
+     *
      * \param X input data bigarray
      * \param Y labels bigarray
      * \param opt options with the following:
-     *  - nlambda (default)
-     *  - hoperf (default)
-     *  - smallnumber (default)
-     *  - split (settable with the class Split and its subclasses)
+     *  - singlelambda (default)
+     *  - epochs (default)
+     *  - paramsel (settable with the class ParamSelection and its subclasses)
+     *  - Xte (test input data matrix, needed for accuracy evaluation)
+     *  - yte (test labels matrix, needed for accuracy evaluation)
      *
-     * \return paramsel, a GurlsOptionList with the following fields:
-     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - guesses = array of guesses for the regularization parameter lambda
-     *  - forho = matrix of validation accuracies for each lambda guess and for each class
+     * \return adds to opt the field optimizer which is a list containing the following fields:
+     *  - W = matrix of coefficient vectors of rls estimator for each class
+     *  - W_sum = sum of the classifiers across iterations
+     *  - t0 = stepsize parameter
+     *  - count = number of iterations
+     *  - acc_last = accuracy of the solution computed in the last iteration
+     *  - acc_avg = average accuracy across iterations
+     *
      */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
-
+    GurlsOptionsList *execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt);
 };
 
+
 template <typename T>
-GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &/*X*/, const BigArray<T> &/*Y*/, const GurlsOptionsList &/*opt*/)
+GurlsOptionsList* BigRLSPegasos<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList& /*opt*/)
 {
     // TODO
 
-    return new GurlsOptionsList("paramsel");
+    return new GurlsOptionsList("optimizer");
 }
 
 }
-
-#endif // _GURLS_BIGHOPRIMAL_H_
+#endif // _GURLS_BIGRLSPEGASOS_H_

@@ -4,7 +4,7 @@
  * Copyright (C) 2011, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
+ * author:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,56 +39,55 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _GURLS_BIGSPLIT_H_
+#define _GURLS_BIGSPLIT_H_
 
-#ifndef _GURLS_BIGHOPRIMAL_H_
-#define _GURLS_BIGHOPRIMAL_H_
-
-
-#include "bigparamsel.h"
-
+#include "optlist.h"
+#include "bigarray.h"
 
 namespace gurls
 {
 
-/**
- * \ingroup ParameterSelection
- * \brief BigParamSelHoPrimal is the subclass of BigParamSelection that implements hold-out cross validation with the primal formulation of RLS
- */
-template <typename T>
-class BigParamSelHoPrimal: public BigParamSelection<T>
-{
+template<typename T>
+class BigSplitHo;
 
+
+/**
+ * \ingroup Split
+ * \brief BigSplit is the class that splits data into pair(s) of training and test samples
+ */
+template<typename T>
+class BigSplit
+{
 public:
 
     /**
-     * Performs parameter selection when the primal formulation of RLS is used.
-     * The hold-out approach is used.
-     * The performance measure specified by opt.hoperf is maximized.
-     * \param X input data bigarray
+     * Splits data into pair(s) of training and test samples, to be used for cross-validation
+     * \param X not used
      * \param Y labels bigarray
-     * \param opt options with the following:
-     *  - nlambda (default)
-     *  - hoperf (default)
-     *  - smallnumber (default)
-     *  - split (settable with the class Split and its subclasses)
+     * \param opt options with the different required fields based on the sub-class
      *
-     * \return paramsel, a GurlsOptionList with the following fields:
-     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - guesses = array of guesses for the regularization parameter lambda
-     *  - forho = matrix of validation accuracies for each lambda guess and for each class
+     * \return a GurlsOptionList
      */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
+    virtual GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
 
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
+    static BigSplit<T> *factory(const std::string& id) throw(BadSplitCreation)
+    {
+        if(id == "ho")
+            return new BigSplitHo<T>;
+
+        throw BadSplitCreation(id);
+    }
 };
 
-template <typename T>
-GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &/*X*/, const BigArray<T> &/*Y*/, const GurlsOptionsList &/*opt*/)
-{
-    // TODO
-
-    return new GurlsOptionsList("paramsel");
-}
 
 }
 
-#endif // _GURLS_BIGHOPRIMAL_H_
+#endif // _GURLS_BIGSPLIT_H_
+

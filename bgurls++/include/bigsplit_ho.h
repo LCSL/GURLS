@@ -40,55 +40,48 @@
  */
 
 
-#ifndef _GURLS_BIGHOPRIMAL_H_
-#define _GURLS_BIGHOPRIMAL_H_
+#ifndef _GURLS_BIGSPLITHO_H_
+#define _GURLS_BIGSPLITHO_H_
 
 
-#include "bigparamsel.h"
-
+#include "bigsplit.h"
+#include "bigarray.h"
 
 namespace gurls
 {
 
 /**
- * \ingroup ParameterSelection
- * \brief BigParamSelHoPrimal is the subclass of BigParamSelection that implements hold-out cross validation with the primal formulation of RLS
+ * \ingroup Split
+ * \brief BigSplitHo is the sub-class of BigSplit that splits data into one or more pairs of training and test samples.
  */
+
 template <typename T>
-class BigParamSelHoPrimal: public BigParamSelection<T>
+class BigSplitHo: public BigSplit<T>
 {
-
 public:
-
     /**
-     * Performs parameter selection when the primal formulation of RLS is used.
-     * The hold-out approach is used.
-     * The performance measure specified by opt.hoperf is maximized.
-     * \param X input data bigarray
+     * Splits data into one or more pairs of training and test samples, to be used for cross-validation. The fraction of samples for the validation set is specified in the field hoproportion of opt, and the number of pairs is specified in the field nholdouts of opt
+     * \param X not used
      * \param Y labels bigarray
-     * \param opt options with the following:
-     *  - nlambda (default)
-     *  - hoperf (default)
-     *  - smallnumber (default)
-     *  - split (settable with the class Split and its subclasses)
+     * \param opt options with the following field
+     *   - hoproportion (default)
+     *   - nholdouts (default)
      *
-     * \return paramsel, a GurlsOptionList with the following fields:
-     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - guesses = array of guesses for the regularization parameter lambda
-     *  - forho = matrix of validation accuracies for each lambda guess and for each class
+     * \return adds to opt the field split, which is a list containing the following fields:
+     *  - indices = nholdoutsxn matrix, each row contains the indices of training and validation samples
+     *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
-
+    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
 
-template <typename T>
-GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &/*X*/, const BigArray<T> &/*Y*/, const GurlsOptionsList &/*opt*/)
+template<typename T>
+GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList &/*opt*/) throw(gException)
 {
-    // TODO
+    //TODO
 
-    return new GurlsOptionsList("paramsel");
+    return new GurlsOptionsList("split");
 }
 
 }
 
-#endif // _GURLS_BIGHOPRIMAL_H_
+#endif //_GURLS_BIGSPLITHO_H_

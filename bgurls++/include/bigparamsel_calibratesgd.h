@@ -40,55 +40,51 @@
  */
 
 
-#ifndef _GURLS_BIGHOPRIMAL_H_
-#define _GURLS_BIGHOPRIMAL_H_
+#ifndef _GURLS_CALIBRATESGD_H_
+#define _GURLS_CALIBRATESGD_H_
 
 
 #include "bigparamsel.h"
+#include "bigarray.h"
 
-
-namespace gurls
-{
+namespace gurls {
 
 /**
  * \ingroup ParameterSelection
- * \brief BigParamSelHoPrimal is the subclass of BigParamSelection that implements hold-out cross validation with the primal formulation of RLS
+ * \brief BigParamselCalibrateSGD is the sub-class of BigParamSelection that implements parameter selection for pegasos
  */
+
 template <typename T>
-class BigParamSelHoPrimal: public BigParamSelection<T>
-{
+class BigParamSelCalibrateSGD: public BigParamSelection<T>{
 
 public:
-
     /**
-     * Performs parameter selection when the primal formulation of RLS is used.
-     * The hold-out approach is used.
-     * The performance measure specified by opt.hoperf is maximized.
+     * Performs parameter selection when one wants to solve the problem using rls_pegasos.
      * \param X input data bigarray
      * \param Y labels bigarray
      * \param opt options with the following:
-     *  - nlambda (default)
+     *  - subsize (default)
+     *  - calibfile (default)
      *  - hoperf (default)
-     *  - smallnumber (default)
-     *  - split (settable with the class Split and its subclasses)
+     *  - singlelambda (default)
+     *  - nlambda (default)
      *
      * \return paramsel, a GurlsOptionList with the following fields:
      *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - guesses = array of guesses for the regularization parameter lambda
-     *  - forho = matrix of validation accuracies for each lambda guess and for each class
+     *  - W = RLS coefficient vector
      */
     GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
-
 };
 
 template <typename T>
-GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &/*X*/, const BigArray<T> &/*Y*/, const GurlsOptionsList &/*opt*/)
+GurlsOptionsList *BigParamSelCalibrateSGD<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList &/*opt*/)
 {
     // TODO
 
     return new GurlsOptionsList("paramsel");
 }
 
+
 }
 
-#endif // _GURLS_BIGHOPRIMAL_H_
+#endif // _GURLS_BIGCALIBRATESGD_H_
