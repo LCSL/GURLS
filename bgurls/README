@@ -37,7 +37,8 @@ permanent.
 Documentation
 =============
 
-Have a look, and run bigdemo.m in the 'demo' subdirectory, and refer to
-single the documentation of single functions for further reference.  The most
-popular learning pipelines are outlined here, with example code:
+Have a look, and run the thtree demos, bigdemoA.m, bigdemoB.m, bigdemoC.m - in the 'demo' subdirectory, 
+to see how to use bGurls on different data formats, and refer to single the documentation 
+of single functions for further reference.  
+The most popular learning pipelines are outlined here, with example code:
 https://github.com/CBCL/GURLS/wiki/User-Manual
