@@ -79,9 +79,161 @@ using namespace std;
 //typedef float T;
 typedef double T;
 
+#include <bigmath.h>
 
 int main(int argc, char *argv[])
 {
+    int numprocs;
+    int myid;
+
+    MPI_Init(&argc, &argv);
+
+//     Find out the number of processes
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+
+//     Get the process rank
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+
+    BigArray<T>* U, *V;
+
+    if(myid == 0)
+    {
+        U = new BigArray<T>("U.nc", 3, 4);
+        U->setValue(0, 0, 0);
+        U->setValue(0, 1, 3);
+        U->setValue(0, 2, 6);
+        U->setValue(0, 3, 9);
+        U->setValue(1, 0, 1);
+        U->setValue(1, 1, 4);
+        U->setValue(1, 2, 7);
+        U->setValue(1, 3, 10);
+        U->setValue(2, 0, 2);
+        U->setValue(2, 1, 5);
+        U->setValue(2, 2, 8);
+        U->setValue(2, 3, 11);
+        U->flush();
+
+//        V = new BigArray<T> ("V.nc", 5, 4);
+//        V->setValue(0, 0, 0);
+//        V->setValue(0, 1, 3);
+//        V->setValue(0, 2, 6);
+//        V->setValue(0, 3, 9);
+//        V->setValue(1, 0, 1);
+//        V->setValue(1, 1, 4);
+//        V->setValue(1, 2, 7);
+//        V->setValue(1, 3, 10);
+//        V->setValue(2, 0, 2);
+//        V->setValue(2, 1, 5);
+//        V->setValue(2, 2, 8);
+//        V->setValue(2, 3, 11);
+//        V->setValue(3, 0, 2);
+//        V->setValue(3, 1, 5);
+//        V->setValue(3, 2, 8);
+//        V->setValue(3, 3, 11);
+//        V->setValue(4, 0, 2);
+//        V->setValue(4, 1, 5);
+//        V->setValue(4, 2, 8);
+//        V->setValue(4, 3, 11);
+//        V->flush();
+
+//        U = new BigArray<T>("U.nc", 6, 4);
+//        U->setValue(0, 0, 0);
+//        U->setValue(0, 1, 3);
+//        U->setValue(0, 2, 6);
+//        U->setValue(0, 3, 9);
+//        U->setValue(1, 0, 1);
+//        U->setValue(1, 1, 4);
+//        U->setValue(1, 2, 7);
+//        U->setValue(1, 3, 10);
+//        U->setValue(2, 0, 2);
+//        U->setValue(2, 1, 5);
+//        U->setValue(2, 2, 8);
+//        U->setValue(2, 3, 11);
+//        U->setValue(3, 0, 2);
+//        U->setValue(3, 1, 5);
+//        U->setValue(3, 2, 8);
+//        U->setValue(3, 3, 11);
+//        U->setValue(4, 0, 2);
+//        U->setValue(4, 1, 5);
+//        U->setValue(4, 2, 8);
+//        U->setValue(4, 3, 11);
+//        U->setValue(5, 0, 1);
+//        U->setValue(5, 1, 4);
+//        U->setValue(5, 2, 7);
+//        U->setValue(5, 3, 10);
+//        U->flush();
+
+        V = new BigArray<T> ("V.nc", 6, 3);
+        V->setValue(0, 0, 0);
+        V->setValue(0, 1, 3);
+        V->setValue(0, 2, 6);
+        V->setValue(1, 0, 1);
+        V->setValue(1, 1, 4);
+        V->setValue(1, 2, 7);
+        V->setValue(2, 0, 2);
+        V->setValue(2, 1, 5);
+        V->setValue(2, 2, 8);
+        V->setValue(3, 0, 2);
+        V->setValue(3, 1, 5);
+        V->setValue(3, 2, 8);
+        V->setValue(4, 0, 2);
+        V->setValue(4, 1, 5);
+        V->setValue(4, 2, 8);
+        V->setValue(5, 0, 1);
+        V->setValue(5, 1, 4);
+        V->setValue(5, 2, 7);
+        V->flush();
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    if(myid != 0)
+    {
+        U = new BigArray<T>("U.nc");
+        V = new BigArray<T> ("V.nc");
+    }
+
+//    BigArray<T>* result = ba_product_uvt(*U, *V, "bigprod.nc");
+//    BigArray<T>* result = matMult_AtB(*U, *V, "bigprod.nc", 248 /*584*/);
+    BigArray<T>* result = matMult_AB(*V, *U, "bigprod.nc", 248 /*584*/);
+
+    if(myid == 0)
+    {
+        cout << "numprocs: " << numprocs << endl;
+
+        cout << "bU: " << endl << (*U) << endl;
+        cout << "bV: " << endl << (*V) << endl;
+        cout << "result: " << endl << (*result) << endl;
+
+
+        gMat2D<T> sU(U->rows(), U->cols());
+        gMat2D<T> sV(V->rows(), V->cols());
+//        gMat2D<T> sresult(U->rows(), V->rows());
+//        gMat2D<T> sresult(U->cols(), V->cols());
+        gMat2D<T> sresult(V->rows(), U->cols());
+
+        U->getMatrix(0, 0, sU);
+        V->getMatrix(0, 0, sV);
+
+//        dot(sU.getData(), sV.getData(), sresult.getData(), sU.rows(), sU.cols(), sV.rows(), sV.cols(), sresult.rows(), sresult.cols(),
+//            CblasNoTrans, CblasTrans, CblasColMajor);
+
+//        dot(sU.getData(), sV.getData(), sresult.getData(), sU.rows(), sU.cols(), sV.rows(), sV.cols(), sresult.rows(), sresult.cols(),
+//            CblasTrans, CblasNoTrans, CblasColMajor);
+
+        dot(sV.getData(), sU.getData(), sresult.getData(), sV.rows(), sV.cols(), sU.rows(), sU.cols(), sresult.rows(), sresult.cols(),
+            CblasNoTrans, CblasNoTrans, CblasColMajor);
+
+        cout << "sU: " << endl << sU << endl;
+        cout << "sV: " << endl << sV << endl;
+        cout << "sresult: " << endl << sresult << endl;
+    }
+
+    MPI_Finalize();
+
+    return 0;
+
+
 
 //    BigArray<T>*  a = new BigArray<T>("prova.nc", 3, 4);
 //    cout << "A: " << a->rows() << " " << a->cols() << endl;
@@ -199,7 +351,7 @@ int main(int argc, char *argv[])
 
 //    return 0;
 
-
+/*
     srand(static_cast<unsigned int>(time(NULL)));
 
     cout.precision(4);
@@ -309,5 +461,5 @@ int main(int argc, char *argv[])
 //    return 0;
     MPI_Finalize();
     return EXIT_SUCCESS;
+    /**/
 }
-/**/

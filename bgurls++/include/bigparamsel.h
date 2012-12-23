@@ -52,8 +52,8 @@
 namespace gurls
 {
 
-//template <typename T>
-//class BigParamSelCalibrateSGD;
+template <typename T>
+class BigParamSelCalibrateSGD;
 
 template <typename T>
 class BigParamSelHoPrimal;
@@ -85,8 +85,8 @@ public:
      */
     static BigParamSelection<T>* factory(const std::string& id) throw(BadParamSelectionCreation)
     {
-//        if(id == "calibratesgd")
-//            return new BigParamSelCalibrateSGD<T>;
+        if(id == "calibratesgd")
+            return new BigParamSelCalibrateSGD<T>;
         if(id == "hoprimal")
             return new BigParamSelHoPrimal<T>;
 

@@ -51,7 +51,7 @@ Documentation
 
 -Test
 	Testing routines and scripts are available in the test directories of the gurls 
-	and gursl++ package. This checks that gurls and gurls++ results coincide.
+	and gurls++ package. This checks that gurls and gurls++ results coincide.
 
 - Further Documentation
 	* Have a look at the README files of each individual package.
