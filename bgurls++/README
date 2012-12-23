@@ -9,7 +9,6 @@ Table of Contents
 - Introduction
 - Installation
 - Configuration
-- Documentation
 
 
 Introduction
@@ -157,21 +156,3 @@ can change the values of some variables and configure the building settings acco
 
 After the build files (e.g. the Makefile under Linux) have been generated, you can proceed as explained above. 
 The same procedure outlined above is used when using the GUI of CMake, e.g. under Windows or Mac. 
-
-
-Documentation
-=============
-
-
-- User's Guide:
-	A User's Guide with help files for each available method is available
-	in the gurls-manual.pdf file.
-
-- C++ Code Documentation can be generated with the following command
-	$ doxygen Doxyfile.in
-
-- C++ Developer's Guide
-	A simple developer's guides is available in the gurls-manual.pdf file.
-	bGURLS is designed for easy expansion. Give it a try!
-	Remark: bGURLS++ is still under development please contact the authors before starting your own development.
-
