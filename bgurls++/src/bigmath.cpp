@@ -56,4 +56,16 @@ GURLS_EXPORT int MPI_ReduceT(double *sendbuf, double *recvbuf, int count, MPI_Op
     return MPI_Reduce(sendbuf, recvbuf, count, MPI_DOUBLE, op, root, comm);
 }
 
+template<>
+GURLS_EXPORT int MPI_AllReduceT(float *sendbuf, float *recvbuf, int count, MPI_Op op, MPI_Comm comm)
+{
+    return MPI_Allreduce(sendbuf, recvbuf, count, MPI_FLOAT, op, comm);
+}
+
+template<>
+GURLS_EXPORT int MPI_AllReduceT(double *sendbuf, double *recvbuf, int count, MPI_Op op, MPI_Comm comm)
+{
+    return MPI_Allreduce(sendbuf, recvbuf, count, MPI_DOUBLE, op, comm);
+}
+
 }
