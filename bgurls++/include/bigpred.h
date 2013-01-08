@@ -71,7 +71,7 @@ public:
      *
      * \return adds the field pred to opt
      */
-    virtual BigArray<T>* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
 
 
     /**

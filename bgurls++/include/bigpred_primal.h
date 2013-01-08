@@ -82,11 +82,11 @@ public:
     *
     * \return pred matrix of predicted labels
     */
-  BigArray<T>* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
+  GurlsOptionsList* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-BigArray<T>* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& /*Y*/, const GurlsOptionsList &opt)
+GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& /*Y*/, const GurlsOptionsList &opt)
 {
     const gMat2D<T>& W = opt.getOptValue<OptMatrix<gMat2D<T> >  >("optimizer.W");
 
@@ -108,12 +108,15 @@ BigArray<T>* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& 
         bW = new BigArray<T>(opt.getOptAsString("tmpfile"));
 
 
-    BigArray<T>* scores = matMult_AB(X, bW, opt.getOptAsString("files.pred_filename"), opt.getOptAsNumber("memlimit"));
+    BigArray<T>* scores = matMult_AB(X, *bW, opt.getOptAsString("files.pred_filename"), opt.getOptAsNumber("memlimit"));
     scores->flush();
 
     delete bW;
 
-    return scores;
+    GurlsOptionsList* ret = new GurlsOptionsList("pred");
+    ret->addOpt("pred", new OptMatrix<BigArray<T> >(*scores));
+
+    return ret;
 }
 
 

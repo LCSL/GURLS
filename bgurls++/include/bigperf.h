@@ -84,7 +84,7 @@ public:
     static BigPerformance<T>* factory(const std::string& id) throw(BadPerformanceCreation)
     {
         if(id == "macroavg")
-            return new PerfMacroAvg<T>;
+            return new BigPerfMacroAvg<T>;
 
         throw BadPerformanceCreation(id);
     }

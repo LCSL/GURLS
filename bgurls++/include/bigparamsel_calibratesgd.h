@@ -40,8 +40,8 @@
  */
 
 
-#ifndef _GURLS_CALIBRATESGD_H_
-#define _GURLS_CALIBRATESGD_H_
+#ifndef _GURLS_BIGCALIBRATESGD_H_
+#define _GURLS_BIGCALIBRATESGD_H_
 
 
 #include "bigparamsel.h"

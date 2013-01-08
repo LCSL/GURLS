@@ -67,7 +67,7 @@ namespace gurls
  * \ingroup Common
  * \brief BGURLS is the class that implements a BGURLS process
  */
-class GURLS_EXPORT BGURLS/*: public GURLS*/
+class GURLS_EXPORT BGURLS
 {
 
 public:
@@ -84,6 +84,46 @@ public:
     template <typename T>
     void run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& opt, std::string processid, bool hasGurlsProcesses);
 
+
+    template<typename T, class TaskT>
+    void runSerialTask(gMat2D<T>& X, gMat2D<T>& y, GurlsOptionsList& opt,
+                        int myid, const std::string& taskName, const std::string& reg2, const std::string& dataExchangeFile)
+    {
+        if(myid == 0)
+        {
+            TaskT* task = TaskT::factory(reg2);
+
+            GurlsOptionsList* ret = task->execute(X, y, opt);
+            ret->save(dataExchangeFile);
+
+            delete task;
+            delete ret;
+        }
+
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        GurlsOptionsList* ret = new GurlsOptionsList(taskName);
+        ret->load(dataExchangeFile);
+
+        opt.removeOpt(taskName);
+        opt.addOpt(taskName, ret);
+
+    }
+
+    template<typename T, class TaskT>
+    void runBigTask(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& opt,
+                    const std::string& taskName, const std::string& reg2)
+    {
+        TaskT* task = TaskT::factory(reg2);
+
+        GurlsOptionsList* ret = task->execute(X, y, opt);
+
+        delete task;
+
+        opt.removeOpt(taskName);
+        opt.addOpt(taskName, ret);
+    }
+
 };
 
 
@@ -95,18 +135,6 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     double begin, end;
-
-    Optimizer<T> *taskOpt;
-    ParamSelection<T> *taskParSel;
-    Prediction<T> *taskPrediction;
-    Performance<T> *taskPerformance;
-    Kernel<T> *taskKernel;
-    Norm<T> *taskNorm;
-    Split<T> *taskSplit;
-    PredKernel<T> *taskPredKernel;
-    Confidence<T> *taskConfidence;
-
-    BigParamSelection<T> *taskBigParSel;
 
 //    try{
 
@@ -159,11 +187,7 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         std::string reg2;
 
         if(myid == 0)
-        {
-            std::cout << std::endl
-                      <<"####### New task sequence... "
-                      << std::endl;
-        }
+            std::cout << std::endl <<"####### New task sequence... " << std::endl;
 
         gMat2D<T> X_mat;
         gMat2D<T> y_mat;
@@ -203,45 +227,11 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
                 if (!reg1.compare("optimizer"))
                 {
-                    if(myid == 0)
-                    {
-                        taskOpt = Optimizer<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskOpt->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskOpt;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("optimizer");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("optimizer");
-                    opt.addOpt("optimizer", ret);
+                    runSerialTask<T, Optimizer<T> >(X_mat, y_mat, opt, myid, "optimizer", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("paramsel"))
                 {
-                    if(myid == 0)
-                    {
-                        taskParSel = ParamSelection<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskParSel->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskParSel;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("paramsel");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("paramsel");
-                    opt.addOpt("paramsel", ret);
+                    runSerialTask<T, ParamSelection<T> >(X_mat, y_mat, opt, myid, "paramsel", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("pred"))
                 {
@@ -249,7 +239,7 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
                     if(myid == 0)
                     {
-                        taskPrediction = Prediction<T>::factory(reg2);
+                        Prediction<T> *taskPrediction = Prediction<T>::factory(reg2);
 
                         GurlsOption* ret = taskPrediction->execute(X_mat, y_mat, opt);
 
@@ -288,52 +278,17 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                 }
                 else if (!reg1.compare("perf"))
                 {
-                    if(myid == 0)
-                    {
-                        taskPerformance = Performance<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskPerformance->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskPerformance;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("perf");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("perf");
-                    opt.addOpt("perf", ret);
-
+                    runSerialTask<T, Performance<T> >(X_mat, y_mat, opt, myid, "perf", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("kernel"))
                 {
-                    if(myid == 0)
-                    {
-                        taskKernel = Kernel<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskKernel->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskKernel;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("kernel");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("kernel");
-                    opt.addOpt("kernel", ret);
+                    runSerialTask<T, Kernel<T> >(X_mat, y_mat, opt, myid, "kernel", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("norm"))
                 {
                     if(myid == 0)
                     {
-                        taskNorm = Norm<T>::factory(reg2);
+                        Norm<T> *taskNorm = Norm<T>::factory(reg2);
 
                         gMat2D<T>* X1 = taskNorm->execute(X_mat, y_mat, opt);
 
@@ -346,77 +301,35 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                 }
                 else if (!reg1.compare("split"))
                 {
-                    if(myid == 0)
-                    {
-                        taskSplit = Split<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskSplit->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskSplit;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("split");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("split");
-                    opt.addOpt("split", ret);
+                    runSerialTask<T, Split<T> >(X_mat, y_mat, opt, myid, "split", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("predkernel"))
                 {
-                    if(myid == 0)
-                    {
-                        taskPredKernel = PredKernel<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskPredKernel->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskPredKernel;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("predkernel");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("predkernel");
-                    opt.addOpt("predkernel", ret);
+                    runSerialTask<T, PredKernel<T> >(X_mat, y_mat, opt, myid, "predkernel", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("conf"))
                 {
-                    if(myid == 0)
-                    {
-                        taskConfidence = Confidence<T>::factory(reg2);
-
-                        GurlsOptionsList* ret = taskConfidence->execute(X_mat, y_mat, opt);
-                        ret->save(dataExchangeFile);
-
-                        delete taskConfidence;
-                        delete ret;
-                    }
-
-                    MPI_Barrier(MPI_COMM_WORLD);
-
-                    GurlsOptionsList* ret = new GurlsOptionsList("conf");
-                    ret->load(dataExchangeFile);
-
-                    opt.removeOpt("conf");
-                    opt.addOpt("conf", ret);
-
+                    runSerialTask<T, Confidence<T> >(X_mat, y_mat, opt, myid, "conf", reg2, dataExchangeFile);
+                }
+                else if (!reg1.compare("bigoptimizer"))
+                {
+                    runBigTask<T, BigOptimizer<T> >(X, y, opt, "bigoptimizer", reg2);
                 }
                 else if (!reg1.compare("bigparamsel"))
                 {
-                    taskBigParSel = BigParamSelection<T>::factory(reg2);
-
-                    GurlsOptionsList* ret = taskBigParSel->execute(X, y, opt);
-
-                    opt.removeOpt("paramsel");
-                    opt.addOpt("paramsel", ret);
-
+                    runBigTask<T, BigParamSelection<T> >(X, y, opt, "bigparamsel", reg2);
+                }
+                else if (!reg1.compare("bigpred"))
+                {
+                    runBigTask<T, BigPrediction<T> >(X, y, opt, "bigpred", reg2);
+                }
+                else if (!reg1.compare("bigperf"))
+                {
+                    runBigTask<T, BigPerformance<T> >(X, y, opt, "bigperf", reg2);
+                }
+                else if (!reg1.compare("bigsplit"))
+                {
+                    runBigTask<T, BigSplit<T> >(X, y, opt, "bigsplit", reg2);
                 }
                 else
                     throw gException(Exception_Invalid_TaskSequence);
@@ -436,7 +349,6 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
             case GURLS::load:
 
-                cout << "Load " << myid << "loadopt=" << loadOpt;
                 if(loadOpt == NULL)
                     throw gException("Opt savefile not found");
                 if(!loadOpt->hasOpt(reg1))
@@ -450,7 +362,9 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                 tmpOpt = loadOpt->getOpt(reg1);
                 loadOpt->removeOpt(reg1, false);
                 opt.addOpt(reg1, tmpOpt);
-                std::cout << " copied" << std::endl;
+
+                if(myid ==0)
+                    std::cout << " copied" << std::endl;
 
                 break;
             default:

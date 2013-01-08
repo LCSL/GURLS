@@ -72,7 +72,7 @@ public:
      * \param opt options with the different required fields based on the sub-class
      * \return adds the fields rls to opt
      */
-    virtual GurlsOption* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * Factory function returning a pointer to the newly created object.
@@ -80,7 +80,7 @@ public:
      * \warning The returned pointer is a plain, un-managed pointer. The calling
      * function is responsible of deallocating the object.
      */
-    static Optimizer<T>* factory(const std::string& id) throw(BadOptimizerCreation)
+    static BigOptimizer<T>* factory(const std::string& id) throw(BadOptimizerCreation)
     {
         if(id == "rlsprimal")
             return new BigRLSPrimal<T>;

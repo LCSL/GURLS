@@ -48,6 +48,7 @@
 #include "optfunction.h"
 #include "bigoptimization.h"
 #include "bigmath.h"
+#include "utils.h"
 
 namespace gurls
 {
@@ -84,43 +85,62 @@ public:
 template <typename T>
 GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt)
 {
-   const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
-   T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
+    int myid;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
-   const unsigned long n = X.rows();
-   const unsigned long d = X.cols();
+    //	K = X'*X;
+    BigArray<T>* bK = matMult_AtB(X, X, "K.nc", opt.getOptAsNumber("memlimit"));
 
-//   const unsigned long Yn = Y.rows();
-   const unsigned long Yd = Y.cols();
+    //	Xty = X'*y;
+    BigArray<T>* bXty = matMult_AtB(X, Y, "Xty.nc", opt.getOptAsNumber("memlimit"));
 
-   //	K = X'*X;
-   BigArray<T>* bK = matMult_AtB(X, X, "K.nc", opt.getOptAsNumber("memlimit"));
+    gMat2D<T> *W;
 
-   //	Xty = X'*y;
-   BigArray<T>* bXty = matMult_AtB(X, Y, "Xty.nc", opt.getOptAsNumber("memlimit"));
+    if(myid == 0)
+    {
+        gMat2D<T> K, Xty;
+        bK->getMatrix(0, 0, bK->rows(), bK->cols(), K);
+        bXty->getMatrix(0, 0, bXty->rows(), bXty->cols(), Xty);
 
+        const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
+        T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
-   gMat2D<T> K, Xty;
-   bK->getMatrix(0, 0, bK->rows(), bK->cols(), K);
-   bXty->getMatrix(0, 0, bXty->rows(), bXty->cols(), Xty);
+        const unsigned long n = X.rows();
+        const unsigned long d = X.cols();
 
-   gMat2D<T> *W = rls_primal_driver(K.getData(), Xty.getData(), n, d, Yd, lambda);
+        //   const unsigned long Yn = Y.rows();
+        const unsigned long Yd = Y.cols();
 
-   delete bK;
-   delete bXty;
+        W = rls_primal_driver(K.getData(), Xty.getData(), n, d, Yd, lambda);
+        W->save("tmp");
 
-   GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
+        MPI_Barrier(MPI_COMM_WORLD);
 
-   optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
+    }
+    else
+    {
+        W = new gMat2D<T>();
 
-   gMat2D<T>* emptyC = new gMat2D<T>();
-   optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
+        MPI_Barrier(MPI_COMM_WORLD);
 
-   //	cfr.X = [];
-   gMat2D<T>* emptyX = new gMat2D<T>();
-   optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+        W->load("tmp");
+    }
 
-   return optimizer;
+    delete bK;
+    delete bXty;
+
+    GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
+
+    optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
+
+    gMat2D<T>* emptyC = new gMat2D<T>();
+    optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
+
+    //	cfr.X = [];
+    gMat2D<T>* emptyX = new gMat2D<T>();
+    optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+
+    return optimizer;
 }
 
 

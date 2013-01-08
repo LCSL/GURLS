@@ -149,7 +149,7 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
 
 // A'B
 template<typename T>
-BigArray<T>* matMult_AtB(BigArray<T>& A, BigArray<T>& B, const std::string& resultFile, const unsigned long memB /*const unsigned long memMB*/)
+BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile, const unsigned long memB /*const unsigned long memMB*/)
 {
 
     if(A.rows() != B.rows())
