@@ -1026,6 +1026,47 @@ T* compare(const T* vector, const T thr, const int size, bool(*pred)(T,T))
     return ret;
 }
 
+
+/**
+  * Sorts the elements of a matrix along the columns
+  *
+  * \param M Input matrix
+  * \param rows Matrix rows
+  * \param cols Matrix columns
+  * \param pred Binary predicate used for comparison
+  * \param values On ouptut contains the ordered values matrix
+  * \param indices On ouptut contains the ordered indices matrix
+  */
+template<typename T>
+void sort(const T* M, const unsigned long rows, const unsigned long cols, bool(*pred)(T,T), T* values, unsigned long* indices)
+{
+    typedef std::multimap<T, unsigned long, bool(*)(T,T) > MapType;
+
+    for(unsigned long i=0; i< rows; ++i)
+    {
+        MapType data(pred);
+
+        for (unsigned long j = 0; i < cols; ++j)
+        {
+            const unsigned long index = i+(cols*j);
+            data.insert( std::pair<T,unsigned long>(M[index], index));
+        }
+
+        typename MapType::iterator it = data.begin();
+
+        for (unsigned long j = 0; i < cols; ++j, ++it)
+        {
+            const unsigned long index = i+(cols*j);
+
+            if(values != NULL)
+                values[index] = it->first;
+
+            if(indices != NULL)
+                indices[index] = it->second;
+        }
+    }
+}
+
 /**
   * Returns the indices of the largest elements along different dimensions of a matrix.
   *
