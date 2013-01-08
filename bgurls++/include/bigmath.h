@@ -60,6 +60,9 @@ namespace gurls
 template<typename T>
 int MPI_ReduceT(T *sendbuf, T *recvbuf, int count, MPI_Op op, int root, MPI_Comm comm);
 
+template<typename T>
+int MPI_AllReduceT(T *sendbuf, T *recvbuf, int count, MPI_Op op, MPI_Comm comm);
+
 // AB
 template<typename T>
 BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile, const unsigned long memB /*const unsigned long memMB*/)
@@ -87,11 +90,7 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
     BigArray<T>* ret;
 
     if(myid == 0)
-    {
         ret = new BigArray<T>(resultFile, n, t);
-        ret->setValue(0, 0, 0);
-        ret->flush();
-    }
 
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -135,7 +134,6 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
 
             dot(U->getData(), V->getData(), result.getData(), rows, d, d, cols, rows, cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-            std::cout << result << std::endl;
             ret->setMatrix(block*blockRowsA, cblock*blockRowsB, result);
         }
     }
