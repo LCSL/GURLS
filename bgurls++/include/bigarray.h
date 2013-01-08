@@ -94,6 +94,11 @@ public:
     BigArray(std::string fileName, unsigned long r, unsigned long c)
     {
         init(fileName, r, c);
+
+        if(r>0 && c>0)
+            setValue(0, 0, 0);
+
+        flush();
     }
 
     BigArray(std::string fileName, const gMat2D<T>& mat)

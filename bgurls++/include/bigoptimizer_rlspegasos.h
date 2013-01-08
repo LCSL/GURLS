@@ -56,8 +56,8 @@ namespace gurls {
  */
 
 template <typename T>
-class BigRLSPegasos: public BigOptimizer<T>{
-
+class BigRLSPegasos: public BigOptimizer<T>
+{
 public:
     /**
      * Computes a classifier for the primal formulation of RLS.
@@ -74,7 +74,7 @@ public:
      *  - Xte (test input data matrix, needed for accuracy evaluation)
      *  - yte (test labels matrix, needed for accuracy evaluation)
      *
-     * \return adds to opt the field optimizer which is a list containing the following fields:
+     * \return returns a list containing the following fields:
      *  - W = matrix of coefficient vectors of rls estimator for each class
      *  - W_sum = sum of the classifiers across iterations
      *  - t0 = stepsize parameter
@@ -83,7 +83,7 @@ public:
      *  - acc_avg = average accuracy across iterations
      *
      */
-    GurlsOptionsList *execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt);
+    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt);
 };
 
 

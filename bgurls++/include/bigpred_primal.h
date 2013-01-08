@@ -80,7 +80,7 @@ public:
     * \param opt options with the following:
     *  - optimizer (settable with the class Optimizers and its subclasses)
     *
-    * \return pred matrix of predicted labels
+    * \return a list containing the matrix of predicted labels
     */
   GurlsOptionsList* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
 };
@@ -96,11 +96,7 @@ GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     if(myid == 0)
-    {
         bW = new BigArray<T>(opt.getOptAsString("tmpfile"), W);
-        bW->setValue(0, 0, 0);
-        bW->flush();
-    }
 
     MPI_Barrier(MPI_COMM_WORLD);
 

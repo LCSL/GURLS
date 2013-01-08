@@ -88,11 +88,15 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
     int myid;
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
+    const std::string sharedDir = opt.getOptAsString("shared_dir");
+    const std::string tempFileName = sharedDir + "tmp";
+
+
     //	K = X'*X;
-    BigArray<T>* bK = matMult_AtB(X, X, "K.nc", opt.getOptAsNumber("memlimit"));
+    BigArray<T>* bK = matMult_AtB(X, X, opt.getOptAsString("XtX_fileName"), opt.getOptAsNumber("memlimit"));
 
     //	Xty = X'*y;
-    BigArray<T>* bXty = matMult_AtB(X, Y, "Xty.nc", opt.getOptAsNumber("memlimit"));
+    BigArray<T>* bXty = matMult_AtB(X, Y, opt.getOptAsString("Xty_fileName"), opt.getOptAsNumber("memlimit"));
 
     gMat2D<T> *W;
 
@@ -112,10 +116,9 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
         const unsigned long Yd = Y.cols();
 
         W = rls_primal_driver(K.getData(), Xty.getData(), n, d, Yd, lambda);
-        W->save("tmp");
+        W->save(tempFileName);
 
         MPI_Barrier(MPI_COMM_WORLD);
-
     }
     else
     {
@@ -123,7 +126,7 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
 
         MPI_Barrier(MPI_COMM_WORLD);
 
-        W->load("tmp");
+        W->load(tempFileName);
     }
 
     delete bK;
@@ -139,6 +142,7 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
     //	cfr.X = [];
     gMat2D<T>* emptyX = new gMat2D<T>();
     optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+
 
     return optimizer;
 }

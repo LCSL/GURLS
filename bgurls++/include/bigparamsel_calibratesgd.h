@@ -55,7 +55,8 @@ namespace gurls {
  */
 
 template <typename T>
-class BigParamSelCalibrateSGD: public BigParamSelection<T>{
+class BigParamSelCalibrateSGD: public BigParamSelection<T>
+{
 
 public:
     /**

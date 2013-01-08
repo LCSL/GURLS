@@ -67,7 +67,7 @@ public:
      *   - hoproportion (default)
      *   - nholdouts (default)
      *
-     * \return adds to opt the field split, which is a list containing the following fields:
+     * \return a list containing the following fields:
      *  - indices = nholdoutsxn matrix, each row contains the indices of training and validation samples
      *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
