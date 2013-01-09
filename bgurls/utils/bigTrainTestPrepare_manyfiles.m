@@ -3,19 +3,19 @@ function [] = bigTrainTestPrepare_manyfiles(DataDir,files,blocksize,test_hopropo
 % INPUT:
 % -DataDir = directory cointaing as many .mat files as the number of classes 
 %     Each file must contain the variables:
-%     - x, the d x n_i input data matrix where d is the number of variables and _ni is the number of samples belonging to the i-th class;
+%     - x, the d x n_i input data matrix where d is the number of variables and n_i is the number of samples belonging to the i-th class;
 % -files = structure containing the fields:
 %     -Xtrain_filename = prefix of files that make the bigarray for input
 %       training data
-%     -ytrain_filename = prefix of files that make the bigarray for ouput
+%     -ytrain_filename = prefix of files that make the bigarray for output
 %       training data
 %     -Xtest_filename = prefix of files that make the bigarray for input
 %       test data
-%     -ytest_filename = prefix of files that make the bigarray for ouput
+%     -ytest_filename = prefix of files that make the bigarray for output
 %       test data
 %     -Xva_filename = prefix of files that make the bigarray for input
 %       validation data
-%     -ytva_filename = prefix of files that make the bigarray for ouput
+%     -yva_filename = prefix of files that make the bigarray for output
 %       validation data
 % -blocksize = number of samples per block
 % -test_hoproportion = percentage of total samples to be used for testing

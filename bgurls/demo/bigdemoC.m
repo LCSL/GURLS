@@ -93,29 +93,31 @@ function [] = bigdemoC()
     bgurls(X,y,opt,2);
     fprintf('---testing done\n\n')
 
-        % Now you should have a mat file in "wpath" named gurls.mat.
-        % This file contains all the information about your experiment.
-        % If you want to see the mean accuracy, for example, load the file
-        % in your workspace and type
-        %
-        % >> mean(opt.perf.acc)
-        %
-        % If you are interested in visualizing or printing stats and facts
-        % about your experiment, check the documentation about the summarizing
-        % functions in the gurls package.
+    % Now you should have a mat file in "wpath" named gurls.mat.
+    % This file contains all the information about your experiment.
+    % If you want to see the mean accuracy, for example, load the file
+    % in your workspace and type
+    %
+    % >> mean(opt.perf.acc)
+    %
+    % If you are interested in visualizing or printing stats and facts
+    % about your experiment, check the documentation about the summarizing
+    % functions in the gurls package.
 end
 function [decision] = userinput(message)
-choice = input(message,'s');
-if isempty(choice) choice = 'n'; end
-while ~strcmp(choice,'y') && ~strcmp(choice,'n')
-    choice = input('\Please type ''y'' or ''n'' : ','s');
-end
-switch(choice)
-    case {'y'}
-        decision = true;
-        return;
-    case{'n'}
-        decision = false;
-        return;
-end
+    choice = input(message,'s');
+    if isempty(choice)
+        choice = 'n';
+    end
+    while ~strcmp(choice,'y') && ~strcmp(choice,'n')
+        choice = input('\Please type ''y'' or ''n'' : ','s');
+    end
+    switch(choice)
+        case {'y'}
+            decision = true;
+            return;
+        case{'n'}
+            decision = false;
+            return;
+    end
 end
