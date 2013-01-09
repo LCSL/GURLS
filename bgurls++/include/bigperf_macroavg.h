@@ -103,7 +103,7 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
 //    nb_pred = opt.nb_pred;
     const unsigned long nb_pred = static_cast<unsigned long>(opt.getOptAsNumber("nb_pred"));
 
-    const BigArray<T>& pred = opt.getOptValue<OptMatrix<BigArray<T> > >("pred");
+    const BigArray<T>& pred = opt.getOptValue<OptMatrix<BigArray<T> > >("pred.pred");
 
 
 //    T = y.Sizes();
