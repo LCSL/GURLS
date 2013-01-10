@@ -91,12 +91,19 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
     const std::string sharedDir = opt.getOptAsString("shared_dir");
     const std::string tempFileName = sharedDir + "tmp";
 
+    const BigArray<T> *bK, *bXty;
 
     //	K = X'*X;
-    BigArray<T>* bK = matMult_AtB(X, X, opt.getOptAsString("files.XtX_fileName"), opt.getOptAsNumber("memlimit"));
+    if(!opt.hasOpt("paramsel.XtX"))
+        bK = matMult_AtB(X, X, opt.getOptAsString("files.XtX_fileName"), opt.getOptAsNumber("memlimit"));
+    else
+        bK = &opt.getOptValue<OptMatrix<BigArray<T> > >("paramsel.XtX");
 
     //	Xty = X'*y;
-    BigArray<T>* bXty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_fileName"), opt.getOptAsNumber("memlimit"));
+    if(!opt.hasOpt("paramsel.Xty"))
+        bXty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_fileName"), opt.getOptAsNumber("memlimit"));
+    else
+        bXty = &opt.getOptValue<OptMatrix<BigArray<T> > >("paramsel.Xty");
 
     gMat2D<T> *W;
 
@@ -111,11 +118,9 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
 
         const unsigned long n = X.rows();
         const unsigned long d = X.cols();
+        const unsigned long t = Y.cols();
 
-        //   const unsigned long Yn = Y.rows();
-        const unsigned long Yd = Y.cols();
-
-        W = rls_primal_driver(K.getData(), Xty.getData(), n, d, Yd, lambda);
+        W = rls_primal_driver(K.getData(), Xty.getData(), n, d, t, lambda);
         W->save(tempFileName);
 
         MPI_Barrier(MPI_COMM_WORLD);
@@ -129,8 +134,11 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
         W->load(tempFileName);
     }
 
-    delete bK;
-    delete bXty;
+    if(!opt.hasOpt("paramsel.XtX"))
+        delete bK;
+
+    if(!opt.hasOpt("paramsel.Xty"))
+        delete bXty;
 
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
 

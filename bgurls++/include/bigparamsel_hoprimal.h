@@ -92,21 +92,20 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     const GurlsOptionsList* split = opt.getOptAs<GurlsOptionsList>("split");
     const BigArray<T>& Xva = split->getOptValue<OptMatrix<BigArray<T> > >("Xva");
     const BigArray<T>& Yva = split->getOptValue<OptMatrix<BigArray<T> > >("Yva");
+    const BigArray<T>& XvatXva = split->getOptValue<OptMatrix<BigArray<T> > >("XvatXva");
+    const BigArray<T>& Xvatyva = split->getOptValue<OptMatrix<BigArray<T> > >("XvatYva");
 
     BigArray<T>* XtX = matMult_AtB(X, X, opt.getOptAsString("files.XtX_filename"), opt.getOptAsNumber("memlimit"));
     BigArray<T>* Xty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_fileName"), opt.getOptAsNumber("memlimit"));
-    BigArray<T>* XvatXva = matMult_AtB(Xva, Xva, opt.getOptAsString("files.XvatXva_filename"), opt.getOptAsNumber("memlimit"));
-    BigArray<T>* Xvatyva = matMult_AtB(Xva, Yva, opt.getOptAsString("files.Xvatyva_fileName"), opt.getOptAsNumber("memlimit"));
 
 
 //    K = XtX - XvatXva;
     gMat2D<T>* XtX_mat = new gMat2D<T>(XtX->rows(), XtX->cols());
     XtX->getMatrix(0,0, *XtX_mat);
-    delete XtX;
+//    delete XtX;
 
-    gMat2D<T>* XvatXva_mat = new gMat2D<T>(XvatXva->rows(), XvatXva->cols());
-    XvatXva->getMatrix(0,0, *XvatXva_mat);
-    delete XvatXva;
+    gMat2D<T>* XvatXva_mat = new gMat2D<T>(XvatXva.rows(), XvatXva.cols());
+    XvatXva.getMatrix(0,0, *XvatXva_mat);
 
     axpy(XtX_mat->getSize(), (T)-1.0, XvatXva_mat->getData(), 1, XtX_mat->getData(), 1);
     delete XvatXva_mat;
@@ -114,11 +113,10 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
 //  Xty = Xty - Xvatyva;
     gMat2D<T>* Xty_mat = new gMat2D<T>(Xty->rows(), Xty->cols());
     Xty->getMatrix(0,0, *Xty_mat);
-    delete Xty;
+//    delete Xty;
 
-    gMat2D<T>* Xvatyva_mat = new gMat2D<T>(Xvatyva->rows(), Xvatyva->cols());
-    Xvatyva->getMatrix(0,0, *Xvatyva_mat);
-    delete Xvatyva;
+    gMat2D<T>* Xvatyva_mat = new gMat2D<T>(Xvatyva.rows(), Xvatyva.cols());
+    Xvatyva.getMatrix(0,0, *Xvatyva_mat);
 
     axpy(Xty_mat->getSize(), (T)-1.0, Xvatyva_mat->getData(), 1, Xty_mat->getData(), 1);
     delete Xvatyva_mat;
@@ -215,6 +213,9 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
         paramsel->removeOpt("lambdas");
         paramsel->removeOpt("forho");
         paramsel->removeOpt("guesses");
+
+        paramsel->removeOpt("XtX");
+        paramsel->removeOpt("Xty");
     }
     else
         paramsel = new GurlsOptionsList("paramsel");
@@ -244,6 +245,9 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
 
     paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
+
+    paramsel->addOpt("XtX", new OptMatrix<BigArray<T> >(*XtX));
+    paramsel->addOpt("Xty", new OptMatrix<BigArray<T> >(*Xty));
 
     return paramsel;
 }
