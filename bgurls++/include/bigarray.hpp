@@ -443,6 +443,7 @@ void BigArray<T>::readCSV(const std::string& fileName)
     }
 
     in.close();
+    flush();
 }
 
 
