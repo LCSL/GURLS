@@ -72,6 +72,11 @@ public:
     * \param opt options with the following:
     *  - singlelambda (default)
     *  - paramsel (settable with the class ParamSelection and its subclasses)
+    *  - files list containing file names for BigArrays
+    *  - tmpfile path of a file used to store and load temporary data
+    *  - memlimit maximum amount memory to be used performing matrix multiplications
+    *
+    * BigArray Multiplications are performed in parallel
     *
     * \return adds to opt the field optimizer which is a list containing the following fields:
     *  - W = matrix of coefficient vectors of rls estimator for each class
@@ -88,8 +93,7 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
     int myid;
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
-    const std::string sharedDir = opt.getOptAsString("shared_dir");
-    const std::string tempFileName = sharedDir + "tmp";
+    const std::string tempFileName = opt.getOptAsString("tmpfile");
 
     const BigArray<T> *bK, *bXty;
 

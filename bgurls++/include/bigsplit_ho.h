@@ -63,15 +63,18 @@ class BigSplitHo: public BigSplit<T>
 public:
     /**
      * Splits data into one or more pairs of training and test samples, to be used for cross-validation. The fraction of samples for the validation set is specified in the field hoproportion of opt, and the number of pairs is specified in the field nholdouts of opt
-     * \param X not used
-     * \param Y labels bigarray
+     * \param X
+     * \param Y labels BigArray
      * \param opt options with the following field
      *   - hoproportion (default)
-     *   - nholdouts (default)
+     *   - files list containing file names for BigArrays
+     *   - memlimit maximum amount memory to be used performing matrix multiplications
      *
      * \return a list containing the following fields:
-     *  - indices = nholdoutsxn matrix, each row contains the indices of training and validation samples
-     *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
+     *  - Xva
+     *  - Yva
+     *  - XvatXva
+     *  - XvatYva
      */
     GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };

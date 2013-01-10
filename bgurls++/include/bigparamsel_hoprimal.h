@@ -75,11 +75,18 @@ public:
      *  - hoperf (default)
      *  - smallnumber (default)
      *  - split (settable with the class Split and its subclasses)
+     *  - files list containing file names for BigArrays
+     *  - tmpfile path of a file used to store and load temporary data
+     *  - memlimit maximum amount memory to be used performing matrix multiplications
+     *
+     * BigArray multiplications and subtasks calls are executed in parallel
      *
      * \return a GurlsOptionList with the following fields:
      *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - forho = matrix of validation accuracies for each lambda guess and for each class
+     *  - XtX = multiplication between X' and X
+     *  - Xty = multiplication between X' and Y
      */
     GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
 

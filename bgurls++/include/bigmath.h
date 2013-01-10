@@ -57,7 +57,14 @@
 namespace gurls
 {
 
-// AB
+/**
+ * Performs Matrix-matrix multiplication (AB) between BigArrays
+ * \param A first matrix
+ * \param B second matrix
+ * \param resultFile filename where result BigArray has to be stored
+ * \param memB available memory in bytes
+ * \return the result BigArray
+ */
 template<typename T>
 BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile, const unsigned long memB /*const unsigned long memMB*/)
 {
@@ -139,7 +146,14 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
 
 }
 
-// A'B
+/**
+ * Performs Matrix-matrix multiplication (A'B) between BigArrays
+ * \param A first matrix
+ * \param B second matrix
+ * \param resultFile filename where result BigArray has to be stored
+ * \param memB available memory in bytes
+ * \return the result BigArray
+ */
 template<typename T>
 BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile, const unsigned long memB /*const unsigned long memMB*/)
 {
@@ -254,7 +268,13 @@ BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::
 
 }
 
-// AB'
+/**
+ * Performs Matrix-matrix multiplication (AB') between BigArrays
+ * \param bU first matrix
+ * \param bV second matrix
+ * \param resultFile filename where result BigArray has to be stored
+ * \return the result BigArray
+ */
 template<typename T>
 BigArray<T>* matMult_ABt(BigArray<T>& bU, BigArray<T>& bV,  const std::string& resultFile)
 {

@@ -70,6 +70,9 @@ public:
      * \param Y labels bigarray
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
+     *  - nb_pred
+     *
+     * This task parallelizes the costs computation
      *
      * \return a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
      *  - acc = array of prediction accuracy for each class

@@ -79,6 +79,10 @@ public:
     * \param Y labels matrix
     * \param opt options with the following:
     *  - optimizer (settable with the class Optimizers and its subclasses)
+    *  - tmpfile path of a file used to store and load temporary data
+    *  - memlimit maximum amount memory to be used performing matrix multiplications
+    *
+    * The task can be entirely run in parallel
     *
     * \return a list containing the matrix of predicted labels
     */
