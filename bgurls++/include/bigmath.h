@@ -142,6 +142,7 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
     delete U;
     delete V;
 
+    ret->flush();
     return ret;
 
 }
