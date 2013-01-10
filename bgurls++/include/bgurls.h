@@ -42,8 +42,9 @@
 #ifndef _GURLS_BGURLS_H_
 #define _GURLS_BGURLS_H_
 
-#include <gurls.h>
-#include <bigarray.h>
+#include "gurls.h"
+#include "bigarray.h"
+#include "bigoptlist.h"
 
 #include "bigparamsel_hoprimal.h"
 #include "bigparamsel_calibratesgd.h"
@@ -82,7 +83,7 @@ public:
      *
      */
     template <typename T>
-    void run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& opt, std::string processid, bool hasGurlsProcesses);
+    void run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& opt, std::string processid, bool hasGurlsProcesses = false);
 
 
     template<typename T, class TaskT>
