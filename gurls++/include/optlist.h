@@ -75,12 +75,6 @@ class GURLS_EXPORT GurlsOptionsList: public GurlsOption
 public:
     typedef std::map<std::string, GurlsOption* > ValueType;
 
-private:
-    std::string name;   ///< Option name
-    ValueType* table;   ///< Options list, indexed by name
-
-public:
-
     /**
       * Constructor. Builds an optionlist with a name and optionally a set of default options
       *
@@ -247,6 +241,10 @@ public:
       * Deserializes the list from file
       */
     void load(const std::string& fileName);
+
+protected:
+    std::string name;   ///< Option name
+    ValueType* table;   ///< Options list, indexed by name
 
 };
 

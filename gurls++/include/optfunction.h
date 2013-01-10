@@ -48,7 +48,8 @@
 
 #include <string>
 
-namespace gurls {
+namespace gurls
+{
 
 class GURLS_EXPORT Functor
 {
