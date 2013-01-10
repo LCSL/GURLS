@@ -63,6 +63,9 @@ int MPI_ReduceT(T *sendbuf, T *recvbuf, int count, MPI_Op op, int root, MPI_Comm
 template<typename T>
 int MPI_AllReduceT(T *sendbuf, T *recvbuf, int count, MPI_Op op, MPI_Comm comm);
 
+template<typename T>
+int MPI_BcastT(T *buffer, int count, int root, MPI_Comm comm);
+
 // AB
 template<typename T>
 BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile, const unsigned long memB /*const unsigned long memMB*/)
@@ -246,12 +249,15 @@ BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::
         ret->setMatrix(0, 0, reduced, d, t);
         ret->flush();
         delete[] reduced;
+
+        MPI_Barrier(MPI_COMM_WORLD);
     }
+    else
+    {
+        MPI_Barrier(MPI_COMM_WORLD);
 
-    MPI_Barrier(MPI_COMM_WORLD);
-
-    if(myid != 0)
         ret = new BigArray<T>(resultFile);
+    }
 
     return ret;
 
