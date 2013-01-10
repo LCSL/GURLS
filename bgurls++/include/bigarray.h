@@ -205,7 +205,7 @@ public:
         return ret;
     }
 
-    gVec<T> getColumnn(unsigned long i)
+    gVec<T> getColumnn(unsigned long i) const
     {
         return (*this)(i);
     }
@@ -366,6 +366,11 @@ public:
     void load(Archive & , const unsigned int);
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+    /**
+      * Read the bigarray from a CSV file
+      */
+    void readCSV(const std::string& fileName);
 
 protected:
 

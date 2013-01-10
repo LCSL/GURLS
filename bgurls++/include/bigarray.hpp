@@ -5,6 +5,12 @@
 
 #include <boost/serialization/base_object.hpp>
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+#include <exceptions.h>
 
 #ifdef  USE_BINARY_ARCHIVES
 typedef boost::archive::binary_iarchive iarchive;
@@ -63,6 +69,65 @@ void BigArray<T>::load(Archive & ar, const unsigned int /* file_version */)
     ar & name;
 
     loadNC(name);
+}
+
+template <typename T>
+void BigArray<T>::readCSV(const std::string& fileName)
+{
+    std::ifstream in(fileName.c_str());
+
+    if(!in.is_open())
+        throw gurls::gException("Cannot open file " + fileName);
+
+    unsigned long rows = 0;
+    unsigned long cols = 0;
+
+    std::string line;
+
+    while(std::getline(in, line))
+    {
+        if(!line.empty())
+            ++rows;
+
+        if(rows == 1)
+        {
+            std::istringstream ss(line);
+            std::vector<T> tf;
+            std::copy(std::istream_iterator<T>(ss), std::istream_iterator<T>(), std::back_inserter(tf));
+
+            cols = tf.size();
+        }
+    }
+
+    in.clear();
+    in.seekg (0, std::ios_base::beg);
+
+    delete dataFile;
+    init(dataFileName, rows, cols);
+
+    if(rows == 0 || cols == 0)
+        return;
+
+    unsigned long row = 0;
+    while (std::getline(in, line))
+    {
+        if(!line.empty())
+        {
+            std::istringstream ss(line);
+            std::vector<T> tf;
+            std::copy(std::istream_iterator<T>(ss), std::istream_iterator<T>(), std::back_inserter(tf));
+
+            if(tf.size() != cols)
+                throw gException(Exception_Inconsistent_Size);
+
+            for(unsigned long i=0; i<cols; ++i)
+                setValue(row, i, tf[i]);
+
+            ++row;
+        }
+    }
+
+    in.close();
 }
 
 }
