@@ -46,6 +46,8 @@
 
 #include "bigsplit.h"
 #include "bigarray.h"
+#include "bigmath.h"
+#include "optmatrix.h"
 
 namespace gurls
 {
@@ -75,11 +77,80 @@ public:
 };
 
 template<typename T>
-GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList &/*opt*/) throw(gException)
+GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt) throw(gException)
 {
-    //TODO
+    double hoProportion = opt.getOptAsNumber("hoproportion");
 
-    return new GurlsOptionsList("split");
+    int numprocs;
+    int myid;
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+
+    BigArray<T>* Xva;
+    BigArray<T>* Yva;
+    BigArray<T>* XvatXva;
+    BigArray<T>* XvatYva;
+
+    if(myid == 0)
+    {
+        Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"), X.rows(), X.cols()*hoProportion);
+        Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"), Y.rows(), Y.cols()*hoProportion);
+
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
+    else
+    {
+        MPI_Barrier(MPI_COMM_WORLD);
+
+        Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"));
+        Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"));
+    }
+
+
+    T* order = new T[std::max(X.cols(), Y.cols())];
+
+
+    if(myid == 0)
+        randperm(X.cols(), order, true, 0);
+
+    MPI_BcastT(order, X.cols(), 0, MPI_COMM_WORLD);
+
+    unsigned long numCols = Xva->cols()/numprocs;
+    unsigned long remainder = (myid == numprocs-1)? (Xva->cols()%numprocs) : 0;
+
+    for(unsigned long i=myid*numCols; i< (myid*numCols+numCols+remainder); ++i)
+        Xva->setColumn(i, X.getColumnn(order[i]));
+
+
+
+    if(myid == 0)
+        randperm(Y.cols(), order, true, 0);
+
+    MPI_BcastT(order, Y.cols(), 0, MPI_COMM_WORLD);
+
+    numCols = X.cols()/numprocs;
+    remainder = (myid == numprocs-1)? (Y.cols()%numprocs) : 0;
+
+    for(unsigned long i=myid*numCols; i< (myid*numCols+numCols+remainder); ++i)
+        Yva->setColumn(i, Y.getColumnn(order[i]));
+
+
+
+    delete[] order;
+
+
+    XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), opt.getOptAsNumber("memlimit"));
+    XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"), opt.getOptAsNumber("memlimit"));
+
+
+    GurlsOptionsList* split = new GurlsOptionsList("split");
+    split->addOpt("Xva", new OptMatrix<BigArray<T> >(*Xva));
+    split->addOpt("Yva", new OptMatrix<BigArray<T> >(*Yva));
+    split->addOpt("XvatXva", new OptMatrix<BigArray<T> >(*XvatXva));
+    split->addOpt("XvatYva", new OptMatrix<BigArray<T> >(*XvatYva));
+
+
+    return split;
 }
 
 }
