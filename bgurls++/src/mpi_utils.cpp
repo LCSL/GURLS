@@ -39,9 +39,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "bigmath.h"
+#include "exports.h"
+#include "mpi_utils.h"
+
 
 namespace gurls
 {
+
+
+template<>
+GURLS_EXPORT int MPI_ReduceT(float *sendbuf, float *recvbuf, int count, MPI_Op op, int root, MPI_Comm comm)
+{
+    return MPI_Reduce(sendbuf, recvbuf, count, MPI_FLOAT, op, root, comm);
+}
+
+template<>
+GURLS_EXPORT int MPI_ReduceT(double *sendbuf, double *recvbuf, int count, MPI_Op op, int root, MPI_Comm comm)
+{
+    return MPI_Reduce(sendbuf, recvbuf, count, MPI_DOUBLE, op, root, comm);
+}
+
+template<>
+GURLS_EXPORT int MPI_AllReduceT(float *sendbuf, float *recvbuf, int count, MPI_Op op, MPI_Comm comm)
+{
+    return MPI_Allreduce(sendbuf, recvbuf, count, MPI_FLOAT, op, comm);
+}
+
+template<>
+GURLS_EXPORT int MPI_AllReduceT(double *sendbuf, double *recvbuf, int count, MPI_Op op, MPI_Comm comm)
+{
+    return MPI_Allreduce(sendbuf, recvbuf, count, MPI_DOUBLE, op, comm);
+}
+
+template<>
+GURLS_EXPORT int MPI_BcastT(float *buffer, int count, int root, MPI_Comm comm)
+{
+    return MPI_Bcast(buffer, count, MPI_FLOAT, root, comm);
+}
+
+template<>
+GURLS_EXPORT int MPI_BcastT(double *buffer, int count, int root, MPI_Comm comm)
+{
+    return MPI_Bcast(buffer, count, MPI_DOUBLE, root, comm);
+}
 
 }

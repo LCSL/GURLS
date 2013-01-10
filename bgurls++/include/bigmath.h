@@ -52,19 +52,10 @@
 #include "gmath.h"
 #include "bigarray.h"
 
-#include <mpi/mpi.h>
+#include "mpi_utils.h"
 
 namespace gurls
 {
-
-template<typename T>
-int MPI_ReduceT(T *sendbuf, T *recvbuf, int count, MPI_Op op, int root, MPI_Comm comm);
-
-template<typename T>
-int MPI_AllReduceT(T *sendbuf, T *recvbuf, int count, MPI_Op op, MPI_Comm comm);
-
-template<typename T>
-int MPI_BcastT(T *buffer, int count, int root, MPI_Comm comm);
 
 // AB
 template<typename T>
