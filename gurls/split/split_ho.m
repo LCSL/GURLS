@@ -1,7 +1,18 @@
 function [splits] = split_ho(X, y, opt)
-% [splits] = splits_incbatch(X, y, opt)
+% [splits] = splits_ho(X, y, opt)
 % Expects binary coded 'y', just like all other functions
 
+% INPUTS:
+% -X: not used
+% -y: labels matrix
+% -OPT: structure of options, with the following field with default values
+%       set through the defopt function:
+%       -nholdouts
+%       -hoproportion
+% 
+% OUTPUT: struct array of length OPT.NHOLDOUTS with each element gaving the following fields:
+%   -tr: indices of samples to be used for training
+%   -va: indices of samples to be used for testing
 
 nSplits = opt.nholdouts;
 fraction = 1-opt.hoproportion;

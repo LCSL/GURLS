@@ -32,7 +32,7 @@
 % ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
 
-function [] = gurls (X, y, opt, jobid)
+function [] = bgurls (X, y, opt, jobid)
 
 %% Enums
 IGN = 0; % Ignore

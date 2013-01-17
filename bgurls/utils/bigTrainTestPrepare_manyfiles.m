@@ -20,7 +20,7 @@ function [] = bigTrainTestPrepare_manyfiles(DataDir,files,blocksize,test_hopropo
 % -blocksize = number of samples per block
 % -test_hoproportion = percentage of total samples to be used for testing
 % -val_hoproportion = percentage of training samples to be used for
-% validation
+%  validation
 
 
 list = dir(fullfile(DataDir, '*.mat'));
