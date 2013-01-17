@@ -9,7 +9,7 @@ function [cfr] = bigrls_pegasos(X, bY, opt)
 %	INPUT:
 %		- X : input data bigarray
 %		- Y : labels bigarray
-%		- opt : struct witht he following fields:
+%		- OPT : struct witht he following fields:
 %			- Fields set by other biggruls tasks:
 %				* paramsel.lambdas (set by the bigparamsel_*) routines.
 %			- Fields set through the bigdefopt function:
@@ -19,16 +19,15 @@ function [cfr] = bigrls_pegasos(X, bY, opt)
 %		- W : matrix of coefficient vectors of rls estimator for each class
 %		- C : empty matrix
 %		- X : empty matrix
-				* epochs
 
 
 
-	n = X.NumItems();
-	d = X.Sizes();
-	d = d{1};
+n = X.NumItems();
+d = X.Sizes();
+d = d{1};
 
-	T = bY.Sizes();
-	T = T{1};
+T = bY.Sizes();
+T = T{1};
 
 opt.cfr.W = zeros(d,T);
 opt.cfr.W_sum = zeros(d,T);

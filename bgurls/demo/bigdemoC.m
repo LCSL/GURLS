@@ -1,4 +1,10 @@
-%=== WARNING===
+% Download the ImageNet data from the web. 
+% The data is stored in as many .mat files as the numer of classes.
+% This demo splits the data in training and test set, and prepare the corresponding bigarrays.
+% Then run the bgurls training process on the training set and the bgurls testing
+% process on the test set
+
+%  === WARNING===
 % This script will download over 1 GB of data on your hard drive.
 
 function [] = bigdemoC()

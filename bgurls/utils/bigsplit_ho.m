@@ -1,4 +1,18 @@
 function [vout] = bigsplit_ho(X,y,opt)
+% [splits] = bigsplit_ho(X, y, opt)
+% Splits data into train and validation set
+
+% INPUTS:
+% -X: input data bigarray
+% -y: labels bigarray
+% -OPT: structure of options, with the following field with default values
+%       set through the bigdefopt function:
+%       -nholdouts
+%       -hoproportion
+% 
+% OUTPUT: struct array of length OPT.NHOLDOUTS with each element gaving the following fields:
+%   -tr: indices of samples to be used for training
+%   -va: indices of samples to be used for testing
 
 if isa(X,'bigarray')
 	n = X.NumItems();

@@ -1,3 +1,9 @@
+% This demo uses the BIO data, stored in bio_TrainTest.zip. 
+% The data is in the form of two input data matrices and two outpit labels vectors,
+% one for traning and one for test.
+% Then run the bgurls training process on the training set and the bgurls testing
+% process on the test set
+
 %% Preprocess data
 unzip('bio_TrainTest.zip','bio_TrainTest')
 filenameXtrain = 'bio_TrainTest/Xtr.csv'; %nxd input data matrix for training

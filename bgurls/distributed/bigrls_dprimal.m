@@ -9,7 +9,7 @@ function [cfr] = bigrls_dprimal(bX, bY, opt)
 %	INPUT:
 %		- X : input data bigarray
 %		- Y : labels bigarray
-%		- opt : struct witht he following fields:
+%		- OPTt : struct witht he following fields:
 %			- Fields set by other biggruls tasks:
 %				* paramsel.lambdas (set by the bigparamsel_*) routines.
 %			- Fields set through the bigdefopt function:

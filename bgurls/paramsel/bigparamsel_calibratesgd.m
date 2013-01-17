@@ -1,19 +1,29 @@
 function [params] = bigparamsel_calibratesgd(X, y, opt)
 
+%   bigparamsel_calibratesgd(X, y, opt)
 %	Performs parameter selection when one wants to solve the problem using rls_pegasos.
 %
-% -OPT: structure of options with the following fields with default values  set through the defopt function:
-%		- subsize
-%		- calibfile
-%		- hoperf
-%		- singlelambda
+%	INPUT:
+%		- X : input data bigarray
+%		- Y : labels bigarray
+%		- OPT : struct witht he following fields:
+%			- Fields set through the bigdefopt function:
+%				* nlambda
+%				* hoperf
+%               * subsize
+%               * calibfile
+%               * hoperf
+%               * singlelambda
+%			- Fields that need to be set by hand:
+%				* opt.files.Xva_filename 	: Validation data bigarray
+%				* opt.files.yva_filename 	: Validation labels bigarray
 %
 %   For more information on standard OPT fields
 %   see also defopt
 % 
-% OUTPUTS: structure with the following fields:
-% - lambda: selected value for the regularization parameter
-% - W: rls coefficient vector
+%   OUTPUTS: structure with the following fields:
+%       - lambdas:  selected value for the regularization parameter
+%       - W:        rls coefficient vector
 
 n_estimates = 1;
 	n = X.NumItems();

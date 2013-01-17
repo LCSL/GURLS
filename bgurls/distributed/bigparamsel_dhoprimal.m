@@ -10,12 +10,11 @@ function [vout] = bigparamsel_dhoprimal(X,y,opt)
 %	INPUT:
 %		- X : input data bigarray
 %		- Y : labels bigarray
-%		- opt : struct witht he following fields:
+%		- OPT : struct witht he following fields:
 %			- Fields set through the bigdefopt function:
 %				* nlambdaa
 %				* hoperf
 %			- Fields that need to be set by hand:
-%
 %				* opt.files.Xva_filename 	: Validation data bigarray
 %				* opt.files.yva_filename 	: Validation labels bigarray
 %				* opt.files.XtX_filename 	: Training data covariance matrix file

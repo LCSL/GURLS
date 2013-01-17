@@ -1,6 +1,7 @@
 function [] = bigMatricesBuild(files)
 % Pre-computes and stores matrices XtX, Xty, XvatXva, Xvatyva
-% files = structure containing the fields:
+% INPUTS:
+% -files = structure containing the fields:
 %     -Xtrain_filename = prefix of files that make the bigarray for input
 %       training data
 %     -ytrain_filename = prefix of files that make the bigarray for ouput
