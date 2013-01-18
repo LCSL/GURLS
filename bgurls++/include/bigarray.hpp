@@ -12,6 +12,9 @@
 
 #include <exceptions.h>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/tokenizer.hpp>
+
 #ifdef  USE_BINARY_ARCHIVES
 typedef boost::archive::binary_iarchive iarchive;
 typedef boost::archive::binary_oarchive oarchive;
@@ -399,6 +402,9 @@ void BigArray<T>::readCSV(const std::string& fileName)
 
     std::string line;
 
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    boost::char_separator<char> sep(" ;|,");
+
     while(std::getline(in, line))
     {
         if(!line.empty())
@@ -406,11 +412,9 @@ void BigArray<T>::readCSV(const std::string& fileName)
 
         if(rows == 1)
         {
-            std::istringstream ss(line);
-            std::vector<T> tf;
-            std::copy(std::istream_iterator<T>(ss), std::istream_iterator<T>(), std::back_inserter(tf));
-
-            cols = tf.size();
+            tokenizer tokens(line, sep);
+            for (tokenizer::iterator t_it = tokens.begin(); t_it != tokens.end(); ++t_it)
+                ++cols;
         }
     }
 
@@ -423,20 +427,25 @@ void BigArray<T>::readCSV(const std::string& fileName)
     if(rows == 0 || cols == 0)
         return;
 
+
+    gVec<T> row_vector(cols);
+    T* rv_it = NULL;
+    T* rv_end = row_vector.getData()+cols;
+    tokenizer::iterator t_it;
+
     unsigned long row = 0;
     while (std::getline(in, line))
     {
         if(!line.empty())
         {
-            std::istringstream ss(line);
-            std::vector<T> tf;
-            std::copy(std::istream_iterator<T>(ss), std::istream_iterator<T>(), std::back_inserter(tf));
+            tokenizer tokens(line, sep);
+            for (rv_it = row_vector.getData(), t_it = tokens.begin(); rv_it != rv_end; ++t_it, ++rv_it)
+                    *rv_it = boost::lexical_cast<T>(*t_it);
 
-            if(tf.size() != cols)
+            if(t_it != tokens.end())
                 throw gException(Exception_Inconsistent_Size);
 
-            for(unsigned long i=0; i<cols; ++i)
-                setValue(row, i, tf[i]);
+            setRow(row, row_vector);
 
             ++row;
         }
@@ -471,8 +480,8 @@ void BigArray<T>::init(std::string& fileName, unsigned long r, unsigned long c)
 {
     dataFileName = fileName;
 
-    try
-    {
+//    try
+//    {
         dataFile = new NcFile(fileName, NcFile::replace/*, NcFile::nc4*/);
 
         std::vector<NcDim> dims(2);
@@ -486,11 +495,11 @@ void BigArray<T>::init(std::string& fileName, unsigned long r, unsigned long c)
 
         matrix = dataFile->addVar("mat", getNcType<T>(), dims);
 
-    }
-    catch(NcException& e)
-    {
-        throw gException("Error opening file " + fileName + ": " + e.what());
-    }
+//    }
+//    catch(NcException& e)
+//    {
+//        throw gException("Error opening file " + fileName + ": " + e.what());
+//    }
 }
 
 }

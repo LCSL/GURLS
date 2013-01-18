@@ -60,6 +60,7 @@
 
 #include <mpi/mpi.h>
 
+#include <boost/algorithm/string/erase.hpp>
 
 namespace gurls
 {
@@ -131,7 +132,6 @@ public:
 template <typename T>
 void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& opt, std::string processid, bool hasGurlsProcesses)
 {
-
     int myid;
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
@@ -314,23 +314,23 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                 }
                 else if (!reg1.compare("bigoptimizer"))
                 {
-                    runBigTask<T, BigOptimizer<T> >(X, y, opt, "bigoptimizer", reg2);
+                    runBigTask<T, BigOptimizer<T> >(X, y, opt, "optimizer", reg2);
                 }
                 else if (!reg1.compare("bigparamsel"))
                 {
-                    runBigTask<T, BigParamSelection<T> >(X, y, opt, "bigparamsel", reg2);
+                    runBigTask<T, BigParamSelection<T> >(X, y, opt, "paramsel", reg2);
                 }
                 else if (!reg1.compare("bigpred"))
                 {
-                    runBigTask<T, BigPrediction<T> >(X, y, opt, "bigpred", reg2);
+                    runBigTask<T, BigPrediction<T> >(X, y, opt, "pred", reg2);
                 }
                 else if (!reg1.compare("bigperf"))
                 {
-                    runBigTask<T, BigPerformance<T> >(X, y, opt, "bigperf", reg2);
+                    runBigTask<T, BigPerformance<T> >(X, y, opt, "perf", reg2);
                 }
                 else if (!reg1.compare("bigsplit"))
                 {
-                    runBigTask<T, BigSplit<T> >(X, y, opt, "bigsplit", reg2);
+                    runBigTask<T, BigSplit<T> >(X, y, opt, "split", reg2);
                 }
                 else
                     throw gException(Exception_Invalid_TaskSequence);
@@ -352,6 +352,8 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
                 if(loadOpt == NULL)
                     throw gException("Opt savefile not found");
+
+                boost::algorithm::erase_first(reg1, "big");
                 if(!loadOpt->hasOpt(reg1))
                 {
                     std::string s = "Task " + reg1 + " not found in opt savefile";
@@ -384,6 +386,8 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
             for (unsigned long i = 0; i < seq->size(); ++i)
             {
                 seq->getTaskAt(i, reg1, reg2);
+                boost::algorithm::erase_first(reg1, "big");
+
                 std::cout << "\t" << "[Task " << i << ": " << reg1 << "]: " << reg2 << "... ";
                 std::cout.flush();
 

@@ -77,7 +77,7 @@ public:
         if(usedefopt)
         {
             (*table)["nb_pred"] = new OptNumber(1);
-            (*table)["memlimit"] = new OptNumber(1000000);
+            (*table)["memlimit"] = new OptNumber(std::pow(2, 30)); // default 1 GB
 
             (*table)["shared_dir"] = new OptString(sharedDir);
 
@@ -91,7 +91,7 @@ public:
             files->addOpt("XvatXva_filename", path(sharedDirPath / "XvatXva.nc").native());
             files->addOpt("XvatYva_filename", path(sharedDirPath / "XvatYva.nc").native());
             files->addOpt("XtX_filename", path(sharedDirPath / "XtX.nc").native());
-            files->addOpt("Xty_fileName", path(sharedDirPath / "Xty.nc").native());
+            files->addOpt("Xty_filename", path(sharedDirPath / "Xty.nc").native());
             files->addOpt("pred_filename", path(sharedDirPath / "pred.nc").native());
 
             (*table)["files"] = files;

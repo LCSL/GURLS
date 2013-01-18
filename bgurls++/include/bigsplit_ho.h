@@ -48,6 +48,9 @@
 #include "bigarray.h"
 #include "bigmath.h"
 #include "optmatrix.h"
+#include "mpi_utils.h"
+
+#include <boost/filesystem.hpp>
 
 namespace gurls
 {
@@ -82,22 +85,108 @@ public:
 template<typename T>
 GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt) throw(gException)
 {
-    double hoProportion = opt.getOptAsNumber("hoproportion");
+    T hoProportion = static_cast<T>(opt.getOptAsNumber("hoproportion"));
 
     int numprocs;
     int myid;
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
+    const unsigned long t = Y.cols();
+
+
+    // distributed over examples (n)
+    unsigned long numRows = n/numprocs;
+    unsigned long remainder = (myid == numprocs-1)? (n%numprocs) : 0;
+
+    unsigned long start = myid*numRows;
+    unsigned long end = start + numRows + remainder;
+
+
+    T* work = new T[(numRows+remainder)*t];
+    unsigned long* inds = new unsigned long[numRows+remainder];
+    memset(inds, 0, (numRows+remainder)*sizeof(unsigned long));
+    gMat2D<T> mat(numRows+remainder, t);
+
+    Y.getMatrix(start, 0, mat);
+    indicesOfMax(mat.getData(), mat.rows(), mat.cols(), inds, work, 2);
+
+    delete [] work;
+
+    if(myid == 0)
+        BigArray<unsigned long> indices(opt.getOptAsString("tmpfile"), n, 1);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    BigArray<unsigned long> indices(opt.getOptAsString("tmpfile"));
+    indices.setMatrix(start, 0, inds, numRows+remainder, 1);
+    indices.flush();
+    delete[] inds;
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    // distributed over classes (t)
+    unsigned long numCols = t/numprocs;
+    remainder = (myid == numprocs-1)? (t%numprocs) : 0;
+
+    start = myid*numCols;
+    const unsigned long size = numCols + remainder;
+    end = start + size;
+
+    unsigned long* counts = new unsigned long[size];
+    memset(counts, 0, (size)*sizeof(unsigned long));
+
+    for(unsigned long i=0; i<n; ++i)
+    {
+        unsigned long ind = indices.getValue(i, 0);
+        if(ind >= start && ind < end)
+            ++counts[ind-start];
+    }
+
+
+    unsigned long **classes = new unsigned long*[size];
+    for(unsigned long i=0; i<size; ++i)
+        classes[i] = new unsigned long [counts[i]];
+
+    unsigned long* used = new unsigned long[size];
+    memset(used, 0, (size)*sizeof(unsigned long));
+
+    for(unsigned long i=0; i<n; ++i)
+    {
+        unsigned long ind = indices.getValue(i, 0);
+        if(ind >= start && ind < end)
+        {
+            unsigned long index = ind-start;
+            classes[index][used[index]++] = i;
+        }
+    }
+    delete[] used;
+
+
+    unsigned long* local_hoCounts = new unsigned long[t];
+    memset(local_hoCounts, 0, t*sizeof(unsigned long));
+
+    for(unsigned long i=0; i<size; ++i)
+        local_hoCounts[i+start] = counts[i]*hoProportion;
+
+    unsigned long* hoCounts = new unsigned long[t];
+    MPI_Allreduce(local_hoCounts, hoCounts, t, MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
+    delete[] local_hoCounts;
+
+
     BigArray<T>* Xva;
     BigArray<T>* Yva;
-    BigArray<T>* XvatXva;
-    BigArray<T>* XvatYva;
 
     if(myid == 0)
     {
-        Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"), X.rows(), X.cols()*hoProportion);
-        Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"), Y.rows(), Y.cols()*hoProportion);
+        unsigned long rows = 0;
+        for(unsigned long* it = hoCounts, *end = hoCounts+t; it<end; ++it)
+            rows += *it;
+
+        Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"), rows, d);
+        Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"), rows, t);
 
         MPI_Barrier(MPI_COMM_WORLD);
     }
@@ -109,37 +198,39 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
         Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"));
     }
 
-
-    T* order = new T[std::max(X.cols(), Y.cols())];
-
-
-    if(myid == 0)
-        randperm(X.cols(), order, true, 0);
-
-    MPI_BcastT(order, X.cols(), 0, MPI_COMM_WORLD);
-
-    unsigned long numCols = Xva->cols()/numprocs;
-    unsigned long remainder = (myid == numprocs-1)? (Xva->cols()%numprocs) : 0;
-
-    for(unsigned long i=myid*numCols; i< (myid*numCols+numCols+remainder); ++i)
-        Xva->setColumn(i, X.getColumnn(order[i]));
+    unsigned long row_offset = 0;
+    for(unsigned long i=0; i<start; ++i)
+        row_offset += hoCounts[i];
 
 
+    for(unsigned long i=0; i<size; ++i)
+    {
+        randperm(counts[i], classes[i], false);
 
-    if(myid == 0)
-        randperm(Y.cols(), order, true, 0);
+        for(unsigned long j=0; j<hoCounts[i+start]; ++j)
+        {
+            Xva->setRow(row_offset, X[classes[i][j]]);
+            Yva->setRow(row_offset, Y[classes[i][j]]);
 
-    MPI_BcastT(order, Y.cols(), 0, MPI_COMM_WORLD);
+            ++row_offset;
+        }
+    }
 
-    numCols = X.cols()/numprocs;
-    remainder = (myid == numprocs-1)? (Y.cols()%numprocs) : 0;
-
-    for(unsigned long i=myid*numCols; i< (myid*numCols+numCols+remainder); ++i)
-        Yva->setColumn(i, Y.getColumnn(order[i]));
-
+    Xva->flush();
+    Yva->flush();
 
 
-    delete[] order;
+    for(unsigned long **it = classes, **end= classes+size; it<end; ++it)
+        delete[] *it;
+
+    delete[] classes;
+    delete[] counts;
+    delete[] hoCounts;
+
+    BigArray<T>* XvatXva;
+    BigArray<T>* XvatYva;
+
+    MPI_Barrier(MPI_COMM_WORLD);
 
 
     XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), opt.getOptAsNumber("memlimit"));

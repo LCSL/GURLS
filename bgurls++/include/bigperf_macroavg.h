@@ -135,30 +135,30 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
     const unsigned long block_rows = blockSize + remainder;
 
 
-    gMat2D<T> y_block(block_rows, t);
-    gMat2D<T> ypred_block(block_rows, t);
+    gMat2D<T> *y_block = new gMat2D<T>(block_rows, t);
+    gMat2D<T> *ypred_block = new gMat2D<T>(block_rows, t);
 
 //        y_block = y(i1 : i2, : );
-    Y.getMatrix(myid*blockSize, 0, y_block);
+    Y.getMatrix(myid*blockSize, 0, *y_block);
 
 //        ypred_block = opt.pred(i1 : i2, : );
-    pred.getMatrix(myid*blockSize, 0, ypred_block);
+    pred.getMatrix(myid*blockSize, 0, *ypred_block);
 
-    T* work = new T[y_block.getSize()];
+    T* work = new T[y_block->getSize()];
 
 //        [dummy,IY]= max(y_block,[],2);
-    unsigned long* IY = new unsigned long[y_block.rows()];
-    indicesOfMax(y_block.getData(), y_block.rows(), y_block.cols(), IY, work, 2);
-
+    unsigned long* IY = new unsigned long[y_block->rows()];
+    indicesOfMax(y_block->getData(), y_block->rows(), y_block->cols(), IY, work, 2);
+    delete[] work;
 
 //        [dummy,IYpred]= sort(ypred_block,2,'descend');
-    unsigned long* IYpred = new unsigned long[y_block.getSize()];
-    y_block.resize(0,0);
+    unsigned long* IYpred = new unsigned long[y_block->getSize()];
+    delete y_block;
 
 
     T* values = NULL;
-    sort(ypred_block.getData(), ypred_block.rows(), ypred_block.cols(), &gt, values, IYpred);
-    ypred_block.resize(0,0);
+    sort(ypred_block->getData(), ypred_block->rows(), ypred_block->cols(), &gt, values, IYpred);
+    delete ypred_block;
 
 //        for i=1:size(y_block,1)
     for(unsigned long i=0; i< block_rows; ++i)
@@ -179,6 +179,8 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
 //            n_class(IY(i)) = n_class(IY(i)) + 1;
         ++nClass[index];
     }
+
+    delete[] IYpred;
 
 
     T* allNClass = new T[t];

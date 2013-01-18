@@ -103,7 +103,7 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     const BigArray<T>& Xvatyva = split->getOptValue<OptMatrix<BigArray<T> > >("XvatYva");
 
     BigArray<T>* XtX = matMult_AtB(X, X, opt.getOptAsString("files.XtX_filename"), opt.getOptAsNumber("memlimit"));
-    BigArray<T>* Xty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_fileName"), opt.getOptAsNumber("memlimit"));
+    BigArray<T>* Xty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_filename"), opt.getOptAsNumber("memlimit"));
 
 
 //    K = XtX - XvatXva;
@@ -143,7 +143,6 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
 
     eig_sm(Q, L, d);
 
-
 //	QtXtY = Q'*Xty;
     T* QtXtY = new T[d*t];
     dot(Q, Xty_mat->getData(), QtXtY, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
@@ -182,9 +181,9 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
         rls_eigen(Q, L, QtXtY, W->getData(), guesses[i], n, d, d, d, d, t, work);
 
 //        opt.pred = bigpred_primal(Xva,yva,opt);
+        nestedOpt->removeOpt("pred");
         GurlsOptionsList *ret_pred = primal.execute(Xva, Yva, *nestedOpt);
 
-        nestedOpt->removeOpt("pred");
         nestedOpt->addOpt("pred", ret_pred);
 
 //		opt.perf = opt.hoperf(Xva,yva,opt);
@@ -201,7 +200,7 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     delete nestedOpt;
 
     delete perfClass;
-    delete [] XtX_mat;
+    delete XtX_mat;
     delete [] L;
     delete [] QtXtY;
 

@@ -70,6 +70,9 @@ netCDF::NcType getNcType<double>();
 template<>
 netCDF::NcType getNcType<unsigned long>();
 
+template<>
+netCDF::NcType getNcType<unsigned int>();
+
 
 
 template<typename T>

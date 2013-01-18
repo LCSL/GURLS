@@ -99,13 +99,13 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
 
     //	K = X'*X;
     if(!opt.hasOpt("paramsel.XtX"))
-        bK = matMult_AtB(X, X, opt.getOptAsString("files.XtX_fileName"), opt.getOptAsNumber("memlimit"));
+        bK = matMult_AtB(X, X, opt.getOptAsString("files.XtX_filename"), opt.getOptAsNumber("memlimit"));
     else
         bK = &opt.getOptValue<OptMatrix<BigArray<T> > >("paramsel.XtX");
 
     //	Xty = X'*y;
     if(!opt.hasOpt("paramsel.Xty"))
-        bXty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_fileName"), opt.getOptAsNumber("memlimit"));
+        bXty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_filename"), opt.getOptAsNumber("memlimit"));
     else
         bXty = &opt.getOptValue<OptMatrix<BigArray<T> > >("paramsel.Xty");
 

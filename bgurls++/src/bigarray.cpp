@@ -18,6 +18,15 @@ GURLS_EXPORT  netCDF::NcType getNcType<double>()
 template<>
 GURLS_EXPORT netCDF::NcType getNcType<unsigned long>()
 {
+    if(sizeof(unsigned long) == sizeof(unsigned int))
+        return netCDF::NcUint();
+
+    return netCDF::NcType(NC_UINT64);
+}
+
+template<>
+GURLS_EXPORT netCDF::NcType getNcType<unsigned int>()
+{
     return netCDF::NcUint();
 }
 
