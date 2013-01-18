@@ -63,11 +63,13 @@
 #include "utils.h"
 
 #include "bigarray.h"
+#include "bigmath.h"
 
-#include <bigmath.h>
+#include <boost/filesystem/path.hpp>
 
 using namespace gurls;
 using namespace std;
+using namespace boost::filesystem3;
 
 //typedef float T;
 typedef double T;
@@ -75,12 +77,12 @@ typedef double T;
 
 int main(int argc, char *argv[])
 {
+
     if(argc < 3)
     {
-        cout << "Usage: " << argv[0] << "<input dir> <shared dir> [memory]." << endl;
+        cout << "Usage: " << argv[0] << " <input dir> <shared dir>." << endl;
         cout << "\t - <input dir> is the directory where the bio_TrainTest data files reside" << endl;
         cout << "\t - <shared dir> is a directory accessible by all processes (all processes must be able to access the same path)" << endl;
-        cout << "\t - [memory] is the maximum amount of memory (in bytes) used by bGurls++ to performa a matrix-matrix multiplication" << endl;
 
         return 0;
     }
@@ -91,8 +93,8 @@ int main(int argc, char *argv[])
     cout.width(11);
     cout << fixed << right << endl;
 
-    string input_directory(argv[1]);
-    string shared_directory(argv[2]);
+    path input_directory(argv[1]);
+    path shared_directory(argv[2]);
 
     int numprocs;
     int myid;
@@ -106,28 +108,43 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
 
-//    "Load" bigarrays variables for the training and test set
-
-    BigArray<T> Xtr("Xtr.nc", 0, 0);
-    Xtr.readCSV(input_directory+"/Xtr.csv");
-
-    BigArray<T> Xte("Xte.nc", 0, 0);
-    Xte.readCSV(input_directory+"/Xte.csv");
-
-    BigArray<T> ytr("ytr.nc", 0, 0);
-    ytr.readCSV(input_directory+"/ytr.csv");
-
-    BigArray<T> yte("yte.nc", 0, 0);
-    yte.readCSV(input_directory+"/yte.csv");
-
-
-    BGurlsOptionsList opt("bio_demoB", shared_directory, true);
-    if(argc == 4)
+    if(myid ==0)
     {
-        opt.removeOpt("memlimit");
-        opt.addOpt("memlimit", new OptNumberList(atoi(argv[3])));
+//    "Load" bigarrays variables for the training and test set
+        cout << "Loading Xtr..." << endl;
+        BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native(), 0, 0);
+        Xtr.readCSV(path(input_directory / "Xtr.csv").native());
+//        Xtr.readCSV(path(input_directory / "Xtr.txt").native());
+
+        cout << "Loading Xte..." << endl;
+        BigArray<T> Xte(path(shared_directory / "Xte.nc").native(), 0, 0);
+        Xte.readCSV(path(input_directory / "Xte.csv").native());
+//        Xte.readCSV(path(input_directory / "Xte.txt").native());
+
+        cout << "Loading ytr..." << endl;
+        BigArray<T> ytr(path(shared_directory / "ytr.nc").native(), 0, 0);
+        ytr.readCSV(path(input_directory / "ytr.csv").native());
+//        ytr.readCSV(path(input_directory / "ytr.txt").native());
+
+        cout << "Loading yte..." << endl;
+        BigArray<T> yte(path(shared_directory / "yte.nc").native(), 0, 0);
+        yte.readCSV(path(input_directory / "yte.csv").native());
+//        yte.readCSV(path(input_directory / "yte.txt").native());
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+
+
+    BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native());
+    BigArray<T> Xte(path(shared_directory / "Xte.nc").native());
+    BigArray<T> ytr(path(shared_directory / "ytr.nc").native());
+    BigArray<T> yte(path(shared_directory / "yte.nc").native());
+
+
+    BGurlsOptionsList opt("bio_demoB", shared_directory.native(), true);
+
+    // remove old experiments results
+    boost::filesystem3::remove(path(opt.getOptAsString("savefile")));
 
     OptTaskSequence *seq = new OptTaskSequence();
     *seq << "bigsplit:ho" << "bigparamsel:hoprimal" << "bigoptimizer:rlsprimal" << "bigpred:primal" << "bigperf:macroavg";
@@ -137,11 +154,11 @@ int main(int argc, char *argv[])
     GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
     OptProcess* process1 = new OptProcess();
-    *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore;
+    *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave << GURLS::ignore << GURLS::ignore;
     process->addOpt("one", process1);
 
     OptProcess* process2 = new OptProcess();
-    *process2 << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave;
+    *process2 << GURLS::load << GURLS::load << GURLS::load << GURLS::computeNsave << GURLS::computeNsave;
     process->addOpt("two", process2);
 
     opt.addOpt("processes", process);
@@ -149,26 +166,45 @@ int main(int argc, char *argv[])
     if(myid ==0)
         std::cout << opt << std::endl;
 
+
     std::string jobid1("one");
     std::string jobid2("two");
 
     BGURLS G;
 
 //    Run bgurls on the training set
-
 //    cout << "---Training..." << endl;
     G.run(Xtr, ytr, opt, jobid1);
 //    cout << "---Training done..." << endl;
 
+//    if(myid ==0)
+//        std::cout << opt << std::endl;
 
 //    Run bgurls on the test set
-
 //    cout << "---Testing..." << endl;
     G.run(Xte, yte, opt, jobid2);
 //    cout << "---Testing done..." << endl;
 
     if(myid ==0)
-        std::cout << opt << std::endl;
+    {
+        const gMat2D<T>& acc = opt.getOptValue<OptMatrix<gMat2D<T> > >("perf.acc");
+        const int accs = acc.getSize();
+
+        std::cout.precision(4);
+
+        std::cout << std::endl << "Prediction accurcay is:" << std::endl;
+
+        for(int i=1; i<= accs; ++i)
+            std::cout << "\tClass " << i << "\t";
+
+        std::cout << std::endl;
+
+        for(int i=0; i< accs; ++i)
+            std::cout << "\t" << acc.getData()[i]*100.0 << "%\t";
+
+        std::cout << std::endl;
+
+    }
 
     MPI_Finalize();
 
