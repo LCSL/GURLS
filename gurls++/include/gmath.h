@@ -1046,7 +1046,7 @@ void sort(const T* M, const unsigned long rows, const unsigned long cols, bool(*
     {
         MapType data(pred);
 
-        for (unsigned long j = 0; i < cols; ++j)
+        for (unsigned long j = 0; j < cols; ++j)
         {
             const unsigned long index = i+(cols*j);
             data.insert( std::pair<T,unsigned long>(M[index], index));
@@ -1054,7 +1054,7 @@ void sort(const T* M, const unsigned long rows, const unsigned long cols, bool(*
 
         typename MapType::iterator it = data.begin();
 
-        for (unsigned long j = 0; i < cols; ++j, ++it)
+        for (unsigned long j = 0; j < cols; ++j, ++it)
         {
             const unsigned long index = i+(cols*j);
 

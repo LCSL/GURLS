@@ -15,6 +15,9 @@ typedef boost::archive::text_iarchive iarchive;
 typedef boost::archive::text_oarchive oarchive;
 #endif
 
+#include <boost/lexical_cast.hpp>
+#include <boost/tokenizer.hpp>
+
 #include <fstream>
 #include <string>
 
@@ -732,15 +735,24 @@ void gMat2D<T>::readCSV(const std::string& fileName, bool colMajor)
     unsigned long cols = 0;
 
     std::string line;
+    typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+    boost::char_separator<char> sep(" ;|,");
+
     while (std::getline(in, line))
     {
-        std::istringstream ss(line);
-        std::vector<T> tf;
-        std::copy(std::istream_iterator<T>(ss), std::istream_iterator<T>(), std::back_inserter(tf));
+        if(!line.empty())
+        {
+            std::vector<T> tf;
 
-        matrix.push_back(tf);
-        ++rows;
+            tokenizer tokens(line, sep);
+            for (tokenizer::iterator it = tokens.begin(); it != tokens.end(); ++it)
+                tf.push_back(boost::lexical_cast<T>(*it));
+
+            matrix.push_back(tf);
+            ++rows;
+        }
     }
+
     in.close();
 
     if(!matrix.empty())
