@@ -1,6 +1,6 @@
 function [splits] = split_ho(X, y, opt)
-% [splits] = splits_ho(X, y, opt)
-% Expects binary coded 'y', just like all other functions
+% [splits] = split_ho(X, y, opt)
+% Splits data into train and validation set
 
 % INPUTS:
 % -X: not used

@@ -11,9 +11,8 @@ function [scores] = bigpred_primal(X,y,opt)
 %   fields that need to be set through previous gurls tasks:
 %		- rls.W (set by the rls_* routines)
 %	- Fields that need to be set by hand:
-%
 %		* opt.files.pred_filename 	: prediction bigarray filename
-
+% 
 % 
 % OUTPUT:
 % -scores: bigarray with predicted scores.

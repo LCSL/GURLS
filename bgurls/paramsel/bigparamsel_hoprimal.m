@@ -8,12 +8,11 @@ function [vout] = bigparamsel_hoprimal(X,y,opt)
 %	INPUT:
 %		- X : input data bigarray
 %		- Y : labels bigarray
-%		- opt : struct witht he following fields:
+%		- OPT : struct witht he following fields:
 %			- Fields set through the bigdefopt function:
-%				* nlambdaa
+%				* nlambda
 %				* hoperf
 %			- Fields that need to be set by hand:
-%
 %				* opt.files.Xva_filename 	: Validation data bigarray
 %				* opt.files.yva_filename 	: Validation labels bigarray
 %
@@ -21,7 +20,7 @@ function [vout] = bigparamsel_hoprimal(X,y,opt)
 %		- lambdas 	: values of the regulariazation parameter maximizing the
 %			    	  validation performance (one for each class).	
 %		- forho		: matrix with validation performance for each class and for each value of the paramter.
-%		- guesses	: contains the values tried for the lambda paramter.
+%		- guesses	: contains the values tried for the lambda parameter.
 
 
 

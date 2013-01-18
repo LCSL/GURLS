@@ -8,6 +8,8 @@ function [p] = bigperf_macroavg(X,y,opt)
 % -OPT: structure of options with the following fields (and subfields):
 %   fields that need to be set through previous gurls tasks:
 %       -pred (set by the pred_* routines)
+%   fields that need to be set through the bigdefopt function:
+%       -nb_pred
 % 
 % OUTPUT: struct with the following fields:
 % -acc: array of prediction accuracy for each class

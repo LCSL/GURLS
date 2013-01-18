@@ -1,3 +1,10 @@
+% This demo uses the BIO data, stored in bio_unique.zip. 
+% The data is in the form of an input data matrix and a outpit labels vector, 
+% The data in split into training and test set.
+% Then the bgurls training process is run on the training set and the bgurls testing
+% process on the test set
+
+
 %% Preprocess data
 unzip('bio_unique.zip','bio_unique')
 filenameX = 'bio_unique/X.csv'; %nxd input data matrix
