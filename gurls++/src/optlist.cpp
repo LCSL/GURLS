@@ -160,7 +160,16 @@ void GurlsOptionsList::printAll()
 
 bool GurlsOptionsList::hasOpt(string key) const
 {
-    return table->count(key)>0;
+    //return table->count(key)>0;
+    try
+    {
+        getOpt((key));
+        return true;
+    }
+    catch(gException&)
+    {
+        return false;
+    }
 }
 
 void GurlsOptionsList::removeOpt(string key, bool deleteMembers)
