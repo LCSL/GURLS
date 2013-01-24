@@ -28,6 +28,7 @@ Installation
 
 In the following we assume the the source code of GURLS++ is located at $GURLS_ROOT. 
 
+
 -Installing GURLS++ on Linux 
 
 Below we describe how to build and install GURLS++ on Ubuntu (tested on Ubuntu 10.04). 
@@ -60,16 +61,16 @@ As an example, to install Netlib's Blas and Lapack run the following command:
 	$ cd build 
 	$ ccmake .. 
 
-The last command will show the CMake interface, which must be used to set the values 
-of some variables used for building and installing GURLS++. See the section Configur- 
-ing GURLS++ below for more information on these variables and how to set them to 
-appropriate values. 
+	The last command will show the CMake interface, which must be used to set the values 
+	of some variables used for building and installing GURLS++. See the section "Configuration"
+	below for more information on these variables and how to set them to appropriate values. 
 
 7. Start GURLS++ building
 	$ make 
 
 8. Install GURLS++ to the path defined at configuration time 
 	$ make install
+
 
 - Installing GURLS++ on Windows 
 Below we describe how to build and install GURLS++ on Windows with Visual Studio (tested 
@@ -92,7 +93,7 @@ Under Windows ACML is probably the easiest choice, since they provide the librar
    You will have to set the source directory to the root directory holding GURLS++ source 
    code, and the build directory to the directory created at the previous step. 
    After pressing the configure button, you have to set the values of some variables used for 
-   building and installing GURLS++. See the section Configuring GURLS++ below for more 
+   building and installing GURLS++. See the section "Configuration" below for more 
    information on these variables and how to set them to appropriate values. After having 
    configured the build options, press the generate button to create the solution file. 
 
@@ -104,6 +105,7 @@ Under Windows ACML is probably the easiest choice, since they provide the librar
 
 Configuration
 =============
+
 The configuration step is carried out using CMake. 
 Using the command-line interface you will be presented with a textual menu, where you 
 can change the values of some variables and configure the building settings accordingly. 

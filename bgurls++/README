@@ -69,16 +69,16 @@ For other distributions, the same packages must be installed with the distributi
 	$ cd build 
 	$ ccmake .. 
 
-The last command will show the CMake interface, which must be used to set the values 
-of some variables used for building and installing bGURLS++. See the section Configur- 
-ing bGURLS++ below for more information on these variables and how to set them to 
-appropriate values. 
+	The last command will show the CMake interface, which must be used to set the values 
+	of some variables used for building and installing bGURLS++. See the section "Configuration"
+	below for more information on these variables and how to set them to appropriate values. 
 
 9. Start bGURLS++ building
 	$ make 
 
 10. Install bGURLS++ to the path defined at configuration time 
 	$ make install
+
 
 - Installing bGURLS++ on Windows 
 Below we describe how to build and install bGURLS++ on Windows with Visual Studio (tested 
@@ -109,7 +109,7 @@ with VS Express 2010 on Windows 7 and with VS Express 2008 on Windows Vista).
    You will have to set the source directory to the root directory holding bGURLS++ source 
    code, and the build directory to the directory created at the previous step. 
    After pressing the configure button, you have to set the values of some variables used for 
-   building and installing bGURLS++. See the section Configuring bGURLS++ below for more 
+   building and installing bGURLS++. See the section "Configuration" below for more 
    information on these variables and how to set them to appropriate values. After having 
    configured the build options, press the generate button to create the solution file. 
 
