@@ -137,7 +137,7 @@ else(BUILD_SHARED_LIBS)
     set(LIB_TYPE STATIC)
 endif(BUILD_SHARED_LIBS)
 
-add_definitions( -Wall )
+#add_definitions( -Wall )
 
 
 #set(BUILD_DEPRECATED ON CACHE BOOL "Build deprecated functions and classes")
