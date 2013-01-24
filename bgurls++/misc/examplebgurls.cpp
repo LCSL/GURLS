@@ -65,13 +65,15 @@
 #include "bigarray.h"
 
 
+#include <boost/filesystem/path.hpp>
+
 using namespace gurls;
 using namespace std;
+using namespace boost::filesystem3;
 
 //typedef float T;
 typedef double T;
 
-#include <bigmath.h>
 
 int main(int argc, char *argv[])
 {
