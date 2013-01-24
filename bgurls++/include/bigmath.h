@@ -91,12 +91,15 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
     BigArray<T>* ret;
 
     if(myid == 0)
+    {
         ret = new BigArray<T>(resultFile, n, t);
-
-    MPI_Barrier(MPI_COMM_WORLD);
-
-    if(myid != 0)
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
+    else
+    {
+        MPI_Barrier(MPI_COMM_WORLD);
         ret = new BigArray<T>(resultFile);
+    }
 
 //    T maxBlockSize = std::floor(static_cast<T>(cells)/d);
 //    int numBlocks = static_cast<int>( std::ceil(static_cast<T>(std::max(n,t))/maxBlockSize) );

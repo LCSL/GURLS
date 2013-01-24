@@ -100,12 +100,17 @@ GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     if(myid == 0)
+    {
         bW = new BigArray<T>(opt.getOptAsString("tmpfile"), W);
 
-    MPI_Barrier(MPI_COMM_WORLD);
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
+    else
+    {
+        MPI_Barrier(MPI_COMM_WORLD);
 
-    if(myid != 0)
         bW = new BigArray<T>(opt.getOptAsString("tmpfile"));
+    }
 
 
     BigArray<T>* scores = matMult_AB(X, *bW, opt.getOptAsString("files.pred_filename"), opt.getOptAsNumber("memlimit"));
