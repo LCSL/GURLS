@@ -220,7 +220,7 @@ const OptTaskSequence *OptTaskSequence::dynacast(const GurlsOption *opt)
 void OptTaskSequence::getTaskAt(int index, string &taskdesc, string &taskname)
 {
     if (!isValid((*value)[index], taskdesc, taskname))
-        throw new gException(gurls::Exception_Invalid_TaskSequence);
+        throw gException(gurls::Exception_Invalid_TaskSequence);
 }
 
 unsigned long OptTaskSequence::size()

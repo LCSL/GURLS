@@ -99,24 +99,24 @@ OptMatrixBase::MatrixType getMatrixCellType()
 }
 
 template<>
-OptMatrixBase::MatrixType getMatrixCellType<gMat2D<float> >();
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<float> >();
 
 template<>
-OptMatrixBase::MatrixType getMatrixCellType<gMat2D<double> >();
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<double> >();
 
 template<>
-OptMatrixBase::MatrixType getMatrixCellType<gMat2D<unsigned long> >();
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<unsigned long> >();
 
 #ifdef _BGURLS
 
 template<>
-OptMatrixBase::MatrixType getMatrixCellType<BigArray<float> >();
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<float> >();
 
 template<>
-OptMatrixBase::MatrixType getMatrixCellType<BigArray<double> >();
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<double> >();
 
 template<>
-OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long> >();
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long> >();
 
 #endif
 

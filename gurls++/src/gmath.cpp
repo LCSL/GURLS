@@ -44,7 +44,6 @@
 #include "gmat2d.h"
 #include "gvec.h"
 
-
 namespace gurls {
 
 /**
@@ -223,7 +222,7 @@ GURLS_EXPORT void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgo
 
 
 template<>
-float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND);
+GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND);
 
 /**
   * Specialized version of pinv for float matrices

@@ -247,7 +247,7 @@ GurlsOptionsList* ParamSelSiglam<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         nestedOpt->addOpt("paramsel", paramsel);
 
         paramsel->removeOpt("sigma");
-        paramsel->addOpt("sigma", new OptNumber( sigmamin * pow(q, i)));
+        paramsel->addOpt("sigma", new OptNumber( sigmamin * pow(q, (T)i)));
 
         // 	opt.kernel = kernel_rbf(X,y,opt);
         GurlsOptionsList* retKernel = rbfkernel.execute(X, Y, *nestedOpt);
