@@ -270,8 +270,9 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                     }
                     else
                     {
-                        GurlsOptionsList* ret = new GurlsOptionsList("pred");
-                        ret->load(dataExchangeFile);
+                        GurlsOptionsList* tmp = new GurlsOptionsList("pred");
+                        tmp->load(dataExchangeFile);
+                        ret = tmp;
                     }
 
                     opt.removeOpt("pred");
