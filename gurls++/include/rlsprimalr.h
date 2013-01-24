@@ -109,7 +109,7 @@ GurlsOptionsList* RLSPrimalr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y,
     T *L = new T[d];
     T *V = NULL;
 
-    T k = gurls::round((opt.getOptAsNumber("eig_percentage")*d)/100.0);
+    unsigned long k = static_cast<unsigned long>(gurls::round((opt.getOptAsNumber("eig_percentage")*d)/100.0));
     random_svd(XtX, d, d, Q, L, V, k);
 
     delete[] XtX;

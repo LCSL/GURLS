@@ -189,7 +189,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         {
             loadOpt->load(saveFile);
         }
-        catch(gException & ex)
+        catch(gException & /*ex*/)
         {
             delete loadOpt;
             loadOpt = NULL;

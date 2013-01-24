@@ -114,7 +114,7 @@ GurlsOptionsList* RLSDualr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, c
     T *V = NULL;
 
 //    k = round(opt.eig_percentage*n/100);
-    T k = gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0);
+    unsigned long k = static_cast<unsigned long>(gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0));
     random_svd(K, n, n, Q, L, V, k);
 
 

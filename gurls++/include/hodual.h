@@ -133,7 +133,7 @@ template<typename T>
 void ParamSelHoDualr<T>::eig_function(T* A, T* L, int A_rows_cols, unsigned long n, const GurlsOptionsList &opt)
 {
     T* V = NULL;
-    T k = gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0);
+    unsigned long k = static_cast<unsigned long>(gurls::round((opt.getOptAsNumber("eig_percentage")*n)/100.0));
     random_svd(A, A_rows_cols, A_rows_cols, A, L, V, k);
 }
 

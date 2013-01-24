@@ -86,7 +86,7 @@ public:
  * \return average precision
  */
 template <typename T>
-double precrec_driver(const T* out, const T* gt, const unsigned long N, T* work)
+T precrec_driver(const T* out, const T* gt, const unsigned long N, T* work)
 {
     std::multimap<T, T, LtCompare<T> > data;
 
@@ -156,11 +156,11 @@ double precrec_driver(const T* out, const T* gt, const unsigned long N, T* work)
  * \return average precision
  */
 template <typename T>
-double precrec_driver(const T* out, const T* gt, const unsigned long N)
+T precrec_driver(const T* out, const T* gt, const unsigned long N)
 {
     T* work = new T[4*N];
 
-    double ret = precrec_driver(out, gt, N, work);
+    T ret = precrec_driver(out, gt, N, work);
 
     delete [] work;
 
