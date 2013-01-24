@@ -130,7 +130,7 @@ if(USE_BINARY_ARCHIVES)
     add_definitions(-DUSE_BINARY_ARCHIVES)
 endif(USE_BINARY_ARCHIVES)
 
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
 if(BUILD_SHARED_LIBS)
     set( LIB_TYPE SHARED)
 else(BUILD_SHARED_LIBS)
