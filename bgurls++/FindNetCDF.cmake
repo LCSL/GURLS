@@ -164,7 +164,7 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
                          NO_DEFAULT_PATH)
 
             find_library(NetCDF_CXX_LIBRARY
-                         NAMES netcdf_c++
+                         NAMES netcdf_c++ netcdf_c++4
                          HINTS ${NetCDF_LIBRARY_DIR}
                          NO_DEFAULT_PATH)
 
@@ -187,7 +187,7 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
                              NO_DEFAULT_PATH)
 
                 find_library(NetCDF_CXX_LIBRARY
-                             NAMES netcdf_c++
+                             NAMES netcdf_c++ netcdf_c++4
                              HINTS ${NetCDF_DIR}
                              PATH_SUFFIXES "lib" "Lib"
                              NO_DEFAULT_PATH)
