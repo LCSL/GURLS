@@ -15,8 +15,8 @@
 #include "rlsprimalr.h"
 #include "rlsdualr.h"
 
-#define BOOST_FILESYSTEM_VERSION 3
-#include <boost/filesystem/path.hpp>
+//#define BOOST_FILESYSTEM_VERSION 3
+#include <boost/filesystem/v3/path.hpp>
 #include <boost/filesystem.hpp>
 
 #include <boost/algorithm/string/split.hpp>
@@ -26,7 +26,7 @@
 #include <boost/test/floating_point_comparison.hpp>
 
 
-using namespace boost::filesystem;
+using namespace boost::filesystem3;
 
 namespace gurls
 {
@@ -80,7 +80,7 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
     case StringOption:
     {
         file.seekg (0, std::ios::end);
-        int length = file.tellg();
+		unsigned int length = static_cast<unsigned int>(file.tellg());
         file.seekg (0, std::ios::beg);
 
         char* data = new char[length+1];
@@ -225,16 +225,23 @@ public:
     Data(path dataDirectory, path taskName, bool loadTrainingData)
     {
         path dataPath = dataDirectory / taskName;
+		path::string_type p;
 
         if(loadTrainingData)
         {
-            X = (dataDirectory / path("Xtr.txt")).native();
-            Y = (dataDirectory / path("ytr.txt")).native();
+			p = (dataDirectory / path("Xtr.txt")).native();
+			X = std::string(p.begin(), p.end());
+
+            p = (dataDirectory / path("ytr.txt")).native();
+			Y = std::string(p.begin(), p.end());
         }
         else
         {
-            X = (dataDirectory / path("Xte.txt")).native();
-            Y = (dataDirectory / path("yte.txt")).native();
+			p = (dataDirectory / path("Xte.txt")).native();
+			X = std::string(p.begin(), p.end());
+
+            p = (dataDirectory / path("yte.txt")).native();
+			Y = std::string(p.begin(), p.end());
         }
 
         readIndexFile(dataPath / path("in.txt"), in);
@@ -285,7 +292,7 @@ protected:
     void readIndexFile(path filePath, ListType& list)
     {
         if(!exists(filePath))
-            throw gurls::gException(std::string("Cannot open file ") + filePath.native());
+			throw gurls::gException(std::string("Cannot open file ") + std::string(filePath.native().begin(), filePath.native().end()));
 
         std::ifstream stream( filePath.native().c_str());
 
@@ -330,10 +337,10 @@ public:
             path filePath(path(dataDir / fileName));
 
             if(!exists(filePath))
-                throw gurls::gException(std::string("Cannot open file ") + filePath.native());
+                throw gurls::gException(std::string("Cannot open file ") + std::string(filePath.native().begin(), filePath.native().end()));
 
-            GurlsOption* option = openFile<T>(filePath.native(), it->second);
-            opt->addOpt(fileName.stem().native(), option);
+            GurlsOption* option = openFile<T>(std::string(filePath.native().begin(), filePath.native().end()), it->second);
+            opt->addOpt(fileName.stem().string(), option);
         }
 
         for(typename ListType::iterator it = this->data.in.begin(), end = this->data.in.end(); it != end; ++it)
@@ -343,7 +350,7 @@ public:
             path filePath(path(dataPath / fileName));
 
             if(!exists(filePath))
-                throw gurls::gException(std::string("Cannot open file ") + filePath.native());
+                throw gurls::gException(std::string("Cannot open file ") + std::string(filePath.native().begin(), filePath.native().end()));
 
             std::vector<std::string> strs;
             boost::split(strs, fileName.stem().native(), boost::is_any_of("-"));
@@ -351,9 +358,9 @@ public:
             GurlsOption* option;
 
             if(fileName.stem() == "split-indices" || fileName.stem() == "split-lasts")
-                option = openFile<unsigned long>(filePath.native(), MatrixOption);
+                option = openFile<unsigned long>(std::string(filePath.native().begin(), filePath.native().end()), MatrixOption);
             else
-                option = openFile<T>(filePath.native(), p.second);
+                option = openFile<T>(std::string(filePath.native().begin(), filePath.native().end()), p.second);
 
             GurlsOptionsList* opt_it = this->opt;
             for(unsigned int i=0; i< strs.size()-1; ++i)
@@ -402,7 +409,7 @@ public:
             path filePath(path(dataPath / fileName));
 
             if(!exists(filePath))
-                throw gurls::gException(std::string("Cannot open file ") + filePath.native());
+                throw gurls::gException(std::string("Cannot open file ") + std::string(filePath.native().begin(), filePath.native().end()));
 
             if(fileName.stem() == "perf-forplot")
                 continue;
@@ -433,12 +440,12 @@ public:
 
             if(fileName.stem() == "split-indices" || fileName.stem() == "split-lasts")
             {
-                reference = openFile<unsigned long>(filePath.native(), MatrixOption);
+                reference = openFile<unsigned long>(std::string(filePath.native().begin(), filePath.native().end()), MatrixOption);
                 checkOptions<unsigned long>(*result, *reference);
             }
             else
             {
-                reference = openFile<T>(filePath.native(), p.second);
+                reference = openFile<T>(std::string(filePath.native().begin(), filePath.native().end()), p.second);
 
                 checkOptions<T>(*result, *reference);
             }
