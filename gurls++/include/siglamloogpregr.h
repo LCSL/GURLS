@@ -59,15 +59,30 @@ namespace gurls {
 
 /**
  * \ingroup ParameterSelection
- * \brief ParamSelSiglamLooGPRegr is the sub-class of ParamSelection that implements
+ * \brief ParamSelSiglamLooGPRegr is the sub-class of ParamSelection that implements leave-one-ot parameter selection for Gaussian process regression
  */
 
 template <typename T>
 class ParamSelSiglamLooGPRegr: public ParamSelection<T>{
 
 public:
-    /**
+     /**
+     * Performs parameter selection for Gaussian process regression with the dual formulation with rbf kernel.
+     * The leave-one-out approach is used on a 2-dimensional grid of values for the parameters sigma (kernel) and lambda (regularization)
+     * The performance measure specified by opt.hoperf is maximized.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - nlambda (default)
+     *  - nsigma (default)
+     *  - hoperf (default)
+     *  - kernel (settbale with the class Kernel and its subclasses)
      *
+     * \return adds the field paramsel to opt, which is alist containing the following fields:
+     *  - lambdas = array containing the value of the regularization parameter lambda maximizing the mean validation accuracy over the classes, replicated as many times as the number of classes
+     *  - sigma = values of the kernel parameter maximizing the validation accuracy
+     *  - guesses = array of guesses for the regularization parameter lambda
+     *  - acc = matrix of validation accuracies for each lambda guess and for each class
      */
    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
