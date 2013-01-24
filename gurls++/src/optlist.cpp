@@ -136,7 +136,7 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
         (*table)["verbose"] = new OptNumber(1);
 
         // ======================================================= Version info
-        (*table)["version"] = new OptString("1.0");
+        (*table)["version"] = new OptString("2.0");
 
     }
 
