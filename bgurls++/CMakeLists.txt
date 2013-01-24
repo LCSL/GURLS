@@ -154,7 +154,7 @@ if(USE_BINARY_ARCHIVES)
     add_definitions(-DUSE_BINARY_ARCHIVES)
 endif(USE_BINARY_ARCHIVES)
 
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
 if(BUILD_SHARED_LIBS)
     set( LIB_TYPE SHARED)
 else(BUILD_SHARED_LIBS)
@@ -196,21 +196,31 @@ set(GURLS_LINK_LIBRARIES
 
 set(BUILD_DEMO OFF CACHE BOOL "")
 if(BUILD_DEMO)
+
+	#SET(MATIO_INCLUDE_DIR "" CACHE PATH "Libmatio include dir")
+	#SET(MATIO_LIBRARIES_DIR "" CACHE PATH "Libmatio libraries dir")
+	#set(GURLS_LINK_LIBRARIES_DEMO matio
+    #	${GURLS_LINK_LIBRARIES}
+	#)
+	#include_directories( ${MATIO_INCLUDE_DIR})
+	#link_directories(${MATIO_LIBRARIES_DIR})
+
     add_all_executables(${PROJECT_SOURCE_DIR} ${DEMODIR} ${GURLS_LINK_LIBRARIES})
+
 endif(BUILD_DEMO)
 
-set(BUILD_TEST OFF CACHE BOOL "")
-if(BUILD_TEST)
-    set(BGURLS_DATA_DIR "" CACHE PATH "Path to the bGURLS++ data directory")
-
-    if(BGURLS_DATA_DIR STREQUAL "")
-        message(WARNING, "BGURLS_DATA_DIR value is set to an empty string. Please be sure this is the right configuration for you")
-    endif(BGURLS_DATA_DIR STREQUAL "")
-
-    add_definitions(-DGURLS_DATA_DIR="${BGURLS_DATA_DIR}")
-
-    add_all_executables(${PROJECT_SOURCE_DIR} ${TESTDIR} ${GURLS_LINK_LIBRARIES})
-endif(BUILD_TEST)
+#set(BUILD_TEST OFF CACHE BOOL "")
+#if(BUILD_TEST)
+#    set(BGURLS_DATA_DIR "" CACHE PATH "Path to the bGURLS++ data directory")
+#
+#    if(BGURLS_DATA_DIR STREQUAL "")
+#        message(WARNING, "BGURLS_DATA_DIR value is set to an empty string. Please be sure this is the right configuration for you")
+#    endif(BGURLS_DATA_DIR STREQUAL "")
+#
+#    add_definitions(-DGURLS_DATA_DIR="${BGURLS_DATA_DIR}")
+#
+#    add_all_executables(${PROJECT_SOURCE_DIR} ${TESTDIR} ${GURLS_LINK_LIBRARIES})
+#endif(BUILD_TEST)
 
 set(BUILD_MISC OFF CACHE BOOL "")
 if(BUILD_MISC)
