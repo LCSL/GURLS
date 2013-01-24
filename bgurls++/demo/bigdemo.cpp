@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     if(argc < 3)
     {
         cout << "Usage: " << argv[0] << " <input dir> <shared dir>." << endl;
-        cout << "\t - <input dir> is the directory where the bio_TrainTest data files reside" << endl;
+        cout << "\t - <input dir> is the directory where the bio_TrainTest csv data files reside" << endl;
         cout << "\t - <shared dir> is a directory accessible by all processes (all processes must be able to access the same path)" << endl;
 
         return 0;
@@ -114,22 +114,18 @@ int main(int argc, char *argv[])
         cout << "Loading Xtr..." << endl;
         BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native(), 0, 0);
         Xtr.readCSV(path(input_directory / "Xtr.csv").native());
-//        Xtr.readCSV(path(input_directory / "Xtr.txt").native());
 
         cout << "Loading Xte..." << endl;
         BigArray<T> Xte(path(shared_directory / "Xte.nc").native(), 0, 0);
         Xte.readCSV(path(input_directory / "Xte.csv").native());
-//        Xte.readCSV(path(input_directory / "Xte.txt").native());
 
         cout << "Loading ytr..." << endl;
         BigArray<T> ytr(path(shared_directory / "ytr.nc").native(), 0, 0);
         ytr.readCSV(path(input_directory / "ytr.csv").native());
-//        ytr.readCSV(path(input_directory / "ytr.txt").native());
 
         cout << "Loading yte..." << endl;
         BigArray<T> yte(path(shared_directory / "yte.nc").native(), 0, 0);
         yte.readCSV(path(input_directory / "yte.csv").native());
-//        yte.readCSV(path(input_directory / "yte.txt").native());
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -194,13 +190,14 @@ int main(int argc, char *argv[])
 
         std::cout << std::endl << "Prediction accurcay is:" << std::endl;
 
+        std::cout << "\t";
         for(int i=1; i<= accs; ++i)
-            std::cout << "\tClass " << i << "\t";
+            std::cout << "Class " << i << "\t";
 
-        std::cout << std::endl;
+        std::cout << std::endl << "\t";
 
         for(int i=0; i< accs; ++i)
-            std::cout << "\t" << acc.getData()[i]*100.0 << "%\t";
+            std::cout << acc.getData()[i]*100.0 << "%\t";
 
         std::cout << std::endl;
 
