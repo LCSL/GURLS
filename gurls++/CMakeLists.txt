@@ -69,23 +69,22 @@ endif(CMAKE_COMPILER_IS_GNUCC OR MSVC)
 
 
 set(GURLSLIBRARY gurls++)
-set(SRCDIR src/)
-set(HDRDIR include/)
-set(DEMODIR demo/)
-set(TESTDIR test/)
-set(MISCDIR misc/)
+set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+set(HDRDIR ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+set(DEMODIR ${CMAKE_CURRENT_SOURCE_DIR}/demo/)
+set(TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+set(MISCDIR ${CMAKE_CURRENT_SOURCE_DIR}/misc/)
 
 
-function(add_all_executables ROOTDIR SRCDIR LINK_LIBS)
+function(add_all_executables SRCDIR LINK_LIBS)
 
-    file(GLOB sources RELATIVE ${ROOTDIR} ${SRCDIR}*.cpp)
+    file(GLOB sources ${SRCDIR}*.cpp)
 
     set(executables "")
 
     foreach(source_file ${sources})
 
-        string(REGEX REPLACE ".cpp" "" executable ${source_file})
-        string(REGEX REPLACE ${SRCDIR} "" executable ${executable})
+        get_filename_component(executable "${source_file}" NAME_WE)
 
         set(executables ${executables} ${executable})
 
@@ -107,8 +106,8 @@ function(add_all_executables ROOTDIR SRCDIR LINK_LIBS)
 endfunction(add_all_executables)
 
 
-file(GLOB gurls_headers RELATIVE ${PROJECT_SOURCE_DIR} ${HDRDIR}*.h*)
-file(GLOB gurls_sources RELATIVE ${PROJECT_SOURCE_DIR} ${SRCDIR}*.cpp)
+file(GLOB gurls_headers ${HDRDIR}*.h*)
+file(GLOB gurls_sources ${SRCDIR}*.cpp)
 
 
 set(Boost_USE_MULTITHREADED      ON)
@@ -175,7 +174,7 @@ set(GURLS_LINK_LIBRARIES
 
 set(BUILD_DEMO OFF CACHE BOOL "")
 if(BUILD_DEMO)
-    add_all_executables(${PROJECT_SOURCE_DIR} ${DEMODIR} ${GURLS_LINK_LIBRARIES})
+    add_all_executables(${DEMODIR} ${GURLS_LINK_LIBRARIES})
 endif(BUILD_DEMO)
 
 set(BUILD_TEST OFF CACHE BOOL "")
@@ -188,21 +187,24 @@ if(BUILD_TEST)
 
     add_definitions(-DGURLS_DATA_DIR="${GURLS_DATA_DIR}")
 
-    add_all_executables(${PROJECT_SOURCE_DIR} ${TESTDIR} ${GURLS_LINK_LIBRARIES})
+    add_all_executables(${TESTDIR} ${GURLS_LINK_LIBRARIES})
 endif(BUILD_TEST)
 
 set(BUILD_MISC OFF CACHE BOOL "")
 if(BUILD_MISC)
-    add_all_executables(${PROJECT_SOURCE_DIR} ${MISCDIR} ${GURLS_LINK_LIBRARIES})
+    add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
 endif(BUILD_MISC)
 
 # add a target to generate API documentation with Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
+set(BUILD_DOC OFF CACHE BOOL "Build Doxygen documentation")
+if(BUILD_DOC)
+    find_package(Doxygen REQUIRED)
+
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     add_custom_target(doc
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen" VERBATIM
         )
-endif(DOXYGEN_FOUND)
+endif(BUILD_DOC)
+

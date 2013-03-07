@@ -71,11 +71,11 @@ endif(CMAKE_COMPILER_IS_GNUCC OR MSVC)
 
 
 set(GURLSLIBRARY bgurls++)
-set(SRCDIR src/)
-set(HDRDIR include/)
-set(DEMODIR demo/)
-set(TESTDIR test/)
-set(MISCDIR misc/)
+set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+set(HDRDIR ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+set(DEMODIR ${CMAKE_CURRENT_SOURCE_DIR}/demo/)
+set(TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+set(MISCDIR ${CMAKE_CURRENT_SOURCE_DIR}/misc/)
 
 set(GURLS_SRCDIR ${GURLS_ROOT}/src/)
 set(GURLS_HDRDIR ${GURLS_ROOT}/include/)
@@ -85,16 +85,15 @@ set(GURLS_HDRDIR ${GURLS_ROOT}/include/)
 
 add_definitions( -D_BGURLS )
 
-function(add_all_executables ROOTDIR SRCDIR LINK_LIBS)
+function(add_all_executables SRCDIR LINK_LIBS)
 
-    file(GLOB sources RELATIVE ${ROOTDIR} ${SRCDIR}*.cpp)
+    file(GLOB sources ${SRCDIR}*.cpp)
 
     set(executables "")
 
     foreach(source_file ${sources})
 
-        string(REGEX REPLACE ".cpp" "" executable ${source_file})
-        string(REGEX REPLACE ${SRCDIR} "" executable ${executable})
+        get_filename_component(executable "${source_file}" NAME_WE)
 
         set(executables ${executables} ${executable})
 
@@ -197,15 +196,15 @@ set(GURLS_LINK_LIBRARIES
 set(BUILD_DEMO OFF CACHE BOOL "")
 if(BUILD_DEMO)
 
-	#SET(MATIO_INCLUDE_DIR "" CACHE PATH "Libmatio include dir")
-	#SET(MATIO_LIBRARIES_DIR "" CACHE PATH "Libmatio libraries dir")
-	#set(GURLS_LINK_LIBRARIES_DEMO matio
+    #SET(MATIO_INCLUDE_DIR "" CACHE PATH "Libmatio include dir")
+    #SET(MATIO_LIBRARIES_DIR "" CACHE PATH "Libmatio libraries dir")
+    #set(GURLS_LINK_LIBRARIES_DEMO matio
     #	${GURLS_LINK_LIBRARIES}
-	#)
-	#include_directories( ${MATIO_INCLUDE_DIR})
-	#link_directories(${MATIO_LIBRARIES_DIR})
+    #)
+    #include_directories( ${MATIO_INCLUDE_DIR})
+    #link_directories(${MATIO_LIBRARIES_DIR})
 
-    add_all_executables(${PROJECT_SOURCE_DIR} ${DEMODIR} ${GURLS_LINK_LIBRARIES})
+    add_all_executables(${DEMODIR} ${GURLS_LINK_LIBRARIES})
 
 endif(BUILD_DEMO)
 
@@ -219,21 +218,23 @@ endif(BUILD_DEMO)
 #
 #    add_definitions(-DGURLS_DATA_DIR="${BGURLS_DATA_DIR}")
 #
-#    add_all_executables(${PROJECT_SOURCE_DIR} ${TESTDIR} ${GURLS_LINK_LIBRARIES})
+#    add_all_executables(${TESTDIR} ${GURLS_LINK_LIBRARIES})
 #endif(BUILD_TEST)
 
 set(BUILD_MISC OFF CACHE BOOL "")
 if(BUILD_MISC)
-    add_all_executables(${PROJECT_SOURCE_DIR} ${MISCDIR} ${GURLS_LINK_LIBRARIES})
+    add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
 endif(BUILD_MISC)
 
 # add a target to generate API documentation with Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
+set(BUILD_DOC OFF CACHE BOOL "Build Doxygen documentation")
+if(BUILD_DOC)
+    find_package(Doxygen REQUIRED)
+
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     add_custom_target(doc
         ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating API documentation with Doxygen" VERBATIM
         )
-endif(DOXYGEN_FOUND)
+endif(BUILD_DOC)
