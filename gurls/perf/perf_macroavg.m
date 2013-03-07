@@ -3,7 +3,7 @@ function [p] = perf_macroavg(X, y, opt)
 % Computes the average classification accuracy per class.
 %
 % INPUTS:
-% -X: input data matrix
+% -X: not used
 % -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
 %   fields that need to be set through previous gurls tasks:
