@@ -43,46 +43,123 @@
 #ifndef _GURLS_BIGARRAY_H_
 #define _GURLS_BIGARRAY_H_
 
-#include <netcdf>
+#include <netcdf_par.h>
+
 
 #include <gmat2d.h>
 #include <string>
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
+#include <boost/signal.hpp>
+#include <boost/signals/connection.hpp>
 
 namespace gurls
 {
 
-
 template<typename T>
-netCDF::NcType getNcType()
+nc_type getNcType()
 {
     throw gException(Exception_Unsupported_MatrixType);
 }
 
 template<>
-netCDF::NcType getNcType<float>();
+nc_type getNcType<float>();
 
 template<>
-netCDF::NcType getNcType<double>();
+nc_type getNcType<double>();
 
 template<>
-netCDF::NcType getNcType<unsigned long>();
+nc_type getNcType<unsigned long>();
 
 template<>
-netCDF::NcType getNcType<unsigned int>();
+nc_type getNcType<unsigned int>();
 
+
+template<typename T>
+int nc_put_vara(int ncid, int varid,  const size_t *startp,
+                   const size_t *countp, const T *op)
+{
+    throw gException(Exception_Unsupported_MatrixType);
+}
+
+template<>
+int nc_put_vara<float>(int ncid, int varid,  const size_t *startp,
+                       const size_t *countp, const float *op);
+template<>
+int nc_put_vara<double>(int ncid, int varid,  const size_t *startp,
+                        const size_t *countp, const double *op);
+template<>
+int nc_put_vara<unsigned long>(int ncid, int varid,  const size_t *startp,
+                               const size_t *countp, const unsigned long *op);
+template<>
+int nc_put_vara<unsigned int>(int ncid, int varid,  const size_t *startp,
+                              const size_t *countp, const unsigned int *op);
+
+
+template<typename T>
+int nc_get_vara(int ncid, int varid,  const size_t *startp,
+                const size_t *countp, T *ip)
+{
+    throw gException(Exception_Unsupported_MatrixType);
+}
+
+template<>
+int nc_get_vara<float>(int ncid, int varid,  const size_t *startp,
+                              const size_t *countp, float *ip);
+template<>
+int nc_get_vara<double>(int ncid, int varid,  const size_t *startp,
+                              const size_t *countp, double *ip);
+template<>
+int nc_get_vara<unsigned long>(int ncid, int varid,  const size_t *startp,
+                              const size_t *countp, unsigned long *ip);
+template<>
+int nc_get_vara<unsigned int>(int ncid, int varid,  const size_t *startp,
+                              const size_t *countp, unsigned int *ip);
+
+
+template<typename T>
+int nc_get_var1(int ncid, int varid,  const size_t *indexp, T *op)
+{
+    throw gException(Exception_Unsupported_MatrixType);
+}
+
+template<>
+GURLS_EXPORT int nc_get_var1<float>(int ncid, int varid,  const size_t *indexp, float *op);
+
+template<>
+GURLS_EXPORT int nc_get_var1<double>(int ncid, int varid,  const size_t *indexp, double *op);
+
+template<>
+int nc_get_var1<unsigned long>(int ncid, int varid,  const size_t *indexp, unsigned long *op);
+
+template<>
+int nc_get_var1<unsigned int>(int ncid, int varid,  const size_t *indexp, unsigned int *op);
+
+
+
+template<typename T>
+int nc_put_var1(int ncid, int varid,  const size_t *indexp, const T *op)
+{
+    throw gException(Exception_Unsupported_MatrixType);
+}
+
+template<>
+GURLS_EXPORT int nc_put_var1<float>(int ncid, int varid,  const size_t *indexp, const float *op);
+
+template<>
+GURLS_EXPORT int nc_put_var1<double>(int ncid, int varid,  const size_t *indexp, const double *op);
+
+template<>
+int nc_put_var1<unsigned long>(int ncid, int varid,  const size_t *indexp, const unsigned long *op);
+
+template<>
+int nc_put_var1<unsigned int>(int ncid, int varid,  const size_t *indexp, const unsigned int *op);
 
 
 template<typename T>
 class BigArray: protected gMat2D<T>
 {
-protected:
-    typedef typename netCDF::NcFile NcFile;
-    typedef typename netCDF::NcVar NcVar;
-    typedef typename netCDF::NcDim NcDim;
-    typedef typename netCDF::exceptions::NcException NcException;
 
 public:
 
@@ -103,6 +180,8 @@ public:
     ~BigArray();
 
     void flush();
+
+    void close();
 
     unsigned long rows() const;
 
@@ -164,16 +243,30 @@ public:
     void readCSV(const std::string& fileName);
 
 
+    static void releaseMPIData()
+    {
+        BigArray<T>::releaseSignal()();
+    }
+
 protected:
+
+    static boost::signal0<void> &releaseSignal()
+    {
+        static boost::signal0<void> signal;
+        return signal;
+    }
 
     void loadNC(const std::string &fileName);
 
     void init(std::string& fileName, unsigned long r, unsigned long c);
 
-    NcFile* dataFile;
-    NcVar matrix;
+
+    int dataFile;
+    int matrix;
 
     std::string dataFileName;
+
+    boost::signals::connection connection;
 };
 
 }

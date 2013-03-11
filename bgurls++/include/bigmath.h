@@ -88,18 +88,7 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
 
-    BigArray<T>* ret;
-
-    if(myid == 0)
-    {
-        ret = new BigArray<T>(resultFile, n, t);
-        MPI_Barrier(MPI_COMM_WORLD);
-    }
-    else
-    {
-        MPI_Barrier(MPI_COMM_WORLD);
-        ret = new BigArray<T>(resultFile);
-    }
+    BigArray<T>* ret = new BigArray<T>(resultFile, n, t);
 
 //    T maxBlockSize = std::floor(static_cast<T>(cells)/d);
 //    int numBlocks = static_cast<int>( std::ceil(static_cast<T>(std::max(n,t))/maxBlockSize) );
@@ -145,7 +134,7 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
     delete U;
     delete V;
 
-    ret->flush();
+    MPI_Barrier(MPI_COMM_WORLD);
     return ret;
 
 }
@@ -250,23 +239,13 @@ BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::
     delete [] sum;
 
 
-    BigArray<T>* ret;
-
+    BigArray<T>* ret = new BigArray<T>(resultFile, d, t);
     if(myid == 0)
     {
-        ret = new BigArray<T>(resultFile, d, t);
         ret->setMatrix(0, 0, reduced, d, t);
-        ret->flush();
         delete[] reduced;
-
-        MPI_Barrier(MPI_COMM_WORLD);
     }
-    else
-    {
-        MPI_Barrier(MPI_COMM_WORLD);
-
-        ret = new BigArray<T>(resultFile);
-    }
+    MPI_Barrier(MPI_COMM_WORLD);
 
     return ret;
 
@@ -332,20 +311,13 @@ BigArray<T>* matMult_ABt(BigArray<T>& bU, BigArray<T>& bV,  const std::string& r
     delete[] result;
 
 
-    BigArray<T>* ret;
-
+    BigArray<T>* ret = new BigArray<T>(resultFile, bU.rows(), bV.rows());
     if(myid == 0)
     {
-        ret = new BigArray<T>(resultFile, bU.rows(), bV.rows());
         ret->setMatrix(0, 0, reduced, rows, cols);
-        ret->flush();
         delete[] reduced;
     }
-
     MPI_Barrier(MPI_COMM_WORLD);
-
-    if(myid != 0)
-        ret = new BigArray<T>(resultFile);
 
 
     return ret;

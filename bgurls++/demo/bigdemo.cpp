@@ -108,44 +108,44 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
 
-    if(myid ==0)
-    {
+
 //    "Load" bigarrays variables for the training and test set
+
+    if(myid ==0)
         cout << "Loading Xtr..." << endl;
-        BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native(), 0, 0);
-        Xtr.readCSV(path(input_directory / "Xtr.csv").native());
 
+    BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native(), 0, 0);
+    Xtr.readCSV(path(input_directory / "Xtr.csv").native());
+
+    if(myid ==0)
         cout << "Loading Xte..." << endl;
-        BigArray<T> Xte(path(shared_directory / "Xte.nc").native(), 0, 0);
-        Xte.readCSV(path(input_directory / "Xte.csv").native());
 
+    BigArray<T> Xte(path(shared_directory / "Xte.nc").native(), 0, 0);
+    Xte.readCSV(path(input_directory / "Xte.csv").native());
+
+    if(myid ==0)
         cout << "Loading ytr..." << endl;
-        BigArray<T> ytr(path(shared_directory / "ytr.nc").native(), 0, 0);
-        ytr.readCSV(path(input_directory / "ytr.csv").native());
 
+    BigArray<T> ytr(path(shared_directory / "ytr.nc").native(), 0, 0);
+    ytr.readCSV(path(input_directory / "ytr.csv").native());
+
+    if(myid ==0)
         cout << "Loading yte..." << endl;
-        BigArray<T> yte(path(shared_directory / "yte.nc").native(), 0, 0);
-        yte.readCSV(path(input_directory / "yte.csv").native());
-    }
 
-    MPI_Barrier(MPI_COMM_WORLD);
-
-
-    BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native());
-    BigArray<T> Xte(path(shared_directory / "Xte.nc").native());
-    BigArray<T> ytr(path(shared_directory / "ytr.nc").native());
-    BigArray<T> yte(path(shared_directory / "yte.nc").native());
+    BigArray<T> yte(path(shared_directory / "yte.nc").native(), 0, 0);
+    yte.readCSV(path(input_directory / "yte.csv").native());
 
 
     BGurlsOptionsList opt("bio_demoB", shared_directory.native(), true);
 
     // remove old experiments results
-    boost::filesystem3::remove(path(opt.getOptAsString("savefile")));
+    if(myid == 0)
+        boost::filesystem3::remove(path(opt.getOptAsString("savefile")));
 
     OptTaskSequence *seq = new OptTaskSequence();
     *seq << "bigsplit:ho" << "bigparamsel:hoprimal" << "bigoptimizer:rlsprimal" << "bigpred:primal" << "bigperf:macroavg";
-    opt.addOpt("seq", seq);
 
+    opt.addOpt("seq", seq);
 
     GurlsOptionsList * process = new GurlsOptionsList("processes", false);
 
@@ -167,6 +167,7 @@ int main(int argc, char *argv[])
     std::string jobid2("two");
 
     BGURLS G;
+
 
 //    Run bgurls on the training set
 //    cout << "---Training..." << endl;
@@ -203,6 +204,7 @@ int main(int argc, char *argv[])
 
     }
 
+    BigArray<T>::releaseMPIData();
     MPI_Finalize();
 
     return EXIT_SUCCESS;

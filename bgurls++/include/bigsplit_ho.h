@@ -115,14 +115,8 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
 
     delete [] work;
 
-    if(myid == 0)
-        BigArray<unsigned long> indices(opt.getOptAsString("tmpfile"), n, 1);
-
-    MPI_Barrier(MPI_COMM_WORLD);
-
-    BigArray<unsigned long> indices(opt.getOptAsString("tmpfile"));
+    BigArray<unsigned long> indices(opt.getOptAsString("tmpfile"), n, 1);
     indices.setMatrix(start, 0, inds, numRows+remainder, 1);
-    indices.flush();
     delete[] inds;
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -176,32 +170,18 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
     delete[] local_hoCounts;
 
 
-    BigArray<T>* Xva;
-    BigArray<T>* Yva;
+    unsigned long rows = 0;
+    for(unsigned long* it = hoCounts, *end = hoCounts+t; it<end; ++it)
+        rows += *it;
 
-    if(myid == 0)
-    {
-        unsigned long rows = 0;
-        for(unsigned long* it = hoCounts, *end = hoCounts+t; it<end; ++it)
-            rows += *it;
+    BigArray<T>* Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"), rows, d);
+    BigArray<T>* Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"), rows, t);
+    MPI_Barrier(MPI_COMM_WORLD);
 
-        Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"), rows, d);
-        Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"), rows, t);
-
-        MPI_Barrier(MPI_COMM_WORLD);
-    }
-    else
-    {
-        MPI_Barrier(MPI_COMM_WORLD);
-
-        Xva = new BigArray<T>(opt.getOptAsString("files.Xva_filename"));
-        Yva = new BigArray<T>(opt.getOptAsString("files.Yva_filename"));
-    }
 
     unsigned long row_offset = 0;
     for(unsigned long i=0; i<start; ++i)
         row_offset += hoCounts[i];
-
 
     for(unsigned long i=0; i<size; ++i)
     {
@@ -216,10 +196,6 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
         }
     }
 
-    Xva->flush();
-    Yva->flush();
-
-
     for(unsigned long **it = classes, **end= classes+size; it<end; ++it)
         delete[] *it;
 
@@ -227,14 +203,10 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
     delete[] counts;
     delete[] hoCounts;
 
-    BigArray<T>* XvatXva;
-    BigArray<T>* XvatYva;
-
     MPI_Barrier(MPI_COMM_WORLD);
 
-
-    XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), opt.getOptAsNumber("memlimit"));
-    XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"), opt.getOptAsNumber("memlimit"));
+    BigArray<T>* XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), opt.getOptAsNumber("memlimit"));
+    BigArray<T>* XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"), opt.getOptAsNumber("memlimit"));
 
 
     GurlsOptionsList* split = new GurlsOptionsList("split");

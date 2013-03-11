@@ -128,10 +128,9 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
         file(STRINGS "${netcdf_h}" netcdf_max_var_dims_string REGEX "^#define NC_MAX_VAR_DIMS")
         string(REGEX REPLACE "[^0-9]" "" netcdf_max_var_dims "${netcdf_max_var_dims_string}")
 
-        #message(STATUS "${netcdf_max_dims_string}")
-        #message(STATUS "${netcdf_max_dims}")
-        #message(STATUS "${netcdf_max_vars}")
-        #message(STATUS "${netcdf_max_var_dims}")
+        #message(STATUS "NC_MAX_DIMS = '${netcdf_max_dims}'")
+        #message(STATUS "NC_MAX_VARS = '${netcdf_max_vars}'")
+        #message(STATUS "NC_MAX_VAR_DIMS = '${netcdf_max_var_dims}'")
 
         if (
              ( (netcdf_max_dims EQUAL 65536)  OR (netcdf_max_dims GREATER 65536) ) AND
@@ -163,15 +162,15 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
                          HINTS ${NetCDF_LIBRARY_DIR}
                          NO_DEFAULT_PATH)
 
-            find_library(NetCDF_CXX_LIBRARY
-                         NAMES netcdf_c++ netcdf_c++4
-                         HINTS ${NetCDF_LIBRARY_DIR}
-                         NO_DEFAULT_PATH)
+            #find_library(NetCDF_CXX_LIBRARY
+            #             NAMES netcdf_c++ netcdf_c++4
+            #             HINTS ${NetCDF_LIBRARY_DIR}
+             #            NO_DEFAULT_PATH)
 
         else()
             message(SEND_ERROR "NetCDF_LIBRARY_DIR=${NetCDF_LIBRARY_DIR} does not exist")
             set(NetCDF_LIBRARY "NetCDF_C_LIBRARY-NOTFOUND")
-            set(NetCDF_LIBRARY "NetCDF_CXX_LIBRARY-NOTFOUND")
+            #set(NetCDF_LIBRARY "NetCDF_CXX_LIBRARY-NOTFOUND")
         endif()
 
     else()
@@ -186,16 +185,16 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
                              PATH_SUFFIXES "lib" "Lib"
                              NO_DEFAULT_PATH)
 
-                find_library(NetCDF_CXX_LIBRARY
-                             NAMES netcdf_c++ netcdf_c++4
-                             HINTS ${NetCDF_DIR}
-                             PATH_SUFFIXES "lib" "Lib"
-                             NO_DEFAULT_PATH)
+                #find_library(NetCDF_CXX_LIBRARY
+                #             NAMES netcdf_c++ netcdf_c++4
+                #             HINTS ${NetCDF_DIR}
+                #             PATH_SUFFIXES "lib" "Lib"
+                #             NO_DEFAULT_PATH)
 
             else()
                  message(SEND_ERROR "NetCDF_DIR=${NetCDF_DIR} does not exist")
                  set(NetCDF_LIBRARY "NetCDF_C_LIBRARY-NOTFOUND")
-                 set(NetCDF_LIBRARY "NetCDF_CXX_LIBRARY-NOTFOUND")
+                 #set(NetCDF_LIBRARY "NetCDF_CXX_LIBRARY-NOTFOUND")
             endif()
 
 
@@ -205,9 +204,9 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
                          NAMES netcdf
                          PATH_SUFFIXES ${netcdf_lib_suffixes})
 
-            find_library(NetCDF_CXX_LIBRARY
-                         NAMES netcdf_c++
-                         PATH_SUFFIXES ${netcdf_lib_suffixes})
+            #find_library(NetCDF_CXX_LIBRARY
+            #             NAMES netcdf_c++
+            #             PATH_SUFFIXES ${netcdf_lib_suffixes})
 
 
         endif()
@@ -218,9 +217,9 @@ else(NetCDF_LIBRARIES AND NetCDF_INCLUDE_DIRS)
         message(SEND_ERROR "Can not locate NetCDF C library")
     endif()
 
-    if ( NOT NetCDF_CXX_LIBRARY )
-        message(SEND_ERROR "Can not locate NetCDF CXX library")
-    endif()
+    #if ( NOT NetCDF_CXX_LIBRARY )
+    #    message(SEND_ERROR "Can not locate NetCDF CXX library")
+    #endif()
 
 
 

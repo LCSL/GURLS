@@ -94,27 +94,9 @@ GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray
 {
     const gMat2D<T>& W = opt.getOptValue<OptMatrix<gMat2D<T> >  >("optimizer.W");
 
-    BigArray<T>* bW;
-
-    int myid;
-    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
-
-    if(myid == 0)
-    {
-        bW = new BigArray<T>(opt.getOptAsString("tmpfile"), W);
-
-        MPI_Barrier(MPI_COMM_WORLD);
-    }
-    else
-    {
-        MPI_Barrier(MPI_COMM_WORLD);
-
-        bW = new BigArray<T>(opt.getOptAsString("tmpfile"));
-    }
-
+    BigArray<T>* bW = new BigArray<T>(opt.getOptAsString("tmpfile"), W);
 
     BigArray<T>* scores = matMult_AB(X, *bW, opt.getOptAsString("files.pred_filename"), opt.getOptAsNumber("memlimit"));
-    scores->flush();
 
     delete bW;
 

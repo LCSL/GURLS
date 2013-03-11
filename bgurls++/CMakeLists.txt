@@ -125,7 +125,7 @@ set(gurls_sources ${gurls_sources} ${bgurls_sources})
 
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package( Boost COMPONENTS serialization date_time  filesystem unit_test_framework system REQUIRED)
+find_package( Boost COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
 option(Boost_USE_STATIC_LIBS "Link statically against boost libs" OFF)
 
 if(Boost_FOUND)
@@ -161,7 +161,7 @@ else(BUILD_SHARED_LIBS)
 endif(BUILD_SHARED_LIBS)
 
 add_definitions( -Wall )
-
+add_definitions( -DMPI_INCLUDED)
 
 add_library(${GURLSLIBRARY} ${LIB_TYPE} ${gurls_headers} ${gurls_sources} )
 target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${NetCDF_LIBRARIES})

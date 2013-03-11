@@ -14,6 +14,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
+#include <boost/bind.hpp>
 
 #ifdef  USE_BINARY_ARCHIVES
 typedef boost::archive::binary_iarchive iarchive;
@@ -51,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const BigArray<T>& m)
 }
 
 template <typename T>
-BigArray<T>::BigArray(): gMat2D<T>(), dataFile(NULL), dataFileName("")
+BigArray<T>::BigArray(): gMat2D<T>(), dataFile(0), dataFileName("")
 {
 }
 
@@ -66,18 +67,21 @@ BigArray<T>::BigArray(std::string fileName, unsigned long r, unsigned long c)
 {
     init(fileName, r, c);
 
-    if(r>0 && c>0)
-        setValue(0, 0, 0);
-
-    flush();
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 template <typename T>
 BigArray<T>::BigArray(std::string fileName, const gMat2D<T>& mat)
 {
     init(fileName, mat.rows(), mat.cols());
-    setMatrix(0, 0, mat);
-    flush();
+
+    int myid;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+
+    if(myid ==  0)
+        setMatrix(0, 0, mat);
+
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 template <typename T>
@@ -101,14 +105,23 @@ BigArray<T>::BigArray(const BigArray<T>& other)
 template <typename T>
 BigArray<T>::~BigArray()
 {
-    delete dataFile;
+    nc_close(dataFile);
+    connection.disconnect();
 }
 
 template <typename T>
 void BigArray<T>::flush()
 {
-    delete dataFile;
-    loadNC(dataFileName);
+//    nc_close(dataFile);
+//    loadNC(dataFileName);
+}
+
+template <typename T>
+void BigArray<T>::close()
+{
+
+    nc_close(dataFile);
+    dataFile = 0;
 }
 
 template <typename T>
@@ -143,7 +156,7 @@ gVec<T> BigArray<T>::operator[](unsigned long i) const
 
     gVec<T> ret(this->numcols);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = 0;
     start[1] = i;
@@ -151,7 +164,9 @@ gVec<T> BigArray<T>::operator[](unsigned long i) const
     count[0] = this->numcols;
     count[1] = 1;
 
-    matrix.getVar(start, count, ret.getData());
+    int retval;
+    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, ret.getData())))
+       throw gException("Error reading row");
 
     return ret;
 }
@@ -170,7 +185,7 @@ gVec<T> BigArray<T>::operator() (unsigned long i) const
 
     gVec<T> ret(this->numrows);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = i;
     start[1] = 0;
@@ -178,7 +193,9 @@ gVec<T> BigArray<T>::operator() (unsigned long i) const
     count[0] = 1;
     count[1] = this->numrows;
 
-    matrix.getVar(start, count, ret.getData());
+    int retval;
+    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, ret.getData())))
+       throw gException("Error reading column");
 
     return ret;
 }
@@ -197,12 +214,14 @@ T BigArray<T>::operator() (unsigned long row, unsigned long col) const
 
     T ret;
 
-    std::vector<size_t> start(2), count(2, 1);
+    size_t start[2];
 
     start[0] = col;
     start[1] = row;
 
-    matrix.getVar(start, count, &ret);
+    int retval;
+    if ((retval = nc_get_var1<T>(dataFile, matrix, start, &ret)))
+       throw gException("Error reading value");
 
     return ret;
 }
@@ -224,7 +243,7 @@ void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol
 
     result.resize(numRows, numCols);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = startingCol;
     start[1] = startingRow;
@@ -232,7 +251,9 @@ void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol
     count[0] = numCols;
     count[1] = numRows;
 
-    matrix.getVar(start, count, result.getData());
+    int retval;
+    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, result.getData())))
+       throw gException("Error reading matrix");
 
 }
 
@@ -245,7 +266,7 @@ void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol
     if(startingRow+result.rows() > this->numrows || startingCol+result.cols() > this->numcols)
         throw gException(Exception_Index_Out_of_Bound);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = startingCol;
     start[1] = startingRow;
@@ -253,8 +274,9 @@ void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol
     count[0] = result.cols();
     count[1] = result.rows();
 
-    matrix.getVar(start, count, result.getData());
-
+    int retval;
+    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, result.getData())))
+       throw gException("Error reading matrix");
 }
 
 
@@ -266,12 +288,14 @@ void BigArray<T>::setValue(unsigned long row, unsigned long col, T value)
     if(row >= this->numrows || col >= this->numcols)
         throw gException(Exception_Index_Out_of_Bound);
 
-    std::vector<size_t> start(2), count(2, 1);
+    size_t start[2];
 
     start[0] = col;
     start[1] = row;
 
-    matrix.putVar(start, count, &value);
+    int retval;
+    if ((retval = nc_put_var1<T>(dataFile, matrix, start, &value)))
+        throw gException("Error setting value");
 }
 
 template <typename T>
@@ -289,7 +313,7 @@ void BigArray<T>::setMatrix(unsigned long startingRow, unsigned long startingCol
     if(startingRow+M_rows > this->numrows || startingCol+M_cols > this->numcols)
         throw gException(Exception_Index_Out_of_Bound);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = startingCol;
     start[1] = startingRow;
@@ -297,7 +321,9 @@ void BigArray<T>::setMatrix(unsigned long startingRow, unsigned long startingCol
     count[0] = M_cols;
     count[1] = M_rows;
 
-    matrix.putVar(start, count, M);
+    int retval;
+    if ((retval = nc_put_vara<T>(dataFile, matrix, start, count, M)))
+        throw gException("Error setting matrix");
 }
 
 template <typename T>
@@ -309,7 +335,7 @@ void BigArray<T>::setColumn(unsigned long col, const gVec<T>& value)
     if(value.getSize() != this->numrows)
         throw gException(Exception_Inconsistent_Size);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = col;
     start[1] = 0;
@@ -317,7 +343,9 @@ void BigArray<T>::setColumn(unsigned long col, const gVec<T>& value)
     count[0] = 1;
     count[1] = this->numrows;
 
-    matrix.putVar(start, count, value.getData());
+    int retval;
+    if ((retval = nc_put_vara<T>(dataFile, matrix, start, count, value.getData())))
+        throw gException("Error setting column");
 }
 
 template <typename T>
@@ -329,7 +357,7 @@ void BigArray<T>::setRow(unsigned long row, const gVec<T>& value)
     if(value.getSize() != this->numcols)
         throw gException(Exception_Inconsistent_Size);
 
-    std::vector<size_t> start(2), count(2);
+    size_t start[2], count[2];
 
     start[0] = 0;
     start[1] = row;
@@ -337,7 +365,10 @@ void BigArray<T>::setRow(unsigned long row, const gVec<T>& value)
     count[0] = this->numcols;
     count[1] = 1;
 
-    matrix.putVar(start, count, value.getData());
+    int retval;
+    if ((retval = nc_put_vara<T>(dataFile, matrix, start, count, value.getData())))
+        throw gException("Error setting row");
+
 }
 
 
@@ -392,67 +423,81 @@ void BigArray<T>::load(Archive & ar, const unsigned int /* file_version */)
 template <typename T>
 void BigArray<T>::readCSV(const std::string& fileName)
 {
-    std::ifstream in(fileName.c_str());
-
-    if(!in.is_open())
-        throw gurls::gException("Cannot open file " + fileName);
+    int myid;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     unsigned long rows = 0;
     unsigned long cols = 0;
 
-    std::string line;
-
     typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
     boost::char_separator<char> sep(" ;|,");
+    std::string line;
 
-    while(std::getline(in, line))
+    if(myid == 0)
     {
-        if(!line.empty())
-            ++rows;
+        std::ifstream in(fileName.c_str());
 
-        if(rows == 1)
+        if(!in.is_open())
+            throw gurls::gException("Cannot open file " + fileName);
+
+        while(std::getline(in, line))
         {
-            tokenizer tokens(line, sep);
-            for (tokenizer::iterator t_it = tokens.begin(); t_it != tokens.end(); ++t_it)
-                ++cols;
+            if(!line.empty())
+                ++rows;
+
+            if(rows == 1)
+            {
+                tokenizer tokens(line, sep);
+                for (tokenizer::iterator t_it = tokens.begin(); t_it != tokens.end(); ++t_it)
+                    ++cols;
+            }
         }
+
+        in.close();
     }
 
-    in.clear();
-    in.seekg (0, std::ios_base::beg);
+    MPI_Bcast(&rows, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&cols, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
 
-    delete dataFile;
+    nc_close(dataFile);
     init(dataFileName, rows, cols);
 
     if(rows == 0 || cols == 0)
         return;
 
-
-    gVec<T> row_vector(cols);
-    T* rv_it = NULL;
-    T* rv_end = row_vector.getData()+cols;
-    tokenizer::iterator t_it;
-
-    unsigned long row = 0;
-    while (std::getline(in, line))
+    if(myid == 0)
     {
-        if(!line.empty())
+        std::ifstream in(fileName.c_str());
+
+        if(!in.is_open())
+            throw gurls::gException("Cannot open file " + fileName);
+
+        gVec<T> row_vector(cols);
+        T* rv_it = NULL;
+        T* rv_end = row_vector.getData()+cols;
+        tokenizer::iterator t_it;
+
+        unsigned long row = 0;
+        while (std::getline(in, line))
         {
-            tokenizer tokens(line, sep);
-            for (rv_it = row_vector.getData(), t_it = tokens.begin(); rv_it != rv_end; ++t_it, ++rv_it)
-                    *rv_it = boost::lexical_cast<T>(*t_it);
+            if(!line.empty())
+            {
+                tokenizer tokens(line, sep);
+                for (rv_it = row_vector.getData(), t_it = tokens.begin(); rv_it != rv_end; ++t_it, ++rv_it)
+                        *rv_it = boost::lexical_cast<T>(*t_it);
 
-            if(t_it != tokens.end())
-                throw gException(Exception_Inconsistent_Size);
+                if(t_it != tokens.end())
+                    throw gException(Exception_Inconsistent_Size);
 
-            setRow(row, row_vector);
+                setRow(row, row_vector);
 
-            ++row;
+                ++row;
+            }
         }
+        in.close();
     }
 
-    in.close();
-    flush();
+    MPI_Barrier(MPI_COMM_WORLD);
 }
 
 
@@ -460,19 +505,34 @@ template <typename T>
 void BigArray<T>::loadNC(const std::string &fileName)
 {
     dataFileName = fileName;
-    try
-    {
-        dataFile = new NcFile(fileName, NcFile::write/*, NcFile::nc4*/);
 
-        this->numrows = dataFile->getDim("cols").getSize();
-        this->numcols = dataFile->getDim("rows").getSize();
+    connection.disconnect();
+    connection = releaseSignal().connect(boost::bind(&gurls::BigArray<T>::close, this));
 
-        matrix = dataFile->getVar("mat");
-    }
-    catch(NcException& e)
-    {
-        throw gException("Error opening file " + fileName + ": " + e.what());
-    }
+    std::string errorString = "Error opening file " + fileName + ":";
+    int retval;
+    char buf[NC_MAX_NAME+1];
+
+    if((retval = nc_open_par(fileName.c_str(), NC_MPIIO|NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &dataFile)))
+        throw gException(errorString);
+
+
+    int dims[2];
+    if((retval = nc_inq_dimid(dataFile, "rows", &dims[0])))
+        throw gException(errorString);
+    if((retval = nc_inq_dimid(dataFile, "cols", &dims[1])))
+        throw gException(errorString);
+
+
+    if((retval = nc_inq_dim(dataFile, dims[0], buf, &(this->numcols))))
+        throw gException(errorString);
+    if((retval = nc_inq_dim(dataFile, dims[1], buf, &(this->numrows))))
+        throw gException(errorString);
+
+
+    if((retval = nc_inq_varid(dataFile, "mat", &matrix)))
+        throw gException(errorString);
+
 }
 
 template <typename T>
@@ -480,26 +540,31 @@ void BigArray<T>::init(std::string& fileName, unsigned long r, unsigned long c)
 {
     dataFileName = fileName;
 
-//    try
-//    {
-        dataFile = new NcFile(fileName, NcFile::replace/*, NcFile::nc4*/);
+    connection.disconnect();
+    connection = releaseSignal().connect(boost::bind(&gurls::BigArray<T>::close, this));
 
-        std::vector<NcDim> dims(2);
+    std::string errorString = "Error opening file " + fileName + ":";
+    int retval;
 
-        // gurls++ uses column-major order while netCDF uses row-major
-        dims[1] = dataFile->addDim("cols", r);
-        this->numrows = r;
+    if((retval = nc_create_par(fileName.c_str(), NC_MPIIO|NC_NETCDF4|NC_CLOBBER,  MPI_COMM_WORLD, MPI_INFO_NULL, &dataFile)))
+        throw gException(errorString);
 
-        dims[0] = dataFile->addDim("rows", c);
-        this->numcols = c;
+    int dims[2];
 
-        matrix = dataFile->addVar("mat", getNcType<T>(), dims);
+    if ((retval = nc_def_dim(dataFile, "rows", c, &dims[0])))
+       throw gException(errorString);
+    if ((retval = nc_def_dim(dataFile, "cols", r, &dims[1])))
+       throw gException(errorString);
 
-//    }
-//    catch(NcException& e)
-//    {
-//        throw gException("Error opening file " + fileName + ": " + e.what());
-//    }
+    this->numrows = r;
+    this->numcols = c;
+
+    if ((retval = nc_def_var(dataFile, "mat", getNcType<T>(), 2, dims, &this->matrix)))
+        throw gException(errorString);
+
+    if(nc_enddef(dataFile))
+        throw gException(errorString);
+
 }
 
 }
