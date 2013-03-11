@@ -650,6 +650,15 @@ template<>
 GURLS_EXPORT bool gt(double a, double b);
 
 /**
+  * "Greater than or equals" operator between two scalars
+  */
+template<typename T>
+bool gte(T a, T b)
+{
+    return gt(a,b) || eq(a,b);
+}
+
+/**
   * "Less or equal than" operator between two scalars
   */
 template<typename T>
@@ -1048,15 +1057,15 @@ void sort(const T* M, const unsigned long rows, const unsigned long cols, bool(*
 
         for (unsigned long j = 0; j < cols; ++j)
         {
-            const unsigned long index = i+(cols*j);
-            data.insert( std::pair<T,unsigned long>(M[index], index));
+            const unsigned long index = i+(rows*j);
+            data.insert( std::pair<T,unsigned long>(M[index], j));
         }
 
         typename MapType::iterator it = data.begin();
 
         for (unsigned long j = 0; j < cols; ++j, ++it)
         {
-            const unsigned long index = i+(cols*j);
+            const unsigned long index = i+(rows*j);
 
             if(values != NULL)
                 values[index] = it->first;
@@ -1366,8 +1375,8 @@ void randperm(const unsigned long n, T* seq, bool generate = true, unsigned long
             *it = val++;
     }
 
-    for(unsigned long i=0; i<n; ++i)
-        std::swap(seq[rand()%n], seq[rand()%n]);
+//    for(unsigned long i=0; i<n; ++i)
+//        std::swap(seq[rand()%n], seq[rand()%n]);
 }
 
 /**

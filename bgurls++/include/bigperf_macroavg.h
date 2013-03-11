@@ -155,9 +155,8 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
     unsigned long* IYpred = new unsigned long[y_block->getSize()];
     delete y_block;
 
-
     T* values = NULL;
-    sort(ypred_block->getData(), ypred_block->rows(), ypred_block->cols(), &gt, values, IYpred);
+    sort(ypred_block->getData(), ypred_block->rows(), ypred_block->cols(), &gte, values, IYpred);
     delete ypred_block;
 
 //        for i=1:size(y_block,1)
@@ -165,11 +164,11 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
     {
         const unsigned long index = IY[i];
 
-//            flatcost(IY(i)) = flatcost(IY(i)) + ~ismember(IY(i),IYpred(i,1:nb_pred));
+//            flatcost(IY(i)) = flatcost(IY(i)) + ismember(IY(i),IYpred(i,1:nb_pred));
         const unsigned long value = IY[i];
         for(unsigned long j=0; j<nb_pred; ++j)
         {
-            if(IYpred[i+(t*j)] == value)
+            if(IYpred[i+(block_rows*j)] == value)
             {
                 ++flatCost[index];
                 break;
@@ -182,7 +181,6 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
 
     delete[] IYpred;
 
-
     T* allNClass = new T[t];
     MPI_AllReduceT(nClass, allNClass, t, MPI_SUM, MPI_COMM_WORLD);
     delete[] nClass;
@@ -191,15 +189,12 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
     MPI_AllReduceT(flatCost, allFlatCost, t, MPI_SUM, MPI_COMM_WORLD);
     delete[] flatCost;
 
-//    p.acc = 1-(flatcost./n_class);
+
+//    p.acc = (flatcost./n_class);
     gMat2D<T>* acc_mat = new gMat2D<T>(1, t);
-    set(acc_mat->getData(), (T)1.0, t);
 
-    rdivide(allFlatCost, allNClass, allFlatCost, t);
+    rdivide(allFlatCost, allNClass, acc_mat->getData(), t);
     delete[] allNClass;
-
-
-    axpy(t, (T)-1.0, allFlatCost, 1, acc_mat->getData(), 1);
     delete[] allFlatCost;
 
 
@@ -207,7 +202,7 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
     perf->addOpt("acc", acc_opt);
 
 
-//    p.forho = 1-(flatcost./n_class);
+//    p.forho = (flatcost./n_class);
     OptMatrix<gMat2D<T> >* forho_opt = new OptMatrix<gMat2D<T> >(*(new gMat2D<T>(*acc_mat)));
     perf->addOpt("forho", forho_opt);
 
