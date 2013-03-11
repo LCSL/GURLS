@@ -1375,8 +1375,8 @@ void randperm(const unsigned long n, T* seq, bool generate = true, unsigned long
             *it = val++;
     }
 
-//    for(unsigned long i=0; i<n; ++i)
-//        std::swap(seq[rand()%n], seq[rand()%n]);
+    for(unsigned long i=0; i<n; ++i)
+        std::swap(seq[rand()%n], seq[rand()%n]);
 }
 
 /**
