@@ -95,6 +95,8 @@ public:
 template <typename T>
 GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const BigArray<T> &Y, const GurlsOptionsList &opt)
 {
+    int myid;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     const GurlsOptionsList* split = opt.getOptAs<GurlsOptionsList>("split");
     const BigArray<T>& Xva = split->getOptValue<OptMatrix<BigArray<T> > >("Xva");
@@ -106,28 +108,32 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     BigArray<T>* Xty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_filename"), opt.getOptAsNumber("memlimit"));
 
 
-//    K = XtX - XvatXva;
-    gMat2D<T>* XtX_mat = new gMat2D<T>(XtX->rows(), XtX->cols());
-    XtX->getMatrix(0,0, *XtX_mat);
-//    delete XtX;
+    gMat2D<T>* XtX_mat = NULL;
+    gMat2D<T>* Xty_mat = NULL;
 
-    gMat2D<T>* XvatXva_mat = new gMat2D<T>(XvatXva.rows(), XvatXva.cols());
-    XvatXva.getMatrix(0,0, *XvatXva_mat);
+    if(myid == 0)
+    {
+//        K = XtX - XvatXva;
+        XtX_mat = new gMat2D<T>(XtX->rows(), XtX->cols());
+        XtX->getMatrix(0,0, *XtX_mat);
 
-    axpy(XtX_mat->getSize(), (T)-1.0, XvatXva_mat->getData(), 1, XtX_mat->getData(), 1);
-    delete XvatXva_mat;
+        gMat2D<T>* XvatXva_mat = new gMat2D<T>(XvatXva.rows(), XvatXva.cols());
+        XvatXva.getMatrix(0,0, *XvatXva_mat);
 
-//  Xty = Xty - Xvatyva;
-    gMat2D<T>* Xty_mat = new gMat2D<T>(Xty->rows(), Xty->cols());
-    Xty->getMatrix(0,0, *Xty_mat);
-//    delete Xty;
+        axpy(XtX_mat->getSize(), (T)-1.0, XvatXva_mat->getData(), 1, XtX_mat->getData(), 1);
+        delete XvatXva_mat;
 
-    gMat2D<T>* Xvatyva_mat = new gMat2D<T>(Xvatyva.rows(), Xvatyva.cols());
-    Xvatyva.getMatrix(0,0, *Xvatyva_mat);
 
-    axpy(Xty_mat->getSize(), (T)-1.0, Xvatyva_mat->getData(), 1, Xty_mat->getData(), 1);
-    delete Xvatyva_mat;
+//        Xty = Xty - Xvatyva;
+        Xty_mat = new gMat2D<T>(Xty->rows(), Xty->cols());
+        Xty->getMatrix(0,0, *Xty_mat);
 
+        gMat2D<T>* Xvatyva_mat = new gMat2D<T>(Xvatyva.rows(), Xvatyva.cols());
+        Xvatyva.getMatrix(0,0, *Xvatyva_mat);
+
+        axpy(Xty_mat->getSize(), (T)-1.0, Xvatyva_mat->getData(), 1, Xty_mat->getData(), 1);
+        delete Xvatyva_mat;
+    }
 
     const unsigned long n = X.rows() - Xva.rows();
     const unsigned long d = X.cols();
@@ -136,20 +142,35 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
 
     int tot = static_cast<int>(std::ceil( opt.getOptAsNumber("nlambda")));
 
+    T* Q = NULL;
+    T *L = NULL;
+    T* QtXtY = NULL;
 
-//	[Q,L] = eig(K);
-    T* Q = XtX_mat->getData();
-    T *L = new T[d];
+    gMat2D<T>* guesses_mat = new gMat2D<T>(1, tot);
 
-    eig_sm(Q, L, d);
+    if(myid == 0)
+    {
+        //	[Q,L] = eig(K);
+        Q = XtX_mat->getData();
+        L = new T[d];
 
-//	QtXtY = Q'*Xty;
-    T* QtXtY = new T[d*t];
-    dot(Q, Xty_mat->getData(), QtXtY, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
-    delete Xty_mat;
+        eig_sm(Q, L, d);
 
-//	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
-    T* guesses = lambdaguesses(L, d, std::min(d, n), n, tot, (T)(opt.getOptAsNumber("smallnumber")));
+        //	QtXtY = Q'*Xty;
+        QtXtY = new T[d*t];
+        dot(Q, Xty_mat->getData(), QtXtY, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+        delete Xty_mat;
+
+        //	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
+        T* guesses = lambdaguesses(L, d, std::min(d, n), n, tot, (T)(opt.getOptAsNumber("smallnumber")));
+        copy(guesses_mat->getData(), guesses, tot);
+        delete[] guesses;
+    }
+
+    T* guesses = guesses_mat->getData();
+    MPI_BcastT<T>(guesses, tot, 0, MPI_COMM_WORLD);
+
 
 //	ap = zeros(tot,T);
     gMat2D<T>* ap_mat = new gMat2D<T>(tot, t);
@@ -166,19 +187,31 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
     nestedOpt->addOpt("optimizer",optimizer);
 
-    T* work = new T[d*(d+1)];
+    T* work = NULL;
+    gMat2D<T> *W_mat = NULL;
 
-    gMat2D<T> *W = new gMat2D<T>(d, t);
-    optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
+    if(myid == 0)
+    {
+        work = new T[d*(d+1)];
+        W_mat = new gMat2D<T>(d, t);
+    }
+
+    BigArray<T>* W = new BigArray<T>(opt.getOptAsString("files.optimizer_W_filename"), d, t);
+    optimizer->addOpt("W", new OptMatrix<BigArray<T> >(*W));
 
     BigPredPrimal< T > primal;
     BigPerformance<T>* perfClass = BigPerformance<T>::factory(opt.getOptAsString("hoperf"));
 
-
     for(int i=0; i<tot; ++i)
     {
+        if(myid == 0)
+        {
 //        opt.rls.W = rls_eigen(Q,L,QtXtY,guesses(i),n);
-        rls_eigen(Q, L, QtXtY, W->getData(), guesses[i], n, d, d, d, d, t, work);
+            rls_eigen(Q, L, QtXtY, W_mat->getData(), guesses[i], n, d, d, d, d, t, work);
+            W->setMatrix(0, 0, *W_mat);
+        }
+
+        MPI_Barrier(MPI_COMM_WORLD);
 
 //        opt.pred = bigpred_primal(Xva,yva,opt);
         nestedOpt->removeOpt("pred");
@@ -194,15 +227,20 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
         copy(ap+i, forho_vec.getData(), t, tot, 1);
 
         delete ret_perf;
+
     }
 
-    delete [] work;
     delete nestedOpt;
-
     delete perfClass;
-    delete XtX_mat;
-    delete [] L;
-    delete [] QtXtY;
+
+    if(myid ==0)
+    {
+        delete W_mat;
+        delete [] work;
+        delete XtX_mat;
+        delete [] L;
+        delete [] QtXtY;
+    }
 
 
     GurlsOptionsList* paramsel;
@@ -245,10 +283,6 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     paramsel->addOpt("forho", new OptMatrix<gMat2D<T> >(*ap_mat));
 
 //	vout.guesses = guesses;
-    gMat2D<T>* guesses_mat = new gMat2D<T>(1, tot);
-    copy(guesses_mat->getData(), guesses, tot);
-    delete[] guesses;
-
     paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
 

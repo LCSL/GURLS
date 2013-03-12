@@ -93,8 +93,6 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
     int myid;
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
-    const std::string tempFileName = opt.getOptAsString("tmpfile");
-
     const BigArray<T> *bK, *bXty;
 
     //	K = X'*X;
@@ -109,7 +107,11 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
     else
         bXty = &opt.getOptValue<OptMatrix<BigArray<T> > >("paramsel.Xty");
 
-    gMat2D<T> *W;
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
+    const unsigned long t = Y.cols();
+
+    BigArray<T>* W = new BigArray<T>(opt.getOptAsString("files.optimizer_W_filename"), d, t);
 
     if(myid == 0)
     {
@@ -120,23 +122,12 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
         const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
         T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
 
-        const unsigned long n = X.rows();
-        const unsigned long d = X.cols();
-        const unsigned long t = Y.cols();
+        gMat2D<T> *W_mat = rls_primal_driver(K.getData(), Xty.getData(), n, d, t, lambda);
 
-        W = rls_primal_driver(K.getData(), Xty.getData(), n, d, t, lambda);
-        W->save(tempFileName);
-
-        MPI_Barrier(MPI_COMM_WORLD);
+        W->setMatrix(0,0,*W_mat);
+        delete W_mat;
     }
-    else
-    {
-        W = new gMat2D<T>();
 
-        MPI_Barrier(MPI_COMM_WORLD);
-
-        W->load(tempFileName);
-    }
 
     if(!opt.hasOpt("paramsel.XtX"))
         delete bK;
@@ -146,15 +137,14 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
 
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
 
-    optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
+    optimizer->addOpt("W", new OptMatrix<BigArray<T> >(*W));
 
-    gMat2D<T>* emptyC = new gMat2D<T>();
-    optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
+    BigArray<T>* emptyC = new BigArray<T>(opt.getOptAsString("files.optimizer_C_filename"), 0, 0);
+    optimizer->addOpt("C", new OptMatrix<BigArray<T> >(*emptyC));
 
     //	cfr.X = [];
-    gMat2D<T>* emptyX = new gMat2D<T>();
-    optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
-
+    BigArray<T>* emptyX = new BigArray<T>(opt.getOptAsString("files.optimizer_X_filename"), 0, 0);
+    optimizer->addOpt("X", new OptMatrix<BigArray<T> >(*emptyX));
 
     return optimizer;
 }

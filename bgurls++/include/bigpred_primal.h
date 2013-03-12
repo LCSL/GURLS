@@ -92,13 +92,9 @@ public:
 template <typename T>
 GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& /*Y*/, const GurlsOptionsList &opt)
 {
-    const gMat2D<T>& W = opt.getOptValue<OptMatrix<gMat2D<T> >  >("optimizer.W");
+    const BigArray<T>& W = opt.getOptValue<OptMatrix<BigArray<T> >  >("optimizer.W");
 
-    BigArray<T>* bW = new BigArray<T>(opt.getOptAsString("tmpfile"), W);
-
-    BigArray<T>* scores = matMult_AB(X, *bW, opt.getOptAsString("files.pred_filename"), opt.getOptAsNumber("memlimit"));
-
-    delete bW;
+    BigArray<T>* scores = matMult_AB(X, W, opt.getOptAsString("files.pred_filename"), opt.getOptAsNumber("memlimit"));
 
     GurlsOptionsList* ret = new GurlsOptionsList("pred");
     ret->addOpt("pred", new OptMatrix<BigArray<T> >(*scores));

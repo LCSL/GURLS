@@ -93,6 +93,9 @@ public:
             files->addOpt("XtX_filename", path(sharedDirPath / "XtX.nc").native());
             files->addOpt("Xty_filename", path(sharedDirPath / "Xty.nc").native());
             files->addOpt("pred_filename", path(sharedDirPath / "pred.nc").native());
+            files->addOpt("optimizer_W_filename", path(sharedDirPath / "optimizzer_W.nc").native());
+            files->addOpt("optimizer_C_filename", path(sharedDirPath / "optimizzer_C.nc").native());
+            files->addOpt("optimizer_X_filename", path(sharedDirPath / "optimizzer_X.nc").native());
 
             (*table)["files"] = files;
 
