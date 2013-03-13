@@ -112,7 +112,7 @@ file(GLOB gurls_sources ${SRCDIR}*.cpp)
 
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package( Boost COMPONENTS serialization date_time  filesystem unit_test_framework system REQUIRED)
+find_package( Boost 1.46.0 COMPONENTS serialization date_time  filesystem unit_test_framework system REQUIRED)
 option(Boost_USE_STATIC_LIBS "Link statically against boost libs" OFF)
 
 if(Boost_FOUND)

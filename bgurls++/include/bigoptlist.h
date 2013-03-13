@@ -72,7 +72,7 @@ public:
       */
     BGurlsOptionsList(const std::string& ExpName, const std::string& sharedDir, bool usedefopt = false) : GurlsOptionsList(ExpName, usedefopt)
     {
-        using namespace boost::filesystem3;
+        using namespace boost::filesystem;
 
         if(usedefopt)
         {

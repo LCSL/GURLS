@@ -69,7 +69,7 @@
 
 using namespace gurls;
 using namespace std;
-using namespace boost::filesystem3;
+using namespace boost::filesystem;
 
 //typedef float T;
 typedef double T;
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
     BGurlsOptionsList opt("examplebgurls", shared_directory.native(), true);
 
     // remove old experiments results
-    boost::filesystem3::remove(path(opt.getOptAsString("savefile")));
+    boost::filesystem::remove(path(opt.getOptAsString("savefile")));
 
     OptTaskSequence *seq = new OptTaskSequence();
     *seq << "bigsplit:ho" << "bigparamsel:hoprimal" << "bigoptimizer:rlsprimal" << "bigpred:primal" << "bigperf:macroavg";

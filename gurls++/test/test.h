@@ -26,7 +26,7 @@
 #include <boost/test/floating_point_comparison.hpp>
 
 
-using namespace boost::filesystem3;
+using namespace boost::filesystem;
 
 namespace gurls
 {
@@ -80,7 +80,7 @@ GurlsOption* openFile(std::string fileName, OptTypes type)
     case StringOption:
     {
         file.seekg (0, std::ios::end);
-		unsigned int length = static_cast<unsigned int>(file.tellg());
+        unsigned int length = static_cast<unsigned int>(file.tellg());
         file.seekg (0, std::ios::beg);
 
         char* data = new char[length+1];
@@ -225,23 +225,23 @@ public:
     Data(path dataDirectory, path taskName, bool loadTrainingData)
     {
         path dataPath = dataDirectory / taskName;
-		path::string_type p;
+        path::string_type p;
 
         if(loadTrainingData)
         {
-			p = (dataDirectory / path("Xtr.txt")).native();
-			X = std::string(p.begin(), p.end());
+            p = (dataDirectory / path("Xtr.txt")).native();
+            X = std::string(p.begin(), p.end());
 
             p = (dataDirectory / path("ytr.txt")).native();
-			Y = std::string(p.begin(), p.end());
+            Y = std::string(p.begin(), p.end());
         }
         else
         {
-			p = (dataDirectory / path("Xte.txt")).native();
-			X = std::string(p.begin(), p.end());
+            p = (dataDirectory / path("Xte.txt")).native();
+            X = std::string(p.begin(), p.end());
 
             p = (dataDirectory / path("yte.txt")).native();
-			Y = std::string(p.begin(), p.end());
+            Y = std::string(p.begin(), p.end());
         }
 
         readIndexFile(dataPath / path("in.txt"), in);
@@ -292,7 +292,7 @@ protected:
     void readIndexFile(path filePath, ListType& list)
     {
         if(!exists(filePath))
-			throw gurls::gException(std::string("Cannot open file ") + std::string(filePath.native().begin(), filePath.native().end()));
+            throw gurls::gException(std::string("Cannot open file ") + std::string(filePath.native().begin(), filePath.native().end()));
 
         std::ifstream stream( filePath.native().c_str());
 

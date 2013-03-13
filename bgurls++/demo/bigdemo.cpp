@@ -69,7 +69,7 @@
 
 using namespace gurls;
 using namespace std;
-using namespace boost::filesystem3;
+using namespace boost::filesystem;
 
 //typedef float T;
 typedef double T;
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 
     // remove old experiments results
     if(myid == 0)
-        boost::filesystem3::remove(path(opt.getOptAsString("savefile")));
+        boost::filesystem::remove(path(opt.getOptAsString("savefile")));
 
     OptTaskSequence *seq = new OptTaskSequence();
     *seq << "bigsplit:ho" << "bigparamsel:hoprimal" << "bigoptimizer:rlsprimal" << "bigpred:primal" << "bigperf:macroavg";

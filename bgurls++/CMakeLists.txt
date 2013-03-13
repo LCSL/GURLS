@@ -125,7 +125,7 @@ set(gurls_sources ${gurls_sources} ${bgurls_sources})
 
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package( Boost COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
+find_package( Boost 1.46.0 COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
 option(Boost_USE_STATIC_LIBS "Link statically against boost libs" OFF)
 
 if(Boost_FOUND)
