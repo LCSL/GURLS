@@ -146,6 +146,10 @@ find_package(NetCDF REQUIRED)
 include_directories(${NetCDF_INCLUDE_DIR})
 link_directories(${NetCDF_LIBRARY_DIR})
 
+find_package(HDF5 COMPONENTS C HL REQUIRED)
+include_directories(${HDF5_INCLUDE_DIRS})
+link_directories(${HDF5_LIBRARY_DIRS})
+add_definitions(${HDF5_DEFINITIONS})
 
 set(USE_BINARY_ARCHIVES OFF CACHE BOOL "If ON all the data structures in GURLS are saved/loaded using binary files.")
 
@@ -164,7 +168,7 @@ add_definitions( -Wall )
 add_definitions( -DMPI_INCLUDED)
 
 add_library(${GURLSLIBRARY} ${LIB_TYPE} ${gurls_headers} ${gurls_sources} )
-target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${NetCDF_LIBRARIES})
+target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${NetCDF_LIBRARIES} ${HDF5_LIBRARIES})
 
 INSTALL(TARGETS ${GURLSLIBRARY}
     RUNTIME DESTINATION bin
@@ -191,6 +195,7 @@ set(GURLS_LINK_LIBRARIES
     ${BLAS_LIBRARIES}
     ${MPI_LIBRARIES}
     ${NetCDF_LIBRARIES}
+    ${HDF5_LIBRARIES}
 )
 
 set(BUILD_DEMO OFF CACHE BOOL "")
