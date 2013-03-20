@@ -59,7 +59,7 @@
 #include "bigpred.h"
 #include "bigmath.h"
 
-#include <mpi/mpi.h>
+#include <mpi.h>
 
 namespace gurls {
 

@@ -58,7 +58,7 @@
 
 #include "bigsplit_ho.h"
 
-#include <mpi/mpi.h>
+#include <mpi.h>
 
 #include <boost/algorithm/string/erase.hpp>
 

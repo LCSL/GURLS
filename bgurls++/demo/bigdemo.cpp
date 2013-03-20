@@ -45,7 +45,7 @@
  */
 
 
-#include <mpi/mpi.h>
+#include <mpi.h>
 
 #include "bgurls.h"
 #include "exceptions.h"

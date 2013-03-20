@@ -42,7 +42,7 @@
 #ifndef _GURLS_MPIUTILS_H_
 #define _GURLS_MPIUTILS_H_
 
-#include "mpi/mpi.h"
+#include <mpi.h>
 
 namespace gurls
 {
