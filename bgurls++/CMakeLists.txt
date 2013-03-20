@@ -11,6 +11,7 @@ if(USE_EXTERNALS)
         message(FATAL_ERROR "Please specify a valid path for EXTERNALS_PREFIX if you want to use externals")
     else()
         set(CMAKE_PREFIX_PATH ${EXTERNALS_PREFIX} ${CMAKE_PREFIX_PATH})
+        set(Boost_NO_SYSTEM_PATHS ON)
     endif()
 endif()
 
