@@ -533,6 +533,9 @@ void BigArray<T>::loadNC(const std::string &fileName)
     if((retval = nc_inq_varid(dataFile, "mat", &matrix)))
         throw gException(errorString);
 
+    if ((retval = nc_var_par_access(dataFile, this->matrix, NC_INDEPENDENT)))
+        throw gException(errorString);
+
 }
 
 template <typename T>
@@ -560,6 +563,9 @@ void BigArray<T>::init(std::string& fileName, unsigned long r, unsigned long c)
     this->numcols = c;
 
     if ((retval = nc_def_var(dataFile, "mat", getNcType<T>(), 2, dims, &this->matrix)))
+        throw gException(errorString);
+
+    if ((retval = nc_var_par_access(dataFile, this->matrix, NC_INDEPENDENT)))
         throw gException(errorString);
 
     if(nc_enddef(dataFile))
