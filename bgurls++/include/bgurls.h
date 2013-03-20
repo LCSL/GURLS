@@ -156,6 +156,8 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
         GurlsOptionsList* loadOpt = new GurlsOptionsList("load");
 
+        MPI_Barrier(MPI_COMM_WORLD);
+
         try
         {
             loadOpt->load(saveFile);
