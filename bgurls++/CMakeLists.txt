@@ -4,8 +4,17 @@ project(bgurls++)
 
 set(GURLS_ROOT "" CACHE PATH "The root directory of gurls++")
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${GURLS_ROOT} ${CMAKE_MODULE_PATH})
+option(USE_EXTERNALS "Link against external libraries" ON)
+if(USE_EXTERNALS)
+    set(EXTERNALS_PREFIX "" CACHE PATH "Directory where externals have been installed")
+    if(EXTERNALS_PREFIX STREQUAL "")
+        message(FATAL_ERROR "Please specify a valid path for EXTERNALS_PREFIX if you want to use externals")
+    else()
+        set(CMAKE_PREFIX_PATH ${EXTERNALS_PREFIX} ${CMAKE_PREFIX_PATH})
+    endif()
+endif()
 
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${GURLS_ROOT} ${CMAKE_MODULE_PATH})
 
 if(CMAKE_COMPILER_IS_GNUCC OR MSVC)
 
@@ -126,13 +135,19 @@ set(gurls_sources ${gurls_sources} ${bgurls_sources})
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 find_package( Boost 1.46.0 COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
-option(Boost_USE_STATIC_LIBS "Link statically against boost libs" OFF)
+
+if(USE_EXTERNALS)
+    unset(Boost_USE_STATIC_LIBS CACHE)
+    set(Boost_USE_STATIC_LIBS ON)
+else()
+    option(Boost_USE_STATIC_LIBS "Link statically against boost libs" ON)
+endif()
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     link_directories(${Boost_LIBRARY_DIRS})
 endif(Boost_FOUND)
-
+mark_as_advanced(Boost_DIR)
 include_directories( ${HDRDIR} ${GURLS_HDRDIR})
 
 
@@ -150,25 +165,36 @@ find_package(HDF5 COMPONENTS C HL REQUIRED)
 include_directories(${HDF5_INCLUDE_DIRS})
 link_directories(${HDF5_LIBRARY_DIRS})
 add_definitions(${HDF5_DEFINITIONS})
+mark_as_advanced(HDF5_DIR)
 
-set(USE_BINARY_ARCHIVES OFF CACHE BOOL "If ON all the data structures in GURLS are saved/loaded using binary files.")
+
+set(USE_BINARY_ARCHIVES ON CACHE BOOL "If ON all the data structures in bGURLS will be saved/loaded using binary files instead of text files")
 
 if(USE_BINARY_ARCHIVES)
     add_definitions(-DUSE_BINARY_ARCHIVES)
 endif(USE_BINARY_ARCHIVES)
 
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
+
+if(USE_EXTERNALS)
+    unset(BUILD_SHARED_LIBS CACHE)
+    set(BUILD_SHARED_LIBS OFF)
+else()
+    set(BUILD_SHARED_LIBS ON CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
+endif()
+
 if(BUILD_SHARED_LIBS)
     set( LIB_TYPE SHARED)
 else(BUILD_SHARED_LIBS)
     set(LIB_TYPE STATIC)
 endif(BUILD_SHARED_LIBS)
 
+
+set ( ZLIB_LIBRARIES ${HDF5_z_LIBRARY})
+
 add_definitions( -Wall )
-add_definitions( -DMPI_INCLUDED)
 
 add_library(${GURLSLIBRARY} ${LIB_TYPE} ${gurls_headers} ${gurls_sources} )
-target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${NetCDF_LIBRARIES} ${HDF5_LIBRARIES})
+target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${NetCDF_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES})
 
 INSTALL(TARGETS ${GURLSLIBRARY}
     RUNTIME DESTINATION bin
@@ -196,9 +222,10 @@ set(GURLS_LINK_LIBRARIES
     ${MPI_LIBRARIES}
     ${NetCDF_LIBRARIES}
     ${HDF5_LIBRARIES}
+    ${ZLIB_LIBRARIES}
 )
 
-set(BUILD_DEMO OFF CACHE BOOL "")
+set(BUILD_DEMO ON CACHE BOOL "")
 if(BUILD_DEMO)
 
     #SET(MATIO_INCLUDE_DIR "" CACHE PATH "Libmatio include dir")
