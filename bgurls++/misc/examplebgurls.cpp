@@ -110,25 +110,25 @@ int main(int argc, char *argv[])
     if(myid ==0)
         cout << "Loading Xtr..." << endl;
 
-    BigArray<T> Xtr(path(shared_directory / "Xtr.nc").native(), 0, 0);
+    BigArray<T> Xtr(path(shared_directory / "Xtr.h5").native(), 0, 0);
     Xtr.readCSV(path(input_directory / "Xtr.txt").native());
 
     if(myid ==0)
         cout << "Loading Xte..." << endl;
 
-    BigArray<T> Xte(path(shared_directory / "Xte.nc").native(), 0, 0);
+    BigArray<T> Xte(path(shared_directory / "Xte.h5").native(), 0, 0);
     Xte.readCSV(path(input_directory / "Xte.txt").native());
 
     if(myid ==0)
         cout << "Loading ytr..." << endl;
 
-    BigArray<T> ytr(path(shared_directory / "ytr.nc").native(), 0, 0);
+    BigArray<T> ytr(path(shared_directory / "ytr.h5").native(), 0, 0);
     ytr.readCSV(path(input_directory / "ytr.txt").native());
 
     if(myid ==0)
         cout << "Loading yte..." << endl;
 
-    BigArray<T> yte(path(shared_directory / "yte.nc").native(), 0, 0);
+    BigArray<T> yte(path(shared_directory / "yte.h5").native(), 0, 0);
     yte.readCSV(path(input_directory / "yte.txt").native());
 
 

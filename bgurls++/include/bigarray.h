@@ -43,8 +43,7 @@
 #ifndef _GURLS_BIGARRAY_H_
 #define _GURLS_BIGARRAY_H_
 
-#include <netcdf_par.h>
-
+#include <hdf5.h>
 
 #include <gmat2d.h>
 #include <string>
@@ -57,24 +56,24 @@
 namespace gurls
 {
 
+
 template<typename T>
-nc_type getNcType()
+hid_t getHdfType()
 {
     throw gException(Exception_Unsupported_MatrixType);
 }
 
 template<>
-nc_type getNcType<float>();
+hid_t getHdfType<float>();
 
 template<>
-nc_type getNcType<double>();
+hid_t getHdfType<double>();
 
 template<>
-nc_type getNcType<unsigned long>();
+hid_t getHdfType<unsigned long>();
 
 template<>
-nc_type getNcType<unsigned int>();
-
+hid_t getHdfType<unsigned int>();
 
 template<typename T>
 int nc_put_vara(int ncid, int varid,  const size_t *startp,
@@ -82,79 +81,6 @@ int nc_put_vara(int ncid, int varid,  const size_t *startp,
 {
     throw gException(Exception_Unsupported_MatrixType);
 }
-
-template<>
-int nc_put_vara<float>(int ncid, int varid,  const size_t *startp,
-                       const size_t *countp, const float *op);
-template<>
-int nc_put_vara<double>(int ncid, int varid,  const size_t *startp,
-                        const size_t *countp, const double *op);
-template<>
-int nc_put_vara<unsigned long>(int ncid, int varid,  const size_t *startp,
-                               const size_t *countp, const unsigned long *op);
-template<>
-int nc_put_vara<unsigned int>(int ncid, int varid,  const size_t *startp,
-                              const size_t *countp, const unsigned int *op);
-
-
-template<typename T>
-int nc_get_vara(int ncid, int varid,  const size_t *startp,
-                const size_t *countp, T *ip)
-{
-    throw gException(Exception_Unsupported_MatrixType);
-}
-
-template<>
-int nc_get_vara<float>(int ncid, int varid,  const size_t *startp,
-                              const size_t *countp, float *ip);
-template<>
-int nc_get_vara<double>(int ncid, int varid,  const size_t *startp,
-                              const size_t *countp, double *ip);
-template<>
-int nc_get_vara<unsigned long>(int ncid, int varid,  const size_t *startp,
-                              const size_t *countp, unsigned long *ip);
-template<>
-int nc_get_vara<unsigned int>(int ncid, int varid,  const size_t *startp,
-                              const size_t *countp, unsigned int *ip);
-
-
-template<typename T>
-int nc_get_var1(int ncid, int varid,  const size_t *indexp, T *op)
-{
-    throw gException(Exception_Unsupported_MatrixType);
-}
-
-template<>
-GURLS_EXPORT int nc_get_var1<float>(int ncid, int varid,  const size_t *indexp, float *op);
-
-template<>
-GURLS_EXPORT int nc_get_var1<double>(int ncid, int varid,  const size_t *indexp, double *op);
-
-template<>
-int nc_get_var1<unsigned long>(int ncid, int varid,  const size_t *indexp, unsigned long *op);
-
-template<>
-int nc_get_var1<unsigned int>(int ncid, int varid,  const size_t *indexp, unsigned int *op);
-
-
-
-template<typename T>
-int nc_put_var1(int ncid, int varid,  const size_t *indexp, const T *op)
-{
-    throw gException(Exception_Unsupported_MatrixType);
-}
-
-template<>
-GURLS_EXPORT int nc_put_var1<float>(int ncid, int varid,  const size_t *indexp, const float *op);
-
-template<>
-GURLS_EXPORT int nc_put_var1<double>(int ncid, int varid,  const size_t *indexp, const double *op);
-
-template<>
-int nc_put_var1<unsigned long>(int ncid, int varid,  const size_t *indexp, const unsigned long *op);
-
-template<>
-int nc_put_var1<unsigned int>(int ncid, int varid,  const size_t *indexp, const unsigned int *op);
 
 
 template<typename T>
@@ -200,7 +126,7 @@ public:
 
     gVec<T> operator() (unsigned long i) const;
 
-    gVec<T> getColumnn(unsigned long i) const;
+    gVec<T> getColumn(unsigned long i) const;
 
     T operator() (unsigned long row, unsigned long col) const;
 
@@ -248,6 +174,16 @@ public:
         BigArray<T>::releaseSignal()();
     }
 
+    static bool isBigArray(const gMat2D<T>* matrix)
+    {
+        return (dynamic_cast<BigArray<T>* >(matrix) != NULL);
+    }
+
+    static bool isBigArray(const gMat2D<T>& matrix)
+    {
+        return isBigArray(&matrix);
+    }
+
 protected:
 
     static boost::signal0<void> &releaseSignal()
@@ -260,9 +196,12 @@ protected:
 
     void init(std::string& fileName, unsigned long r, unsigned long c);
 
+    void getMatrix(unsigned long startingRow, unsigned long startingCol, unsigned long numRows, unsigned long numCols, T* result) const;
 
-    int dataFile;
-    int matrix;
+
+    hid_t file_id;
+    hid_t dset_id;
+    hid_t plist_id;
 
     std::string dataFileName;
 

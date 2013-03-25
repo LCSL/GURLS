@@ -24,6 +24,9 @@ typedef boost::archive::text_iarchive iarchive;
 typedef boost::archive::text_oarchive oarchive;
 #endif
 
+#define CHECK_HDF5_ERR(value, errorString) \
+    if(value < 0) throw gException(errorString);
+
 namespace gurls
 {
 
@@ -52,7 +55,7 @@ std::ostream& operator<<(std::ostream& os, const BigArray<T>& m)
 }
 
 template <typename T>
-BigArray<T>::BigArray(): gMat2D<T>(), dataFile(0), dataFileName("")
+BigArray<T>::BigArray(): gMat2D<T>(), file_id(-1), dset_id(-1), plist_id(-1), dataFileName("")
 {
 }
 
@@ -74,12 +77,6 @@ template <typename T>
 BigArray<T>::BigArray(std::string fileName, const gMat2D<T>& mat)
 {
     init(fileName, mat.rows(), mat.cols());
-
-    int myid;
-    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
-
-    if(myid ==  0)
-        setMatrix(0, 0, mat);
 
     MPI_Barrier(MPI_COMM_WORLD);
 }
@@ -105,23 +102,42 @@ BigArray<T>::BigArray(const BigArray<T>& other)
 template <typename T>
 BigArray<T>::~BigArray()
 {
-    nc_close(dataFile);
+    close();
     connection.disconnect();
 }
 
 template <typename T>
 void BigArray<T>::flush()
 {
-//    nc_close(dataFile);
-//    loadNC(dataFileName);
+    herr_t status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
+    CHECK_HDF5_ERR(status, "Error flushing data to file")
 }
 
 template <typename T>
 void BigArray<T>::close()
 {
+    herr_t status;
 
-    nc_close(dataFile);
-    dataFile = 0;
+    if(dset_id >= 0)
+    {
+        status = H5Dclose(dset_id);
+        CHECK_HDF5_ERR(status, "Error closing BigArray dataset")
+        dset_id = -1;
+    }
+
+    if(plist_id >= 0)
+    {
+        status = H5Pclose(plist_id);
+        CHECK_HDF5_ERR(status, "Error closing BigArray plist")
+        plist_id = -1;
+    }
+
+    if(file_id >= 0)
+    {
+        status = H5Fclose(file_id);
+        CHECK_HDF5_ERR(status, "Error closing BigArray file")
+        file_id = -1;
+    }
 }
 
 template <typename T>
@@ -156,17 +172,7 @@ gVec<T> BigArray<T>::operator[](unsigned long i) const
 
     gVec<T> ret(this->numcols);
 
-    size_t start[2], count[2];
-
-    start[0] = 0;
-    start[1] = i;
-
-    count[0] = this->numcols;
-    count[1] = 1;
-
-    int retval;
-    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, ret.getData())))
-       throw gException("Error reading row");
+    getMatrix(i, 0, 1, this->numcols, ret.getData());
 
     return ret;
 }
@@ -185,23 +191,13 @@ gVec<T> BigArray<T>::operator() (unsigned long i) const
 
     gVec<T> ret(this->numrows);
 
-    size_t start[2], count[2];
-
-    start[0] = i;
-    start[1] = 0;
-
-    count[0] = 1;
-    count[1] = this->numrows;
-
-    int retval;
-    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, ret.getData())))
-       throw gException("Error reading column");
+    getMatrix(0, i, this->numrows, 1, ret.getData());
 
     return ret;
 }
 
 template <typename T>
-gVec<T> BigArray<T>::getColumnn(unsigned long i) const
+gVec<T> BigArray<T>::getColumn(unsigned long i) const
 {
     return (*this)(i);
 }
@@ -214,14 +210,29 @@ T BigArray<T>::operator() (unsigned long row, unsigned long col) const
 
     T ret;
 
-    size_t start[2];
+    std::string errorString("Error reading BigArray value");
 
-    start[0] = col;
-    start[1] = row;
+    hsize_t dims[2] = {1, 1};
+    hid_t memspace = H5Screate_simple(2, dims, NULL);
+    CHECK_HDF5_ERR(memspace, errorString)
 
-    int retval;
-    if ((retval = nc_get_var1<T>(dataFile, matrix, start, &ret)))
-       throw gException("Error reading value");
+    hsize_t point[2] = {col, row};
+    hid_t filespace = H5Dget_space(dset_id);
+    CHECK_HDF5_ERR(filespace, errorString)
+
+    herr_t status;
+
+    status = H5Sselect_elements(filespace, H5S_SELECT_SET, 1, point);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Dread(dset_id, getHdfType<T>(), memspace, filespace, plist_id, &ret);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(memspace);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(filespace);
+    CHECK_HDF5_ERR(status, errorString)
 
     return ret;
 }
@@ -243,18 +254,7 @@ void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol
 
     result.resize(numRows, numCols);
 
-    size_t start[2], count[2];
-
-    start[0] = startingCol;
-    start[1] = startingRow;
-
-    count[0] = numCols;
-    count[1] = numRows;
-
-    int retval;
-    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, result.getData())))
-       throw gException("Error reading matrix");
-
+    getMatrix(startingRow, startingCol, numRows, numCols, result.getData());
 }
 
 template <typename T>
@@ -266,20 +266,42 @@ void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol
     if(startingRow+result.rows() > this->numrows || startingCol+result.cols() > this->numcols)
         throw gException(Exception_Index_Out_of_Bound);
 
-    size_t start[2], count[2];
-
-    start[0] = startingCol;
-    start[1] = startingRow;
-
-    count[0] = result.cols();
-    count[1] = result.rows();
-
-    int retval;
-    if ((retval = nc_get_vara<T>(dataFile, matrix, start, count, result.getData())))
-       throw gException("Error reading matrix");
+    getMatrix(startingRow, startingCol, result.rows(), result.cols(), result.getData());
 }
 
+template <typename T>
+void BigArray<T>::getMatrix(unsigned long startingRow, unsigned long startingCol, unsigned long numRows, unsigned long numCols, T* result) const
+{
+    std::string errorString("Error reading matrix data");
 
+    hsize_t dims[2] = {numCols, numRows};
+    hid_t memspace = H5Screate_simple(2, dims, NULL);
+    CHECK_HDF5_ERR(memspace, errorString)
+
+    hsize_t	count[2] = {1, 1};
+    hsize_t	stride[2] = {1, 1};
+    hsize_t	block[2] = {dims[0], dims[1]};
+    hsize_t	offset[2] = {startingCol, startingRow};
+
+
+    // Select hyperslab in the file.
+    hid_t filespace = H5Dget_space(dset_id);
+    CHECK_HDF5_ERR(filespace, errorString)
+
+    herr_t status;
+
+    status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, stride, count, block);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Dread(dset_id, getHdfType<T>(), memspace, filespace, plist_id, result);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(memspace);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(filespace);
+    CHECK_HDF5_ERR(status, errorString)
+}
 
 // Setter
 template <typename T>
@@ -288,14 +310,29 @@ void BigArray<T>::setValue(unsigned long row, unsigned long col, T value)
     if(row >= this->numrows || col >= this->numcols)
         throw gException(Exception_Index_Out_of_Bound);
 
-    size_t start[2];
+    std::string errorString("Error writing BigArray value");
 
-    start[0] = col;
-    start[1] = row;
+    hsize_t dims[2] = {1, 1};
+    hid_t memspace = H5Screate_simple(2, dims, NULL);
+    CHECK_HDF5_ERR(memspace, errorString)
 
-    int retval;
-    if ((retval = nc_put_var1<T>(dataFile, matrix, start, &value)))
-        throw gException("Error setting value");
+    hsize_t point[2] = {col, row};
+    hid_t filespace = H5Dget_space(dset_id);
+    CHECK_HDF5_ERR(filespace, errorString)
+
+    herr_t status;
+
+    status = H5Sselect_elements(filespace, H5S_SELECT_SET, 1, point);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Dwrite(dset_id, getHdfType<T>(), memspace, filespace, plist_id, &value);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(memspace);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(filespace);
+    CHECK_HDF5_ERR(status, errorString)
 }
 
 template <typename T>
@@ -313,17 +350,34 @@ void BigArray<T>::setMatrix(unsigned long startingRow, unsigned long startingCol
     if(startingRow+M_rows > this->numrows || startingCol+M_cols > this->numcols)
         throw gException(Exception_Index_Out_of_Bound);
 
-    size_t start[2], count[2];
+    std::string errorString("Error writing matrix data");
 
-    start[0] = startingCol;
-    start[1] = startingRow;
+    hsize_t dims[2] = {M_cols, M_rows};
+    hid_t memspace = H5Screate_simple(2, dims, NULL);
+    CHECK_HDF5_ERR(memspace, errorString)
 
-    count[0] = M_cols;
-    count[1] = M_rows;
+    hsize_t	count[2] = {1, 1};
+    hsize_t	stride[2] = {1, 1};
+    hsize_t	block[2] = {dims[0], dims[1]};
+    hsize_t	offset[2] = {startingCol, startingRow};
 
-    int retval;
-    if ((retval = nc_put_vara<T>(dataFile, matrix, start, count, M)))
-        throw gException("Error setting matrix");
+
+    // Select hyperslab in the file.
+    hid_t filespace = H5Dget_space(dset_id);
+    CHECK_HDF5_ERR(filespace, errorString)
+
+    herr_t status;
+    status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, stride, count, block);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Dwrite(dset_id, getHdfType<T>(), memspace, filespace, plist_id, M);
+    CHECK_HDF5_ERR(status, errorString)
+
+    H5Sclose(memspace);
+    CHECK_HDF5_ERR(status, errorString)
+
+    H5Sclose(filespace);
+    CHECK_HDF5_ERR(status, errorString)
 }
 
 template <typename T>
@@ -335,17 +389,7 @@ void BigArray<T>::setColumn(unsigned long col, const gVec<T>& value)
     if(value.getSize() != this->numrows)
         throw gException(Exception_Inconsistent_Size);
 
-    size_t start[2], count[2];
-
-    start[0] = col;
-    start[1] = 0;
-
-    count[0] = 1;
-    count[1] = this->numrows;
-
-    int retval;
-    if ((retval = nc_put_vara<T>(dataFile, matrix, start, count, value.getData())))
-        throw gException("Error setting column");
+    setMatrix(0, col, value.getData(), this->numrows, 1);
 }
 
 template <typename T>
@@ -357,18 +401,7 @@ void BigArray<T>::setRow(unsigned long row, const gVec<T>& value)
     if(value.getSize() != this->numcols)
         throw gException(Exception_Inconsistent_Size);
 
-    size_t start[2], count[2];
-
-    start[0] = 0;
-    start[1] = row;
-
-    count[0] = this->numcols;
-    count[1] = 1;
-
-    int retval;
-    if ((retval = nc_put_vara<T>(dataFile, matrix, start, count, value.getData())))
-        throw gException("Error setting row");
-
+    setMatrix(row, 0, value.getData(), 1, this->numcols);
 }
 
 
@@ -417,7 +450,8 @@ void BigArray<T>::load(Archive & ar, const unsigned int /* file_version */)
     std::string name;
     ar & name;
 
-    loadNC(name);
+    if(!name.empty())
+        loadNC(name);
 }
 
 template <typename T>
@@ -459,7 +493,7 @@ void BigArray<T>::readCSV(const std::string& fileName)
     MPI_Bcast(&rows, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
     MPI_Bcast(&cols, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
 
-    nc_close(dataFile);
+    close();
     init(dataFileName, rows, cols);
 
     if(rows == 0 || cols == 0)
@@ -495,6 +529,8 @@ void BigArray<T>::readCSV(const std::string& fileName)
             }
         }
         in.close();
+
+//        flush();
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -510,31 +546,48 @@ void BigArray<T>::loadNC(const std::string &fileName)
     connection = releaseSignal().connect(boost::bind(&gurls::BigArray<T>::close, this));
 
     std::string errorString = "Error opening file " + fileName + ":";
-    int retval;
-    char buf[NC_MAX_NAME+1];
 
-    if((retval = nc_open_par(fileName.c_str(), NC_MPIIO|NC_WRITE, MPI_COMM_WORLD, MPI_INFO_NULL, &dataFile)))
+
+    // Set up file access property list with parallel I/O access
+    plist_id = H5Pcreate(H5P_FILE_ACCESS);
+    if(plist_id == -1)
         throw gException(errorString);
 
+    herr_t status;
 
-    int dims[2];
-    if((retval = nc_inq_dimid(dataFile, "rows", &dims[0])))
-        throw gException(errorString);
-    if((retval = nc_inq_dimid(dataFile, "cols", &dims[1])))
+    status = H5Pset_fapl_mpio(plist_id, MPI_COMM_WORLD, MPI_INFO_NULL);
+    CHECK_HDF5_ERR(status, errorString)
+
+    // Create a new file collectively and release property list identifier.
+    file_id = H5Fopen(fileName.c_str(), H5F_ACC_RDWR, plist_id);
+    CHECK_HDF5_ERR(file_id, errorString)
+
+    status = H5Pclose(plist_id);
+    CHECK_HDF5_ERR(status, errorString)
+
+    dset_id =  H5Dopen(file_id, "mat", H5P_DEFAULT);
+    CHECK_HDF5_ERR(dset_id, errorString)
+
+    hid_t filespace = H5Dget_space( dset_id );
+    CHECK_HDF5_ERR(filespace, errorString)
+
+    hsize_t dims[2], maxDims[2];
+    status = H5Sget_simple_extent_dims(filespace, dims, maxDims);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(filespace);
+    CHECK_HDF5_ERR(status, errorString)
+
+    this->numrows = dims[1];
+    this->numcols = dims[0];
+
+    // Create property list for collective dataset write.
+    plist_id = H5Pcreate(H5P_DATASET_XFER);
+    if(plist_id == -1)
         throw gException(errorString);
 
-
-    if((retval = nc_inq_dim(dataFile, dims[0], buf, &(this->numcols))))
-        throw gException(errorString);
-    if((retval = nc_inq_dim(dataFile, dims[1], buf, &(this->numrows))))
-        throw gException(errorString);
-
-
-    if((retval = nc_inq_varid(dataFile, "mat", &matrix)))
-        throw gException(errorString);
-
-    if ((retval = nc_var_par_access(dataFile, this->matrix, NC_INDEPENDENT)))
-        throw gException(errorString);
+    status = H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_INDEPENDENT);
+    CHECK_HDF5_ERR(status, errorString)
 
 }
 
@@ -546,31 +599,60 @@ void BigArray<T>::init(std::string& fileName, unsigned long r, unsigned long c)
     connection.disconnect();
     connection = releaseSignal().connect(boost::bind(&gurls::BigArray<T>::close, this));
 
-    std::string errorString = "Error opening file " + fileName + ":";
-    int retval;
+    std::string errorString = "Error creating file " + fileName + ":";
 
-    if((retval = nc_create_par(fileName.c_str(), NC_MPIIO|NC_NETCDF4|NC_CLOBBER,  MPI_COMM_WORLD, MPI_INFO_NULL, &dataFile)))
+    // Set up file access property list with parallel I/O access
+    plist_id = H5Pcreate(H5P_FILE_ACCESS);
+    if(plist_id == -1)
         throw gException(errorString);
 
-    int dims[2];
+    herr_t status;
 
-    if ((retval = nc_def_dim(dataFile, "rows", c, &dims[0])))
-       throw gException(errorString);
-    if ((retval = nc_def_dim(dataFile, "cols", r, &dims[1])))
-       throw gException(errorString);
+    status = H5Pset_fapl_mpio(plist_id, MPI_COMM_WORLD, MPI_INFO_NULL);
+    CHECK_HDF5_ERR(status, errorString)
+
+    // Create a new file collectively and release property list identifier.
+    file_id = H5Fcreate(fileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, plist_id);
+    CHECK_HDF5_ERR(file_id, errorString)
+
+    status = H5Pclose(plist_id);
+    CHECK_HDF5_ERR(status, errorString)
+
+
+    // Create the dataspace for the dataset.
+    hsize_t dims[2];
+    dims[0] = static_cast<hsize_t>(c);
+    dims[1] = static_cast<hsize_t>(r);
+    hid_t filespace = H5Screate_simple(2, dims, NULL);
+    CHECK_HDF5_ERR(filespace, errorString)
+
+
+    hid_t plist_dset_id = H5Pcreate(H5P_DATASET_CREATE);
+    if(plist_dset_id == -1)
+        throw gException(errorString);
+
+    dset_id = H5Dcreate(file_id, "mat", getHdfType<T>(), filespace, H5P_DEFAULT, plist_dset_id, H5P_DEFAULT);
+    CHECK_HDF5_ERR(dset_id, errorString)
+
+    status = H5Pclose(plist_dset_id);
+    CHECK_HDF5_ERR(status, errorString)
+
+    status = H5Sclose(filespace);
+    CHECK_HDF5_ERR(status, errorString)
 
     this->numrows = r;
     this->numcols = c;
 
-    if ((retval = nc_def_var(dataFile, "mat", getNcType<T>(), 2, dims, &this->matrix)))
+    // Create property list for collective dataset write.
+    plist_id = H5Pcreate(H5P_DATASET_XFER);
+    if(plist_id == -1)
         throw gException(errorString);
 
-    if ((retval = nc_var_par_access(dataFile, this->matrix, NC_INDEPENDENT)))
-        throw gException(errorString);
+    status = H5Pset_dxpl_mpio(plist_id, H5FD_MPIO_INDEPENDENT);
+    CHECK_HDF5_ERR(status, errorString)
 
-    if(nc_enddef(dataFile))
-        throw gException(errorString);
-
+    flush();
 }
 
 }
+

@@ -66,29 +66,12 @@ ExternalProject_add(hdf5
     SOURCE_DIR  ${EXTERNAL_PREFIX}/src/hdf5
     INSTALL_DIR ${EXTERNAL_PREFIX}/
     CONFIGURE_COMMAND CC=${EXTERNAL_PREFIX}/bin/mpicc CFLAGS=-w <SOURCE_DIR>/configure
-    --prefix=<INSTALL_DIR> --enable-production --enable-parallel --disable-shared --disable-fortran --with-zlib=${EXTERNAL_PREFIX}/
+    --prefix=<INSTALL_DIR> --enable-production --enable-parallel --disable-shared --disable-fortran --disable-hl --with-zlib=${EXTERNAL_PREFIX}/
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${MAKE_ARGS}
 )
 add_dependencies(hdf5 zlib MPICH2)
 
 #set_target_properties(hdf5 PROPERTIES EXCLUDE_FROM_ALL 1)
-
-
-
-############## netCDF
-
-ExternalProject_add(netCDF
-    URL http://www.unidata.ucar.edu/downloads/netcdf/ftp/netcdf-4.2.1.1.tar.gz
-    BUILD_IN_SOURCE 1
-    SOURCE_DIR  ${EXTERNAL_PREFIX}/src/netCDF
-    INSTALL_DIR ${EXTERNAL_PREFIX}/
-    CONFIGURE_COMMAND CC=${EXTERNAL_PREFIX}/bin/mpicc CPPFLAGS=-w CFLAGS=-I${EXTERNAL_PREFIX}/include LDFLAGS=-L${EXTERNAL_PREFIX}/lib <SOURCE_DIR>/configure
-    --prefix=<INSTALL_DIR> --disable-shared --enable-static --disable-dap --enable-netcdf-4
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${MAKE_ARGS}
-)
-add_dependencies(netCDF hdf5)
-
-#set_target_properties(netCDF PROPERTIES EXCLUDE_FROM_ALL 1)
 
 
 

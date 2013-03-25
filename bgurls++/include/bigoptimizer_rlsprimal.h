@@ -139,11 +139,11 @@ GurlsOptionsList* BigRLSPrimal<T>::execute(const BigArray<T>& X, const BigArray<
 
     optimizer->addOpt("W", new OptMatrix<BigArray<T> >(*W));
 
-    BigArray<T>* emptyC = new BigArray<T>(opt.getOptAsString("files.optimizer_C_filename"), 0, 0);
+    BigArray<T>* emptyC = new BigArray<T>();
     optimizer->addOpt("C", new OptMatrix<BigArray<T> >(*emptyC));
 
     //	cfr.X = [];
-    BigArray<T>* emptyX = new BigArray<T>(opt.getOptAsString("files.optimizer_X_filename"), 0, 0);
+    BigArray<T>* emptyX = new BigArray<T>();
     optimizer->addOpt("X", new OptMatrix<BigArray<T> >(*emptyX));
 
     return optimizer;

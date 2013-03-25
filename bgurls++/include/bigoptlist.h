@@ -86,16 +86,16 @@ public:
             (*table)["tmpfile"] = new OptString(path(sharedDirPath / "tmp").native());
 
             GurlsOptionsList* files = new GurlsOptionsList("files");
-            files->addOpt("Xva_filename", path(sharedDirPath / "Xva.nc").native());
-            files->addOpt("Yva_filename", path(sharedDirPath / "Yva.nc").native());
-            files->addOpt("XvatXva_filename", path(sharedDirPath / "XvatXva.nc").native());
-            files->addOpt("XvatYva_filename", path(sharedDirPath / "XvatYva.nc").native());
-            files->addOpt("XtX_filename", path(sharedDirPath / "XtX.nc").native());
-            files->addOpt("Xty_filename", path(sharedDirPath / "Xty.nc").native());
-            files->addOpt("pred_filename", path(sharedDirPath / "pred.nc").native());
-            files->addOpt("optimizer_W_filename", path(sharedDirPath / "optimizzer_W.nc").native());
-            files->addOpt("optimizer_C_filename", path(sharedDirPath / "optimizzer_C.nc").native());
-            files->addOpt("optimizer_X_filename", path(sharedDirPath / "optimizzer_X.nc").native());
+            files->addOpt("Xva_filename", path(sharedDirPath / "Xva.h5").native());
+            files->addOpt("Yva_filename", path(sharedDirPath / "Yva.h5").native());
+            files->addOpt("XvatXva_filename", path(sharedDirPath / "XvatXva.h5").native());
+            files->addOpt("XvatYva_filename", path(sharedDirPath / "XvatYva.h5").native());
+            files->addOpt("XtX_filename", path(sharedDirPath / "XtX.h5").native());
+            files->addOpt("Xty_filename", path(sharedDirPath / "Xty.h5").native());
+            files->addOpt("pred_filename", path(sharedDirPath / "pred.h5").native());
+            files->addOpt("optimizer_W_filename", path(sharedDirPath / "optimizer_W.h5").native());
+            files->addOpt("optimizer_C_filename", path(sharedDirPath / "optimizer_C.h5").native());
+            files->addOpt("optimizer_X_filename", path(sharedDirPath / "optimizer_X.h5").native());
 
             (*table)["files"] = files;
 
