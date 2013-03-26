@@ -458,6 +458,8 @@ template <typename T>
 void BigArray<T>::readCSV(const std::string& fileName)
 {
     int myid;
+    int numprocs;
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
     unsigned long rows = 0;
@@ -499,39 +501,45 @@ void BigArray<T>::readCSV(const std::string& fileName)
     if(rows == 0 || cols == 0)
         return;
 
-    if(myid == 0)
+    unsigned long block_rows = rows/numprocs;
+    const unsigned long first_row = myid*block_rows;
+    if(myid == numprocs -1)
+       block_rows += rows%numprocs;
+    const unsigned long last_row = first_row+block_rows-1;
+
+
+    std::ifstream in(fileName.c_str());
+
+    if(!in.is_open())
+        throw gurls::gException("Cannot open file " + fileName);
+
+    T* block_transposed = new T[cols*block_rows];
+    T* rv_it = block_transposed;
+
+    tokenizer::iterator t_it;
+
+    unsigned long row = 0;
+    while (std::getline(in, line))
     {
-        std::ifstream in(fileName.c_str());
-
-        if(!in.is_open())
-            throw gurls::gException("Cannot open file " + fileName);
-
-        gVec<T> row_vector(cols);
-        T* rv_it = NULL;
-        T* rv_end = row_vector.getData()+cols;
-        tokenizer::iterator t_it;
-
-        unsigned long row = 0;
-        while (std::getline(in, line))
+        if(!line.empty())
         {
-            if(!line.empty())
+            if(row >= first_row && row <= last_row)
             {
                 tokenizer tokens(line, sep);
-                for (rv_it = row_vector.getData(), t_it = tokens.begin(); rv_it != rv_end; ++t_it, ++rv_it)
+                for (t_it = tokens.begin(); t_it != tokens.end(); ++t_it, ++rv_it)
                         *rv_it = boost::lexical_cast<T>(*t_it);
-
-                if(t_it != tokens.end())
-                    throw gException(Exception_Inconsistent_Size);
-
-                setRow(row, row_vector);
-
-                ++row;
             }
+            ++row;
         }
-        in.close();
-
-//        flush();
     }
+    in.close();
+
+    T* block =  new T[block_rows*cols];
+    transpose(block_transposed, cols, block_rows, block);
+    setMatrix(first_row, 0, block, block_rows, cols);
+
+    delete[] block_transposed;
+    delete[] block;
 
     MPI_Barrier(MPI_COMM_WORLD);
 }
