@@ -555,7 +555,11 @@ void BigArray<T>::loadNC(const std::string &fileName)
 
     herr_t status;
 
+#ifdef USE_MPIIO
     status = H5Pset_fapl_mpio(plist_id, MPI_COMM_WORLD, MPI_INFO_NULL);
+#else
+    status = H5Pset_fapl_mpiposix(plist_id, MPI_COMM_WORLD, false);
+#endif
     CHECK_HDF5_ERR(status, errorString)
 
     // Create a new file collectively and release property list identifier.
