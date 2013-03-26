@@ -165,6 +165,10 @@ link_directories(${HDF5_LIBRARY_DIRS})
 add_definitions(${HDF5_DEFINITIONS})
 mark_as_advanced(HDF5_DIR)
 
+option(USE_MPI_IO "Access HDF5 files using MPI_IO instead of MPI_POSIX" OFF)
+if(USE_MPI_IO)
+    add_definitions(-DUSE_MPIIO)
+endif()
 
 set(USE_BINARY_ARCHIVES ON CACHE BOOL "If ON all the data structures in bGURLS will be saved/loaded using binary files instead of text files")
 
