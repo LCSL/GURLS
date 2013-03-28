@@ -155,7 +155,7 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         const std::string dataExchangeFile = sharedDir + "ret";
 
         GurlsOptionsList* loadOpt = new GurlsOptionsList("load");
-        cout << myid << "begin" << endl;
+
         MPI_Barrier(MPI_COMM_WORLD);
 
         try
