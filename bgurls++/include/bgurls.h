@@ -155,7 +155,7 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         const std::string dataExchangeFile = sharedDir + "ret";
 
         GurlsOptionsList* loadOpt = new GurlsOptionsList("load");
-
+        cout << myid << "begin" << endl;
         MPI_Barrier(MPI_COMM_WORLD);
 
         try
@@ -379,6 +379,8 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
 
         }
 
+        MPI_Barrier(MPI_COMM_WORLD);
+
         if(myid == 0)
         {
             timelist->addOpt(processid, new OptMatrix<gMat2D<T> >(*process_time_vector));
@@ -417,9 +419,8 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
             }
         }
 
-        delete loadOpt;
-
         MPI_Barrier(MPI_COMM_WORLD);
+        delete loadOpt;
 
 //    }
 //    catch (gException& gex)
