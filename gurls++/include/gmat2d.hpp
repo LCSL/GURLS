@@ -1,8 +1,17 @@
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#endif
+
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
 
 #include <boost/serialization/base_object.hpp>
 
