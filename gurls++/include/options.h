@@ -164,6 +164,11 @@ public:
       */
     OptString(const std::string& str);
 
+	/**
+      * Constructor from a wstring
+      */
+	OptString(const std::wstring& str);
+
     /**
       * Copies the opt values from an existing \ref OptString
       */

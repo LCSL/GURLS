@@ -380,6 +380,12 @@ bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value)
     return true;
 }
 
+bool GurlsOptionsList::addOpt(std::string key, std::wstring value)
+{
+    std::string val = std::string(value.begin(), value.end());
+	return addOpt(key, val);
+}
+
 bool GurlsOptionsList::addOpt(std::string key, std::string value)
 {
     if(hasOpt(key))

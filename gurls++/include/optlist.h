@@ -99,6 +99,11 @@ public:
     bool addOpt(std::string key, std::string value);
 
     /**
+      * Adds a string option to the list indexed with a specified key
+      */
+    bool addOpt(std::string key, std::wstring value);
+
+    /**
       * Returns a pointer to a generic option mapped with a key
       */
     GurlsOption* getOpt(std::string key);

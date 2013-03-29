@@ -455,6 +455,11 @@ OptString::OptString(): GurlsOption(StringOption), value(""){}
 
 OptString::OptString(const std::string& str): GurlsOption(StringOption),value(str){}
 
+OptString::OptString(const std::wstring& str): GurlsOption(StringOption)
+{
+	value = std::string(str.begin(), str.end());
+}
+
 OptString::~OptString()
 {
     value.clear();
