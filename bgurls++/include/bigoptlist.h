@@ -70,38 +70,18 @@ public:
       * \param ExpName name of the options list
       * \param usedefopt if \a true the list is filled with a set of default options, if \a false the list is left empty
       */
-    BGurlsOptionsList(const std::string& ExpName, const std::string& sharedDir, bool usedefopt = false) : GurlsOptionsList(ExpName, usedefopt)
-    {
-        using namespace boost::filesystem;
+    BGurlsOptionsList(const std::string& ExpName, const std::string& sharedDir, bool usedefopt = false);
 
-        if(usedefopt)
-        {
-            (*table)["nb_pred"] = new OptNumber(1);
-            (*table)["memlimit"] = new OptNumber(std::pow(2, 30)); // default 1 GB
+    /**
+      * Constructor. Builds an optionlist with a name and optionally a set of default options
+      *
+      * \param ExpName name of the options list
+      * \param usedefopt if \a true the list is filled with a set of default options, if \a false the list is left empty
+      */
+    BGurlsOptionsList(const std::string& ExpName, const std::wstring& sharedDir, bool usedefopt = false);
 
-            (*table)["shared_dir"] = new OptString(sharedDir);
-
-            path sharedDirPath(sharedDir);
-
-            (*table)["tmpfile"] = new OptString(path(sharedDirPath / "tmp").native());
-
-            GurlsOptionsList* files = new GurlsOptionsList("files");
-            files->addOpt("Xva_filename", path(sharedDirPath / "Xva.h5").native());
-            files->addOpt("Yva_filename", path(sharedDirPath / "Yva.h5").native());
-            files->addOpt("XvatXva_filename", path(sharedDirPath / "XvatXva.h5").native());
-            files->addOpt("XvatYva_filename", path(sharedDirPath / "XvatYva.h5").native());
-            files->addOpt("XtX_filename", path(sharedDirPath / "XtX.h5").native());
-            files->addOpt("Xty_filename", path(sharedDirPath / "Xty.h5").native());
-            files->addOpt("pred_filename", path(sharedDirPath / "pred.h5").native());
-            files->addOpt("optimizer_W_filename", path(sharedDirPath / "optimizer_W.h5").native());
-            files->addOpt("optimizer_C_filename", path(sharedDirPath / "optimizer_C.h5").native());
-            files->addOpt("optimizer_X_filename", path(sharedDirPath / "optimizer_X.h5").native());
-
-            (*table)["files"] = files;
-
-        }
-    }
-
+protected:
+    void init(const std::string& sharedDir, bool usedefopt);
 };
 
 #ifdef _WIN32
