@@ -3,7 +3,7 @@
 
 #ifdef _WIN32
 #  ifdef _GURLS_STATIC
-#    define GURLS_EXPORT __stdcall
+#    define GURLS_EXPORT
 #  elif defined _GURLS_EXPORTS
 #    define GURLS_EXPORT  __declspec( dllexport )
 #  else

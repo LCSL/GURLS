@@ -135,14 +135,18 @@ set(gurls_sources ${gurls_sources} ${bgurls_sources})
 
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
-find_package( Boost 1.46.0 COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
 
 if(USE_EXTERNALS)
     unset(Boost_USE_STATIC_LIBS CACHE)
-    set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_LIBS	ON)
+    if(MSVC)
+        add_definitions(-DBOOST_ALL_NO_LIB)
+    endif()
 else()
     option(Boost_USE_STATIC_LIBS "Link statically against boost libs" ON)
 endif()
+
+find_package( Boost 1.46.0 COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
@@ -179,7 +183,11 @@ endif(USE_BINARY_ARCHIVES)
 
 if(USE_EXTERNALS)
     unset(BUILD_SHARED_LIBS CACHE)
-    set(BUILD_SHARED_LIBS OFF)
+    if(MSVC)
+        set(BUILD_SHARED_LIBS ON)
+    else()
+        set(BUILD_SHARED_LIBS OFF)
+    endif()
 else()
     set(BUILD_SHARED_LIBS ON CACHE BOOL "Build a shared library (ON) or a static one (OFF)")
 endif()
@@ -190,10 +198,15 @@ else(BUILD_SHARED_LIBS)
     set(LIB_TYPE STATIC)
 endif(BUILD_SHARED_LIBS)
 
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIRS})
+link_directories(${ZLIB_LIBRARY_DIRS})
+add_definitions(${ZLIB_DEFINITIONS})
 
-set ( ZLIB_LIBRARIES ${HDF5_z_LIBRARY})
 
-add_definitions( -Wall )
+#set ( ZLIB_LIBRARIES ${HDF5_z_LIBRARY})
+
+#add_definitions( -Wall )
 
 add_library(${GURLSLIBRARY} ${LIB_TYPE} ${gurls_headers} ${gurls_sources} )
 target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES})
@@ -207,10 +220,12 @@ INSTALL(TARGETS ${GURLSLIBRARY}
 if(MSVC)
 
     add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-    set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_FLAGS "/EHa")
+    #set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_FLAGS "/EHa")
 
     if(BUILD_SHARED_LIBS)
         set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_EXPORTS")
+    else()
+        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_STATIC")
     endif(BUILD_SHARED_LIBS)
 
 endif(MSVC)

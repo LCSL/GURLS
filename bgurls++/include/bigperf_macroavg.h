@@ -115,11 +115,11 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
 
 //    n_class = zeros(1,T);
     T* nClass = new T[t];
-    set(nClass, (T)0.0, t);
+    set(nClass, (T)0.0, (int)t);
 
 //    flatcost = zeros(1,T);
     T* flatCost = new T[t];
-    set(flatCost, (T)0.0, t);
+    set(flatCost, (T)0.0, (int)t);
 
 
     int numprocs;
@@ -148,7 +148,7 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
 
 //        [dummy,IY]= max(y_block,[],2);
     unsigned long* IY = new unsigned long[y_block->rows()];
-    indicesOfMax(y_block->getData(), y_block->rows(), y_block->cols(), IY, work, 2);
+    indicesOfMax(y_block->getData(), (int)(y_block->rows()), (int)(y_block->cols()), IY, work, 2);
     delete[] work;
 
 //        [dummy,IYpred]= sort(ypred_block,2,'descend');
@@ -156,7 +156,7 @@ GurlsOptionsList* BigPerfMacroAvg<T>::execute(const BigArray<T>& /*X*/, const Bi
     delete y_block;
 
     T* values = NULL;
-    sort(ypred_block->getData(), ypred_block->rows(), ypred_block->cols(), &gte, values, IYpred);
+    sort(ypred_block->getData(), ypred_block->rows(), ypred_block->cols(), &gte<T>, values, IYpred);
     delete ypred_block;
 
 //        for i=1:size(y_block,1)

@@ -1,7 +1,17 @@
+
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#endif
+
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
 
 #include <boost/serialization/base_object.hpp>
 
@@ -77,6 +87,34 @@ template <typename T>
 BigArray<T>::BigArray(std::string fileName, const gMat2D<T>& mat)
 {
     init(fileName, mat.rows(), mat.cols());
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
+
+template <typename T>
+BigArray<T>::BigArray(std::wstring fileName)
+{
+    std::string fName = std::string(fileName.begin(), fileName.end());
+
+    loadNC(fName);
+}
+
+template <typename T>
+BigArray<T>::BigArray(std::wstring fileName, unsigned long r, unsigned long c)
+{
+    std::string fName = std::string(fileName.begin(), fileName.end());
+
+    init(fName, r, c);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+}
+
+template <typename T>
+BigArray<T>::BigArray(std::wstring fileName, const gMat2D<T>& mat)
+{
+    std::string fName = std::string(fileName.begin(), fileName.end());
+
+    init(fName, mat.rows(), mat.cols());
 
     MPI_Barrier(MPI_COMM_WORLD);
 }
@@ -535,7 +573,7 @@ void BigArray<T>::readCSV(const std::string& fileName)
     in.close();
 
     T* block =  new T[block_rows*cols];
-    transpose(block_transposed, cols, block_rows, block);
+    gurls::transpose(block_transposed, cols, block_rows, block);
     setMatrix(first_row, 0, block, block_rows, cols);
 
     delete[] block_transposed;
@@ -544,6 +582,13 @@ void BigArray<T>::readCSV(const std::string& fileName)
     MPI_Barrier(MPI_COMM_WORLD);
 }
 
+template <typename T>
+void BigArray<T>::readCSV(const std::wstring& fileName)
+{
+    std::string fName = std::string(fileName.begin(), fileName.end());
+
+    readCSV(fName);
+}
 
 template <typename T>
 void BigArray<T>::loadNC(const std::string &fileName)
@@ -590,8 +635,8 @@ void BigArray<T>::loadNC(const std::string &fileName)
     status = H5Sclose(filespace);
     CHECK_HDF5_ERR(status, errorString)
 
-    this->numrows = dims[1];
-    this->numcols = dims[0];
+    this->numrows = static_cast<unsigned long>(dims[1]);
+    this->numcols = static_cast<unsigned long>(dims[0]);
 
     // Create property list for collective dataset write.
     plist_id = H5Pcreate(H5P_DATASET_XFER);

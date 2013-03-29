@@ -64,23 +64,16 @@ hid_t getHdfType()
 }
 
 template<>
-hid_t getHdfType<float>();
+GURLS_EXPORT hid_t getHdfType<float>();
 
 template<>
-hid_t getHdfType<double>();
+GURLS_EXPORT hid_t getHdfType<double>();
 
 template<>
-hid_t getHdfType<unsigned long>();
+GURLS_EXPORT hid_t getHdfType<unsigned long>();
 
 template<>
-hid_t getHdfType<unsigned int>();
-
-template<typename T>
-int nc_put_vara(int ncid, int varid,  const size_t *startp,
-                   const size_t *countp, const T *op)
-{
-    throw gException(Exception_Unsupported_MatrixType);
-}
+GURLS_EXPORT hid_t getHdfType<unsigned int>();
 
 
 template<typename T>
@@ -96,6 +89,12 @@ public:
     BigArray(std::string fileName, unsigned long r, unsigned long c);
 
     BigArray(std::string fileName, const gMat2D<T>& mat);
+
+    BigArray(std::wstring fileName);
+
+    BigArray(std::wstring fileName, unsigned long r, unsigned long c);
+
+    BigArray(std::wstring fileName, const gMat2D<T>& mat);
 
     BigArray(const BigArray<T>& other);
 
@@ -168,6 +167,10 @@ public:
       */
     void readCSV(const std::string& fileName);
 
+    /**
+      * Read the bigarray from a CSV file
+      */
+    void readCSV(const std::wstring& fileName);
 
     static void releaseMPIData()
     {

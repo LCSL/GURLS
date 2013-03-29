@@ -104,8 +104,10 @@ GurlsOptionsList *BigParamSelHoPrimal<T>::execute(const BigArray<T> &X, const Bi
     const BigArray<T>& XvatXva = split->getOptValue<OptMatrix<BigArray<T> > >("XvatXva");
     const BigArray<T>& Xvatyva = split->getOptValue<OptMatrix<BigArray<T> > >("XvatYva");
 
-    BigArray<T>* XtX = matMult_AtB(X, X, opt.getOptAsString("files.XtX_filename"), opt.getOptAsNumber("memlimit"));
-    BigArray<T>* Xty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_filename"), opt.getOptAsNumber("memlimit"));
+    const unsigned long memLimit = static_cast<unsigned long>(opt.getOptAsNumber("memlimit"));
+
+    BigArray<T>* XtX = matMult_AtB(X, X, opt.getOptAsString("files.XtX_filename"), memLimit);
+    BigArray<T>* Xty = matMult_AtB(X, Y, opt.getOptAsString("files.Xty_filename"), memLimit);
 
 
     gMat2D<T>* XtX_mat = NULL;

@@ -162,7 +162,7 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
         {
             loadOpt->load(saveFile);
         }
-        catch(gException & ex)
+        catch(gException & /*ex*/)
         {
             delete loadOpt;
             loadOpt = NULL;

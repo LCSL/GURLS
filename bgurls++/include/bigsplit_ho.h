@@ -163,10 +163,10 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
     memset(local_hoCounts, 0, t*sizeof(unsigned long));
 
     for(unsigned long i=0; i<size; ++i)
-        local_hoCounts[i+start] = counts[i]*hoProportion;
+        local_hoCounts[i+start] = static_cast<unsigned long>(std::ceil(counts[i]*hoProportion));
 
     unsigned long* hoCounts = new unsigned long[t];
-    MPI_Allreduce(local_hoCounts, hoCounts, t, MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(local_hoCounts, hoCounts, (int)t, MPI_UNSIGNED_LONG, MPI_SUM, MPI_COMM_WORLD);
     delete[] local_hoCounts;
 
 
@@ -205,8 +205,9 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    BigArray<T>* XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), opt.getOptAsNumber("memlimit"));
-    BigArray<T>* XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"), opt.getOptAsNumber("memlimit"));
+    unsigned long memLimit = static_cast<unsigned long>(opt.getOptAsNumber("memlimit"));
+    BigArray<T>* XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), memLimit);
+    BigArray<T>* XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"), memLimit);
 
 
     GurlsOptionsList* split = new GurlsOptionsList("split");
