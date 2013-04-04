@@ -94,7 +94,7 @@ GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray
 {
     const BigArray<T>& W = opt.getOptValue<OptMatrix<BigArray<T> >  >("optimizer.W");
 
-    BigArray<T>* scores = matMult_AB(X, W, opt.getOptAsString("files.pred_filename"), static_cast<unsigned long>(opt.getOptAsNumber("memlimit")));
+    BigArray<T>* scores = matMult_AB(X, W, opt.getOptAsString("files.pred_filename"));
 
     GurlsOptionsList* ret = new GurlsOptionsList("pred");
     ret->addOpt("pred", new OptMatrix<BigArray<T> >(*scores));

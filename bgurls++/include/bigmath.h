@@ -96,9 +96,9 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
 
 
     const unsigned long blockRowsA = n/numBlocks;
-    const unsigned long blockRowsB = t/numBlocks;
+    const unsigned long blockColsB = t/numBlocks;
     const unsigned long lastBlockRowsA = blockRowsA + n%numBlocks;
-    const unsigned long lastBlockRowsB = blockRowsB + t%numBlocks;
+    const unsigned long lastblockColsB = blockColsB + t%numBlocks;
 
     gMat2D<T>* U = new gMat2D<T>;
     gMat2D<T>* V = new gMat2D<T>;
@@ -117,17 +117,17 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
         for(int cblock=0; cblock<numBlocks; ++cblock)
         {
             if(cblock == numBlocks -1)
-                cols = lastBlockRowsB;
+                cols = lastblockColsB;
             else
-                cols = blockRowsB;
+                cols = blockColsB;
 
             gMat2D<T> result(rows, cols);
 
-            B.getMatrix(0, cblock*blockRowsB, d, cols, *V);
+            B.getMatrix(0, cblock*blockColsB, d, cols, *V);
 
             dot(U->getData(), V->getData(), result.getData(), rows, d, d, cols, rows, cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-            ret->setMatrix(block*blockRowsA, cblock*blockRowsB, result);
+            ret->setMatrix(block*blockRowsA, cblock*blockColsB, result);
         }
     }
 
@@ -137,6 +137,61 @@ BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::s
     MPI_Barrier(MPI_COMM_WORLD);
     return ret;
 
+}
+
+
+/**
+ * Performs Matrix-matrix multiplication (AB) between BigArrays, assuming that B can be fully loaded in memory
+ * \param A first matrix
+ * \param B second matrix
+ * \param resultFile filename where result BigArray has to be stored
+ * \param memB available memory in bytes
+ * \return the result BigArray
+ */
+template<typename T>
+BigArray<T>* matMult_AB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile)
+{
+
+    if(A.cols() != B.rows())
+        throw gException(Exception_Inconsistent_Size);
+
+
+    const unsigned long n = A.rows();
+    const unsigned long d = A.cols();
+    const unsigned long t = B.cols();
+
+
+    int numprocs;
+    int myid;
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+
+
+    BigArray<T>* ret = new BigArray<T>(resultFile, n, t);
+
+    const unsigned long blockSize = n/numprocs;
+    const unsigned long remainder = (myid == numprocs-1)? (n%numprocs): 0;
+    const unsigned long blockRows = blockSize + remainder;
+
+    gMat2D<T>* U = new gMat2D<T>;
+    gMat2D<T>* V = new gMat2D<T>;
+
+    A.getMatrix(myid*blockSize, 0, blockRows, d, *U);
+    B.getMatrix(0, 0, d, t, *V);
+
+    T* result = new T[blockRows*t];
+
+    dot(U->getData(), V->getData(), result, blockRows, d, d, t, blockRows, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+
+    ret->setMatrix(myid*blockSize, 0, result, blockRows, t);
+
+    delete [] result;
+    delete U;
+    delete V;
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    return ret;
 }
 
 /**
@@ -233,6 +288,73 @@ BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::
     T* reduced = NULL;
     if(myid == 0)
         reduced = new T[d*t]; // size: d*t
+
+    MPI_ReduceT(sum, reduced, d*t, MPI_SUM, 0, MPI_COMM_WORLD);
+
+    delete [] sum;
+
+
+    BigArray<T>* ret = new BigArray<T>(resultFile, d, t);
+    if(myid == 0)
+    {
+        ret->setMatrix(0, 0, reduced, d, t);
+        delete[] reduced;
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    return ret;
+
+}
+
+/**
+ * Performs Matrix-matrix multiplication (A'B) between BigArrays
+ * \param A first matrix
+ * \param B second matrix
+ * \param resultFile filename where result BigArray has to be stored
+ * \param memB available memory in bytes
+ * \return the result BigArray
+ */
+template<typename T>
+BigArray<T>* matMult_AtB(const BigArray<T>& A, const BigArray<T>& B, const std::string& resultFile)
+{
+
+    if(A.rows() != B.rows())
+        throw gException(Exception_Inconsistent_Size);
+
+
+    const unsigned long n = A.rows();
+    const unsigned long d = A.cols();
+    const unsigned long t = B.cols();
+
+
+    int numprocs;
+    int myid;
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+
+
+    const unsigned long blockSize = n/numprocs;
+    const unsigned long remainder = (myid == numprocs-1)? (n%numprocs): 0;
+    const unsigned long blockRows = blockSize + remainder;
+
+
+    T* sum = new T[d*t];
+    set(sum, (T)0.0, d*t);
+
+    gMat2D<T>* U = new gMat2D<T>;
+    gMat2D<T>* V = new gMat2D<T>;
+
+    A.getMatrix(myid*blockSize, 0, blockRows, d, *U);
+    B.getMatrix(myid*blockSize, 0, blockRows, t, *V);
+
+    dot(U->getData(), V->getData(), sum, blockRows, d, blockRows, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+    delete U;
+    delete V;
+
+    T* reduced = NULL;
+    if(myid == 0)
+        reduced = new T[d*t];
 
     MPI_ReduceT(sum, reduced, d*t, MPI_SUM, 0, MPI_COMM_WORLD);
 

@@ -205,9 +205,8 @@ GurlsOptionsList* BigSplitHo<T>::execute(const BigArray<T>& X, const BigArray<T>
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    unsigned long memLimit = static_cast<unsigned long>(opt.getOptAsNumber("memlimit"));
-    BigArray<T>* XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"), memLimit);
-    BigArray<T>* XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"), memLimit);
+    BigArray<T>* XvatXva = matMult_AtB(*Xva, *Xva, opt.getOptAsString("files.XvatXva_filename"));
+    BigArray<T>* XvatYva = matMult_AtB(*Xva, *Yva, opt.getOptAsString("files.XvatYva_filename"));
 
 
     GurlsOptionsList* split = new GurlsOptionsList("split");
