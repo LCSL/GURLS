@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
     BGurlsOptionsList opt("bio_demoB", shared_directory.native(), true);
 
     // remove old experiments results
-    if(myid == 0)
+    if(myid == 0 && boost::filesystem::exists(path(opt.getOptAsString("savefile"))))
         boost::filesystem::remove(path(opt.getOptAsString("savefile")));
 
     OptTaskSequence *seq = new OptTaskSequence();

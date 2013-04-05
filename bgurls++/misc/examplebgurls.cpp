@@ -135,7 +135,8 @@ int main(int argc, char *argv[])
     BGurlsOptionsList opt("examplebgurls", shared_directory.native(), true);
 
     // remove old experiments results
-    boost::filesystem::remove(path(opt.getOptAsString("savefile")));
+    if(myid == 0 && boost::filesystem::exists(path(opt.getOptAsString("savefile"))))
+        boost::filesystem::remove(path(opt.getOptAsString("savefile")));
 
     OptTaskSequence *seq = new OptTaskSequence();
     *seq << "bigsplit:ho" << "bigparamsel:hoprimal" << "bigoptimizer:rlsprimal" << "bigpred:primal" << "bigperf:macroavg";
