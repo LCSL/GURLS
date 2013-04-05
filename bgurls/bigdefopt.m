@@ -31,7 +31,7 @@ opt.perfeval = {'acc'};
 opt.nholdouts = 1;
 %% Data option
 opt.hoproportion = 0.5;
-opt.nlambda = 50;
+opt.nlambda = 20;
 opt.nsigma =  25;
 
 %% Quiet

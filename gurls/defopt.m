@@ -35,7 +35,7 @@ opt.hoperf = @perf_macroavg;
 opt.nholdouts = 1;
 %% Data option
 opt.hoproportion = 0.2;
-opt.nlambda = 100;
+opt.nlambda = 20;
 opt.nsigma =  25;
 
 
