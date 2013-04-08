@@ -142,8 +142,8 @@ if(MSVC)
 
     if(GURLS_BUILD_SHARED_LIBS)
         set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_EXPORTS")
-    else()
-        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_STATIC")
+#    else()
+#        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_STATIC")
     endif(GURLS_BUILD_SHARED_LIBS)
 
 endif(MSVC)
