@@ -17,7 +17,7 @@ include_directories( ${HDRDIR} )
 
 
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
-target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES})
 
 if(GURLS_USE_EXTERNAL_BOOST)
     add_dependencies(${GURLSLIBRARY} boost)
@@ -28,12 +28,13 @@ INSTALL(TARGETS ${GURLSLIBRARY}
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+INSTALL (FILES ${gurls_headers} DESTINATION include/gurls++)
 
 if(MSVC)
 
     set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_FLAGS "/EHa")
-	
-	if(GURLS_BUILD_SHARED_LIBS)
+
+    if(GURLS_BUILD_SHARED_LIBS)
         set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_EXPORTS")
 #    else()
 #        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_STATIC")
@@ -43,9 +44,7 @@ endif(MSVC)
 
 set(GURLS_LINK_LIBRARIES
     ${GURLSLIBRARY}
-    ${Boost_LIBRARIES}
-    ${LAPACK_LIBRARIES}
-    ${BLAS_LIBRARIES}
+    ${GurlsDependencies_LIBRARIES}
 )
 
 set(GURLSPP_BUILD_DEMO OFF CACHE BOOL "")

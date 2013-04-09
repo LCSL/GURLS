@@ -121,7 +121,7 @@ endif(BGURLSPP_USE_MPI_IO)
 
 
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
-target_link_libraries(${GURLSLIBRARY} ${Boost_LIBRARIES} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${MPI_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES} ${MPI_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES})
 
 if(GURLS_USE_EXTERNAL_BOOST)
     add_dependencies(${GURLSLIBRARY} boost)
@@ -151,9 +151,7 @@ endif(MSVC)
 
 set(GURLS_LINK_LIBRARIES
     ${GURLSLIBRARY}
-    ${Boost_LIBRARIES}
-    ${LAPACK_LIBRARIES}
-    ${BLAS_LIBRARIES}
+    ${GurlsDependencies_LIBRARIES}
     ${MPI_LIBRARIES}
     ${HDF5_LIBRARIES}
     ${ZLIB_LIBRARIES}

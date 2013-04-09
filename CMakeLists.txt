@@ -55,6 +55,12 @@ if(GURLS_BUILD_GURLSPP OR GURLS_BUILD_BGURLSPP)
 
         add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external)
 
+    else(GURLS_USE_EXTERNALS)
+
+        unset(GURLS_USE_EXTERNAL_BLAS_LAPACK CACHE)
+        unset(GURLS_USE_EXTERNAL_BOOST CACHE)
+        unset(GURLS_USE_EXTERNAL_HDF5 CACHE)
+
     endif(GURLS_USE_EXTERNALS)
 
     #################### BLAS/LAPACK
@@ -63,67 +69,7 @@ if(GURLS_BUILD_GURLSPP OR GURLS_BUILD_BGURLSPP)
 
     else(GURLS_USE_EXTERNAL_BLAS_LAPACK)
 
-        if(CMAKE_COMPILER_IS_GNUCC OR MSVC)
-
-            set(BLAS_LAPACK_IMPLEMENTATION "" CACHE STRING "Specify your blas/lapack implementation (MKL, ACML, ATLAS, NETLIB or an empty string)")
-
-            if(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
-
-                unset(BLAS_LIBRARIES CACHE)
-                unset(LAPACK_LIBRARIES CACHE)
-
-                find_package(MKL)
-
-                include_directories(${MKL_INCLUDE_DIRS})
-                link_directories(${MKL_LIBRARY_DIRS})
-                add_definitions( ${MKL_DEFINITIONS})
-
-                set(BLAS_LIBRARIES "")
-                set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
-
-            elseif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "ACML")
-
-                unset(BLAS_LIBRARIES CACHE)
-                unset(LAPACK_LIBRARIES CACHE)
-
-                find_package(ACML)
-                set(BLAS_LIBRARIES "")
-                add_definitions( ${ACML_DEFINITIONS})
-                set(LAPACK_LIBRARIES ${ACML_LIBRARIES})
-
-
-            elseif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "ATLAS")
-
-                unset(BLAS_LIBRARIES CACHE)
-                unset(LAPACK_LIBRARIES CACHE)
-
-                find_package(ATLAS)
-                set(BLAS_LIBRARIES ${ATLAS_BLAS_LIBS} ${ATLAS_LIBS} gfortran)
-                add_definitions( ${ATLAS_DEFINITIONS})
-                set(LAPACK_LIBRARIES ${ATLAS_LAPACK_LIBS})
-
-            elseif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "NETLIB")
-
-                unset(BLAS_LIBRARIES CACHE)
-                unset(LAPACK_LIBRARIES CACHE)
-
-                enable_language(Fortran)
-                find_package(BLAS)
-                find_package(LAPACK)
-
-            else(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
-
-                set(BLAS_LIBRARIES  "" CACHE FILEPATH "")
-                set(LAPACK_LIBRARIES "" CACHE FILEPATH "")
-
-            endif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
-
-        else(CMAKE_COMPILER_IS_GNUCC OR MSVC)
-
-            set(BLAS_LIBRARIES  "" CACHE FILEPATH "")
-            set(LAPACK_LIBRARIES "" CACHE FILEPATH "")
-
-        endif(CMAKE_COMPILER_IS_GNUCC OR MSVC)
+            set(DEPENDENCIES_COMPONENTS ${DEPENDENCIES_COMPONENTS} BLAS_LAPACK)
 
     endif(GURLS_USE_EXTERNAL_BLAS_LAPACK)
 
@@ -154,23 +100,25 @@ if(GURLS_BUILD_GURLSPP OR GURLS_BUILD_BGURLSPP)
             add_definitions(-DBOOST_ALL_NO_LIB)
         endif()
 
-        set( Boost_FOUND ON )
+        include_directories(${Boost_INCLUDE_DIRS})
+        link_directories(${Boost_LIBRARY_DIRS})
+        set(GurlsExtDependencies_LIBRARIES ${GurlsExtDependencies_LIBRARIES} ${Boost_LIBRARIES})
 
     else(GURLS_USE_EXTERNAL_BOOST)
 
-        set(Boost_USE_MULTITHREADED      ON)
-        set(Boost_USE_STATIC_RUNTIME    OFF)
-        option(Boost_USE_STATIC_LIBS "Link statically against boost libs" OFF)
-        find_package( Boost 1.46.0 COMPONENTS serialization date_time  filesystem unit_test_framework system signals REQUIRED)
-        mark_as_advanced(Boost_DIR)
+       set(DEPENDENCIES_COMPONENTS ${DEPENDENCIES_COMPONENTS} BOOST)
 
     endif(GURLS_USE_EXTERNAL_BOOST)
 
-    if(Boost_FOUND)
-        include_directories(${Boost_INCLUDE_DIRS})
-        link_directories(${Boost_LIBRARY_DIRS})
-    endif(Boost_FOUND)
+    if(DEPENDENCIES_COMPONENTS)
+        find_package(GurlsDependencies COMPONENTS ${DEPENDENCIES_COMPONENTS} REQUIRED)
 
+        include_directories(${GurlsDependencies_INCLUDE_DIRS})
+        link_directories(${GurlsDependencies_LIBRARY_DIRS})
+        add_definitions(${GurlsDependencies_DEFINITIONS})
+    endif()
+
+    set(GurlsDependencies_LIBRARIES ${GurlsDependencies_LIBRARIES} ${GurlsExtDependencies_LIBRARIES})
 
     set(GURLS_USE_BINARY_ARCHIVES ON CACHE BOOL "If ON all the data structures in GURLS are saved/loaded using binary files.")
 
@@ -189,7 +137,7 @@ if(GURLS_BUILD_GURLSPP OR GURLS_BUILD_BGURLSPP)
         set( GURLS_LIB_LINK SHARED)
     else(GURLS_BUILD_SHARED_LIBS)
         set(GURLS_LIB_LINK STATIC)
-		add_definitions( -D_GURLS_STATIC)
+        add_definitions( -D_GURLS_STATIC)
     endif(GURLS_BUILD_SHARED_LIBS)
 
     #add_definitions( -Wall )
