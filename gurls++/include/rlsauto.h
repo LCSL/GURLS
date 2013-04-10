@@ -44,6 +44,7 @@
 #define _GURLS_RLSAUTO_H_
 
 #include "optimization.h"
+#include "linearkernel.h"
 
 
 namespace gurls {
@@ -96,6 +97,25 @@ GurlsOptionsList* RLSAuto<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, co
     {
         //      cfr = rls_dual(X, y, opt);
         RLSDual<T> rlsdual;
+
+        if(!opt.hasOpt("kernel.K"))
+        {
+            KernelLinear<T> kernelTask;
+            GurlsOptionsList* kernel = kernelTask.execute(X, Y, opt);
+
+            GurlsOptionsList tmp_opt("tmp");
+
+            GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
+            tmp_paramsel->copyOpt("lambas", *(opt.getOptAs<GurlsOptionsList>("paramsel")));
+            tmp_opt.addOpt("paramsel", tmp_paramsel);
+
+            tmp_opt.copyOpt("singlelambda", opt);
+
+            tmp_opt.addOpt("kernel", kernel);
+
+            return rlsdual.execute(X, Y, tmp_opt);
+        }
+
         return rlsdual.execute(X, Y, opt);
     }
 }
