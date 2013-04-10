@@ -6,8 +6,6 @@
 #  Gurls++_LIBRARIES - The libraries needed to use Gurls++
 #  Gurls++_DEFINITIONS - Compiler switches required for using Gurls++
 
-find_package(GurlsDependencies)
-
 
 set(Gurls++_USE_BINARY_ARCHIVES ON CACHE BOOL "If ON all the data structures in GURLS are saved/loaded using binary files.")
 
@@ -21,11 +19,16 @@ find_path(Gurls++_INCLUDE_DIR
         PATHS ${Gurls++_ROOT}/include/gurls++
 )
 
-if( ( Gurls++_LIBRARY STREQUAL "") OR ( Gurls++_INCLUDE_DIR STREQUAL "") )
+if( ( Gurls++_LIBRARY STREQUAL "Gurls++_LIBRARY-NOTFOUND") OR ( Gurls++_INCLUDE_DIR STREQUAL "Gurls++_INCLUDE_DIR-NOTFOUND") )
     set(Gurls++_ROOT "" CACHE PATH "Path to the root of a Gurls++ installation")
     set(Gurls++_FOUND 0)
-    message(WARNING "Gurls++ not found. Please try specifying Gurls++_ROOT")
+    message(FATAL_ERROR "Gurls++ not found. Please try specifying Gurls++_ROOT")
 else()
+
+    set(ENV{GURLSPP_ROOT} ${Gurls++_ROOT})
+    set(CMAKE_PREFIX_PATH  ${GURLS++_ROOT} ${CMAKE_PREFIX_PATH})
+    find_package(GurlsDependencies)
+
     set(Gurls++_FOUND 1)
     set(Gurls++_INCLUDE_DIRS ${Gurls++_INCLUDE_DIR} ${GurlsDependencies_INCLUDE_DIRS})
     set(Gurls++_LIBRARY_DIRS ${GurlsDependencies_LIBRARY_DIRS})
@@ -37,4 +40,3 @@ else()
     endif(Gurls++_USE_BINARY_ARCHIVES)
 
 endif()
-

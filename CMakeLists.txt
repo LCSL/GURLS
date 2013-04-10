@@ -42,7 +42,12 @@ if(GURLS_BUILD_GURLSPP OR GURLS_BUILD_BGURLSPP)
 
     if(GURLS_USE_EXTERNALS)
 
-        #set(GURLS_USE_EXTERNAL_BLAS_LAPACK OFF CACHE BOOL "")
+        if(MSVC)
+            set(GURLS_USE_EXTERNAL_BLAS_LAPACK OFF)
+        else()
+            set(GURLS_USE_EXTERNAL_BLAS_LAPACK ON CACHE BOOL "")
+        endif()
+
         set(GURLS_USE_EXTERNAL_BOOST ON CACHE BOOL "")
 
         if(GURLS_BUILD_BGURLSPP)
@@ -66,6 +71,10 @@ if(GURLS_BUILD_GURLSPP OR GURLS_BUILD_BGURLSPP)
     #################### BLAS/LAPACK
 
     if(GURLS_USE_EXTERNAL_BLAS_LAPACK)
+
+        enable_language(Fortran)
+        link_directories(${GURLS_EXTERNALS_PREFIX}/lib)
+        set(GurlsExtDependencies_LIBRARIES libopenblas.a gfortran pthread)
 
     else(GURLS_USE_EXTERNAL_BLAS_LAPACK)
 

@@ -13,11 +13,15 @@ set(MISCDIR ${CMAKE_CURRENT_SOURCE_DIR}/misc/)
 file(GLOB gurls_headers ${HDRDIR}*.h*)
 file(GLOB gurls_sources ${SRCDIR}*.cpp)
 
-include_directories( ${HDRDIR} )
+include_directories( BEFORE ${HDRDIR} )
 
 
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
 target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES})
+
+if(GURLS_USE_EXTERNAL_BLAS_LAPACK)
+    add_dependencies(${GURLSLIBRARY} openblas)
+endif(GURLS_USE_EXTERNAL_BLAS_LAPACK)
 
 if(GURLS_USE_EXTERNAL_BOOST)
     add_dependencies(${GURLSLIBRARY} boost)
