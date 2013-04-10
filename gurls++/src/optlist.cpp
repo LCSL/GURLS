@@ -142,6 +142,18 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
 
 }
 
+GurlsOptionsList::GurlsOptionsList(const GurlsOptionsList &other): GurlsOption(OptListOption)
+{
+    table = new ValueType();
+
+    ValueType::const_iterator it, end;
+
+    for(it = other.table->begin(), end = other.table->end(); it != end; ++it)
+        copyOpt(it->first, other);
+
+    name = getOptAsString("Name");
+}
+
 GurlsOptionsList::~GurlsOptionsList()
 {
     ValueType::iterator it, end;
@@ -326,18 +338,7 @@ void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
     {
         const GurlsOptionsList* toCopy_list = GurlsOptionsList::dynacast(toCopy);
 
-        GurlsOptionsList* list = new GurlsOptionsList(toCopy_list->name);
-
-        ValueType::const_iterator it, end;
-
-        list->removeOpt("Name");
-
-        for(it = toCopy_list->table->begin(), end = toCopy_list->table->end(); it != end; ++it)
-            list->copyOpt(it->first, *toCopy_list);
-
-        list->setName(list->getOptAsString("Name"));
-
-        newOpt = list;
+        newOpt = new GurlsOptionsList(*toCopy_list);
     }
         break;
     case OptArrayOption:

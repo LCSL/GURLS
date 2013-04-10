@@ -84,6 +84,11 @@ public:
     GurlsOptionsList(std::string ExpName, bool usedefopt = false);
 
     /**
+      * Copy constructor
+      */
+    GurlsOptionsList(const GurlsOptionsList &other);
+
+    /**
       * Destructor
       */
     ~GurlsOptionsList();
