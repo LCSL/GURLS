@@ -19,7 +19,7 @@ function [cfr] = bigrls_primal(bX, bY, opt)
 %		- C : empty matrix
 %		- X : empty matrix
 
-	
+    XtX = ba_product_uvt(bX, bX); 
 	Xty = ba_product_uvt(bX, bY);
 	
 	n = bX.NumItems();
