@@ -20,24 +20,36 @@ function vout = paramsel_loocvprimal(X,y,opt)
 % -perf: is a matrix with the validation error for each lambda guess 
 %        and for each class
 % -guesses: array of guesses for the regularization parameter lambda 
+% -XtX: kernel matrix in the primal space (X'*X)
+% -Xty: X'*y
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
 end
 
-K = X'*X;
+%verify if matrix XtX has already been computed (especially for online RLS)
+if isfield(opt,'rls');
+    if isfield(opt.rls,'XtX');
+        Ktot = opt.rls.XtX;
+    else
+        Ktot = X'*X;
+    end
+else
+    Ktot = X'*X;
+end
+Xtytot = X'*y;
+
 [n,T]  = size(y);
 d = size(X,2);
-[Q,L] = eig(K);
+[Q,L] = eig(Ktot);
 L = double(diag(L));
-
 
 tot = opt.nlambda;
 guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
 
 LEFT = X*Q;
-RIGHT = Q'*X'*y;
+RIGHT = Q'*Xtytot;
 
 right = Q'*X';
 
@@ -65,3 +77,6 @@ end
 vout.lambdas = 	guesses(idx);
 vout.perf = 	ap;
 vout.guesses = 	guesses;
+vout.XtX = Ktot;
+vout.Xty = Xtytot;
+
