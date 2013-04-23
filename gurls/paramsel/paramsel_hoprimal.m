@@ -28,8 +28,6 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 % -guesses: cell array (opt.nholdoutsX1). For each split a cell contains an 
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
-% -XtX: kernel matrix in the primal space (X'*X)
-% -Xty: X'*y
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
@@ -47,10 +45,15 @@ if isfield(opt,'kernel');
     else
         Ktot = X'*X;
     end
+    if isfield(opt.kernel,'XtX');
+        Xtytot = opt.kernel.Xty;
+    else
+        Xtytot = X'*y;
+    end
 else
     Ktot = X'*X;
+    Xtytot = X'*y;
 end
-Xtytot = X'*y;
 
 d = size(X,2);
 T = size(y,2);
@@ -96,5 +99,3 @@ if numel(vout.lambdas_round) > 1
 else
 	vout.lambdas = vout.lambdas_round{1};
 end
-vout.XtX = Ktot;
-vout.Xty = Xtytot;
