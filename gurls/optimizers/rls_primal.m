@@ -26,11 +26,20 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 %fprintf('\tSolving primal RLS...\n');
 
-[n,d] = size(X);
+n = size(y,1);
 
-XtX = X'*X; % d x d matrix.
-Xty = X'*y; % d x T matrix.
-
+% check if matrices XtX and Xty have been previously computed during
+% parameter selection
+if isfield(opt.paramsel,'XtX');
+    XtX = opt.paramsel.XtX;
+else
+    XtX = X'*X; % d x d matrix.
+end
+if isfield(opt.paramsel,'XtX');
+    Xty = opt.paramsel.Xty;
+else
+    Xty = X'*y; % d x T matrix.
+end
 cfr.W = rls_primal_driver( XtX, Xty, n, lambda );
 cfr.C = [];
 cfr.X = [];
