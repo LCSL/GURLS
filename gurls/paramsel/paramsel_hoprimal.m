@@ -41,9 +41,9 @@ end
 savevars = [];
 
 %verify if matrix XtX has already been computed (especially for online RLS)
-if isfield(opt,'rls');
-    if isfield(opt.rls,'XtX');
-        Ktot = opt.rls.XtX;
+if isfield(opt,'kernel');
+    if isfield(opt.kernel,'XtX');
+        Ktot = opt.kernel.XtX;
     else
         Ktot = X'*X;
     end
@@ -52,6 +52,8 @@ else
 end
 Xtytot = X'*y;
 
+d = size(X,2);
+T = size(y,2);
 
 for nh = 1:opt.nholdouts
 	if strcmp(class(opt.split),'cell')
@@ -62,8 +64,7 @@ for nh = 1:opt.nholdouts
 		va = opt.split.va;
 	end	
 
-	[n,d] = size(X(tr,:));
-	[n,T]  = size(y(tr,:));
+	n = length(tr);
 	
 	K = Ktot - X(va,:)'*X(va,:);
 	
