@@ -30,8 +30,8 @@ end
 
 %verify if matrix XtX has already been computed (especially for online RLS)
 if isfield(opt,'rls');
-    if isfield(opt.rls,'XtX');
-        Ktot = opt.rls.XtX;
+    if isfield(opt.kernel,'XtX');
+        Ktot = opt.kernel.XtX;
     else
         Ktot = X'*X;
     end
@@ -79,4 +79,3 @@ vout.perf = 	ap;
 vout.guesses = 	guesses;
 vout.XtX = Ktot;
 vout.Xty = Xtytot;
-
