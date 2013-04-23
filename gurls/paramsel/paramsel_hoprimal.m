@@ -28,13 +28,30 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 % -guesses: cell array (opt.nholdoutsX1). For each split a cell contains an 
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
+% -XtX: kernel matrix in the primal space (X'*X)
+% -Xty: X'*y
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+    vout = rmfield(vout,'perf');
+    vout = rmfield(vout,'guesses');
 end
 
 savevars = [];
+
+%verify if matrix XtX has already been computed (especially for online RLS)
+if isfield(opt,'rls');
+    if isfield(opt.rls,'XtX');
+        Ktot = opt.rls.XtX;
+    else
+        Ktot = X'*X;
+    end
+else
+    Ktot = X'*X;
+end
+Xtytot = X'*y;
+
 
 for nh = 1:opt.nholdouts
 	if strcmp(class(opt.split),'cell')
@@ -48,13 +65,13 @@ for nh = 1:opt.nholdouts
 	[n,d] = size(X(tr,:));
 	[n,T]  = size(y(tr,:));
 	
-	K = X(tr,:)'*X(tr,:);
+	K = Ktot - X(va,:)'*X(va,:);
 	
 	tot = opt.nlambda;
 	[Q,L] = eig(K);
 	Q = double(Q);
 	L = double(diag(L));
-	QtXtY = Q'*(X(tr,:)'*y(tr,:));
+	QtXtY = Q'*(Xtytot - X(va,:)'*y(va,:));
 	
 	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
 		
@@ -63,7 +80,6 @@ for nh = 1:opt.nholdouts
 		opt.rls.W = rls_eigen(Q,L,QtXtY,guesses(i),n);
 		opt.pred = pred_primal(X(va,:),y(va,:),opt);
 		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);
-		%p{i} = perf(scores,yho,{'precrec'});
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);
 		end	
@@ -79,3 +95,5 @@ if numel(vout.lambdas_round) > 1
 else
 	vout.lambdas = vout.lambdas_round{1};
 end
+vout.XtX = Ktot;
+vout.Xty = Xtytot;
