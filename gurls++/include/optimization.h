@@ -82,6 +82,12 @@ class RLSPegasos;
 template <typename T>
 class RLSGPRegr;
 
+template <typename T>
+class RLSPrimalRecInit;
+
+template <typename T>
+class RLSPrimalRecUpdate;
+
 /**
  * \ingroup Exceptions
  *
@@ -136,6 +142,10 @@ public:
         return new RLSPegasos<T>;
       if(id == "rlsgpregr")
         return new RLSGPRegr<T>;
+      if(id == "rlsprimalrecinit")
+        return new RLSPrimalRecInit<T>;
+      if(id == "rlsprimalrecupdate")
+        return new RLSPrimalRecUpdate<T>;
 
         throw BadOptimizerCreation(id);
     }

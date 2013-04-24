@@ -77,6 +77,8 @@
 #include "rlsdualr.h"
 #include "rlspegasos.h"
 #include "rlsgp.h"
+#include "rlsprimalrecinit.h"
+#include "rlsprimalrecupdate.h"
 
 #include "loocvprimal.h"
 #include "loocvdual.h"
