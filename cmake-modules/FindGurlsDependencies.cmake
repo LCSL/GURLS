@@ -74,7 +74,10 @@ if(GURLS_USE_BLAS_LAPACK)
             unset(LAPACK_LIBRARIES CACHE)
 
             set (Openblas_ROOT $ENV{GURLSPP_ROOT})
-            enable_language(Fortran)
+			if(CMAKE_COMPILER_IS_GNUCC)
+				enable_language(Fortran)
+			endif()
+			set (OPENBLAS_IGNORE_HEADERS ON)
             find_package(Openblas)
 
             set(GurlsDependencies_INCLUDE_DIRS ${GurlsDependencies_INCLUDE_DIRS} ${Openblas_INCLUDE_DIRS})
@@ -118,6 +121,10 @@ if(GURLS_USE_BOOST)
         set(GurlsDependencies_LIBRARIES ${GurlsDependencies_LIBRARIES} ${Boost_LIBRARIES})
     endif(Boost_FOUND)
 
+	if(MSVC)
+		add_definitions(-DBOOST_ALL_NO_LIB)
+	endif()
+	
 endif(GURLS_USE_BOOST)
 
 SET(GurlsDependencies_FOUND 1)
