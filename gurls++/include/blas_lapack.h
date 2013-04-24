@@ -344,6 +344,27 @@ int dpotrf_(char *UPLO, int *n, double *a, int *lda , int *info);
 int sgelss_( int *m, int *n, int* nrhs, float *a, int *lda, float* b, int *ldb, float *s, float *rcond, int *rank, float *work, int *lwork, int *info);
 
 /**
+  * \brief Prototype for Lapack DGELSS
+  *
+  * Computes the minimum norm solution to a real linear least squares problem:
+  *
+  *  Minimize \f$||(| b - Ax |)||_2\f$.
+  *
+  * Using the singular value decomposition (SVD) of \f$A\f$. \f$A\f$ is an M-by-N
+  * matrix which may be rank-deficient.
+  *
+  * Several right hand side vectors b and solution vectors x can be
+  * handled in a single call; they are stored as the columns of the
+  * M-by-NRHS right hand side matrix \f$B\f$ and the N-by-NRHS solution matrix
+  * \f$X\f$.
+  *
+  * The effective rank of \f$A\f$ is determined by treating as zero those
+  * singular values which are less than RCOND times the largest singular
+  * value.
+  */
+int dgelss_( int *m, int *n, int* nrhs, double *a, int *lda, double* b, int *ldb, double *s, double *rcond, int *rank, double *work, int *lwork, int *info);
+
+/**
   * \brief Prototype for Lapack SSYEV
   *
   * Computes all eigenvalues and, optionally, eigenvectors of a

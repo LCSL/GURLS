@@ -420,7 +420,59 @@ void clearLowerTriangular(T* matrix, int rows, int cols)
   * \return the pseudoinverse matrix
   */
 template <typename T>
-T* pinv(const T* A, const int rows, const int cols, int& res_rows, int& res_cols, T* RCOND = NULL);
+T* pinv(const T* A, const int rows, const int cols, int& res_rows, int& res_cols, T* RCOND = NULL)
+{
+    int M = rows;
+    int N = cols;
+
+    T* a = new T[rows*cols];
+    copy(a, A, rows*cols);
+
+    int LDA = M;
+    int LDB = std::max(M, N);
+    int NRHS = LDB;
+
+    const int b_size = LDB*NRHS;
+    T *b = new T[LDB*NRHS];
+
+    set(b, (T)0.0, b_size);
+    set(b, (T)1.0, std::min(LDB, NRHS), NRHS+1);
+
+    T* S = new T[std::min(M,N)];
+    T rcond = (RCOND == NULL)? (std::max(rows, cols)*std::numeric_limits<T>::epsilon()): *RCOND;
+
+    int RANK = -1; // std::min(M,N);
+    int LWORK = -1; //2 * (3*LDB + std::max( 2*std::min(M,N), LDB));
+    T* WORK = new T[1];
+
+    int INFO;
+
+    /* Query and allocate the optimal workspace */
+    gelss( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+    LWORK = static_cast<int>(WORK[0]);
+    delete [] WORK;
+    WORK = new T[LWORK];
+
+    gelss( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+
+    delete [] S;
+    delete [] WORK;
+    delete [] a;
+
+    if(INFO != 0)
+    {
+        delete [] b;
+
+        std::stringstream str;
+        str << "Pinv failed, error code " << INFO << ";" << std::endl;
+        throw gException(str.str());
+    }
+
+    res_rows = LDB;
+    res_cols = NRHS;
+
+    return b;
+}
 
 /**
   * Transpose a matrix.
@@ -1808,6 +1860,12 @@ void median(const T* M, const int rows, const int cols, const int dimension, T* 
         throw gException(Exception_Illegal_Argument_Value);
     }
 }
+
+/**
+  * Template function to call LAPACK *GELSS routines
+  */
+template<typename T>
+int gelss( int *m, int *n, int* nrhs, T *a, int *lda, T* b, int *ldb, T *s, T *rcond, int *rank, T *work, int *lwork, int *info);
 
 }
 

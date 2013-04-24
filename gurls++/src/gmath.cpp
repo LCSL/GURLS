@@ -43,6 +43,7 @@
 
 #include "gmat2d.h"
 #include "gvec.h"
+#include "exports.h"
 
 namespace gurls {
 
@@ -220,10 +221,6 @@ GURLS_EXPORT void inv(const gMat2D<float>& A, gMat2D<float>& Ainv, InversionAlgo
     delete[] work;
 }
 
-
-template<>
-GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND);
-
 /**
   * Specialized version of pinv for float matrices
   */
@@ -231,7 +228,7 @@ template <>
 GURLS_EXPORT void pinv(const gMat2D<float>& A, gMat2D<float>& Ainv, float RCOND)
 {
     int r, c;
-    float* inv = gurls::pinv<float>(A.getData(), A.rows(), A.cols(), r, c, &RCOND);
+    float* inv = pinv(A.getData(), A.rows(), A.cols(), r, c, &RCOND);
 
     Ainv.resize(r, c);
     gurls::copy(Ainv.getData(), inv, r*c);
@@ -445,98 +442,98 @@ void GURLS_EXPORT copy(double* dst, const double* src, const int size)
     dcopy_(const_cast<int*>(&size), const_cast<double*>(src), &incr, dst, &incr);
 }
 
-/**
-  * Specialized version of pinv for float buffers
-  */
-template<>
-GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND)
-{
-    int M = rows;
-    int N = cols;
+///**
+//  * Specialized version of pinv for float buffers
+//  */
+//template<>
+//GURLS_EXPORT float* pinv(const float* A, int rows, int cols, int& res_rows, int& res_cols, float* RCOND)
+//{
+//    int M = rows;
+//    int N = cols;
 
-    float* a = new float[rows*cols];
-    copy<float>(a, A, rows*cols);
+//    float* a = new float[rows*cols];
+//    copy<float>(a, A, rows*cols);
 
-    int LDA = M;
-    int LDB = std::max(M, N);
-    int NRHS = LDB;
+//    int LDA = M;
+//    int LDB = std::max(M, N);
+//    int NRHS = LDB;
 
 
-    // float* b = eye(LDB).getData()
+//    // float* b = eye(LDB).getData()
 
-    const int b_size = LDB*NRHS;
-    float *b = new float[LDB*NRHS];
-    set<float>(b, 0.f, b_size);
-    set<float>(b, 1.f, std::min(LDB, NRHS), NRHS+1);
+//    const int b_size = LDB*NRHS;
+//    float *b = new float[LDB*NRHS];
+//    set<float>(b, 0.f, b_size);
+//    set<float>(b, 1.f, std::min(LDB, NRHS), NRHS+1);
 
-    float* S = new float[std::min(M,N)];
-//    float condnum = 0.f; // The condition number of A in the 2-norm = S(1)/S(min(m,n)).
+//    float* S = new float[std::min(M,N)];
+////    float condnum = 0.f; // The condition number of A in the 2-norm = S(1)/S(min(m,n)).
 
-    float rcond = (RCOND == NULL)? (std::max(rows, cols)*FLT_EPSILON): *RCOND;
+//    float rcond = (RCOND == NULL)? (std::max(rows, cols)*FLT_EPSILON): *RCOND;
 
-//    if (RCOND < 0)
-//        RCOND = 0.f;
+////    if (RCOND < 0)
+////        RCOND = 0.f;
 
-    int RANK = -1; // std::min(M,N);
-    int LWORK = -1; //2 * (3*LDB + std::max( 2*std::min(M,N), LDB));
-    float* WORK = new float[1];
+//    int RANK = -1; // std::min(M,N);
+//    int LWORK = -1; //2 * (3*LDB + std::max( 2*std::min(M,N), LDB));
+//    float* WORK = new float[1];
 
-    /*
+//    /*
 
-    subroutine SGELSS 	( 	INTEGER  	M,
-      INTEGER  	N,
-      INTEGER  	NRHS,
-      REAL,dimension( lda, * )  	A,
-      INTEGER  	LDA,
-      REAL,dimension( ldb, * )  	B,
-      INTEGER  	LDB,
-      REAL,dimension( * )  	S,
-      REAL  	RCOND,
-      INTEGER  	RANK,
-      REAL,dimension( * )  	WORK,
-      INTEGER  	LWORK,
-      INTEGER  	INFO
-     )
+//    subroutine SGELSS 	( 	INTEGER  	M,
+//      INTEGER  	N,
+//      INTEGER  	NRHS,
+//      REAL,dimension( lda, * )  	A,
+//      INTEGER  	LDA,
+//      REAL,dimension( ldb, * )  	B,
+//      INTEGER  	LDB,
+//      REAL,dimension( * )  	S,
+//      REAL  	RCOND,
+//      INTEGER  	RANK,
+//      REAL,dimension( * )  	WORK,
+//      INTEGER  	LWORK,
+//      INTEGER  	INFO
+//     )
 
-    */
+//    */
 
-    /*
-   INFO:
-   = 0:	successful exit
-   < 0:	if INFO = -i, the i-th argument had an illegal value.
-   > 0:	the algorithm for computing the SVD failed to converge;
-     if INFO = i, i off-diagonal elements of an intermediate
-     bidiagonal form did not converge to zero.
-   */
-    int INFO;
+//    /*
+//   INFO:
+//   = 0:	successful exit
+//   < 0:	if INFO = -i, the i-th argument had an illegal value.
+//   > 0:	the algorithm for computing the SVD failed to converge;
+//     if INFO = i, i off-diagonal elements of an intermediate
+//     bidiagonal form did not converge to zero.
+//   */
+//    int INFO;
 
-    /* Query and allocate the optimal workspace */
-    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
-    LWORK = static_cast<int>(WORK[0]);
-    delete [] WORK;
-    WORK = new float[LWORK];
+//    /* Query and allocate the optimal workspace */
+//    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+//    LWORK = static_cast<int>(WORK[0]);
+//    delete [] WORK;
+//    WORK = new float[LWORK];
 
-    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
+//    sgelss_( &M, &N, &NRHS, a, &LDA, b, &LDB, S, &rcond, &RANK, WORK, &LWORK, &INFO);
 
-    // TODO: check INFO on exit
-    //condnum = S[0]/(S[std::min(M, N)]-1);
+//    // TODO: check INFO on exit
+//    //condnum = S[0]/(S[std::min(M, N)]-1);
 
-    if(INFO != 0)
-    {
-        std::stringstream str;
-        str << "Pinv failed, error code " << INFO << ";" << std::endl;
-        throw gException(str.str());
-    }
+//    if(INFO != 0)
+//    {
+//        std::stringstream str;
+//        str << "Pinv failed, error code " << INFO << ";" << std::endl;
+//        throw gException(str.str());
+//    }
 
-    delete [] S;
-    delete [] WORK;
-    delete [] a;
+//    delete [] S;
+//    delete [] WORK;
+//    delete [] a;
 
-    res_rows = LDB;
-    res_cols = NRHS;
-    return b;
+//    res_rows = LDB;
+//    res_cols = NRHS;
+//    return b;
 
-}
+//}
 
 /**
   * Specialized version of gemm for float buffers
@@ -857,6 +854,24 @@ template<>
 GURLS_EXPORT void orgqr(int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *lwork, int *info)
 {
     dorgqr_(m, n, k, a, lda, tau, work, lwork, info);
+}
+
+/**
+  * Specialized version of gelss for float buffers
+  */
+template<>
+GURLS_EXPORT int gelss( int *m, int *n, int* nrhs, float *a, int *lda, float* b, int *ldb, float *s, float *rcond, int *rank, float *work, int *lwork, int *info)
+{
+    return sgelss_( m, n, nrhs, a, lda, b, ldb, s, rcond, rank, work, lwork, info);
+}
+
+/**
+  * Specialized version of gelss for double buffers
+  */
+template<>
+GURLS_EXPORT int gelss( int *m, int *n, int* nrhs, double *a, int *lda, double* b, int *ldb, double *s, double *rcond, int *rank, double *work, int *lwork, int *info)
+{
+    return dgelss_( m, n, nrhs, a, lda, b, ldb, s, rcond, rank, work, lwork, info);
 }
 
 }
