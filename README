@@ -39,6 +39,7 @@ Documentation
 
 - C++ Code Documentation can be generated with the following command
 	$ doxygen Doxyfile.in
+  and a pre-built version can be found in doc_gurls++.zip. The online version of the documentation will be soon available
 
 - Matlab and C++ Developer's Guide
 	Simple developer's guides for Matlab and C++ are available in the gurls-manual.pdf 
