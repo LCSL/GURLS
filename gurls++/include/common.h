@@ -123,7 +123,7 @@ at (https://github.com/CBCL/GURLS) and keep updated for futher developments.
 <p><strong>Copyright Notice</strong>:</p>
 
 
-<p>Copyright (C) 2011, Matteo Santoro and IIT\@MIT Lab</p>
+<p>Copyright (C) 2013, Matteo Santoro and IIT\@MIT Lab</p>
 
 <p>All rights reserved.</p>
 
@@ -168,6 +168,8 @@ GURLS++ is released under the following licence:
 
 <ol>
 
+
+<li> Version 2.0.00, released 2013 January 24th.
 
 <li> Version 1.0.00, released 2012 June 1th. GURLS++ 1.0.00 is the first
 complete release.
