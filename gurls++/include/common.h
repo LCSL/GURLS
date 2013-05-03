@@ -70,8 +70,8 @@ routines especially designed to deal with massive datasets,
 furthermore, it is instrinsically modular and each method can be
 used independently.
 
+\image html pipeline_s.png "GURLS++ pipeline"
 
-<img src="../pipeline.png"  title="" alt="pipeline" height="264" width="480" />
 
 <p>GURLS and GURLS++ have been developed within the context of the
 IIT\@MIT Lab, established
