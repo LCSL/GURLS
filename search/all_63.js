@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['cblas_5fdiag',['CBLAS_DIAG',['../db/d4e/namespacegurls.html#a3e7a144c59b79cc681105e939e6c5771',1,'gurls']]],
+  ['cblas_5forder',['CBLAS_ORDER',['../db/d4e/namespacegurls.html#ab5c7287e6f0f0083b89564297bdf493c',1,'gurls']]],
+  ['cblas_5fside',['CBLAS_SIDE',['../db/d4e/namespacegurls.html#a65d460224ff1a74c16799b7a2febd70a',1,'gurls']]],
+  ['cblas_5ftranspose',['CBLAS_TRANSPOSE',['../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154',1,'gurls']]],
+  ['cblas_5fuplo',['CBLAS_UPLO',['../db/d4e/namespacegurls.html#a3e3b1abfe9f414a711d30d7c2955d013',1,'gurls']]],
+  ['charvalue',['charValue',['../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d',1,'gurls::BlasUtils']]],
+  ['cholesky',['cholesky',['../db/d4e/namespacegurls.html#aba10db703ce209fe176c801b878b135f',1,'gurls::cholesky(const gMat2D&lt; T &gt; &amp;A, gMat2D&lt; T &gt; &amp;L, bool upper=true)'],['../db/d4e/namespacegurls.html#aee7209646b99e3b22a01ac7b99672443',1,'gurls::cholesky(const T *matrix, const int rows, const int cols, T *result, bool upper=true)'],['../db/d4e/namespacegurls.html#a22152d974dcfd59f248d29db71e4ac28',1,'gurls::cholesky(const gMat2D&lt; float &gt; &amp;A, gMat2D&lt; float &gt; &amp;L, bool upper)']]],
+  ['clear',['clear',['../df/d32/classgurls_1_1g_vec.html#a82e81c97f14c6d39062f8e31c7691377',1,'gurls::gVec::clear()'],['../da/d90/classgurls_1_1_opt_array.html#a8b2ac147e8119a5d8405bf16a4626505',1,'gurls::OptArray::clear()'],['../d7/da3/classgurls_1_1_opt_string_list.html#aa6c9b9833e28283306899039e6cdeb04',1,'gurls::OptStringList::clear()'],['../df/dda/classgurls_1_1_opt_number_list.html#a42a0b9d9bb06658ba5f4c7a410115089',1,'gurls::OptNumberList::clear()'],['../db/d52/classgurls_1_1_opt_process.html#abea3ed1e52906201158953f58e6a66c0',1,'gurls::OptProcess::clear()']]],
+  ['clearlowertriangular',['clearLowerTriangular',['../db/d4e/namespacegurls.html#acdb75103dd22dfa78d15facde1ab4264',1,'gurls']]],
+  ['closeto',['closeTo',['../d9/d8b/classgurls_1_1_base_array.html#a515140860e1faa548b9b799651978e90',1,'gurls::BaseArray']]],
+  ['cols',['cols',['../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844',1,'gurls::gMat2D']]],
+  ['columnwise',['COLUMNWISE',['../db/d4e/namespacegurls.html#aaf6481f6844f82fc3f44119d2d47158a',1,'gurls']]],
+  ['common_2eh',['common.h',['../dc/d54/common_8h.html',1,'']]],
+  ['compare',['compare',['../d1/d9e/classgurls_1_1g_mat2_d.html#a4b3ea192d1b037d2f77b4e62e368d387',1,'gurls::gMat2D::compare()'],['../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388',1,'gurls::compare(const T *vector1, const T *vector2, const int size, bool(*pred)(T, T))'],['../db/d4e/namespacegurls.html#af451b4a61520b4d079bf1362cd62617e',1,'gurls::compare(const T *vector, const T thr, const int size, bool(*pred)(T, T))']]],
+  ['confboltzman',['ConfBoltzman',['../dd/d88/classgurls_1_1_conf_boltzman.html',1,'gurls']]],
+  ['confboltzmangap',['ConfBoltzmanGap',['../d0/d77/classgurls_1_1_conf_boltzman_gap.html',1,'gurls']]],
+  ['confgap',['ConfGap',['../d8/dbc/classgurls_1_1_conf_gap.html',1,'gurls']]],
+  ['confidence',['Confidence',['../da/d7d/classgurls_1_1_confidence.html',1,'gurls']]],
+  ['confmaxscore',['ConfMaxScore',['../de/ded/classgurls_1_1_conf_max_score.html',1,'gurls']]],
+  ['copy',['copy',['../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded',1,'gurls::copy(T *dst, const T *src, const int size)'],['../db/d4e/namespacegurls.html#aecc83576a108dcd0cbab3e4956212a9a',1,'gurls::copy(float *dst, const float *src, const int size)'],['../db/d4e/namespacegurls.html#a8ba49c145d274c4f2d7f424ff50c1fab',1,'gurls::copy(double *dst, const double *src, const int size)'],['../db/d4e/namespacegurls.html#a2e02d5bd7802f23c7fc5d223d2759631',1,'gurls::copy(T *dst, const T *src, const int size, const int dstIncr, const int srcIncr)'],['../db/d4e/namespacegurls.html#ab454d5e33dafced9298ce1b58addc4c6',1,'gurls::copy(float *dst, const float *src, const int size, const int dstIncr, const int srcIncr)'],['../db/d4e/namespacegurls.html#a0b170100fd0b364cb865aca0af137277',1,'gurls::copy(double *dst, const double *src, const int size, const int dstIncr, const int srcIncr)']]],
+  ['copy_5fsubmatrix',['copy_submatrix',['../db/d4e/namespacegurls.html#a136f025f497da2678751fbdd97db463e',1,'gurls']]],
+  ['copylocations',['copyLocations',['../df/d32/classgurls_1_1g_vec.html#a855f49f0d9e1de2cc2a77e745cc8bbe4',1,'gurls::gVec::copyLocations()'],['../db/d4e/namespacegurls.html#ad606e8b3fbcbadf7bbe942cb16df301a',1,'gurls::copyLocations()']]]
+];

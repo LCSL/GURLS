@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['f',['f',['../d8/d4b/classgurls_1_1_opt_function.html#ac8d6a9a2c35dae4d45f15a0a663007cc',1,'gurls::OptFunction']]],
+  ['factory',['factory',['../da/d7d/classgurls_1_1_confidence.html#af86adf5cf4608cf95056029e6f979500',1,'gurls::Confidence::factory()'],['../dc/d0c/classgurls_1_1_kernel.html#a502a6236b98389f61b3f0affbcf027f8',1,'gurls::Kernel::factory()'],['../d9/d56/classgurls_1_1_norm.html#a6de8719538c5f134ce611489b5578a59',1,'gurls::Norm::factory()'],['../d6/ddf/classgurls_1_1_optimizer.html#a9470360032168e3208f4aa0c1ee05e86',1,'gurls::Optimizer::factory()'],['../d8/d85/classgurls_1_1_param_selection.html#a627e4fd41fa3c581c8eac309c32fc29e',1,'gurls::ParamSelection::factory()'],['../d5/dac/classgurls_1_1_performance.html#af45e9e3b96f97d345c8c8b8ff9e92552',1,'gurls::Performance::factory()'],['../d7/d57/classgurls_1_1_prediction.html#a1ddacf8a2757aab38d1e4b564526571a',1,'gurls::Prediction::factory()'],['../d1/d99/classgurls_1_1_pred_kernel.html#ae9d54c93c34ed89919ca1dc72092e602',1,'gurls::PredKernel::factory()'],['../d7/d41/classgurls_1_1_split.html#a9256a7f8bbd8d3d66b09a0aebc025a6b',1,'gurls::Split::factory()']]],
+  ['functor',['Functor',['../d5/dc9/classgurls_1_1_functor.html',1,'gurls']]]
+];

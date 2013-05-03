@@ -1,0 +1,48 @@
+\form#0:\[ C = \alpha op(A) op(B) + \beta C,\]
+\form#1:$op(X)$
+\form#2:$op(X) = X$
+\form#3:$op(X) = X^T$
+\form#4:$\alpha$
+\form#5:$\beta$
+\form#6:$A$
+\form#7:$B$
+\form#8:$C$
+\form#9:$op(A)$
+\form#10:$op(B)$
+\form#11:\[y = \alpha A x + \beta y\]
+\form#12:\[y = \alpha A^T x + \beta y\]
+\form#13:$x$
+\form#14:$y$
+\form#15:$ SNRM2 = \sqrt{(x^T x)} $
+\form#16:\[op(A) X = \alpha B\]
+\form#17:\[X op(A) = \alpha B\]
+\form#18:$X$
+\form#19:$ op(A) = A$
+\form#20:$op(A) = A^T$
+\form#21:\[A = P L U\]
+\form#22:$P$
+\form#23:$L$
+\form#24:$U$
+\form#25:\[A = U \Sigma V^T \]
+\form#26:$\Sigma$
+\form#27:$V$
+\form#28:$V^T$
+\form#29:\[A v(j) = \lambda (j) v(j)\]
+\form#30:$\lambda (j)$
+\form#31:$u(j)$
+\form#32:\[u(j)^T A = \lambda (j) u(j)^T\]
+\form#33:$u(j)^T$
+\form#34:$A^{-1}$
+\form#35:$A^{-1} L = U^{-1}$
+\form#36:\[A = U^T U\]
+\form#37:\[A = L L^T\]
+\form#38:$||(| b - Ax |)||_2$
+\form#39:$A P = Q R$
+\form#40:$Q$
+\form#41:\[Q = H(1) H(2) . . . H(k)\]
+\form#42:$A^-{1}$
+\form#43:$op$
+\form#44:$result = A op B$
+\form#45:$(Q^T Y)$
+\form#46:$X^T X$
+\form#47:$X X^T$
