@@ -71,13 +71,14 @@ public:
      * \param opt options with the following:
      *  - singlelambda (default)
      *  - paramsel (settable with the class ParamSelection and its subclasses)
+     *  - optimizer.W
+     *  - optimizer.Cinv
      *
      * \return adds to opt the field optimizer which is a list containing the following fields:
      *  - W = matrix of coefficient vectors of rls estimator for each class
      *  - C = empty matrix
      *  - X = empty matrix
      *  - Cinv = inverse of the regularized kernel matrix in the primal space
-     *  - XtX = the kernel matrix in the primal space
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
