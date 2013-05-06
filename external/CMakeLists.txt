@@ -170,12 +170,14 @@ if(GURLS_USE_EXTERNAL_BLAS_LAPACK)
     ExternalProject_add(openblas
         GIT_REPOSITORY "git://github.com/xianyi/OpenBLAS.git"
         GIT_TAG "v0.2.6"
+        UPDATE_COMMAND ""
         BUILD_IN_SOURCE 1
         SOURCE_DIR  ${EXTERNAL_PREFIX}/src/openblas
         INSTALL_DIR ${EXTERNAL_PREFIX}/
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} ${MAKE_ARGS} libs netlib
-        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install PREFIX=<INSTALL_DIR>
+        PATCH_COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/Makefile.install.openblas" "<SOURCE_DIR>/Makefile.install"
+        BUILD_COMMAND NO_SHARED=1 ${CMAKE_MAKE_PROGRAM} libs netlib
+        INSTALL_COMMAND NO_SHARED=1 ${CMAKE_MAKE_PROGRAM} install PREFIX=<INSTALL_DIR>
     )
 
     set_target_properties(openblas PROPERTIES EXCLUDE_FROM_ALL 1)
