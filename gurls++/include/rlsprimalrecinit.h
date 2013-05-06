@@ -101,7 +101,7 @@ GurlsOptionsList* RLSPrimalRecInit<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     //	XtX = X'*X;
     T* XtX = new T[d*d];
-    if(opt.hasOpt("kernel.XtX"))
+    if(!opt.hasOpt("kernel.XtX"))
         dot(X.getData(), X.getData(), XtX, n, d, n, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
     else
     {
@@ -111,7 +111,7 @@ GurlsOptionsList* RLSPrimalRecInit<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     //	Xty = X'*y;
     T* Xty = new T[d*t];
-    if(opt.hasOpt("kernel.Xty"))
+    if(!opt.hasOpt("kernel.Xty"))
         dot(X.getData(), Y.getData(), Xty, n, d, n, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
     else
     {
@@ -122,7 +122,7 @@ GurlsOptionsList* RLSPrimalRecInit<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     //  Cinv = pinv(XtX + (n*lambda)*eye(d));
     T coeff = n*lambda;
-    axpy(d*d, (T)1.0, &coeff, 0, XtX, d+1);
+    axpy(d, (T)1.0, &coeff, 0, XtX, d+1);
 
     int cinv_rows, cinv_cols;
     T* cinv = pinv(XtX, d, d, cinv_rows, cinv_cols);
