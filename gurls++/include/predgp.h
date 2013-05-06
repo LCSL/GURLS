@@ -50,7 +50,6 @@
 #include "options.h"
 #include "optlist.h"
 
-using namespace std;
 
 namespace gurls {
 
