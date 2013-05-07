@@ -93,29 +93,40 @@ GurlsOptionsList* RLSPrimalRecInit<T>::execute(const gMat2D<T>& X, const gMat2D<
 
 
     //	[n,d] = size(X);
-
-    const unsigned long n = X.rows();
-    const unsigned long d = X.cols();
-    const unsigned long t = Y.cols();
+    const unsigned long n = opt.hasOpt("nTot")? static_cast<unsigned long>(opt.getOptAsNumber("nTot")) : X.rows();
+    unsigned long d;
+    unsigned long t;
 
 
     //	XtX = X'*X;
-    T* XtX = new T[d*d];
+    T* XtX;
     if(!opt.hasOpt("kernel.XtX"))
+    {
+        d = X.cols();
+        XtX = new T[d*d];
         dot(X.getData(), X.getData(), XtX, n, d, n, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+    }
     else
     {
         const gMat2D<T>& XtX_mat = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.XtX");
+        d = XtX_mat.cols();
+        XtX = new T[d*d];
         copy(XtX, XtX_mat.getData(), d*d);
     }
 
     //	Xty = X'*y;
-    T* Xty = new T[d*t];
+    T* Xty;
     if(!opt.hasOpt("kernel.Xty"))
+    {
+        t = Y.cols();
+        Xty = new T[d*t];
         dot(X.getData(), Y.getData(), Xty, n, d, n, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+    }
     else
     {
         const gMat2D<T>& Xty_mat = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.Xty");
+        t = Xty_mat.cols();
+        Xty = new T[d*t];
         copy(Xty, Xty_mat.getData(), d*t);
     }
 
