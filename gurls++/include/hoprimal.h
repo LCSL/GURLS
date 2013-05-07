@@ -140,21 +140,18 @@ template <typename T>
 GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
     //    [n,T]  = size(y);
-    const unsigned long n = Y.rows();
     const unsigned long t = Y.cols();
-
-    const unsigned long x_rows = X.rows();
     const unsigned long d = X.cols();
 
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-//    nestedOpt->copyOpt<T>("kernel", opt);
-//    nestedOpt->addOpt("predkernel", new GurlsOptionsList("predkernel"));
 
 
     const GurlsOptionsList* split = opt.getOptAs<GurlsOptionsList>("split");
     const gMat2D< unsigned long > &indices_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("indices");
     const gMat2D< unsigned long > &lasts_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("lasts");
+
+    const unsigned long n = indices_mat.cols();
 
     const unsigned long *lasts = lasts_mat.getData();
     const unsigned long* indices_buffer = indices_mat.getData();
@@ -170,7 +167,7 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
 
     T* Q = new T[d*d];
-    T* Qty = new T[d*t];
+    T* QtXty = new T[d*t];
     T *L = new T[d];
 
     gMat2D<T>* perf_mat = new gMat2D<T>(nholdouts, tot*t);
@@ -191,6 +188,9 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
     gMat2D<T> *W = new gMat2D<T>(d, t);
     optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));
 
+
+    bool hasXt = opt.hasOpt("kernel.XtX") && opt.hasOpt("kernel.Xty");
+
     for(int nh=0; nh<nholdouts; ++nh)
     {
         unsigned long last = lasts[nh];
@@ -203,11 +203,35 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
         //copy int va indices_ from n*nh+last to n*nh+n
         copy< unsigned long >(va,(indices_buffer+ n*nh+last), n-last,1,1);
 
-        //       K = X(tr,:)'*X(tr,:);
-        T* Xtr = new T[last*d];
-        subMatrixFromRows(X.getData(), x_rows, d, tr, last, Xtr);
 
-        dot(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+        gMat2D<T> Xva(n-last, d);
+        gMat2D<T> yva(n-last, t);
+
+        subMatrixFromRows(X.getData(), n, d, va, n-last, Xva.getData());
+        subMatrixFromRows(Y.getData(), n, t, va, n-last, yva.getData());
+
+        T* Xtr = NULL;
+        if(hasXt)
+        {
+            T* XvatXva = new T[d*d];
+            dot(Xva.getData(), Xva.getData(), XvatXva, n-last, d, n-last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            const gMat2D<T>&XtX = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.XtX");
+
+            // Q = XtX - XvatXva
+            copy(Q, XtX.getData(), XtX.getSize());
+            axpy(d*d, (T)-1.0, XvatXva, 1, Q, 1);
+
+            delete [] XvatXva;
+        }
+        else
+        {
+            //       K = X(tr,:)'*X(tr,:);
+            Xtr = new T[last*d];
+            subMatrixFromRows(X.getData(), n, d, tr, last, Xtr);
+
+            dot(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+        }
 
         unsigned long k = eig_function(Q, L, d, d, opt, last);
 
@@ -215,39 +239,56 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
         T* ap = new T[tot*t];
 
-        T* Ytr = new T[last*t];
-        subMatrixFromRows(Y.getData(), n, t, tr, last, Ytr);
+
+        if(hasXt)
+        {
+            T* Xvatyva = new T[d*t];
+            dot(Xva.getData(), yva.getData(), Xvatyva, n-last, d, n-last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            const gMat2D<T>&Xty = opt.getOptValue<OptMatrix<gMat2D<T> > >("kernel.Xty");
 
 
-        T* QtyT = new T[d * last];
-        dot(Q, Xtr, QtyT, d, d, last, d, d, last, CblasTrans, CblasTrans, CblasColMajor);
+            // QtXty = Q'*(Xty - XvatXva)
 
-        delete [] Xtr;
+            T* Xtrtytr = new T[d*t];
 
-        dot(QtyT, Ytr, Qty, d, last, last, t, d, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+            copy(Xtrtytr, Xty.getData(), Xty.getSize());
+            axpy(d*t, (T)-1.0, Xvatyva, 1, Xtrtytr, 1);
 
-        delete [] Ytr;
-        delete [] QtyT;
+            dot(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            delete [] Xvatyva;
+            delete [] Xtrtytr;
+        }
+        else
+        {
+            T* ytr = new T[last*t];
+            subMatrixFromRows(Y.getData(), n, t, tr, last, ytr);
 
 
-        gMat2D<T> xx(n-last, d);
-        gMat2D<T> yy(n-last, t);
+            T* Xtrtytr = new T[d*t];
+            dot(Xtr, ytr, Xtrtytr, last, d, last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+            delete [] Xtr;
 
-        subMatrixFromRows(X.getData(), x_rows, d, va, n-last, xx.getData());
-        subMatrixFromRows(Y.getData(), n, t, va, n-last, yy.getData());
+            dot(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            delete [] ytr;
+            delete [] Xtrtytr;
+        }
+
 
         T* work = new T[d*(d+1)];
 
         for(int i=0; i<tot; ++i)
         {
-            rls_eigen(Q, L, Qty, W->getData(), guesses[i], last, d, d, d, d, t, work);
+            rls_eigen(Q, L, QtXty, W->getData(), guesses[i], last, d, d, d, d, t, work);
 
-            OptMatrix<gMat2D<T> > *ret_pred = primal.execute(xx, yy, *nestedOpt);
+            OptMatrix<gMat2D<T> > *ret_pred = primal.execute(Xva, yva, *nestedOpt);
 
             nestedOpt->removeOpt("pred");
             nestedOpt->addOpt("pred", ret_pred);
 
-            GurlsOptionsList* ret_perf = perfClass->execute(xx, yy, *nestedOpt);
+            GurlsOptionsList* ret_perf = perfClass->execute(Xva, yva, *nestedOpt);
 
             gMat2D<T> &forho_vec = ret_perf->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
@@ -292,7 +333,7 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     delete perfClass;
     delete [] Q;
-    delete [] Qty;
+    delete [] QtXty;
     delete [] L;
 
     GurlsOptionsList* paramsel;
