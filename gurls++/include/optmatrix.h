@@ -130,7 +130,8 @@ template <typename Matrix>
 class OptMatrix: public OptMatrixBase
 {
 private:
-    Matrix& value;  ///< Option value
+    Matrix* value;  ///< Option value
+    bool isOwner;   ///< Flag indicating if the option is owner of the matrix pointer
 
 public:
     typedef Matrix ValueType;
@@ -138,7 +139,7 @@ public:
     /**
       * Empty constructor
       */
-    OptMatrix(): OptMatrixBase () , value (*(new Matrix()))
+    OptMatrix(): OptMatrixBase () , value (new Matrix()), isOwner(true)
     {
         this->matType = getMatrixCellType<Matrix>();
     }
@@ -146,7 +147,7 @@ public:
     /**
       * Constructor from an existing matrix
       */
-    OptMatrix(Matrix& m): OptMatrixBase(), value(m)
+    OptMatrix(Matrix& m): OptMatrixBase(), value(new Matrix(m)), isOwner(true)
     {
         this->matType = getMatrixCellType<Matrix>();
     }
@@ -161,7 +162,16 @@ public:
       */
     ~OptMatrix()
     {
-        delete &value;
+        if(isOwner)
+            delete value;
+    }
+
+    /**
+      * Remove ownership for matrix pointer
+      */
+    void detachValue()
+    {
+        isOwner = false;
     }
 
     /**
@@ -169,8 +179,9 @@ public:
       */
     OptMatrix& operator=(const Matrix& other)
     {
+        setValue(other);
+
         this->type = MatrixOption;
-        this->value = other;
 
         return *this;
     }
@@ -180,7 +191,10 @@ public:
       */
     void setValue(const Matrix& newvalue)
     {
-        value = newvalue;
+        ~OptMatrix();
+
+        value = new Matrix(newvalue);
+        this->isOwner = true;
     }
 
     /**
@@ -188,7 +202,7 @@ public:
       */
     Matrix& getValue()
     {
-        return value;
+        return *value;
     }
 
     /**
@@ -196,7 +210,7 @@ public:
       */
     const Matrix& getValue() const
     {
-        return value;
+        return *value;
     }
 
     /**
