@@ -1,7 +1,7 @@
 /*
  * The GURLS Package in C++
  *
- * Copyright (C) 2011, Matteo Santoro
+ * Copyright (C) 2011-1013, Matteo Santoro
  * All rights reserved.
  *
  * author:  M. Santoro

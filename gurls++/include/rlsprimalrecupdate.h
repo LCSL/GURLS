@@ -1,7 +1,7 @@
  /*
   * The GURLS Package in C++
   *
-  * Copyright (C) 2011, IIT@MIT Lab
+  * Copyright (C) 2011-1013, IIT@MIT Lab
   * All rights reserved.
   *
   * authors:  M. Santoro
@@ -69,8 +69,6 @@ public:
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the following:
-     *  - singlelambda (default)
-     *  - paramsel (settable with the class ParamSelection and its subclasses)
      *  - optimizer.W
      *  - optimizer.Cinv
      *

@@ -1,7 +1,7 @@
  /*
   * The GURLS Package in C++
   *
-  * Copyright (C) 2011, IIT@MIT Lab
+  * Copyright (C) 2011-1013, IIT@MIT Lab
   * All rights reserved.
   *
   * authors:  M. Santoro
@@ -78,7 +78,6 @@ public:
      *  - C = empty matrix
      *  - X = empty matrix
      *  - Cinv = inverse of the regularized kernel matrix in the primal space
-     *  - XtX = the kernel matrix in the primal space
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
