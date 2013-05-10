@@ -8,23 +8,20 @@ Table of Contents
 
 - Introduction
 - Documentation
-- Quick and dirty
 
 Introduction
 ============
 
 The GRAND UNIFIED LEAST SQUARES software library comprises the following packages.
 
-- GURLS, a MATLAB software library for regression and (multiclass) classiﬁcation 
+-GURLS, a MATLAB software library for regression and (multiclass) classification 
 based on the Regularized Least Squares (RLS) loss function. 
 Datasets that fit into your computer's memory should be handled with this package.
 
--bGURLS (b is for big), a MATLAB software library for regression and (multiclass) classiﬁcation 
-based on the Regularized Least Squares (RLS) loss function. 
-It can handle computations with very large matrices by means of memory-mapped storage 
-and a simple distributed task manager.
+-bGURLS (b is for big), a MATLAB software library that allows to use RLS on very large
+matrices by means of memory-mapped storage and a simple distributed task manager.
 
-- GURLS++, a C++ standalone implementation of GURLS.
+-GURLS++, a C++ standalone implementation of GURLS.
 
 -bGURLS++, a  C++ standalone implementation of bGURLS.
 
@@ -32,21 +29,27 @@ Documentation
 
 =============
 
+- Webpage 
+	the GURLS webpage can be found at: http://cbcl.github.io/GURLS/
 
-- User's Guide:
-	A common gurls and gurls++ User's Guide describing the package organization and rationale, 
-	as well as each available method is available in the gurls-manual.pdf file.
+- Installation instructions can be found here:
+	https://github.com/CBCL/GURLS/wiki/2-Getting-Started
 
-- C++ online code documentation is available at http://cbcl.github.io/GURLS/
+- Quick intructions on how to run the libraries for a default case can be found here: 
+	https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World
 
-- Matlab and C++ Developer's Guide
-	Simple developer's guides for Matlab and C++ are available in the gurls-manual.pdf 
-	file. GURLS is designed for easy expansion. Give it a try!
+- A User manual with several examples can be found here:
+	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-User_Manual
 
-- Demos
-	All packages have exstensively commented demos in the "demo"
-	subdirectory of each package. We feel this is the best way to learn how
-	to use these packages.
+- A collection of the most useful and common pipelines can be found here:
+	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-Examples
+
+- The list of all the available method of the libraries can be found at
+	https://github.com/CBCL/GURLS/wiki/4-Available-methods
+
+- C++ Code Documentation can be generated with the following command
+   $ doxygen Doxyfile.in
+ and a pre-built version can be found in doc_gurls++.zip. The online version of the documentation will be soon available
 
 -Test
 	Testing routines and scripts are available in the test directories of the gurls 
@@ -54,19 +57,5 @@ Documentation
 
 - Further Documentation
 	* Have a look at the README files of each individual package.
-
-	* A collection of the most useful and common pipelines can be found here:
-	  https://github.com/CBCL/GURLS/wiki/User-Manual
-
-Quick and Dirty
-===============
-
-
-While we have put a considerable effort in making the GURLS
-package versatile and yet self contained, we do understand that sometimes
-you just want to run it!
-
-Have a look at the README file inside the "gurls" directory for quick intructions on
-how to install and run the package for a default case.
-
-
+	
+	* In gurls-manual.pdf you can find both the installation instructions and user manual, together with the Matlab and C++ Developer's Guide. GURLS is designed for easy expansion. Give it a try!
