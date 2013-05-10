@@ -205,21 +205,18 @@ template&lt;typename T &gt; </div>
 <p>Definition at line <a class="el" href="../../d5/d8b/hoprimal_8h_source.html#l00140">140</a> of file <a class="el" href="../../d5/d8b/hoprimal_8h_source.html">hoprimal.h</a>.</p>
 <div class="fragment"><pre class="fragment">{
     <span class="comment">//    [n,T]  = size(y);</span>
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = Y.rows();
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = Y.cols();
-
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> x_rows = X.rows();
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.cols();
 
 
     GurlsOptionsList* nestedOpt = <span class="keyword">new</span> GurlsOptionsList(<span class="stringliteral">&quot;nested&quot;</span>);
-<span class="comment">//    nestedOpt-&gt;copyOpt&lt;T&gt;(&quot;kernel&quot;, opt);</span>
-<span class="comment">//    nestedOpt-&gt;addOpt(&quot;predkernel&quot;, new GurlsOptionsList(&quot;predkernel&quot;));</span>
 
 
     <span class="keyword">const</span> GurlsOptionsList* split = opt.getOptAs&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;split&quot;</span>);
     <span class="keyword">const</span> gMat2D&lt; unsigned long &gt; &amp;indices_mat = split-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt; unsigned long &gt; &gt; &gt;(<span class="stringliteral">&quot;indices&quot;</span>);
     <span class="keyword">const</span> gMat2D&lt; unsigned long &gt; &amp;lasts_mat = split-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt; unsigned long &gt; &gt; &gt;(<span class="stringliteral">&quot;lasts&quot;</span>);
+
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = indices_mat.cols();
 
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *lasts = lasts_mat.getData();
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* indices_buffer = indices_mat.getData();
@@ -235,7 +232,7 @@ template&lt;typename T &gt; </div>
 
 
     T* Q = <span class="keyword">new</span> T[d*d];
-    T* Qty = <span class="keyword">new</span> T[d*t];
+    T* QtXty = <span class="keyword">new</span> T[d*t];
     T *L = <span class="keyword">new</span> T[d];
 
     gMat2D&lt;T&gt;* perf_mat = <span class="keyword">new</span> gMat2D&lt;T&gt;(nholdouts, tot*t);
@@ -256,6 +253,9 @@ template&lt;typename T &gt; </div>
     gMat2D&lt;T&gt; *W = <span class="keyword">new</span> gMat2D&lt;T&gt;(d, t);
     optimizer-&gt;addOpt(<span class="stringliteral">&quot;W&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*W));
 
+
+    <span class="keywordtype">bool</span> hasXt = opt.hasOpt(<span class="stringliteral">&quot;kernel.XtX&quot;</span>) &amp;&amp; opt.hasOpt(<span class="stringliteral">&quot;kernel.Xty&quot;</span>);
+
     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> nh=0; nh&lt;nholdouts; ++nh)
     {
         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> last = lasts[nh];
@@ -268,11 +268,35 @@ template&lt;typename T &gt; </div>
         <span class="comment">//copy int va indices_ from n*nh+last to n*nh+n</span>
         copy&lt; unsigned long &gt;(va,(indices_buffer+ n*nh+last), n-last,1,1);
 
-        <span class="comment">//       K = X(tr,:)&#39;*X(tr,:);</span>
-        T* Xtr = <span class="keyword">new</span> T[last*d];
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), x_rows, d, tr, last, Xtr);
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+        gMat2D&lt;T&gt; Xva(n-last, d);
+        gMat2D&lt;T&gt; yva(n-last, t);
+
+        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, d, va, n-last, Xva.getData());
+        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), n, t, va, n-last, yva.getData());
+
+        T* Xtr = NULL;
+        <span class="keywordflow">if</span>(hasXt)
+        {
+            T* XvatXva = <span class="keyword">new</span> T[d*d];
+            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xva.getData(), Xva.getData(), XvatXva, n-last, d, n-last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            <span class="keyword">const</span> gMat2D&lt;T&gt;&amp;XtX = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.XtX&quot;</span>);
+
+            <span class="comment">// Q = XtX - XvatXva</span>
+            <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Q, XtX.getData(), XtX.getSize());
+            <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d*d, (T)-1.0, XvatXva, 1, Q, 1);
+
+            <span class="keyword">delete</span> [] XvatXva;
+        }
+        <span class="keywordflow">else</span>
+        {
+            <span class="comment">//       K = X(tr,:)&#39;*X(tr,:);</span>
+            Xtr = <span class="keyword">new</span> T[last*d];
+            <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, d, tr, last, Xtr);
+
+            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+        }
 
         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> k = <a class="code" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html#a15fcb7f1e31693dc20540ed7632532ca" title="Auxiliary method used to call the right eig/svd function for this class.">eig_function</a>(Q, L, d, d, opt, last);
 
@@ -280,39 +304,56 @@ template&lt;typename T &gt; </div>
 
         T* ap = <span class="keyword">new</span> T[tot*t];
 
-        T* Ytr = <span class="keyword">new</span> T[last*t];
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), n, t, tr, last, Ytr);
+
+        <span class="keywordflow">if</span>(hasXt)
+        {
+            T* Xvatyva = <span class="keyword">new</span> T[d*t];
+            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xva.getData(), yva.getData(), Xvatyva, n-last, d, n-last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            <span class="keyword">const</span> gMat2D&lt;T&gt;&amp;Xty = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.Xty&quot;</span>);
 
 
-        T* QtyT = <span class="keyword">new</span> T[d * last];
-        <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Xtr, QtyT, d, d, last, d, d, last, CblasTrans, CblasTrans, CblasColMajor);
+            <span class="comment">// QtXty = Q&#39;*(Xty - XvatXva)</span>
 
-        <span class="keyword">delete</span> [] Xtr;
+            T* Xtrtytr = <span class="keyword">new</span> T[d*t];
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(QtyT, Ytr, Qty, d, last, last, t, d, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Xtrtytr, Xty.getData(), Xty.getSize());
+            <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d*t, (T)-1.0, Xvatyva, 1, Xtrtytr, 1);
 
-        <span class="keyword">delete</span> [] Ytr;
-        <span class="keyword">delete</span> [] QtyT;
+            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            <span class="keyword">delete</span> [] Xvatyva;
+            <span class="keyword">delete</span> [] Xtrtytr;
+        }
+        <span class="keywordflow">else</span>
+        {
+            T* ytr = <span class="keyword">new</span> T[last*t];
+            <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), n, t, tr, last, ytr);
 
 
-        gMat2D&lt;T&gt; xx(n-last, d);
-        gMat2D&lt;T&gt; yy(n-last, t);
+            T* Xtrtytr = <span class="keyword">new</span> T[d*t];
+            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xtr, ytr, Xtrtytr, last, d, last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+            <span class="keyword">delete</span> [] Xtr;
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), x_rows, d, va, n-last, xx.getData());
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), n, t, va, n-last, yy.getData());
+            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+            <span class="keyword">delete</span> [] ytr;
+            <span class="keyword">delete</span> [] Xtrtytr;
+        }
+
 
         T* work = <span class="keyword">new</span> T[d*(d+1)];
 
         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;tot; ++i)
         {
-            <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(Q, L, Qty, W-&gt;getData(), guesses[i], last, d, d, d, d, t, work);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(Q, L, QtXty, W-&gt;getData(), guesses[i], last, d, d, d, d, t, work);
 
-            OptMatrix&lt;gMat2D&lt;T&gt; &gt; *ret_pred = primal.execute(xx, yy, *nestedOpt);
+            OptMatrix&lt;gMat2D&lt;T&gt; &gt; *ret_pred = primal.execute(Xva, yva, *nestedOpt);
 
             nestedOpt-&gt;removeOpt(<span class="stringliteral">&quot;pred&quot;</span>);
             nestedOpt-&gt;addOpt(<span class="stringliteral">&quot;pred&quot;</span>, ret_pred);
 
-            GurlsOptionsList* ret_perf = perfClass-&gt;execute(xx, yy, *nestedOpt);
+            GurlsOptionsList* ret_perf = perfClass-&gt;execute(Xva, yva, *nestedOpt);
 
             gMat2D&lt;T&gt; &amp;forho_vec = ret_perf-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;forho&quot;</span>);
 
@@ -357,7 +398,7 @@ template&lt;typename T &gt; </div>
 
     <span class="keyword">delete</span> perfClass;
     <span class="keyword">delete</span> [] Q;
-    <span class="keyword">delete</span> [] Qty;
+    <span class="keyword">delete</span> [] QtXty;
     <span class="keyword">delete</span> [] L;
 
     GurlsOptionsList* paramsel;
@@ -474,7 +515,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html">ParamSelHoPrimal</a>      </li>
 
-    <li class="footer">Generated on Fri May 3 2013 16:42:14 for GURLS++ by
+    <li class="footer">Generated on Fri May 10 2013 15:47:33 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

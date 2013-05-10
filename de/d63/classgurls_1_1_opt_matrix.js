@@ -5,6 +5,7 @@ var classgurls_1_1_opt_matrix =
     [ "OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#ae12a99ebd4b22d732265a831bfd7232e", null ],
     [ "OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#aafac47a311657b4bd610e2ee11dec471", null ],
     [ "~OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#a0296b7f4abad68c2de5f7f48ef725fdd", null ],
+    [ "detachValue", "de/d63/classgurls_1_1_opt_matrix.html#acfd739dd3ea40687f5114e2aa06d4eb2", null ],
     [ "dynacast", "de/d63/classgurls_1_1_opt_matrix.html#afcdaab9bb024c4b065db65730359264b", null ],
     [ "dynacast", "de/d63/classgurls_1_1_opt_matrix.html#ae6ff51264f2855d69c690f2f8c4a42e8", null ],
     [ "getDataID", "d5/dcc/classgurls_1_1_gurls_option.html#a431323a19e055d3153e22a1871afb50d", null ],
@@ -18,7 +19,8 @@ var classgurls_1_1_opt_matrix =
     [ "operator=", "de/d63/classgurls_1_1_opt_matrix.html#a1ae5f6a3c2badf0c19b303416a9d3e09", null ],
     [ "setValue", "de/d63/classgurls_1_1_opt_matrix.html#a6d51b77697ed425ed61f0251a05b395e", null ],
     [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#ab8ca962235eb774ea2c322df52f50afd", null ],
+    [ "isOwner", "de/d63/classgurls_1_1_opt_matrix.html#aeb76d52e5f52f62841c75f359dd198d6", null ],
     [ "matType", "d3/dfe/classgurls_1_1_opt_matrix_base.html#a0c70f9146433e3a823cb3d36f8f8b3f1", null ],
     [ "type", "d5/dcc/classgurls_1_1_gurls_option.html#aea0687b6adb753e8693061721142905d", null ],
-    [ "value", "de/d63/classgurls_1_1_opt_matrix.html#af5a34c78712b7a6baa7c89c6e4c78951", null ]
+    [ "value", "de/d63/classgurls_1_1_opt_matrix.html#a0596ff5838c0e1d6efb26f47f047a124", null ]
 ];

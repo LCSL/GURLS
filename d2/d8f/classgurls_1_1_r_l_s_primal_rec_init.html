@@ -188,14 +188,13 @@ template&lt;typename T &gt; </div>
 <li>W = matrix of coefficient vectors of rls estimator for each class</li>
 <li>C = empty matrix</li>
 <li>X = empty matrix</li>
-<li>Cinv = inverse of the regularized kernel matrix in the primal space</li>
-<li>XtX = the kernel matrix in the primal space </li>
+<li>Cinv = inverse of the regularized kernel matrix in the primal space </li>
 </ul>
 </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/ddf/classgurls_1_1_optimizer.html#a2b13d7accfa26e838280455bda27d7ab">gurls::Optimizer&lt; T &gt;</a>.</p>
 
-<p>Definition at line <a class="el" href="../../d9/d39/rlsprimalrecinit_8h_source.html#l00088">88</a> of file <a class="el" href="../../d9/d39/rlsprimalrecinit_8h_source.html">rlsprimalrecinit.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d9/d39/rlsprimalrecinit_8h_source.html#l00087">87</a> of file <a class="el" href="../../d9/d39/rlsprimalrecinit_8h_source.html">rlsprimalrecinit.h</a>.</p>
 <div class="fragment"><pre class="fragment">{
     <span class="comment">//  lambda = opt.singlelambda(opt.paramsel.lambdas);</span>
     <span class="keyword">const</span> gMat2D&lt;T&gt; &amp;ll = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>);
@@ -203,36 +202,47 @@ template&lt;typename T &gt; </div>
 
 
     <span class="comment">//  [n,d] = size(X);</span>
-
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.rows();
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.cols();
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = Y.cols();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = opt.hasOpt(<span class="stringliteral">&quot;nTot&quot;</span>)? <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">long</span><span class="keyword">&gt;</span>(opt.getOptAsNumber(<span class="stringliteral">&quot;nTot&quot;</span>)) : X.rows();
+    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d;
+    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t;
 
 
     <span class="comment">//  XtX = X&#39;*X;</span>
-    T* XtX = <span class="keyword">new</span> T[d*d];
-    <span class="keywordflow">if</span>(opt.hasOpt(<span class="stringliteral">&quot;kernel.XtX&quot;</span>))
+    T* XtX;
+    <span class="keywordflow">if</span>(!opt.hasOpt(<span class="stringliteral">&quot;kernel.XtX&quot;</span>))
+    {
+        d = X.cols();
+        XtX = <span class="keyword">new</span> T[d*d];
         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), X.getData(), XtX, n, d, n, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+    }
     <span class="keywordflow">else</span>
     {
         <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; XtX_mat = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.XtX&quot;</span>);
+        d = XtX_mat.cols();
+        XtX = <span class="keyword">new</span> T[d*d];
         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(XtX, XtX_mat.getData(), d*d);
     }
 
     <span class="comment">//  Xty = X&#39;*y;</span>
-    T* Xty = <span class="keyword">new</span> T[d*t];
-    <span class="keywordflow">if</span>(opt.hasOpt(<span class="stringliteral">&quot;kernel.Xty&quot;</span>))
+    T* Xty;
+    <span class="keywordflow">if</span>(!opt.hasOpt(<span class="stringliteral">&quot;kernel.Xty&quot;</span>))
+    {
+        t = Y.cols();
+        Xty = <span class="keyword">new</span> T[d*t];
         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), Y.getData(), Xty, n, d, n, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+    }
     <span class="keywordflow">else</span>
     {
         <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; Xty_mat = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.Xty&quot;</span>);
+        t = Xty_mat.cols();
+        Xty = <span class="keyword">new</span> T[d*t];
         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Xty, Xty_mat.getData(), d*t);
     }
 
 
     <span class="comment">//  Cinv = pinv(XtX + (n*lambda)*eye(d));</span>
     T coeff = n*lambda;
-    <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d*d, (T)1.0, &amp;coeff, 0, XtX, d+1);
+    <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d, (T)1.0, &amp;coeff, 0, XtX, d+1);
 
     <span class="keywordtype">int</span> cinv_rows, cinv_cols;
     T* cinv = <a class="code" href="../../db/d4e/namespacegurls.html#a753b9fab2b7733245db71f4d59bcfc9b" title="Computes the pseudo-inverse of a non square matrix A.">pinv</a>(XtX, d, d, cinv_rows, cinv_cols);
@@ -337,7 +347,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d2/d8f/classgurls_1_1_r_l_s_primal_rec_init.html">RLSPrimalRecInit</a>      </li>
 
-    <li class="footer">Generated on Fri May 3 2013 16:42:14 for GURLS++ by
+    <li class="footer">Generated on Fri May 10 2013 15:47:33 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

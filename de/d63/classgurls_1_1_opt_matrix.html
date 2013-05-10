@@ -139,6 +139,9 @@ Public Types</h2></td></tr>
 typedef Matrix&#160;</td><td class="memItemRight" valign="bottom"><b>ValueType</b></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acfd739dd3ea40687f5114e2aa06d4eb2"></a><!-- doxytag: member="gurls::OptMatrix::detachValue" ref="acfd739dd3ea40687f5114e2aa06d4eb2" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d63/classgurls_1_1_opt_matrix.html#acfd739dd3ea40687f5114e2aa06d4eb2">detachValue</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove ownership for matrix pointer. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a431323a19e055d3153e22a1871afb50d"></a><!-- doxytag: member="gurls::OptMatrix::getDataID" ref="a431323a19e055d3153e22a1871afb50d" args="()" -->
 virtual const std::type_info &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dcc/classgurls_1_1_gurls_option.html#a431323a19e055d3153e22a1871afb50d">getDataID</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the identifier of the option type. <br/></td></tr>
@@ -195,8 +198,11 @@ Protected Attributes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Option type. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af5a34c78712b7a6baa7c89c6e4c78951"></a><!-- doxytag: member="gurls::OptMatrix::value" ref="af5a34c78712b7a6baa7c89c6e4c78951" args="" -->
-Matrix &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d63/classgurls_1_1_opt_matrix.html#af5a34c78712b7a6baa7c89c6e4c78951">value</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb76d52e5f52f62841c75f359dd198d6"></a><!-- doxytag: member="gurls::OptMatrix::isOwner" ref="aeb76d52e5f52f62841c75f359dd198d6" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d63/classgurls_1_1_opt_matrix.html#aeb76d52e5f52f62841c75f359dd198d6">isOwner</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating if the option is owner of the matrix pointer. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0596ff5838c0e1d6efb26f47f047a124"></a><!-- doxytag: member="gurls::OptMatrix::value" ref="a0596ff5838c0e1d6efb26f47f047a124" args="" -->
+Matrix *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d63/classgurls_1_1_opt_matrix.html#a0596ff5838c0e1d6efb26f47f047a124">value</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Option value. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
@@ -237,7 +243,7 @@ template&lt;typename T &gt; </div>
 
 <p>Reimplemented from <a class="el" href="../../d5/dcc/classgurls_1_1_gurls_option.html#aaa798e1552e96f68e358ec5a89ee7500">gurls::GurlsOption</a>.</p>
 
-<p>Definition at line <a class="el" href="../../de/d25/optmatrix_8h_source.html#l00267">267</a> of file <a class="el" href="../../de/d25/optmatrix_8h_source.html">optmatrix.h</a>.</p>
+<p>Definition at line <a class="el" href="../../de/d25/optmatrix_8h_source.html#l00281">281</a> of file <a class="el" href="../../de/d25/optmatrix_8h_source.html">optmatrix.h</a>.</p>
 <div class="fragment"><pre class="fragment">{
     <span class="keywordflow">return</span> os &lt;&lt; std::endl &lt;&lt; this-&gt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a686e6896611474b7dfdd09e38e64d2a6" title="Returns the matrix.">getValue</a>();
 }
@@ -268,7 +274,7 @@ template&lt;typename T &gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../de/d63/classgurls_1_1_opt_matrix.html">OptMatrix</a>      </li>
 
-    <li class="footer">Generated on Fri May 3 2013 16:42:13 for GURLS++ by
+    <li class="footer">Generated on Fri May 10 2013 15:47:33 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -126,7 +126,7 @@ Inheritance diagram for gurls::RLSPrimalRecUpdate&lt; T &gt;:</div>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844">execute</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;Y, const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;opt)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a classifier for the primal formulation of RLS.  <a href="#a0712b0fb0b96f2cd1dd1cdaed5246844"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a classifier for the primal formulation of RLS, using a recursive update, starting from an initial estimator found in opt.optimizer.  <a href="#a0712b0fb0b96f2cd1dd1cdaed5246844"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d6/ddf/classgurls_1_1_optimizer.html">Optimizer</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/ddf/classgurls_1_1_optimizer.html#a9470360032168e3208f4aa0c1ee05e86">factory</a> (const std::string &amp;id)  throw (BadOptimizerCreation)</td></tr>
@@ -171,14 +171,13 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<p>The regularization parameter is set to the one found in the field paramsel of opt. In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt</p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">X</td><td>input data matrix </td></tr>
     <tr><td class="paramname">Y</td><td>labels matrix </td></tr>
-    <tr><td class="paramname">opt</td><td>options with the following:<ul>
-<li>singlelambda (default)</li>
-<li>paramsel (settable with the class <a class="el" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection.">ParamSelection</a> and its subclasses)</li>
+    <tr><td class="paramname">opt</td><td>options with the following fields that need to be set through previous gurls++ tasks:<ul>
+<li>optimizer.W</li>
+<li>optimizer.Cinv</li>
 </ul>
 </td></tr>
   </table>
@@ -188,14 +187,13 @@ template&lt;typename T &gt; </div>
 <li>W = matrix of coefficient vectors of rls estimator for each class</li>
 <li>C = empty matrix</li>
 <li>X = empty matrix</li>
-<li>Cinv = inverse of the regularized kernel matrix in the primal space</li>
-<li>XtX = the kernel matrix in the primal space </li>
+<li>Cinv = inverse of the regularized kernel matrix in the primal space </li>
 </ul>
 </dd></dl>
 
 <p>Implements <a class="el" href="../../d6/ddf/classgurls_1_1_optimizer.html#a2b13d7accfa26e838280455bda27d7ab">gurls::Optimizer&lt; T &gt;</a>.</p>
 
-<p>Definition at line <a class="el" href="../../d3/dcb/rlsprimalrecupdate_8h_source.html#l00087">87</a> of file <a class="el" href="../../d3/dcb/rlsprimalrecupdate_8h_source.html">rlsprimalrecupdate.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d3/dcb/rlsprimalrecupdate_8h_source.html#l00085">85</a> of file <a class="el" href="../../d3/dcb/rlsprimalrecupdate_8h_source.html">rlsprimalrecupdate.h</a>.</p>
 <div class="fragment"><pre class="fragment">{
     <span class="comment">//  [n,d] = size(X);</span>
 
@@ -349,7 +347,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html">RLSPrimalRecUpdate</a>      </li>
 
-    <li class="footer">Generated on Fri May 3 2013 16:42:14 for GURLS++ by
+    <li class="footer">Generated on Fri May 10 2013 15:47:33 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

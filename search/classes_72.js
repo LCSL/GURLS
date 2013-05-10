@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['recursiverlsretrainwrapper',['RecursiveRLSRetrainWrapper',['../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html',1,'gurls']]],
+  ['recursiverlswrapper',['RecursiveRLSWrapper',['../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html',1,'gurls']]],
   ['rlsauto',['RLSAuto',['../d5/d00/classgurls_1_1_r_l_s_auto.html',1,'gurls']]],
   ['rlsdual',['RLSDual',['../d3/d15/classgurls_1_1_r_l_s_dual.html',1,'gurls']]],
   ['rlsdualr',['RLSDualr',['../d9/d3f/classgurls_1_1_r_l_s_dualr.html',1,'gurls']]],

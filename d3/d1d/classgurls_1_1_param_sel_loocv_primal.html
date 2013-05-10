@@ -211,23 +211,24 @@ template&lt;typename T &gt; </div>
         <span class="keywordflow">if</span>(xr != n)
             <span class="keywordflow">throw</span> gException(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
 
-        gMat2D&lt;T&gt; *XtX = <span class="keyword">new</span> gMat2D&lt;T&gt;(xc, xc);
-
-        <span class="keywordflow">if</span>(!opt.hasOpt(<span class="stringliteral">&quot;kernel.XtX&quot;</span>))
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), X.getData(), XtX-&gt;getData(), xr, xc, xr, xc, xc, xc, CblasTrans, CblasNoTrans, CblasColMajor);
-        <span class="keywordflow">else</span>
-        {
-            <span class="keyword">const</span> gMat2D&lt;T&gt; &amp; XtX_opt = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.XtX&quot;</span>);
-            <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(XtX-&gt;getData(), XtX_opt.getData(), xc*xc);
-        }
+        T* K = <span class="keyword">new</span> T[xc*xc];
+        garbage.insert(K);
+        <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), X.getData(), K, xr, xc, xr, xc, xc, xc, CblasTrans, CblasNoTrans, CblasColMajor);
 
 
         <span class="comment">// tot = opt.nlambda;</span>
         <span class="keywordtype">int</span> tot = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(std::ceil( opt.getOptAsNumber(<span class="stringliteral">&quot;nlambda&quot;</span>)));
 
+        <span class="comment">//  [Q,L] = eig(K);</span>
+        <span class="comment">//  L = diag(L);</span>
 
-        T* Q = <span class="keyword">new</span> T[xc*xc];
-        <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Q, XtX-&gt;getData(), xc*xc);
+<span class="comment">//        T* Q, *L;</span>
+
+<span class="comment">//        eig(K, Q, L, xc, xc);</span>
+<span class="comment">//        garbage.insert(Q);</span>
+<span class="comment">//        garbage.insert(L);</span>
+
+        T* Q = K;
         T* L = <span class="keyword">new</span> T[xc];
         garbage.insert(L);
 
@@ -540,7 +541,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d3/d1d/classgurls_1_1_param_sel_loocv_primal.html">ParamSelLoocvPrimal</a>      </li>
 
-    <li class="footer">Generated on Fri May 3 2013 16:42:14 for GURLS++ by
+    <li class="footer">Generated on Fri May 10 2013 15:47:33 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

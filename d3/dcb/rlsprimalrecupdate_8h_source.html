@@ -104,7 +104,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001  <span class="comment">/*</span>
 <a name="l00002"></a>00002 <span class="comment">  * The GURLS Package in C++</span>
 <a name="l00003"></a>00003 <span class="comment">  *</span>
-<a name="l00004"></a>00004 <span class="comment">  * Copyright (C) 2011, IIT@MIT Lab</span>
+<a name="l00004"></a>00004 <span class="comment">  * Copyright (C) 2011-1013, IIT@MIT Lab</span>
 <a name="l00005"></a>00005 <span class="comment">  * All rights reserved.</span>
 <a name="l00006"></a>00006 <span class="comment">  *</span>
 <a name="l00007"></a>00007 <span class="comment">  * authors:  M. Santoro</span>
@@ -160,98 +160,98 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00061"></a><a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html">00061</a> <span class="keyword">class </span><a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html" title="RLSPrimalRecUpdate is the sub-class of Optimizer that implements RLS with the primal formulation...">RLSPrimalRecUpdate</a>: <span class="keyword">public</span> <a class="code" href="../../d6/ddf/classgurls_1_1_optimizer.html" title="Optimizer is a class that implements a Regularized Least Square algorithm.">Optimizer</a>&lt;T&gt;
 <a name="l00062"></a>00062 {
 <a name="l00063"></a>00063 <span class="keyword">public</span>:
-<a name="l00082"></a>00082     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844" title="Computes a classifier for the primal formulation of RLS.">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt);
-<a name="l00083"></a>00083 };
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00087"></a><a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844">00087</a> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844" title="Computes a classifier for the primal formulation of RLS.">RLSPrimalRecUpdate&lt;T&gt;::execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> &amp;opt)
-<a name="l00088"></a>00088 {
-<a name="l00089"></a>00089     <span class="comment">//  [n,d] = size(X);</span>
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>();
-<a name="l00092"></a>00092     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>();
+<a name="l00080"></a>00080     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844" title="Computes a classifier for the primal formulation of RLS, using a recursive update, starting from an initial estimator found in opt.optimizer.">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt);
+<a name="l00081"></a>00081 };
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00085"></a><a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844">00085</a> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844" title="Computes a classifier for the primal formulation of RLS, using a recursive update, starting from an initial estimator found in opt.optimizer.">RLSPrimalRecUpdate&lt;T&gt;::execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> &amp;opt)
+<a name="l00086"></a>00086 {
+<a name="l00087"></a>00087     <span class="comment">//  [n,d] = size(X);</span>
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>();
+<a name="l00090"></a>00090     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>();
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = Y.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>();
 <a name="l00093"></a>00093 
-<a name="l00094"></a>00094     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = Y.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>();
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096     <span class="comment">//  W = opt.rls.W;</span>
-<a name="l00097"></a>00097     <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; prev_W = opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;optimizer.W&quot;</span>);
-<a name="l00098"></a>00098     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* W = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(prev_W);
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100     <span class="comment">//  Cinv = opt.rls.Cinv;</span>
-<a name="l00101"></a>00101     <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; prev_Cinv = opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;optimizer.Cinv&quot;</span>);
-<a name="l00102"></a>00102     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* Cinv = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(prev_Cinv);
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104     T* WData = W-&gt;getData();
-<a name="l00105"></a>00105     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> wn = W-&gt;rows();
-<a name="l00106"></a>00106     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> wd = W-&gt;cols();
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109     T* CinvData = Cinv-&gt;getData();
-<a name="l00110"></a>00110     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cn = Cinv-&gt;rows();
-<a name="l00111"></a>00111     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cd = Cinv-&gt;cols();
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113     T* Cx = <span class="keyword">new</span> T[cn];
-<a name="l00114"></a>00114     T* x = <span class="keyword">new</span> T[d];
-<a name="l00115"></a>00115     T* y = <span class="keyword">new</span> T[t];
-<a name="l00116"></a>00116     T xCx;
-<a name="l00117"></a>00117     T* CxCxt = <span class="keyword">new</span> T[cn*cn];
-<a name="l00118"></a>00118     T* xW = <span class="keyword">new</span> T[wd];
-<a name="l00119"></a>00119     T* Cxy = <span class="keyword">new</span> T[cn*t];
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;n; ++i)
-<a name="l00122"></a>00122     {
-<a name="l00123"></a>00123         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n, d, i, x);
-<a name="l00124"></a>00124         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(Y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n, t, i, y);
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126         <span class="comment">//  Cx = Cinv*X(i,:)&#39;;</span>
-<a name="l00127"></a>00127         <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(CblasNoTrans, cn, cd, (T)1.0, CinvData, cn, x, 1, (T)0.0, Cx, 1);
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129         <span class="comment">//  xCx = X(i,:)*Cx;</span>
-<a name="l00130"></a>00130         <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(CblasNoTrans, 1, d, (T)1.0, x, 1, Cx, 1, (T)0.0, &amp;xCx, 1);
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132         <span class="comment">//  Cinv = Cinv - Cx*Cx&#39;./(1+xCx);</span>
-<a name="l00133"></a>00133         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Cx, Cx, CxCxt, cn, 1, cn, 1, cn, cn, CblasNoTrans, CblasTrans, CblasColMajor);
-<a name="l00134"></a>00134         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(cn*cn, (T)(-1.0/(xCx+1)), CxCxt, 1, CinvData, 1);
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137         <span class="comment">//  W = W +(Cx*(y(i,:)-X(i,:)*W))./(1+xCx);</span>
-<a name="l00138"></a>00138         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(x, WData, xW, 1, d, wn, wd, 1, wd, CblasNoTrans, CblasNoTrans, CblasColMajor);
-<a name="l00139"></a>00139         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(t, (T)-1.0, xW, 1, y, 1);
-<a name="l00140"></a>00140         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Cx, y, Cxy, cn, 1, 1, t, cn, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
-<a name="l00141"></a>00141         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(cn*t, (T)(1.0/(xCx+1)), Cxy, 1, WData, 1);
-<a name="l00142"></a>00142     }
-<a name="l00143"></a>00143 
-<a name="l00144"></a>00144     <span class="keyword">delete</span>[] Cx;
-<a name="l00145"></a>00145     <span class="keyword">delete</span>[] x;
-<a name="l00146"></a>00146     <span class="keyword">delete</span>[] y;
-<a name="l00147"></a>00147     <span class="keyword">delete</span>[] CxCxt;
-<a name="l00148"></a>00148     <span class="keyword">delete</span>[] xW;
-<a name="l00149"></a>00149     <span class="keyword">delete</span>[] Cxy;
-<a name="l00150"></a>00150 
+<a name="l00094"></a>00094     <span class="comment">//  W = opt.rls.W;</span>
+<a name="l00095"></a>00095     <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; prev_W = opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;optimizer.W&quot;</span>);
+<a name="l00096"></a>00096     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* W = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(prev_W);
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098     <span class="comment">//  Cinv = opt.rls.Cinv;</span>
+<a name="l00099"></a>00099     <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; prev_Cinv = opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;optimizer.Cinv&quot;</span>);
+<a name="l00100"></a>00100     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* Cinv = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(prev_Cinv);
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102     T* WData = W-&gt;getData();
+<a name="l00103"></a>00103     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> wn = W-&gt;rows();
+<a name="l00104"></a>00104     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> wd = W-&gt;cols();
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107     T* CinvData = Cinv-&gt;getData();
+<a name="l00108"></a>00108     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cn = Cinv-&gt;rows();
+<a name="l00109"></a>00109     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cd = Cinv-&gt;cols();
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111     T* Cx = <span class="keyword">new</span> T[cn];
+<a name="l00112"></a>00112     T* x = <span class="keyword">new</span> T[d];
+<a name="l00113"></a>00113     T* y = <span class="keyword">new</span> T[t];
+<a name="l00114"></a>00114     T xCx;
+<a name="l00115"></a>00115     T* CxCxt = <span class="keyword">new</span> T[cn*cn];
+<a name="l00116"></a>00116     T* xW = <span class="keyword">new</span> T[wd];
+<a name="l00117"></a>00117     T* Cxy = <span class="keyword">new</span> T[cn*t];
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;n; ++i)
+<a name="l00120"></a>00120     {
+<a name="l00121"></a>00121         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n, d, i, x);
+<a name="l00122"></a>00122         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(Y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n, t, i, y);
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124         <span class="comment">//  Cx = Cinv*X(i,:)&#39;;</span>
+<a name="l00125"></a>00125         <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(CblasNoTrans, cn, cd, (T)1.0, CinvData, cn, x, 1, (T)0.0, Cx, 1);
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127         <span class="comment">//  xCx = X(i,:)*Cx;</span>
+<a name="l00128"></a>00128         <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(CblasNoTrans, 1, d, (T)1.0, x, 1, Cx, 1, (T)0.0, &amp;xCx, 1);
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         <span class="comment">//  Cinv = Cinv - Cx*Cx&#39;./(1+xCx);</span>
+<a name="l00131"></a>00131         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Cx, Cx, CxCxt, cn, 1, cn, 1, cn, cn, CblasNoTrans, CblasTrans, CblasColMajor);
+<a name="l00132"></a>00132         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(cn*cn, (T)(-1.0/(xCx+1)), CxCxt, 1, CinvData, 1);
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135         <span class="comment">//  W = W +(Cx*(y(i,:)-X(i,:)*W))./(1+xCx);</span>
+<a name="l00136"></a>00136         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(x, WData, xW, 1, d, wn, wd, 1, wd, CblasNoTrans, CblasNoTrans, CblasColMajor);
+<a name="l00137"></a>00137         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(t, (T)-1.0, xW, 1, y, 1);
+<a name="l00138"></a>00138         <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Cx, y, Cxy, cn, 1, 1, t, cn, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+<a name="l00139"></a>00139         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(cn*t, (T)(1.0/(xCx+1)), Cxy, 1, WData, 1);
+<a name="l00140"></a>00140     }
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142     <span class="keyword">delete</span>[] Cx;
+<a name="l00143"></a>00143     <span class="keyword">delete</span>[] x;
+<a name="l00144"></a>00144     <span class="keyword">delete</span>[] y;
+<a name="l00145"></a>00145     <span class="keyword">delete</span>[] CxCxt;
+<a name="l00146"></a>00146     <span class="keyword">delete</span>[] xW;
+<a name="l00147"></a>00147     <span class="keyword">delete</span>[] Cxy;
+<a name="l00148"></a>00148 
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* optimizer = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
 <a name="l00151"></a>00151 
-<a name="l00152"></a>00152     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* optimizer = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
-<a name="l00153"></a>00153 
-<a name="l00154"></a>00154     <span class="comment">//  rls.W = W;</span>
-<a name="l00155"></a>00155     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;W&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*W));
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157     <span class="comment">//  rls.C = [];</span>
-<a name="l00158"></a>00158     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* emptyC = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>();
-<a name="l00159"></a>00159     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;C&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*emptyC));
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161     <span class="comment">//  cfr.X = [];</span>
-<a name="l00162"></a>00162     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* emptyX = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>();
-<a name="l00163"></a>00163     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;X&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*emptyX));
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165     <span class="comment">//  rls.Cinv = Cinv;</span>
-<a name="l00166"></a>00166     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;Cinv&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*Cinv));
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168     <span class="keywordflow">return</span> optimizer;
-<a name="l00169"></a>00169 }
-<a name="l00170"></a>00170 
-<a name="l00171"></a>00171 
-<a name="l00172"></a>00172 }
-<a name="l00173"></a>00173 <span class="preprocessor">#endif // _GURLS_RLSPRIMALRECUPDATE_H_</span>
+<a name="l00152"></a>00152     <span class="comment">//  rls.W = W;</span>
+<a name="l00153"></a>00153     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;W&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*W));
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155     <span class="comment">//  rls.C = [];</span>
+<a name="l00156"></a>00156     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* emptyC = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>();
+<a name="l00157"></a>00157     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;C&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*emptyC));
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159     <span class="comment">//  cfr.X = [];</span>
+<a name="l00160"></a>00160     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* emptyX = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>();
+<a name="l00161"></a>00161     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;X&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*emptyX));
+<a name="l00162"></a>00162 
+<a name="l00163"></a>00163     <span class="comment">//  rls.Cinv = Cinv;</span>
+<a name="l00164"></a>00164     optimizer-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;Cinv&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*Cinv));
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166     <span class="keywordflow">return</span> optimizer;
+<a name="l00167"></a>00167 }
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170 }
+<a name="l00171"></a>00171 <span class="preprocessor">#endif // _GURLS_RLSPRIMALRECUPDATE_H_</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -272,7 +272,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>rlsprimalrecupdate.h</b>      </li>
 
-    <li class="footer">Generated on Fri May 3 2013 16:42:13 for GURLS++ by
+    <li class="footer">Generated on Fri May 10 2013 15:47:32 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

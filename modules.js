@@ -13,5 +13,6 @@ var modules =
     [ "Prediction", "df/d05/group___prediction.html", null ],
     [ "Settings", "d6/d6e/group___settings.html", null ],
     [ "Split", "d7/d0a/group___split.html", null ],
-    [ "Tutorials", "d1/d3d/group___tutorials.html", null ]
+    [ "Tutorials", "d1/d3d/group___tutorials.html", null ],
+    [ "Wrappers", "d7/df3/group___wrappers.html", null ]
 ];

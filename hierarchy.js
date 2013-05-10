@@ -43,13 +43,17 @@ var hierarchy =
         [ "gurls::OptTaskSequence", "dc/d25/classgurls_1_1_opt_task_sequence.html", null ]
       ] ]
     ] ],
+    [ "gurls::GurlsWrapper", "d5/d55/classgurls_1_1_gurls_wrapper.html", [
+      [ "gurls::RecursiveRLSWrapper", "d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html", [
+        [ "gurls::RecursiveRLSRetrainWrapper", "d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html", null ]
+      ] ]
+    ] ],
     [ "gurls::Kernel< T >", "dc/d0c/classgurls_1_1_kernel.html", [
       [ "gurls::KernelChisquared< T >", "dc/d82/classgurls_1_1_kernel_chisquared.html", null ],
       [ "gurls::KernelLinear< T >", "d8/d84/classgurls_1_1_kernel_linear.html", null ],
       [ "gurls::KernelRBF< T >", "d0/d97/classgurls_1_1_kernel_r_b_f.html", null ]
     ] ],
     [ "gurls::LtCompare< T >", "d0/db4/classgurls_1_1_lt_compare.html", null ],
-    [ "gurls::Module", "da/dd9/classgurls_1_1_module.html", null ],
     [ "gurls::Norm< T >", "d9/d56/classgurls_1_1_norm.html", [
       [ "gurls::NormL2< T >", "db/d42/classgurls_1_1_norm_l2.html", null ],
       [ "gurls::NormTestZScore< T >", "db/d98/classgurls_1_1_norm_test_z_score.html", null ],

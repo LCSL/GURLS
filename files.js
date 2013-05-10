@@ -33,8 +33,6 @@ var files =
     [ "loogpregr.h", null, null ],
     [ "macroavg.h", null, null ],
     [ "maxscore.h", null, null ],
-    [ "module.cpp", null, null ],
-    [ "module.h", null, null ],
     [ "norm.h", null, null ],
     [ "norml2.h", null, null ],
     [ "normtestzscore.h", null, null ],
@@ -76,5 +74,7 @@ var files =
     [ "siglamloogpregr.h", null, null ],
     [ "split.h", null, null ],
     [ "splitho.h", null, null ],
-    [ "utils.h", "d5/d60/utils_8h.html", "d5/d60/utils_8h" ]
+    [ "utils.h", "d5/d60/utils_8h.html", "d5/d60/utils_8h" ],
+    [ "wrapper.cpp", null, null ],
+    [ "wrapper.h", null, null ]
 ];

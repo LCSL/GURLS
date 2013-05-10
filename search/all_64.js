@@ -4,6 +4,7 @@ var searchData=
   ['daxpy_5f',['daxpy_',['../dd/df1/blas__lapack_8h.html#aebed34a8a0affdf35639abf072c7e50e',1,'blas_lapack.h']]],
   ['dcopy_5f',['dcopy_',['../dd/df1/blas__lapack_8h.html#a3031b7ee89efd261a0280ca955224d4c',1,'blas_lapack.h']]],
   ['ddot_5f',['ddot_',['../dd/df1/blas__lapack_8h.html#a2247ca92b3cf0e88e9448ad05240921f',1,'blas_lapack.h']]],
+  ['detachvalue',['detachValue',['../de/d63/classgurls_1_1_opt_matrix.html#acfd739dd3ea40687f5114e2aa06d4eb2',1,'gurls::OptMatrix']]],
   ['dgeev_5f',['dgeev_',['../dd/df1/blas__lapack_8h.html#acf4971bebb7923471eb609ac7f66c9be',1,'blas_lapack.h']]],
   ['dgelss_5f',['dgelss_',['../dd/df1/blas__lapack_8h.html#a58f2e24d9280b3bece4af72bc9c433da',1,'blas_lapack.h']]],
   ['dgemm_5f',['dgemm_',['../dd/df1/blas__lapack_8h.html#a893258e0b2ea9411e7e6a55d0f422db6',1,'blas_lapack.h']]],
