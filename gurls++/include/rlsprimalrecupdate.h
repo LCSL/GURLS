@@ -62,13 +62,12 @@ class RLSPrimalRecUpdate: public Optimizer<T>
 {
 public:
     /**
-     * Computes a classifier for the primal formulation of RLS.
-     * The regularization parameter is set to the one found in the field paramsel of opt.
-     * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
+     * Computes a classifier for the primal formulation of RLS, using a
+     * recursive update, starting from an initial estimator found in opt.optimizer.
      *
      * \param X input data matrix
      * \param Y labels matrix
-     * \param opt options with the following:
+     * \param opt options with the following fields that need to be set through previous gurls++ tasks:
      *  - optimizer.W
      *  - optimizer.Cinv
      *

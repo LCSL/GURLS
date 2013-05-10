@@ -92,7 +92,7 @@ class Prediction
 public:
 
     /**
-     * Computes predictions of the classifier stored in the field rls of opt on the samples passed in the X matrix.
+     * Computes predictions of the classifier stored in the field optimizer of opt on the samples passed in the X matrix.
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the different required fields based on the sub-class
