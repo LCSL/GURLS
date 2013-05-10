@@ -65,6 +65,12 @@ bool checkMatrices(const gMat2D<T>& m1, const gMat2D<T>& m2);
 
 /**
   * Main function
+  *
+  * The data is already split into training and test set, and each set is
+  * in the form of an input data matrix and a output labels vector.
+  * Parameter selection and initial RLS estimation is carried out on a first subset of the training set.
+  * Recursive RLS is run on the remainder of the training set, simulating online learning.
+  * Finally the gurls++ testing process is run on the test set.
   */
 int main(int argc, char* argv[])
 {

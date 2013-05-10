@@ -254,6 +254,11 @@ enhancements, suggestions are wellcome.
  */
 
 /**
+ * \defgroup Wrappers Wrappers
+ * \brief Contains gurls++ wrapper classes allowing users to easily bypass pipelines.
+ */
+
+/**
  * \ingroup Common Common
  * \file
  * \brief Header file containing a number of common definition.
