@@ -2,7 +2,6 @@
 -------- Grand Unified Regularized Least Squares ---------
 ----------------------------------------------------------
 
-
 Table of Contents
 =================
 
@@ -51,11 +50,11 @@ Documentation
    $ doxygen Doxyfile.in
  and a pre-built version can be found in doc_gurls++.zip. The online version of the documentation will be soon available
 
--Test
-	Testing routines and scripts are available in the test directories of the gurls 
-	and gurls++ package. This checks that gurls and gurls++ results coincide.
-
 - Further Documentation
 	* Have a look at the README files of each individual package.
 	
 	* In gurls-manual.pdf you can find both the installation instructions and user manual, together with the Matlab and C++ Developer's Guide. GURLS is designed for easy expansion. Give it a try!
+
+-Test
+	Testing routines and scripts are available in the test directories of the gurls 
+	and gurls++ package. This checks that gurls and gurls++ results coincide.
