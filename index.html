@@ -95,29 +95,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">The GURLS Package in C++ </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This C++ library provides an object oriented framework to solve supervised mult-class learning problems using a regularized least square approach.</p>
-<p>GURLS++ is the C++ implementation of the Matlab toolbox GURLS (<a href="http://cbcl.mit.edu/gurls/">http://cbcl.mit.edu/gurls/</a>).</p>
-<p>The ultimate goal of the authors and contributors to GURLS++ has been to develop a comprehensive library to solve easily classication and regression problems both in the setting of batch and online learning from examples.</p>
-<p>Both GURLS and GURLS++ allows for training multiclass classifiers based on the Regularized Least Squares (RLS) loss function. The libraries encode ideas and experience from classical and more recent developments in theory and practice of multicategory classification. The software package includes efficient methods to automatically select good model parameters, to use a variety of output coding schemes and an easy interface for experiment management and results visualization. The software package includes a number of routines especially designed to deal with massive datasets, furthermore, it is instrinsically modular and each method can be used independently.</p>
+<div class="textblock"><p>GURLS++ is one of the 4 Grand Unified Laest Squares libraries (GURLS, GURLS++, bGURLS, bGURLS++), a set of modular and easy-to-extend software libraries for efficient supervised learning, which can be adopted effortlessly by both non-specialists and machine learning practitioners (<a href="http://lcsl.mit.edu/gurls.html">http://lcsl.mit.edu/gurls.html</a>).</p>
+<p>GURLS++, the C++ implementation of the Matlab toolbox GURLS, provides an object oriented framework to to solve supervised learning problems via different state-of-the-art learning methods based on Regularized Least Squares. It takes advantage of some favorable properties of regularized least squares algorithm. is tailored to deal in particular with multi-category/multi-label problems.</p>
+<p>The library comprises useful routines to perform automatic parameter selection, and simple API's for specific learning algorithms (currently only the Recursive RLS API is available but many others will be soon available).</p>
+<p>The specification of the desired machine learning experiment in the library is very straightforward. Basically, it is a formal description of a pipeline, i.e. an ordered sequence of steps. Each step identifies an actual learning task, which can belong to a predefined category. The core of the library is a class called GURLScore, which is responsible for processing the sequence of tasks in the proper order and for linking the output of the former task to the input of the subsequent one.</p>
 <div class="image">
-<img src="pipeline_s.png" alt="pipeline_s.png"/>
+<img src="GURLS-design.png" alt="GURLS-design.png"/>
 <div class="caption">
 GURLS++ pipeline</div></div>
- <p>GURLS and GURLS++ have been developed within the context of the IIT@MIT Lab, established between the Massachusetts Institute of Technology (MIT) and the Istituto Italiano di Tecnologia (IIT) to develop novel learning and perception technologies/algorithms for learning, especially in the visual perception domain, that are inspired by the neuroscience of sensory systems and are developed within the rapidly growing theory of computational learning.</p>
-<p><b>Software Package</b></p>
-<p>The GURLS package is more than a collection of optimization routines, its design allows for quickly composing various experiments by varying the parameter selection, performance evaluation and the optimization procedures. The GURLS package has three main features:</p>
-<ol>
-<li>
-A core library consisting of parameter selection and a wide range of optimization routines for building regularized least squares classifiers. </li>
-<li>
-Automated tools for building principled classifiers, where most decisions for building an optimal classifier are taken by the package based on theory. </li>
-<li>
-A simple and easy-to-use, and easy-to-extend benchmarking framework for rapidly prototyping learning algorithms with various components. </li>
-</ol>
-<p><b>Benchmarking Framework</b></p>
-<p>The GURLS package allows the user to quickly design and compare experiments, run with different pattern recognition pipelines (for example, comparing the performance of linear vs. non-linear classifiers on a given dataset). The output of each task in the sequence is stored in a particular format by GURLS, which makes it easy for the package to combine the results and present them as plots or tables.</p>
+<p> A key role is played by the additional "options" structure, which we usually refer to as "opt". It is used to store all configuration parameters required to customize the behaviour of single tasks in the pipeline. Tasks receive configuration parameters from "opt" in read-only mode and - upon termination - the results are appended to the structure by GURLScore in order to make them available to the subsequent tasks. This allows the user to easily skip the execution of some tasks in a pipeline, by simply inserting the desired results directly into the options structure. Currently, we identify six different task categories:</p>
+<ul>
+<li>automatic training</li>
+<li>validation</li>
+<li>test dataset splitting</li>
+<li>computation of the kernel matrix</li>
+<li>model selection</li>
+<li>optimization and training</li>
+<li>classifier prediction</li>
+<li>performance assessment.</li>
+</ul>
+<p>All tasks in the same category can be interchanged with each other.</p>
+<p>Further documentation:</p>
+<ul>
+<li>Installation instructions can be found here: <a href="https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Installing_GURLSbGURLS">https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Installing_GURLSbGURLS</a></li>
+<li>Quick intructions on how to run the libraries for a default case can be found here: <a href="https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World_in_GURLS-2">https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World_in_GURLS-2</a></li>
+<li>A User manual with several examples can be found here: <a href="https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage-2">https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage-2</a></li>
+<li>In gurls-manual.pdf you can find both the installation instructions and user manual, together with the Matlab and C++ Developer's Guide. GURLS is designed for easy expansion. Give it a try!</li>
+</ul>
+<p>The GURLS libraries have been developed within the context of the IIT@MIT Lab, established between the Massachusetts Institute of Technology (MIT) and the Istituto Italiano di Tecnologia (IIT) to develop novel learning and perception technologies/algorithms for learning, especially in the visual perception domain, that are inspired by the neuroscience of sensory systems and are developed within the rapidly growing theory of computational learning.</p>
 <p><b>Current Development Status</b></p>
-<p>The current version of this C++ library implements all the core functionalities available in GURLS but still miss the functionalities required to handle large scale machine learning. A major upgrade and revision will be available soon. Check out the main GURLS repository at (<a href="https://github.com/CBCL/GURLS">https://github.com/CBCL/GURLS</a>) and keep updated for futher developments.</p>
+<p>The current version of this C++ library implements all the core functionalities available in GURLS. Check out the main GURLS repository at (<a href="https://github.com/CBCL/GURLS">https://github.com/CBCL/GURLS</a>) and keep updated for futher developments.</p>
 <p><b>Author</b>:</p>
 <p><em>Matteo Santoro</em>. (<em>Contacts:</em> <a href="mailto:matteo.santoro@gmail.com">matteo.santoro@gmail.com</a>)</p>
 <p><b>Copyright Notice</b>:</p>
@@ -163,7 +170,7 @@ A simple and easy-to-use, and easy-to-extend benchmarking framework for rapidly 
   <div id="nav-path" class="navpath">
     <ul>
 
-    <li class="footer">Generated on Fri May 10 2013 15:47:34 for GURLS++ by
+    <li class="footer">Generated on Mon May 13 2013 09:27:05 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>
