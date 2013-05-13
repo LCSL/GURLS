@@ -1,7 +1,8 @@
 function [cfr] = rls_primalrecinit(X, y, opt)
-
-% rls_primal_recursiveinit(X,y,opt)
-% computes a classifier for the primal formulation of RLS.
+% rls_primalrecinit(X,y,opt)
+% computes a classifier for the primal formulation of RLS. 
+% The variables necessary for further recursive update are stored in the
+% output structure.
 % The regularization parameter is set to the one found in opt.paramsel.
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
@@ -19,7 +20,6 @@ function [cfr] = rls_primalrecinit(X, y, opt)
 % 
 % OUTPUT: struct with the following fields:
 % -W: matrix of coefficient vectors of rls estimator for each class
-% -XtX: the kernel matrix in the primal space
 % -Cinv: inverse of the regularized kernel matrix in the primal space
 % -C: empty matrix
 % -X: empty matrix

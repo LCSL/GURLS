@@ -88,9 +88,8 @@ protected:
   * computation of the RLS estimator is carried out by the class RLSPrimalRecInit,
   * which stores all information necessary for efficient recursive update in the options structure.
   * Once the information about initial training is stored in the options structure, given a
-  * new set of input–output pairs (possibly also just one pair), the RLS estimator can be efficiently
-  * updated via the method update(). Every time a new set of input-output
-  * pairs is available, method update() can be invoked again.
+  * new input–output pair, the RLS estimator can be efficiently updated via the method update(). 
+  * Every time a new input-output pair is available, method update() can be invoked again.
   * Finally, the eval() method can be used on test data.
   */
 class RecursiveRLSWrapper: public GurlsWrapper
@@ -141,9 +140,8 @@ public:
   * computation of the RLS estimator is carried out by the class RLSPrimalRecInit,
   * which stores all information necessary for efficient recursive update in the options structure.
   * Once the information about initial training is stored in the options structure, given a
-  * new set of input–output pairs (possibly also just one pair), the RLS estimator can be efficiently
-  * updated via the method update(). Every time a new set of input-output
-  * pairs is available, method update() can be invoked again. Parameter selection
+  * new input–output pair, the RLS estimator can be efficiently updated via the method update(). 
+  * Every time a new input-output pair is available, method update() can be invoked again. Parameter selection
   * and RLS estimation ( method retrain()) can be repeated after any number of online updates.
   * Finally, the eval() method can be used on test data.
   */
