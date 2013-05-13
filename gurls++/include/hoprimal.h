@@ -207,8 +207,8 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
         gMat2D<T> Xva(n-last, d);
         gMat2D<T> yva(n-last, t);
 
-        subMatrixFromRows(X.getData(), n, d, va, n-last, Xva.getData());
-        subMatrixFromRows(Y.getData(), n, t, va, n-last, yva.getData());
+        subMatrixFromRows(X.getData(), X.rows(), d, va, n-last, Xva.getData());
+        subMatrixFromRows(Y.getData(), Y.rows(), t, va, n-last, yva.getData());
 
         T* Xtr = NULL;
         if(hasXt)
