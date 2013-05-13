@@ -1,6 +1,6 @@
 function [rls] = rls_primalrecupdate (X, y, opt)
 
-% rls_primalrecursive(X,y,opt)
+% rls_primalrecupdate(X,y,opt)
 % computes a classifier for the primal formulation of RLS, using a
 % recursive update, starting from an initial estimator found in OPT.RLS.
 %
@@ -9,7 +9,8 @@ function [rls] = rls_primalrecupdate (X, y, opt)
 % -y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
-%		- rls.W (set by the rls_* routines)
+%		- rls.W (set by the rls_primalrecinit)
+%       - rls.Cinv (set by rls_primalrecinit)
 % 
 %   For more information on standard OPT fields
 %   see also defopt
