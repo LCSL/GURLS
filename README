@@ -54,8 +54,8 @@ Documentation
 	* Have a look at the README files of each individual package.
 	
 	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
-          together with the Matlab and C++ Developer's Guide. GURLS is designed for easy expansion. 
-          Give it a try!
+          together with the Matlab and C++ Developer's Guide. GURLS is designed 
+	  for easy expansion. Give it a try!
 	
 	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive RLS API 
 
