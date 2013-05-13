@@ -68,8 +68,8 @@ public:
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the following fields that need to be set through previous gurls++ tasks:
-     *  - optimizer.W
-     *  - optimizer.Cinv
+     *  - optimizer.W (settable with the class RLSPrimalRecInit)
+     *  - optimizer.Cinv (settable with the class RLSPrimalRecInit)
      *
      * \return adds to opt the field optimizer which is a list containing the following fields:
      *  - W = matrix of coefficient vectors of rls estimator for each class

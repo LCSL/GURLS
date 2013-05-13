@@ -65,6 +65,7 @@ public:
     /**
      * Computes a classifier for the primal formulation of RLS.
      * The regularization parameter is set to the one found in the field paramsel of opt.
+	 * The variables necessary for further recursive update are stored in the output structure
      * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
      *
      * \param X input data matrix
