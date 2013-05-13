@@ -57,7 +57,8 @@ Documentation
           together with the Matlab and C++ Developer's Guide. GURLS is designed 
 	  for easy expansion. Give it a try!
 	
-	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive RLS API 
+	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive 
+	  RLS API 
 
 -Test
 	Testing routines and scripts are available in the test directories of the gurls 
