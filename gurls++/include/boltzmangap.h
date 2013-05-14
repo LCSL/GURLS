@@ -68,7 +68,7 @@ public:
      *
      * \return ret, a GurlsOptionList with the following fields:
      *  - confidence = array containing the confidence score for each row of the field pred of opt.
-	 *  - labels = array containing predicted class for each row of the field pred of opt.
+     *  - labels = array containing predicted class for each row of the field pred of opt.
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
@@ -91,7 +91,6 @@ GurlsOptionsList *ConfBoltzmanGap<T>::execute(const gMat2D<T>& /*X*/, const gMat
     const T* expscores = pred.getData();
 
     T sum;
-    T* work = new T[t+1];
     T* rowT = new T[t];
 
     gMat2D<T> *conf = new gMat2D<T>(n,1);
@@ -103,14 +102,13 @@ GurlsOptionsList *ConfBoltzmanGap<T>::execute(const gMat2D<T>& /*X*/, const gMat
         getRow(expscores, n, t, i, rowT);
         exp(rowT, t);
 
-        sum = sumv(rowT, t, work);
+        sum = sumv(rowT, t);
         scal(t, (T)(1.0/sum), rowT, 1);
 
         std::sort(rowT,rowT+t);
         confidence[i] =  rowT[t-1]-rowT[t-2];
     }
 
-    delete [] work;
     delete [] rowT;
 
     GurlsOptionsList* ret = new GurlsOptionsList("confidence");

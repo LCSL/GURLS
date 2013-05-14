@@ -331,8 +331,8 @@ template<typename T>
 void copy_submatrix(T* dst, const T* src, const int src_Rows, const int sizeRows, const int sizeCols, unsigned long *indices_rows, unsigned long *indices_cols)
 {
   int t=0;
-  for (int j = 0; j < sizeCols; j++)
-    for (int i = 0; i < sizeRows; i++)
+  for (int j = 0; j < sizeCols; ++j)
+    for (int i = 0; i < sizeRows; ++i)
     {
         dst[t] = src[ indices_rows[i] + indices_cols[j]*src_Rows ];
         ++t;
@@ -828,21 +828,27 @@ void sum(const T* A, T* result, const int A_rows, const int A_cols, const int re
 }
 
 /**
-  * Computes the sum of all elements of a vector
+  * Sums all elements along the columns of a matrix
   *
-  * \param V input vector
-  * \param len vector length
-  * \param work work buffer of length >= len+1
-  * \return sum of all elements of the input vector
+  * \param A input matrix
+  * \param result vecotr of length A_rows containing sums for each column of the matrix
+  * \param A_rows number of rows of matrix A
+  * \param A_cols number of columns of matrix A
   */
 template <typename T>
-T sumv(const T* V, const int len, T* work) throw (gException)
+void sum_col(const T* A, T* result, const int A_rows, const int A_cols) throw (gException)
 {
-    set(work, (T)1.0, len);
+    const T *a_it = A, *a_end;
 
-    gemv(CblasNoTrans, 1, len, (T)1.0, work, 1, V, 1, (T)0.0, work+len, 1);
+    const T zero = static_cast<T>(0.0);
 
-    return work[len];
+    for(T *r_it = result, *r_end = result+A_rows; r_it != r_end; ++r_it)
+    {
+        *r_it = zero;
+
+        for(a_it = A+(r_it-result), a_end = a_it+((A_cols-1)*A_rows); a_it != a_end; a_it += A_rows)
+            *r_it += *a_it;
+    }
 }
 
 /**
@@ -920,6 +926,20 @@ void axpy(const int N, const T alpha, const T *X, const int incX, T *Y, const in
   */
 template <typename T>
 T dot(const int N, const T *X, const int incX, const T *Y, const int incY);
+
+/**
+  * Computes the sum of all elements of a vector
+  *
+  * \param V input vector
+  * \param len vector length
+  * \return sum of all elements of the input vector
+  */
+template <typename T>
+T sumv(const T* V, const int len) throw (gException)
+{
+    T y = 1;
+    return dot(len, V, 1, &y, 0);
+}
 
 /**
   * Computes RLS estimator given the singular value decomposition of the kernel matrix
@@ -1866,6 +1886,12 @@ void median(const T* M, const int rows, const int cols, const int dimension, T* 
   */
 template<typename T>
 int gelss( int *m, int *n, int* nrhs, T *a, int *lda, T* b, int *ldb, T *s, T *rcond, int *rank, T *work, int *lwork, int *info);
+
+/**
+  * Template function to call BLAS *SWAP routines
+  */
+template<typename T>
+void swap( int n, T *x, int incx, T *y, int incy);
 
 }
 

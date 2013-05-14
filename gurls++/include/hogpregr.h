@@ -84,7 +84,7 @@ public:
      *  - guesses = array of guesses for the regularization parameter lambda
      *  - forho = matrix of validation accuracies for each lambda guess and for each class
      */
-	 GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
+     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
@@ -123,7 +123,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     stdDev(Y.getData(), n, t, stdY, work);
 
-    const T lmax = sumv(stdY, t, work)/((T)t);
+    const T lmax = sumv(stdY, t)/((T)t);
 
 //    lmin = mean(std(y))*10^-5;
     const T lmin = lmax * (T)1.0e-5;

@@ -110,7 +110,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
 
     stdDev(Y.getData(), n, t, stdY, work);
 
-    const T lmax = sumv(stdY, t, work)/((T)t);
+    const T lmax = sumv(stdY, t)/((T)t);
 
     delete[] work;
     delete[] stdY;
