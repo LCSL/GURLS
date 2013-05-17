@@ -864,9 +864,7 @@ template <typename T>
 void mean(const T* A, T* result, const int A_rows, const int A_cols, const int res_length) throw (gException)
 {
     sum(A, result, A_rows, A_cols, res_length);
-
-    for(T *it = result, *end = result+A_cols; it != end; ++it)
-        *it /= A_rows;
+    scal(res_length, (T)(1.0/A_rows), result, 1);
 }
 
 /**
