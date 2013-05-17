@@ -846,7 +846,7 @@ void sum_col(const T* A, T* result, const int A_rows, const int A_cols) throw (g
     {
         *r_it = zero;
 
-        for(a_it = A+(r_it-result), a_end = a_it+((A_cols-1)*A_rows); a_it != a_end; a_it += A_rows)
+        for(a_it = A+(r_it-result), a_end = a_it+(A_cols*A_rows); a_it != a_end; a_it += A_rows)
             *r_it += *a_it;
     }
 }
