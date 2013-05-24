@@ -781,4 +781,23 @@ void gMat2D<T>::readCSV(const std::string& fileName, bool colMajor)
     }
 }
 
+template <typename T>
+void gMat2D<T>::saveCSV(const std::string& fileName) const
+{
+    std::ofstream out(fileName.c_str());
+
+    if(!out.is_open())
+        throw gurls::gException("Cannot open file " + fileName);
+
+    for (unsigned long i = 0; i < numrows; ++i)
+    {
+        for (unsigned long j = 0; j < numcols; ++j)
+            out << " " << this->data[i+numrows*j];
+
+        out << std::endl;
+    }
+
+    out.close();
+}
+
 }
