@@ -109,7 +109,7 @@ public:
     /**
       * Destructor
       */
-    ~BaseArray(){ if (this->isowner && data != NULL) { delete[] this->data; } }
+    ~BaseArray(){ if (this->isowner && data != NULL && size > 0) { delete[] this->data; } }
 
     /**
       * Copies \c n elements of a given vector \c v to this vector starting from \c start
