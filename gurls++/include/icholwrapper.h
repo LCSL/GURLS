@@ -83,8 +83,12 @@ public:
 
     using GurlsWrapper::eval;
 
-    void setRank(unsigned long rank);
+    void setRankMax(unsigned long rank);
+    void setNRank(unsigned long n_rank);
     void setSigma(double sigma);
+    void setXva(const gMat2D<T>& Xva);
+    void setyva(const gMat2D<T>& yva);
+
 
 
 protected:
