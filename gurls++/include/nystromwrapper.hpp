@@ -134,8 +134,8 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 //    for(unsigned long i=1; i<=nparams; ++i)
 //        guesses.insert( static_cast<unsigned long>(gurls::round(std::pow(n_nystrom, ((T)i)/nparams)))-1);
 
-    unsigned long aaa = static_cast<unsigned long>(floor(n_nystrom/nparams));
-    for(unsigned long i = guesses_end-1, count = 0; count < nparams; i-=aaa, ++count)
+    unsigned long step = static_cast<unsigned long>(floor(n_nystrom/nparams));
+    for(unsigned long i = guesses_end-1, count = 0; count < nparams; i-=step, ++count)
         guesses.insert(i);
 
 

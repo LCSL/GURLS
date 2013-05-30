@@ -89,8 +89,12 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 
 
     std::set<unsigned long> ireg;
-    for(unsigned long i=0; i<n_rank; ++i)
-        ireg.insert( static_cast<unsigned long>(gurls::round(std::pow(m, (i+1.0)/n_rank)))-1);
+//    for(unsigned long i=0; i<n_rank; ++i)
+//        ireg.insert( static_cast<unsigned long>(gurls::round(std::pow(m, (i+1.0)/n_rank)))-1);
+
+    unsigned long step = static_cast<unsigned long>(floor(m/n_rank));
+    for(unsigned long i = m-1, count = 0; count < n_rank; i-=step, ++count)
+        ireg.insert(i);
 
 
     GurlsOptionsList* perf_opt = new GurlsOptionsList("perf_opt");
@@ -99,8 +103,16 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     unsigned long maxRank = 0;
     gMat2D<T> *perfs_mat = new gMat2D<T>(1, ireg.size());
     T *perfs = perfs_mat->getData();
+    set(perfs, (T)-1, ireg.size());
+
     gMat2D<T> *times_mat = new gMat2D<T>(1, ireg.size());
     T *times = times_mat->getData();
+    set(times, (T)0, ireg.size());
+
+
+    gMat2D<T> *guesses_mat = new gMat2D<T>(1, ireg.size());
+    T *guesses_mat_it = guesses_mat->getData();
+    set(guesses_mat_it, (T)-1, ireg.size());
 
 
     T* G = new T[n*m];  //Cholesky factor
@@ -119,6 +131,7 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     boost::posix_time::ptime begin, end;
     boost::posix_time::time_duration diff;
 
+    T prevPerf = 0;
 
     // ---- Cholesky decomposition ----
     T* diagG;
@@ -286,6 +299,8 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 
         if(ireg.find(i) != ireg.end())
         {
+            *guesses_mat_it++ = i+1;
+
 //            vout.alpha = Q(:,1:i)*RR(1:i,1:i)*(Q(:,1:i)'*y(Pvec,:));
 
             const unsigned long ii = i+1;
@@ -335,7 +350,7 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
                 gMat2D<T>& acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
                 T perf_i = sumv(acc.getData(), acc.getSize())/acc.getSize();
                 *perfs = perf_i;
-                ++perfs;
+//                ++perfs;
 
                 perf_opt->removeOpt("pred");
                 delete perf;
@@ -350,6 +365,15 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
                 }
                 else
                     delete alphaMat;
+
+
+                if(le(*perfs, prevPerf) && i > 10)
+                    break;
+                else
+                {
+                    prevPerf = *perfs;
+                    ++perfs;
+                }
             }
             else
             {
@@ -396,12 +420,14 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     paramsel->removeOpt("maxRank");
     paramsel->removeOpt("maxPerf");
     paramsel->removeOpt("times");
+    paramsel->removeOpt("guesses");
 
     paramsel->addOpt("alpha", new OptMatrix<gMat2D<T> >(*alpha));
     paramsel->addOpt("acc", new OptMatrix<gMat2D<T> >(*perfs_mat));
     paramsel->addOpt("maxRank", new OptNumber(maxRank));
     paramsel->addOpt("maxPerf", new OptNumber(maxPerf));
     paramsel->addOpt("times", new OptMatrix<gMat2D<T> >(*times_mat));
+    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
 }
 
