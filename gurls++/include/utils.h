@@ -432,6 +432,29 @@ void distance(const T* A, const T* B, const int rows, const int A_cols, const in
 }
 
 /**
+ * Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean distance between each row of A and each row of B
+ *
+ * \param A matrix
+ * \param B matrix
+ * \param cols number of cols of both A and B
+ * \param A_rows number of rows of A
+ * \param B_rows number of rows of B
+ * \param D output A_rowsxB_rows kernel matrix
+ */
+template <typename T>
+void distance_transposed(const T* A, const T* B, const int cols, const int A_rows, const int B_rows, T* D)
+{
+    set(D, (T)0.0, A_rows*B_rows);
+
+    for(int i=0; i< A_rows; ++i)
+        for(int j=0; j< B_rows; ++j)
+            for(int k=0; k<cols; ++k)
+                //          d(i,j) = d(i,j) + (a(i,k) - b(j,k))^2;
+                D[i+A_rows*j] += pow(A[i+A_rows*k]-B[j+B_rows*k], (T)2.0);
+
+}
+
+/**
  * Constructs a nearly optimal rank-\a k approximation USV' to \a A, using \a its full iterations of a block Lanczos method
  * of block size \a l, started with an n x \a l random matrix, when \a A is m x n;
  *
