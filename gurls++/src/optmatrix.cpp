@@ -16,6 +16,18 @@ GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<double> >()
 }
 
 template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<const gMat2D<float> >()
+{
+    return OptMatrixBase::FLOAT;
+}
+
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<const gMat2D<double> >()
+{
+    return OptMatrixBase::DOUBLE;
+}
+
+template<>
 GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<unsigned long> >()
 {
     return OptMatrixBase::ULONG;
