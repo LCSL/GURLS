@@ -53,10 +53,11 @@ namespace gurls
   * \ingroup Wrappers
   * \brief GurlsWrapper is the base class for all gurls++ wrappers
   */
+template<typename T>
 class GurlsWrapper
 {
 protected:
-    typedef double T;   ///< Data type for matrices cells
+//    typedef double T;   ///< Data type for matrices cells
 
 public:
     /**
@@ -133,7 +134,8 @@ protected:
   * Every time a new input-output pair is available, method update() can be invoked again.
   * Finally, the eval() method can be used on test data.
   */
-class RecursiveRLSWrapper: public GurlsWrapper
+template<typename T>
+class RecursiveRLSWrapper: public GurlsWrapper<T>
 {
 public:
     /**
@@ -168,7 +170,7 @@ public:
     gMat2D<T>* eval(const gMat2D<T> &X);
 
 
-    using GurlsWrapper::eval;
+    using GurlsWrapper<T>::eval;
 
 };
 
@@ -186,7 +188,8 @@ public:
   * and RLS estimation ( method retrain()) can be repeated after any number of online updates.
   * Finally, the eval() method can be used on test data.
   */
-class RecursiveRLSRetrainWrapper: public RecursiveRLSWrapper
+template<typename T>
+class RecursiveRLSRetrainWrapper: public RecursiveRLSWrapper<T>
 {
 public:
     /**
@@ -224,4 +227,7 @@ protected:
 };
 
 }
+
+#include"wrapper.hpp"
+
 #endif //GURLS_WRAPPER_H

@@ -12,64 +12,80 @@
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
-using namespace gurls;
-
-ICholWrapper::ICholWrapper(const std::string& name):GurlsWrapper(name)
+namespace gurls
 {
-    opt = new GurlsOptionsList(name, true);
+
+template <typename T>
+ICholWrapper<T>::ICholWrapper(const std::string& name):GurlsWrapper<T>(name)
+{
+    this->opt = new GurlsOptionsList(name, true);
 
     GurlsOptionsList *paramsel = new GurlsOptionsList("paramsel");
-    opt->addOpt("paramsel", paramsel);
+    this->opt->addOpt("paramsel", paramsel);
 
     GurlsOptionsList *split = new GurlsOptionsList("split");
-    opt->addOpt("split", split);
+    this->opt->addOpt("split", split);
 }
 
-void ICholWrapper::train(const gMat2D<T> &X, const gMat2D<T> &y)
+template <typename T>
+void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 {
+    GurlsOptionsList*opt = this->opt;
+
     const unsigned long m = static_cast<unsigned long>(opt->getOptAsNumber("paramsel.rank_max"));
     const unsigned long n_rank = static_cast<unsigned long>(opt->getOptAsNumber("paramsel.n_rank"));
 
     const double sigma = opt->getOptAsNumber("paramsel.sigma");
 
-    const gMat2D<T>& Xva = opt->getOptValue<OptMatrix<gMat2D<T> > >("split.Xva");
-    const gMat2D<T>& yva = opt->getOptValue<OptMatrix<gMat2D<T> > >("split.yva");
-
     const unsigned long n = X.rows();
     const unsigned long d = X.cols();
     const unsigned long t = y.cols();
 
-
     Performance<T> * perfTask = Performance<T>::factory(opt->getOptAsString("hoperf"));
 
+    bool computePred = (opt->hasOpt("split.Xva") && opt->hasOpt("split.yva"));
 
-    GurlsOptionsList* opt_tmp = new GurlsOptionsList("tmp");
-    GurlsOptionsList* tmp_kernel = new GurlsOptionsList("kernel");
-    GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
+
     GurlsOptionsList* tmp_optimizer = new GurlsOptionsList("optimizer");
-
-    opt_tmp->addOpt("kernel", tmp_kernel);
-    opt_tmp->addOpt("paramsel", tmp_paramsel);
-    opt_tmp->addOpt("optimizer", tmp_optimizer);
-
-    tmp_kernel->addOpt("type", "rbf");
-    tmp_paramsel->addOpt("sigma", new OptNumber(sigma));
-
-    gMat2D<T> * X_copy = new gMat2D<T>(X);
-    OptMatrix<gMat2D<T> >* X_opt = new OptMatrix<gMat2D<T> >(*X_copy);
+    OptMatrix<const gMat2D<T> > *X_opt = new OptMatrix<const gMat2D<T> >(X, false);
     tmp_optimizer->addOpt("X", X_opt);
 
+    const gMat2D<T>* Xva = NULL;
+    const gMat2D<T>* yva = NULL;
+    gMat2D<T>* predKernel_K = NULL;
+    const gMat2D<T> empty;
 
-    PredKernelTrainTest<T> predKernelTask;
-    gMat2D<T> empty;
-    GurlsOptionsList* predKernel = predKernelTask.execute(Xva, empty, *opt_tmp);
+    if(computePred)
+    {
+        Xva = &(opt->getOptValue<OptMatrix<gMat2D<T> > >("split.Xva"));
+        yva = &(opt->getOptValue<OptMatrix<gMat2D<T> > >("split.yva"));
 
-    gMat2D<T>* predKernel_K = &predKernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
 
-    predKernel->removeOpt("K", false);
+        GurlsOptionsList* opt_tmp = new GurlsOptionsList("tmp");
+        GurlsOptionsList* tmp_kernel = new GurlsOptionsList("kernel");
+        GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
 
-    delete predKernel;
-    delete opt_tmp;
+        opt_tmp->addOpt("kernel", tmp_kernel);
+        opt_tmp->addOpt("paramsel", tmp_paramsel);
+        opt_tmp->addOpt("optimizer", tmp_optimizer);
+
+        tmp_kernel->addOpt("type", "rbf");
+        tmp_paramsel->addOpt("sigma", new OptNumber(sigma));
+
+
+        PredKernelTrainTest<T> predKernelTask;
+        GurlsOptionsList* predKernel = predKernelTask.execute(*Xva, empty, *opt_tmp);
+
+        OptMatrix<gMat2D<T> > *k_opt = predKernel->getOptAs<OptMatrix<gMat2D<T> > >("K");
+        k_opt->detachValue();
+        predKernel_K = &(k_opt->getValue());
+
+        delete predKernel;
+        opt_tmp->removeOpt("optimizer", false);
+        delete opt_tmp;
+    }
+
+    opt->addOpt("optimizer", tmp_optimizer);
 
 
     std::set<unsigned long> ireg;
@@ -204,6 +220,8 @@ void ICholWrapper::train(const gMat2D<T> &X, const gMat2D<T> &y)
             copy(G_ip1_n+(rows*cols), newKcol, rows);
             mult(G_ip1_n, G_ip1_n, G_ip1_n, rows*(cols+1));
 
+            delete [] newKcol;
+
             T* sums = new T[rows];
             sum_col(G_ip1_n, sums, rows, cols+1);
             set(diagG+(i+1), (T)1.0, rows);
@@ -303,34 +321,49 @@ void ICholWrapper::train(const gMat2D<T> &X, const gMat2D<T> &y)
 
             delete [] alpha_i;
 
-            // pred_primal
-            gMat2D<T> * pred = new gMat2D<T>(Xva.rows(), t);
-            dot(predKernel_K->getData(), alphaMat_it, pred->getData(), Xva.rows(), n, n, t, Xva.rows(), t, CblasNoTrans, CblasNoTrans, CblasColMajor);
-
-
-            // perf_macroavg
-
-            perf_opt->addOpt("pred", new OptMatrix<gMat2D<T> >(*pred));
-            GurlsOptionsList* perf = perfTask->execute(empty, yva, *perf_opt);
-
-            gMat2D<T>& acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
-            T perf_i = sumv(acc.getData(), acc.getSize())/acc.getSize();
-            *perfs = perf_i;
-            ++perfs;
-
-            perf_opt->removeOpt("pred");
-            delete perf;
-
-            if(perf_i > maxPerf)
+            if(computePred)
             {
-                maxPerf = perf_i;
-                maxRank = i;
+                // pred_primal
+                gMat2D<T> * pred = new gMat2D<T>(Xva->rows(), t);
+                dot(predKernel_K->getData(), alphaMat_it, pred->getData(), Xva->rows(), n, n, t, Xva->rows(), t, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
-                delete alpha;
-                alpha = alphaMat;
+                // perf_macroavg
+
+                perf_opt->addOpt("pred", new OptMatrix<gMat2D<T> >(*pred));
+                GurlsOptionsList* perf = perfTask->execute(empty, *yva, *perf_opt);
+
+                gMat2D<T>& acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
+                T perf_i = sumv(acc.getData(), acc.getSize())/acc.getSize();
+                *perfs = perf_i;
+                ++perfs;
+
+                perf_opt->removeOpt("pred");
+                delete perf;
+
+                if(perf_i > maxPerf)
+                {
+                    maxPerf = perf_i;
+                    maxRank = i;
+
+                    delete alpha;
+                    alpha = alphaMat;
+                }
+                else
+                    delete alphaMat;
             }
             else
-                delete alphaMat;
+            {
+                if(i == m-1)
+                {
+                    delete alpha;
+                    alpha = alphaMat;
+                    maxPerf = 1;
+                    maxRank = i;
+
+                    set(perfs, (T)0.0, ireg.size());
+                    set(times, (T)0.0, ireg.size());
+                }
+            }
 
             end = boost::posix_time::microsec_clock::local_time();
             diff = end-begin;
@@ -372,65 +405,153 @@ void ICholWrapper::train(const gMat2D<T> &X, const gMat2D<T> &y)
 
 }
 
-void ICholWrapper::update(const gVec<T> &X, const gVec<T> &y)
+template <typename T>
+void ICholWrapper<T>::update(const gVec<T> &X, const gVec<T> &y)
 {
 }
 
-gMat2D<GurlsWrapper::T>* ICholWrapper::eval(const gMat2D<T> &X)
+template <typename T>
+gMat2D<T>* ICholWrapper<T>::eval(const gMat2D<T> &X)
 {
-    if(!trainedModel())
-        throw gException("Error, Train Model First");
+    GurlsOptionsList *opt = this->opt;
 
-    gurls::PredPrimal<T> predTask;
-    gMat2D<T> y;
+    const gMat2D<T> &alpha_mat = opt->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.alpha");
+    const T *const alpha = alpha_mat.getData();
 
-    OptMatrix<gMat2D<T> >* result = predTask.execute(X, y, *opt);
+    const unsigned long n = X.rows();
+    const unsigned long nt = alpha_mat.rows();
+    const unsigned long t = alpha_mat.cols();
 
-    gMat2D<T>& pred_mat = result->getValue();
-    result->detachValue();
-    delete result;
+    PredKernelTrainTest<T> predKernelTask;
 
-    return &pred_mat;
+    gMat2D<T> empty;
+
+
+    GurlsOptionsList* opt_tmp = new GurlsOptionsList("tmp");
+    GurlsOptionsList* tmp_kernel = new GurlsOptionsList("kernel");
+    GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
+
+    opt_tmp->addOpt("kernel", tmp_kernel);
+    opt_tmp->addOpt("paramsel", tmp_paramsel);
+    opt_tmp->addOpt("optimizer", opt->getOpt("optimizer"));
+
+    tmp_kernel->addOpt("type", "rbf");
+    tmp_paramsel->addOpt("sigma", new OptNumber(opt->getOptAsNumber("paramsel.sigma")));
+
+
+    gMat2D<T> *y = new gMat2D<T>(n, t);
+
+    GurlsOptionsList *predKernel = predKernelTask.execute(X, empty, *opt_tmp);
+    const gMat2D<T> &predKernel_K = predKernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
+
+    dot(predKernel_K.getData(), alpha, y->getData(), n, nt, nt, t, n, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+
+    opt_tmp->removeOpt("optimizer", false);
+    delete opt_tmp;
+    delete predKernel;
+
+    return y;
 }
 
-void ICholWrapper::setRankMax(unsigned long rank)
+template <typename T>
+gMat2D<T>* ICholWrapper<T>::eval_ls(const gMat2D<T> &X)
 {
-    GurlsOptionsList* paramsel = opt->getOptAs<GurlsOptionsList>("paramsel");
+    GurlsOptionsList *opt = this->opt;
+
+    const gMat2D<T> &alpha_mat = opt->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.alpha");
+    const T *const alpha = alpha_mat.getData();
+
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
+    const unsigned long nt = alpha_mat.rows();
+    const unsigned long t = alpha_mat.cols();
+
+    gMat2D<T> Xi_mat(1, d);
+    T* yi = new T[t];
+    T* const Xi = Xi_mat.getData();
+
+    gMat2D<T> *y_mat = new gMat2D<T>(n, t);
+    T* y_it = y_mat->getData();
+
+    GurlsOptionsList* opt_tmp = new GurlsOptionsList("tmp");
+    GurlsOptionsList* tmp_kernel = new GurlsOptionsList("kernel");
+    GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
+
+    opt_tmp->addOpt("kernel", tmp_kernel);
+    opt_tmp->addOpt("paramsel", tmp_paramsel);
+    opt_tmp->addOpt("optimizer", opt->getOpt("optimizer"));
+
+    tmp_kernel->addOpt("type", "rbf");
+    tmp_paramsel->addOpt("sigma", new OptNumber(opt->getOptAsNumber("paramsel.sigma")));
+
+
+    PredKernelTrainTest<T> predKernelTask;
+    const gMat2D<T> empty;
+
+    for(int i=0; i<n; ++i, ++y_it)
+    {
+        getRow(X.getData(), n, d, i, Xi);
+
+        GurlsOptionsList *predKernel = predKernelTask.execute(Xi_mat, empty, *opt_tmp);
+        const gMat2D<T> &predKernel_K = predKernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
+
+        dot(predKernel_K.getData(), alpha, yi, 1, nt, nt, t, 1, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+        copy(y_it, yi, t, n, 1);
+
+        delete predKernel;
+    }
+
+    opt_tmp->removeOpt("optimizer", false);
+    delete opt_tmp;
+    delete [] yi;
+
+    return y_mat;
+}
+
+template <typename T>
+void ICholWrapper<T>::setRankMax(unsigned long rank)
+{
+    GurlsOptionsList* paramsel = this->opt->template getOptAs<GurlsOptionsList>("paramsel");
     paramsel->removeOpt("rank_max");
     paramsel->addOpt("rank_max", new OptNumber(rank));
 }
 
-void ICholWrapper::setNRank(unsigned long n_rank)
+template <typename T>
+void ICholWrapper<T>::setNRank(unsigned long n_rank)
 {
-    GurlsOptionsList* paramsel = opt->getOptAs<GurlsOptionsList>("paramsel");
+    GurlsOptionsList* paramsel = this->opt->template getOptAs<GurlsOptionsList>("paramsel");
     paramsel->removeOpt("n_rank");
     paramsel->addOpt("n_rank", new OptNumber(n_rank));
 }
 
-void ICholWrapper::setSigma(double sigma)
+template <typename T>
+void ICholWrapper<T>::setSigma(double sigma)
 {
-    GurlsOptionsList* paramsel = opt->getOptAs<GurlsOptionsList>("paramsel");
+    GurlsOptionsList* paramsel = this->opt->template getOptAs<GurlsOptionsList>("paramsel");
     paramsel->removeOpt("sigma");
     paramsel->addOpt("sigma", new OptNumber(sigma));
 }
 
-void ICholWrapper::setXva(const gMat2D<GurlsWrapper::T> &Xva)
+template <typename T>
+void ICholWrapper<T>::setXva(const gMat2D<T> &Xva)
 {
-    GurlsOptionsList* split = opt->getOptAs<GurlsOptionsList>("split");
+    GurlsOptionsList* split = this->opt->template getOptAs<GurlsOptionsList>("split");
     gMat2D<T> *Xva_mat = new gMat2D<T>(Xva);
     split->removeOpt("Xva");
     split->addOpt("Xva", new OptMatrix<gMat2D<T> >(*Xva_mat));
 }
 
-void ICholWrapper::setyva(const gMat2D<GurlsWrapper::T> &yva)
+template <typename T>
+void ICholWrapper<T>::setyva(const gMat2D<T> &yva)
 {
-    GurlsOptionsList* split = opt->getOptAs<GurlsOptionsList>("split");
+    GurlsOptionsList* split = this->opt->template getOptAs<GurlsOptionsList>("split");
     gMat2D<T> *yva_mat = new gMat2D<T>(yva);
     split->removeOpt("yva");
     split->addOpt("yva", new OptMatrix<gMat2D<T> >(*yva_mat));
 }
 
-GurlsWrapper::T* ICholWrapper::computeNewKcol(const T* Xtr, const unsigned long xr, const unsigned long xc,
+template <typename T>
+T* ICholWrapper<T>::computeNewKcol(const T* Xtr, const unsigned long xr, const unsigned long xc,
                                              const double sigma,
                                              const unsigned long* pVec,
                                              const unsigned long start, const unsigned long n)
@@ -459,4 +580,6 @@ GurlsWrapper::T* ICholWrapper::computeNewKcol(const T* Xtr, const unsigned long 
     gurls::exp(newKcol, len);
 
     return newKcol;
+}
+
 }

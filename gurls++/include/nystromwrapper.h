@@ -39,8 +39,8 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
 
-#ifndef GURLS_ICHOLWRAPPER_H
-#define GURLS_ICHOLWRAPPER_H
+#ifndef GURLS_NYSTROMWRAPPER_H
+#define GURLS_NYSTROMWRAPPER_H
 
 #include "wrapper.h"
 
@@ -48,7 +48,7 @@ namespace gurls
 {
 
 template<typename T>
-class ICholWrapper: public GurlsWrapper<T>
+class NystromWrapper: public GurlsWrapper<T>
 {
 public:
     /**
@@ -56,7 +56,7 @@ public:
       *
       * \param name Name of the option's structure that will be initialized
       */
-    ICholWrapper(const std::string& name);
+    NystromWrapper(const std::string& name);
 
     /**
       * Initial parameter selection and training
@@ -65,14 +65,6 @@ public:
       * \param Y Labels matrix
       */
     void train(const gMat2D<T> &X, const gMat2D<T> &y);
-
-    /**
-      * Estimator update
-      *
-      * \param X Input data vector
-      * \param Y Labels vector
-      */
-    void update(const gVec<T> &X, const gVec<T> &y);
 
     /**
       * Estimates label for an input matrix
@@ -86,24 +78,17 @@ public:
 
     using GurlsWrapper<T>::eval;
 
-    void setRankMax(unsigned long rank);
-    void setNRank(unsigned long n_rank);
+    void setNNystrom(unsigned long n_nystrom);
+    void setNParams(unsigned long nparams);
+    void setKernelType(const std::string &type);
     void setSigma(double sigma);
-    void setXva(const gMat2D<T>& Xva);
-    void setyva(const gMat2D<T>& yva);
 
-
-
-protected:
-    T* computeNewKcol( const T* Xtr, const unsigned long xr, const unsigned long xc,
-                         const double sigma,
-                         const unsigned long* pVec,
-                         const unsigned long start, const unsigned long n);
-
+private:
+    void update(const gVec<T> &X, const gVec<T> &y);
 };
 
 }
 
-#include "icholwrapper.hpp"
+#include "nystromwrapper.hpp"
 
-#endif //GURLS_ICHOLWRAPPER_H
+#endif //GURLS_NYSTROMWRAPPER_H
