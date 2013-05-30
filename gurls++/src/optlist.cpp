@@ -233,7 +233,7 @@ GurlsOption *GurlsOptionsList::operator [](int idx)
     return itr->second;
 }
 
-std::ostream& GurlsOptionsList::operator<<(std::ostream& os)
+std::ostream& GurlsOptionsList::operator<<(std::ostream& os) const
 {
     return os << *this;
 }
@@ -360,6 +360,11 @@ void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
   * Writes a GurlsOptionsList to a stream
   */
 GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt)
+{
+    return os << const_cast<const GurlsOptionsList&>(opt);
+}
+
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const GurlsOptionsList& opt)
 {
     std::map<std::string, GurlsOption* >::iterator it;
 
