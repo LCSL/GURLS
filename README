@@ -33,6 +33,11 @@ Documentation
 - Webpage 
 	the GURLS webpage can be found at: http://lcsl.mit.edu/gurls.html
 
+- Reference paper
+	Tacchetti,  Mallapragada, Santoro and Rosasco,
+	Gurls: a least squares-based library for state of the art supervised learning
+	accepted for publication on JMLR
+
 - Installation instructions can be found here:
 	https://github.com/CBCL/GURLS/wiki/2-Getting-Started
 
