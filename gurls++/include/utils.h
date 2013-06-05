@@ -426,8 +426,11 @@ void distance(const T* A, const T* B, const int rows, const int A_cols, const in
         for(int j=0; j< B_cols; ++j)
             //      for k = 1:dim_a
             for(int k=0; k<rows; ++k)
+            {
                 //          d(i,j) = d(i,j) + (a(k,i) - b(k,j))^2;
-                D[i+A_cols*j] += pow(A[k+rows*i]-B[k+rows*j], (T)2.0);
+                const double diff = A[k+rows*i]-B[k+rows*j];
+                D[i+A_cols*j] += diff*diff;
+            }
 
 }
 
@@ -449,10 +452,14 @@ void distance_transposed(const T* A, const T* B, const int cols, const int A_row
     for(int i=0; i< A_rows; ++i)
         for(int j=0; j< B_rows; ++j)
             for(int k=0; k<cols; ++k)
+            {
                 //          d(i,j) = d(i,j) + (a(i,k) - b(j,k))^2;
-                D[i+A_rows*j] += pow(A[i+A_rows*k]-B[j+B_rows*k], (T)2.0);
+                const double diff = A[i+A_rows*k]-B[j+B_rows*k];
+                D[i+A_rows*j] += diff*diff;
+            }
 
 }
+
 
 /**
  * Constructs a nearly optimal rank-\a k approximation USV' to \a A, using \a its full iterations of a block Lanczos method

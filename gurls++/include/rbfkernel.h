@@ -109,12 +109,7 @@ GurlsOptionsList *KernelRBF<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y
     {
         dist = new gMat2D<T>(xr, xr);
 
-        T* Xt = new T[xc*xr];
-        transpose(X.getData(), xr, xc, Xt);
-
-        distance(Xt, Xt, xc, xr, xr, dist->getData());
-
-        delete[] Xt;
+        distance_transposed(X.getData(), X.getData(), xc, xr, xr, dist->getData());
     }
 
 
