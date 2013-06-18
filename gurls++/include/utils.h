@@ -460,6 +460,44 @@ void distance_transposed(const T* A, const T* B, const int cols, const int A_row
 
 }
 
+/**
+ * Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean distance between a vector A and each row of B
+ *
+ * \param A vector
+ * \param B matrix
+ * \param cols number of cols of both A and B
+ * \param B_rows number of rows of B
+ * \param D output of length "size"
+ * \param size length of vector D
+ * \param incrA specifies the increment for indexing vector A
+ */
+template <typename T>
+void distance_transposed_vm(const T* A, const T* B, const int cols, const int B_rows, T* D, const int size, const int incrA = 1)
+{
+    int j;
+
+    //#pragma omp parallel for private(j)
+    for(j=0; j< size; ++j)
+    {
+        const T* B_it = B+j;
+        const T* A_it = A;
+
+        T Dj = 0;
+
+        for(int k=0; k<cols; ++k)
+        {
+//            d(j) = d(j) + (a(k) - b(j,k))^2;
+            const double diff = *A_it - *B_it;
+            Dj += diff*diff;
+
+            A_it += incrA;
+            B_it += B_rows;
+        }
+
+        D[j] = Dj;
+    }
+}
+
 
 /**
  * Constructs a nearly optimal rank-\a k approximation USV' to \a A, using \a its full iterations of a block Lanczos method
