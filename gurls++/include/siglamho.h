@@ -249,7 +249,7 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
     T* row = new T[t];
 
     const unsigned long nholdouts = static_cast<unsigned long>(opt.getOptAsNumber("nholdouts"));
-    T* work = new T[std::max(nholdouts, t+1)];
+    T* work = new T[nholdouts];
 
 //    for i = 1:opt.nsigma
     for(int i=0; i<nsigma; ++i)
@@ -278,7 +278,7 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
         for(int j=0;j<nlambda;++j)
         {
             getRow(perf_median, nlambda, t, j, row);
-            perf[j] = sumv(row, t, work);
+            perf[j] = sumv(row, t);
         }
 
 //        guesses(i,:) = median(cell2mat(paramsel.guesses'),1);

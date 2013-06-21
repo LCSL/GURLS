@@ -92,7 +92,7 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
     //                  % unless they have the same name
     //    end
 
-    GurlsOptionsList* perf;
+    GurlsOptionsList* perf = NULL;
 
     if(opt.hasOpt("perf"))
     {

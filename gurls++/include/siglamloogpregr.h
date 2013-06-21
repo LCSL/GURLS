@@ -213,7 +213,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
     KernelRBF<T> rbf;
     ParamSelLooGPRegr<T> loogp;
 
-    T* work = new T[t+t+1];
+    T* work = new T[t];
 
     GurlsOptionsList* paramsel_rbf = new GurlsOptionsList("paramsel");
     nestedOpt->addOpt("paramsel", paramsel_rbf);
@@ -247,7 +247,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
         {
             getRow(perf_mat.getData(), perf_mat.rows(), perf_mat.cols(), j, work);
 
-            *perf_it = sumv(work, t, work+t);
+            *perf_it = sumv(work, t);
         }
 
 //        guesses(i,:) = paramsel.guesses;

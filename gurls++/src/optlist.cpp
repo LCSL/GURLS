@@ -64,11 +64,7 @@ namespace gurls{
 void GurlsOptionsList::setName(std::string newname)
 {
     name = newname;
-    if(hasOpt("Name"))
-    {
-        delete (*table)["Name"];
-        table->erase("Name");
-    }
+    removeOpt("Name");
     (*table)["Name"] = new OptString(newname);
 }
 
@@ -186,12 +182,13 @@ bool GurlsOptionsList::hasOpt(string key) const
 
 void GurlsOptionsList::removeOpt(string key, bool deleteMembers)
 {
-    if(hasOpt(key))
+    ValueType::iterator it = table->find(key);
+    if(it != table->end())
     {
         if (deleteMembers)
-            delete (*table)[key];
+            delete it->second;
 
-        table->erase(key);
+        table->erase(it);
     }
 }
 
@@ -233,7 +230,7 @@ GurlsOption *GurlsOptionsList::operator [](int idx)
     return itr->second;
 }
 
-std::ostream& GurlsOptionsList::operator<<(std::ostream& os)
+std::ostream& GurlsOptionsList::operator<<(std::ostream& os) const
 {
     return os << *this;
 }
@@ -361,6 +358,11 @@ void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
   */
 GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt)
 {
+    return os << const_cast<const GurlsOptionsList&>(opt);
+}
+
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const GurlsOptionsList& opt)
+{
     std::map<std::string, GurlsOption* >::iterator it;
 
     os << std::endl << "~~~~~~~ GurlsOptionList: " << opt.getName() << std::endl;
@@ -374,10 +376,11 @@ GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt)
 
 bool GurlsOptionsList::addOpt(std::string key, GurlsOption* value)
 {
-    if(hasOpt(key))
+    std::pair<ValueType::iterator, bool> res = table->insert( pair<std::string,GurlsOption*>(key, value) );
+
+    if(!res.second)
         throw gException(Exception_Parameter_Already_Definied + " (" + key + ")");
 
-    table->insert( pair<std::string,GurlsOption*>(key, value) );
     return true;
 }
 
@@ -389,48 +392,66 @@ bool GurlsOptionsList::addOpt(std::string key, std::wstring value)
 
 bool GurlsOptionsList::addOpt(std::string key, std::string value)
 {
-    if(hasOpt(key))
-        throw gException(Exception_Parameter_Already_Definied + " (" + key + ")");
-
     OptString* v = new OptString(value);
-    table->insert( pair<std::string,GurlsOption*>(key, v) );
-    return true;
+    try
+    {
+        return addOpt(key, v);
+    }
+    catch (gException & ex)
+    {
+        delete v;
+        throw ex;
+    }
 }
 
 GurlsOption* GurlsOptionsList::getOpt(std::string key)
 {
+    if(key.empty())
+        throw gException(Exception_Parameter_Not_Definied_Yet + "( )");
+
     std::vector<std::string> names;
     boost::split(names, key, boost::is_any_of("."));
 
-    GurlsOption* gout;
-    std::map<std::string, GurlsOption* >::iterator it = table->find(names[0]);
+    GurlsOption* gout = this;
+    ValueType *tab;
 
-    if(it == table->end())
-        throw gException(Exception_Parameter_Not_Definied_Yet + "( " + names[0] + " )");
+    for(std::vector<std::string>::iterator n_it = names.begin(); n_it != names.end(); ++n_it)
+    {
+        tab = GurlsOptionsList::dynacast(gout)->table;
 
-    gout = it->second;
+        std::map<std::string, GurlsOption* >::iterator it = tab->find(*n_it);
 
-    for(unsigned int i=1; i<names.size(); ++i)
-        gout = GurlsOptionsList::dynacast(gout)->getOpt(names[i]);
+        if(it == tab->end())
+            throw gException(Exception_Parameter_Not_Definied_Yet + "( " + *n_it + " )");
+
+        gout = it->second;
+    }
 
     return gout;
 }
 
 const GurlsOption* GurlsOptionsList::getOpt(std::string key) const
 {
+    if(key.empty())
+        throw gException(Exception_Parameter_Not_Definied_Yet + "( )");
+
     std::vector<std::string> names;
     boost::split(names, key, boost::is_any_of("."));
 
-    GurlsOption* gout;
-    std::map<std::string, GurlsOption* >::iterator it = table->find(names[0]);
+    const GurlsOption* gout = this;
+    ValueType *tab;
 
-    if(it == table->end())
-        throw gException(Exception_Parameter_Not_Definied_Yet + "( " + names[0] + " )");
+    for(std::vector<std::string>::iterator n_it = names.begin(); n_it != names.end(); ++n_it)
+    {
+        tab = GurlsOptionsList::dynacast(gout)->table;
 
-    gout = it->second;
+        std::map<std::string, GurlsOption* >::iterator it = tab->find(*n_it);
 
-    for(unsigned int i=1; i<names.size(); ++i)
-        gout = GurlsOptionsList::dynacast(gout)->getOpt(names[i]);
+        if(it == tab->end())
+            throw gException(Exception_Parameter_Not_Definied_Yet + "( " + *n_it + " )");
+
+        gout = it->second;
+    }
 
     return gout;
 }

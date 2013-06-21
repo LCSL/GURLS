@@ -108,16 +108,8 @@ GurlsOptionsList *PredKernelTrainTest<T>::execute(const gMat2D<T>& X, const gMat
 //                opt.predkernel.distance = distance(X',opt.rls.X');
         gMat2D<T> *dist = new gMat2D<T>(xr, rls_xr);
 
-        T* Xt = new T[xc*xr];
-        T* rls_Xt = new T[xc*rls_xr];
+        distance_transposed(X.getData(), rls_X.getData(), xc, xr, rls_xr, dist->getData());
 
-        transpose(X.getData(), xr, xc, Xt);
-        transpose(rls_X.getData(), rls_xr, xc, rls_Xt);
-
-        distance(Xt, rls_Xt, xc, xr, rls_xr, dist->getData());
-
-        delete[] Xt;
-        delete[] rls_Xt;
 
 //                fk.distance = opt.predkernel.distance;
         predkernel->addOpt("distance", new OptMatrix<gMat2D<T> > (*dist));

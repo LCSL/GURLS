@@ -426,10 +426,78 @@ void distance(const T* A, const T* B, const int rows, const int A_cols, const in
         for(int j=0; j< B_cols; ++j)
             //      for k = 1:dim_a
             for(int k=0; k<rows; ++k)
+            {
                 //          d(i,j) = d(i,j) + (a(k,i) - b(k,j))^2;
-                D[i+A_cols*j] += pow(A[k+rows*i]-B[k+rows*j], (T)2.0);
+                const double diff = A[k+rows*i]-B[k+rows*j];
+                D[i+A_cols*j] += diff*diff;
+            }
 
 }
+
+/**
+ * Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean distance between each row of A and each row of B
+ *
+ * \param A matrix
+ * \param B matrix
+ * \param cols number of cols of both A and B
+ * \param A_rows number of rows of A
+ * \param B_rows number of rows of B
+ * \param D output A_rowsxB_rows kernel matrix
+ */
+template <typename T>
+void distance_transposed(const T* A, const T* B, const int cols, const int A_rows, const int B_rows, T* D)
+{
+    set(D, (T)0.0, A_rows*B_rows);
+
+    for(int i=0; i< A_rows; ++i)
+        for(int j=0; j< B_rows; ++j)
+            for(int k=0; k<cols; ++k)
+            {
+                //          d(i,j) = d(i,j) + (a(i,k) - b(j,k))^2;
+                const double diff = A[i+A_rows*k]-B[j+B_rows*k];
+                D[i+A_rows*j] += diff*diff;
+            }
+
+}
+
+/**
+ * Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean distance between a vector A and each row of B
+ *
+ * \param A vector
+ * \param B matrix
+ * \param cols number of cols of both A and B
+ * \param B_rows number of rows of B
+ * \param D output of length "size"
+ * \param size length of vector D
+ * \param incrA specifies the increment for indexing vector A
+ */
+template <typename T>
+void distance_transposed_vm(const T* A, const T* B, const int cols, const int B_rows, T* D, const int size, const int incrA = 1)
+{
+    int j;
+
+    //#pragma omp parallel for private(j)
+    for(j=0; j< size; ++j)
+    {
+        const T* B_it = B+j;
+        const T* A_it = A;
+
+        T Dj = 0;
+
+        for(int k=0; k<cols; ++k)
+        {
+//            d(j) = d(j) + (a(k) - b(j,k))^2;
+            const double diff = *A_it - *B_it;
+            Dj += diff*diff;
+
+            A_it += incrA;
+            B_it += B_rows;
+        }
+
+        D[j] = Dj;
+    }
+}
+
 
 /**
  * Constructs a nearly optimal rank-\a k approximation USV' to \a A, using \a its full iterations of a block Lanczos method

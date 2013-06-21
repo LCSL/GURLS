@@ -61,9 +61,12 @@ namespace gurls
 
 }
 
-extern "C" {
+extern "C"
+{
 
-// BLAS
+
+// ------ BLAS
+
 
 /**
   * \brief Prototype for Blas SDOT
@@ -134,6 +137,13 @@ void sscal_(int *n, float *a, float *x, int *incx);
   */
 void strsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *a, int *lda, float *b, int *ldb);
 
+/**
+  * \brief Prototype for Blas SSWAP
+  *
+  * Interchanges two vectors.
+  * Uses unrolled loops for increments equal to 1.
+  */
+void sswap_(int *n, float *sx, int *incx, float *sy, int *incy);
 
 /**
   * \brief Prototype for Blas DDOT
@@ -204,7 +214,19 @@ void dscal_(int *n, double *a, double *x, int *incx);
   */
 void dtrsm_(char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *a, int *lda, double *b, int *ldb);
 
-// LAPACK
+/**
+  * \brief Prototype for Blas DSWAP
+  *
+  * Interchanges two vectors.
+  * Uses unrolled loops for increments equal to 1.
+  */
+void dswap_(int *n, double *sx, int *incx, double *sy, int *incy);
+
+
+
+// ------ LAPACK
+
+
 
 /**
   * \brief Prototype for Lapack SGETRF

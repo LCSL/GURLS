@@ -60,7 +60,7 @@ if(MKL_MULTITHREADING)
             iomp5${OMP_SUFFIX}
             )
         SET(MKL_IOMP_LIB_DIR "" CACHE PATH "Path to the intel OpenMP library")
-        SET(MKL_LIBRARY_DIRS ${MKL_LIBRARY_DIRS} ${IOMP_LIB_DIR})
+        SET(MKL_LIBRARY_DIRS ${MKL_LIBRARY_DIRS} ${MKL_IOMP_LIB_DIR})
     else(MKL_IOMP)
         SET(MULTITHREADING_LIBS
             mkl_gnu_thread${LIB_SUFFIX}

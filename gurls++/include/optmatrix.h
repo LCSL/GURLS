@@ -105,6 +105,12 @@ template<>
 GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<double> >();
 
 template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<const gMat2D<float> >();
+
+template<>
+GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<const gMat2D<double> >();
+
+template<>
 GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<gMat2D<unsigned long> >();
 
 #ifdef _BGURLS
@@ -147,7 +153,7 @@ public:
     /**
       * Constructor from an existing matrix
       */
-    OptMatrix(Matrix& m): OptMatrixBase(), value(new Matrix(m)), isOwner(true)
+    OptMatrix(Matrix& m, bool owner = true): OptMatrixBase(), value(&m), isOwner(owner)
     {
         this->matType = getMatrixCellType<Matrix>();
     }

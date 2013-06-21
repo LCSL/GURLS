@@ -525,6 +525,11 @@ public:
       */
     void readCSV(const std::string& fileName, bool colMajor = true);
 
+    /**
+      * Saves the matrix into a CSV file
+      */
+    void saveCSV(const std::string& fileName) const;
+
 };
 
 }

@@ -226,11 +226,12 @@ public:
       * Writes a GurlsOptionsList to a stream
       */
     friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOptionsList& opt);
+    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const GurlsOptionsList& opt);
 
     /**
       * Writes the list to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
     /**
       * Writes the list to a string

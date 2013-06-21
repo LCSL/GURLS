@@ -874,4 +874,22 @@ GURLS_EXPORT int gelss( int *m, int *n, int* nrhs, double *a, int *lda, double* 
     return dgelss_( m, n, nrhs, a, lda, b, ldb, s, rcond, rank, work, lwork, info);
 }
 
+/**
+  * Specialized version of swap for float buffers
+  */
+template<>
+GURLS_EXPORT void swap( int n, float *x, int incx, float *y, int incy)
+{
+    sswap_(&n, x, &incx, y, &incy);
+}
+
+/**
+  * Specialized version of swap for double buffers
+  */
+template<>
+GURLS_EXPORT void swap( int n, double *x, int incx, double *y, int incy)
+{
+    dswap_(&n, x, &incx, y, &incy);
+}
+
 }
