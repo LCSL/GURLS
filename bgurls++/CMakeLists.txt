@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
+if ( ${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
+    message( FATAL_ERROR "You are trying to run CMake from the bgurls++ directory, instead of just from the top directory")
+endif()
+
 project(bgurls++)
 
 get_filename_component(GURLS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../gurls++" ABSOLUTE)

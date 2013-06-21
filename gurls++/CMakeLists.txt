@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
+if ( ${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
+    message( FATAL_ERROR "You are trying to run CMake from the gurls++ directory, instead of just from the top directory")
+endif()
+
 project(gurls++)
 
 set(GURLSLIBRARY gurls++)
@@ -14,7 +18,6 @@ file(GLOB gurls_headers ${HDRDIR}*.h*)
 file(GLOB gurls_sources ${SRCDIR}*.cpp)
 
 include_directories( BEFORE ${HDRDIR} )
-
 
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
 target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES})

@@ -140,6 +140,25 @@ if(GURLS_USE_EXTERNAL_BOOST)
     endif()
 
     #address-model=64
+	
+	if(${MSVC_VERSION} GREATER 1699)
+		set(CONF_TOOLSET "vc11")
+		set(BUILD_TOOLSET "msvc-11.0")
+	elseif(${MSVC_VERSION} GREATER 1599)
+		set(CONF_TOOLSET "vc10")
+		set(BUILD_TOOLSET "msvc-10.0")
+	elseif(${MSVC_VERSION} GREATER 1499)
+		set(CONF_TOOLSET "vc9")
+		set(BUILD_TOOLSET "msvc-9.0")
+	elseif(${MSVC_VERSION} GREATER 1399)
+		set(CONF_TOOLSET "vc8")
+		set(BUILD_TOOLSET "msvc-8.0")
+	elseif(${MSVC_VERSION} GREATER 1299)
+		set(CONF_TOOLSET "vc7")
+		set(BUILD_TOOLSET "msvc-7.0")
+	elseif(${MSVC_VERSION} GREATER 1199)
+		message(FATAL_ERROR "vc6 is not supported by Boost: Please upgrade your compiler.")
+	endif()
 
     ExternalProject_add(boost
         URL http://downloads.sourceforge.net/boost/boost_1_53_0.tar.gz
@@ -147,8 +166,8 @@ if(GURLS_USE_EXTERNAL_BOOST)
         BUILD_IN_SOURCE 1
         SOURCE_DIR  ${EXTERNAL_PREFIX}/src/boost
         INSTALL_DIR ${EXTERNAL_PREFIX}/
-        CONFIGURE_COMMAND <SOURCE_DIR>/bootstrap.${EXT}
-        BUILD_COMMAND <SOURCE_DIR>/b2 ${MAKE_ARGS} -d0 --layout=tagged variant=release link=static threading=multi runtime-link=shared
+        CONFIGURE_COMMAND <SOURCE_DIR>/bootstrap.${EXT} ${CONF_TOOLSET}
+        BUILD_COMMAND <SOURCE_DIR>/b2 toolset=${BUILD_TOOLSET} ${MAKE_ARGS} -d0 --layout=tagged variant=release link=static threading=multi runtime-link=shared
                     --prefix=${EXTERNAL_PREFIX}
                     --with-serialization
                     --with-date_time
