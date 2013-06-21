@@ -51,14 +51,16 @@ set(GURLS_LINK_LIBRARIES
     ${GurlsDependencies_LIBRARIES}
 )
 
-set(GURLSPP_BUILD_DEMO OFF CACHE BOOL "")
+set(GURLSPP_BUILD_DEMO ON CACHE BOOL "")
 if(GURLSPP_BUILD_DEMO)
     add_all_executables(${DEMODIR} ${GURLS_LINK_LIBRARIES})
 endif(GURLSPP_BUILD_DEMO)
 
 set(GURLSPP_BUILD_TEST OFF CACHE BOOL "")
+mark_as_advanced(FORCE GURLSPP_BUILD_TEST)
 if(GURLSPP_BUILD_TEST)
-    set(GURLS_DATA_DIR "" CACHE PATH "Path to the Gurls++ data directory")
+    set(GURLSPP_DATA_DIR "" CACHE PATH "Path to the Gurls++ data directory")
+    mark_as_advanced(FORCE GURLSPP_DATA_DIR)
 
     if(GURLSPP_DATA_DIR STREQUAL "")
         message(WARNING, "GURLSPP_DATA_DIR value is set to an empty string. Please be sure this is the right configuration for you")
@@ -70,6 +72,7 @@ if(GURLSPP_BUILD_TEST)
 endif(GURLSPP_BUILD_TEST)
 
 set(GURLSPP_BUILD_MISC OFF CACHE BOOL "")
+mark_as_advanced(FORCE GURLSPP_BUILD_MISC)
 if(GURLSPP_BUILD_MISC)
     add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
 endif(GURLSPP_BUILD_MISC)
