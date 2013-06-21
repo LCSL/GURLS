@@ -151,7 +151,6 @@ int main(int argc, char* argv[])
             // Update estimator with a new input pair
             wrapper->update(Xnew, ynew);
         }
-        std::cout << "Update: " << tot.total_milliseconds() <<  std::endl;
 
         // Reinitialize model
         if(retrain)
