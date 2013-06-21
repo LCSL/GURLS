@@ -11,7 +11,7 @@ Table of Contents
 Introduction
 ============
 
-The GRAND UNIFIED LEAST SQUARES software library comprises the following packages.
+The GRAND UNIFIED REGULARIZED LEAST SQUARES software library comprises the following packages.
 
 -GURLS, a MATLAB software library for regression and (multiclass) classification 
 based on the Regularized Least Squares (RLS) loss function. 
@@ -21,8 +21,8 @@ Datasets that fit into your computer's memory should be handled with this packag
 matrices by means of memory-mapped storage and a simple distributed task manager.
 
 -GURLS++, a C++ standalone implementation of GURLS, with additional simple API's for specific 
- learning pipelines (currently only the Recursive RLS API is available though we are planning 
- to add soon new API's)
+ learning pipelines (currently only the Recursive RLS and Nystrom REgularization API is available 
+ though we are planning to add soon new API's)
 
 -bGURLS++, a  C++ standalone implementation of bGURLS.
 
@@ -50,7 +50,7 @@ Documentation
 - A collection of the most useful and common pipelines can be found here:
 	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-Examples
 
-- The list of all the available method of the libraries can be found at
+- The list of all the available methods of the libraries can be found at
 	https://github.com/CBCL/GURLS/wiki/4-Available-methods
 
 - C++ Code Documentation can be found at: http://cbcl.github.io/GURLS/
@@ -64,7 +64,3 @@ Documentation
 	
 	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive 
 	  RLS API 
-
--Test
-	Testing routines and scripts are available in the test directories of the gurls 
-	and gurls++ package. This checks that gurls and gurls++ results coincide.
