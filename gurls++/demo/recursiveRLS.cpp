@@ -74,7 +74,7 @@ bool checkMatrices(const gMat2D<T>& m1, const gMat2D<T>& m2);
   */
 int main(int argc, char* argv[])
 {
-    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
 
 //    std::cout.precision(16);
 //    std::cout.setf( std::ios::fixed, std::ios::floatfield);
