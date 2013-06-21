@@ -48,7 +48,7 @@
 #include <iostream>
 #include <string>
 
-#include "wrapper.h"
+#include "recrlswrapper.h"
 #include "rlsprimal.h"
 #include "primal.h"
 

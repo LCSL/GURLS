@@ -48,7 +48,7 @@ namespace gurls
 {
 
 template<typename T>
-class NystromWrapper: public GurlsWrapper<T>
+class NystromWrapper: public KernelWrapper<T>
 {
 public:
     /**
@@ -66,6 +66,8 @@ public:
       */
     void train(const gMat2D<T> &X, const gMat2D<T> &y);
 
+    void train_largescale(const gMat2D<T> &X, const gMat2D<T> &y);
+
     /**
       * Estimates label for an input matrix
       *
@@ -74,17 +76,19 @@ public:
       */
     gMat2D<T>* eval(const gMat2D<T> &X);
 
-    gMat2D<T>* eval_ls(const gMat2D<T> &X);
+    gMat2D<T>* eval_largescale(const gMat2D<T> &X);
 
-    using GurlsWrapper<T>::eval;
+
+
+//    using GurlsWrapper<T>::eval;
 
     void setNNystrom(unsigned long n_nystrom);
-    void setNParams(unsigned long nparams);
-    void setKernelType(const std::string &type);
-    void setSigma(double sigma);
 
-private:
-    void update(const gVec<T> &X, const gVec<T> &y);
+    void rescale(gMat2D<T> &y);
+
+protected:
+    unsigned long *getIndices(const gMat2D<T>&y, const unsigned long n, const unsigned long t, const unsigned long n_nystrom, unsigned long &length);
+
 };
 
 }

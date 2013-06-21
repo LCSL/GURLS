@@ -5,7 +5,7 @@
 #include "predkerneltraintest.h"
 #include "primal.h"
 #include "utils.h"
-//#include "splitho.h"
+
 
 #include "macroavg.h"
 #include "precisionrecall.h"
@@ -13,32 +13,19 @@
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <vector>
+
 namespace gurls
 {
 
 template <typename T>
-NystromWrapper<T>::NystromWrapper(const std::string& name):GurlsWrapper<T>(name)
-{
-    this->opt = new GurlsOptionsList(name, true);
-
-    GurlsOptionsList *paramsel = new GurlsOptionsList("paramsel");
-    this->opt->addOpt("paramsel", paramsel);
-
-    GurlsOptionsList *kernel = new GurlsOptionsList("kernel");
-    this->opt->addOpt("kernel", kernel);
-
-
-    this->opt->removeOpt("hoproportion");
-    this->opt->addOpt("hoproportion", new OptNumber(0.2));
-
-    this->opt->removeOpt("nholdouts");
-    this->opt->addOpt("nholdouts", new OptNumber(1));
-}
+NystromWrapper<T>::NystromWrapper(const std::string& name):KernelWrapper<T>(name) {}
 
 template <typename T>
 void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 {
     GurlsOptionsList *opt = this->opt;
+    const bool regression = (this->probType == GurlsWrapper<T>::REGRESSION);
 
     GurlsOptionsList* paramsel = opt->getOptAs<GurlsOptionsList>("paramsel");
     paramsel->removeOpt("X");
@@ -60,7 +47,7 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 
 
     const double n_nystrom = opt->getOptAsNumber("n_nystrom");
-    const unsigned long nparams = static_cast<unsigned long>(opt->getOptAsNumber("nparams"));
+    const unsigned long nparams = static_cast<unsigned long>(opt->getOptAsNumber("nlambda"));
 
 
     const gMat2D<T> *Xtr = NULL;
@@ -68,24 +55,13 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     const gMat2D<T> *Xva = NULL;
     const gMat2D<T> *yva = NULL;
 
+
     bool split = (nparams > 1);
 
     unsigned long ntr, nva;
 
     if(split)
     {
-//        SplitHo<T> splitTask;
-
-//        GurlsOptionsList* splitOpt = splitTask.execute(empty, y, *opt);
-//        const gMat2D<unsigned long>& split_indices = splitOpt->getOptValue<OptMatrix<gMat2D<unsigned long> > >("indices");
-//        const gMat2D<unsigned long>& split_lasts = splitOpt->getOptValue<OptMatrix<gMat2D<unsigned long> > >("lasts");
-
-//        const unsigned long ntr = split_lasts.getData()[0];
-//        const unsigned long nva = split_indices.getSize()-ntr;
-
-//        const unsigned long *tr = split_indices.getData();
-//        const unsigned long *va = split_indices.getData()+ntr;
-
         ntr = n*(1.0-opt->getOptAsNumber("hoproportion"));
         nva = n-ntr;
 
@@ -129,20 +105,21 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 
     unsigned long guesses_end = static_cast<unsigned long>(n_nystrom);
 
-//    guesses = unique(round((opt.n_nystrom).^((1:opt.nparams)./opt.nparams)));
-    std::set<unsigned long> guesses;
-//    for(unsigned long i=1; i<=nparams; ++i)
-//        guesses.insert( static_cast<unsigned long>(gurls::round(std::pow(n_nystrom, ((T)i)/nparams)))-1);
-
+    std::vector<unsigned long> guesses;
     unsigned long step = static_cast<unsigned long>(floor(n_nystrom/nparams));
     for(unsigned long i = guesses_end-1, count = 0; count < nparams; i-=step, ++count)
-        guesses.insert(i);
+        guesses.push_back(i);
 
 
 //    indices = randperm(ntr);
-    unsigned long *indices = new unsigned long[ntr];
-    randperm(ntr, indices, true, 0);
+    unsigned long indices_length = 0;
+    unsigned long *indices = getIndices(y, ntr, t, n_nystrom, indices_length);
 
+
+
+    gMat2D<unsigned long> *indices_mat = new gMat2D<unsigned long>(indices_length, 1);
+    copy(indices_mat->getData(), indices, indices_length);
+    paramsel->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*indices_mat));
 
 
 //    vout.perf = zeros(length(guesses),1);
@@ -168,6 +145,7 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     gMat2D<T>* K_mat = NULL;
     T *K = NULL;
     T* Ktrva = NULL;
+
     if(split)
     {
         K_mat = new gMat2D<T>(ntr, guesses_end);
@@ -212,10 +190,10 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     boost::posix_time::ptime begin, end;
     boost::posix_time::time_duration diff;
 
-    T prevPerf = 0;
+    T prevPerf = (regression)? -std::numeric_limits<T>::max(): 0;
 
     begin = boost::posix_time::microsec_clock::local_time();
-    for(std::set<unsigned long>::iterator it = guesses.begin(); it != guesses.end(); ++it)
+    for(std::vector<unsigned long>::iterator it = guesses.begin(); it != guesses.end(); ++it)
     {
         const unsigned long i = *it;
 
@@ -243,6 +221,10 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
         {
             OptMatrix<gMat2D<T> > * kk = kernel->getOptAs<OptMatrix<gMat2D<T> > >("K");
             kk->detachValue();
+
+            if(K_mat != NULL)
+                delete K_mat;
+
             K_mat = &predkernel_K;
             K = K_mat->getData();
         }
@@ -281,6 +263,7 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 //        alpha = pinv(KtK(1:i_end,1:i_end))*(K(:,1:i_end)'*ytr);
 
         const unsigned long ii = i+1;
+
 
         KtK_sub = new T[ ii*ii];
         for(T *K_it = KtK, *Ks_it = KtK_sub, *const K_end = K_it+(guesses_end*ii); K_it != K_end; K_it+=guesses_end, Ks_it+=ii)
@@ -321,10 +304,16 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
             GurlsOptionsList *perf = perfTask->execute(empty, *yva, *opt);
             opt->removeOpt("pred");
 
-    //        vout.perf(guesses_c) = mean(perf.forho);
-            const gMat2D<T> &acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
+            if(regression)
+                *perf_it =  perf->getOptValue<OptNumber>("forho");
+            else
+            {
+        //        vout.perf(guesses_c) = mean(perf.forho);
+                const gMat2D<T> &acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
 
-            *perf_it = sumv(acc.getData(), acc.getSize())/acc.getSize();
+                *perf_it = sumv(acc.getData(), acc.getSize())/acc.getSize();
+            }
+
 
             delete perf;
         }
@@ -334,6 +323,7 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 //        Xsub(i_init:i_end,:) = Xnew;
         for(T* Xsub_it = Xsub+i_init, *Xsub_end = Xsub_it+(guesses_end*d), *Xnew_it = Xnew->getData(); Xsub_it != Xsub_end; Xsub_it+=guesses_end, Xnew_it+=nindices)
             copy(Xsub_it, Xnew_it, nindices);
+
 
         delete Xnew;
 
@@ -365,8 +355,9 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
         delete yva;
 
         delete [] Ktrva;
-        delete K_mat;
     }
+
+    delete K_mat;
 
     delete [] indices;
     delete [] KtK;
@@ -374,9 +365,12 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     delete perfTask;
     delete opt_tmp;
 
+
+    unsigned long nsub;
+
     if(guesses_mat_it - guesses_mat->getData() < guesses_mat->getSize()-1)
     {
-        const unsigned long nsub = static_cast<unsigned long>(*guesses_mat_it);
+        nsub = static_cast<unsigned long>(*guesses_mat_it);
         gMat2D<T> *Xsub_mat_sub = new gMat2D<T>(nsub, d);
 
         const unsigned long size = nsub*d;
@@ -387,6 +381,8 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
         delete Xsub_mat;
         Xsub_mat = Xsub_mat_sub;
     }
+    else
+        nsub = guesses_end;
 
 
 //    vout.X = Xsub(1:i_end,:);
@@ -404,10 +400,255 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 }
 
 template <typename T>
-void NystromWrapper<T>::update(const gVec<T> &X, const gVec<T> &y)
+void NystromWrapper<T>::train_largescale(const gMat2D<T> &X, const gMat2D<T> &y)
 {
+    GurlsOptionsList *opt = this->opt;
+
+    GurlsOptionsList* paramsel = opt->getOptAs<GurlsOptionsList>("paramsel");
+    paramsel->removeOpt("X");
+    paramsel->removeOpt("C");
+    paramsel->removeOpt("n_opt");
+    paramsel->removeOpt("guesses");
+    paramsel->removeOpt("acc");
+    paramsel->removeOpt("times");
+    paramsel->removeOpt("indices");
+
+
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
+    const unsigned long t = y.cols();
+
+    const gMat2D<T> empty;
+
+    const double sigma = opt->getOptAsNumber("paramsel.sigma");
+
+    const double n_nystrom = opt->getOptAsNumber("n_nystrom");
+//    B = opt.nystrom_blocksize;
+    const unsigned long B = static_cast<unsigned long>(opt->getOptAsNumber("nlambda"));
+
+    const gMat2D<T> *Xtr = &X;
+    const gMat2D<T> *ytr = &y;
+
+    unsigned long ntr = n;
+
+
+    unsigned long guesses_end = static_cast<unsigned long>(n_nystrom);
+
+//    guesses = B:B:opt.rank_max;
+    std::vector<unsigned long> guesses;
+    for(unsigned long i = B-1; i < guesses_end; i+=B)
+        guesses.push_back(i);
+
+    guesses_end = *(guesses.rbegin())+1;
+
+//    indices = randperm(ntr);
+    unsigned long indices_length = 0;
+    unsigned long *indices = getIndices(y, ntr, t, n_nystrom, indices_length);
+
+
+
+    gMat2D<unsigned long> *indices_mat = new gMat2D<unsigned long>(indices_length, 1);
+    copy(indices_mat->getData(), indices, indices_length);
+    paramsel->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*indices_mat));
+
+
+    gMat2D<T> *times_mat = new gMat2D<T>(guesses.size(), 1);
+    paramsel->addOpt("times", new OptMatrix<gMat2D<T> >(*times_mat));
+    T *times_it = times_mat->getData();
+    set(times_it, (T)0, guesses.size());
+
+
+
+//    Xsub = zeros(guesses(end),d);
+    gMat2D<T> *Xsub_mat = new gMat2D<T>(guesses_end, d);
+    T *Xsub = Xsub_mat->getData();
+    set(Xsub, (T)0.0, guesses_end*d);
+
+//    KtK = zeros(guesses(end),guesses(end));
+    T *KtK = new T[guesses_end*guesses_end];
+    set(KtK, (T)0.0, guesses_end*guesses_end);
+
+    //    Kty = zeros(guesses(end),T);
+    T *Kty = new T[guesses_end*t];
+    set(Kty, (T)0.0, guesses_end*t);
+
+//    i_init = 1;
+    unsigned long i_init = 0;
+
+
+//    opt_tmp.paramsel.sigma = opt.paramsel.sigma;
+//    opt_tmp.kernel.type = opt.kernel.type;
+
+    GurlsOptionsList* opt_tmp = new GurlsOptionsList("tmp");
+    GurlsOptionsList* tmp_kernel = new GurlsOptionsList("kernel");
+    GurlsOptionsList* tmp_paramsel = new GurlsOptionsList("paramsel");
+    GurlsOptionsList* tmp_optimizer = new GurlsOptionsList("optimizer");
+
+    opt_tmp->addOpt("kernel", tmp_kernel);
+    opt_tmp->addOpt("paramsel", tmp_paramsel);
+    opt_tmp->addOpt("optimizer", tmp_optimizer);
+
+    tmp_kernel->addOpt("type", opt->getOptAsString("kernel.type"));
+    tmp_paramsel->addOpt("sigma", new OptNumber(sigma));
+
+
+    PredKernelTrainTest<T> predKernelTask;
+
+    gMat2D<T> *alpha_mat = new gMat2D<T>(guesses_end, t);
+    T *const alpha = alpha_mat->getData();
+
+    gMat2D<T> *guesses_mat = new gMat2D<T>(guesses.size(), 1);
+    T *guesses_mat_it = guesses_mat->getData();
+    set(guesses_mat_it, (T)-1, guesses.size());
+
+    boost::posix_time::ptime begin, end;
+    boost::posix_time::time_duration diff;
+
+    begin = boost::posix_time::microsec_clock::local_time();
+    for(std::vector<unsigned long>::iterator it = guesses.begin(); it != guesses.end(); ++it)
+    {
+        const unsigned long i = *it;
+        *guesses_mat_it = i+1;
+
+//        Xnew = Xtr(indices(i_init:i_end),:);
+        const int nindices = i - i_init + 1;
+        gMat2D<T> *Xnew = new gMat2D<T>(nindices,d);
+        subMatrixFromRows(Xtr->getData(), ntr, d, indices+i_init, nindices, Xnew->getData());
+
+//        opt_tmp.rls.X = Xnew;
+        tmp_optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*Xnew, false));
+
+//        kernel_col = predkernel_traintest(Xtr,[],opt_tmp);
+        GurlsOptionsList *kernel = predKernelTask.execute(*Xtr, empty, *opt_tmp);
+
+        gMat2D<T> &predkernel_K = kernel->getOptValue<OptMatrix<gMat2D<T> > >("K");
+
+//        Kty(i_init:i_end,:) = kernel_col.K'*y;
+        T* Kty_sub = new T[nindices*t];
+        dot(predkernel_K.getData(), ytr->getData(), Kty_sub, ntr, nindices, ntr, t, nindices, t, CblasTrans, CblasNoTrans, CblasColMajor);
+        for(int i=0; i< t; ++i)
+            copy(Kty+i_init+(i*guesses_end), Kty_sub+(i*nindices), nindices);
+
+        delete [] Kty_sub;
+
+//        KtK(i_init:i_end,i_init:i_end) = kernel_col.K'*kernel_col.K;
+        T* KtK_sub = new T[nindices*nindices];
+
+        dot(predkernel_K.getData(), predkernel_K.getData(), KtK_sub, ntr, nindices, ntr, nindices, nindices, nindices, CblasTrans, CblasNoTrans, CblasColMajor);
+        for(int i=0; i< nindices; ++i)
+            copy(KtK+i_init+((i_init+i)*guesses_end), KtK_sub+(i*nindices), nindices);
+
+        delete[] KtK_sub;
+
+
+//        if guesses_c>1
+        if(it != guesses.begin())
+        {
+//            KtKcol = zeros((i_init-1),i_end-i_init+1);
+            T *KtKcol = new T[i_init*nindices];
+            set(KtKcol, (T)0.0, i_init*nindices);
+
+
+            const T salpha = (T)(-1.0/pow(sigma, 2));
+            const T one = (T) 1.0;
+
+            T *kernel_old = new T[i_init];
+
+            const T *Xtr_it = Xtr->getData();
+            T *K_it = predkernel_K.getData();
+
+//            for l=1:ntot
+            for(unsigned long l = 0; l< ntr; ++l, ++Xtr_it, ++K_it)
+            {
+//                opt_tmp.rls.X = Xsub(1:(i_init-1),:);
+//                kernel_old = predkernel_traintest(X(l,:),[],opt_tmp);
+                distance_transposed_vm(Xtr_it, Xsub, d, guesses_end, kernel_old, i_init, ntr);
+                scal(i_init, salpha, kernel_old, 1);
+                exp(kernel_old, i_init);
+
+//                KtKcol = KtKcol + kernel_old.K'*kernel_col.K(l,:);
+                gemv(CblasNoTrans, i_init, 1, one, kernel_old, i_init, K_it, ntr, one, KtKcol, 1); // 1 i_init   1 nindices  i_init nindices
+            }
+
+            delete [] kernel_old;
+
+
+//            KtK(1:(i_init-1),i_init:i_end) = KtKcol;
+//            KtK(i_init:i_end,1:(i_init-1)) = KtKcol';
+            for(unsigned long j=0; j<nindices; ++j)
+            {
+                copy(KtK+(guesses_end*(i_init+j)), KtKcol+(i_init*j), i_init);
+                copy(KtK+i_init+j, KtKcol+(i_init*j), i_init, guesses_end, 1);
+            }
+
+            delete [] KtKcol;
+        }
+
+        delete kernel;
+
+
+//        alpha = pinv(KtK(1:i_end,1:i_end))*(Kty(1:i_end,:));
+
+        const unsigned long ii = i+1;
+
+        KtK_sub = new T[ ii*ii];
+        for(T *K_it = KtK, *Ks_it = KtK_sub, *const K_end = K_it+(guesses_end*ii); K_it != K_end; K_it+=guesses_end, Ks_it+=ii)
+            copy(Ks_it, K_it, ii);
+
+        int r, c;
+        T *pinv_K = pinv(KtK_sub, ii, ii, r, c);
+        delete [] KtK_sub;
+
+        Kty_sub = new T[ii*t];
+        for(T *K_it = Kty, *Ks_it = Kty_sub, *const K_end = K_it+(guesses_end*t); K_it != K_end; K_it+=guesses_end, Ks_it+=ii)
+            copy(Ks_it, K_it, ii);
+
+
+        dot(pinv_K, Kty_sub, alpha, ii, ii, ii, t, ii, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
+
+        delete [] Kty_sub;
+        delete [] pinv_K;
+
+
+        tmp_optimizer->removeOpt("X");
+
+//        Xsub(i_init:i_end,:) = Xnew;
+        for(T* Xsub_it = Xsub+i_init, *Xsub_end = Xsub_it+(guesses_end*d), *Xnew_it = Xnew->getData(); Xsub_it != Xsub_end; Xsub_it+=guesses_end, Xnew_it+=nindices)
+            copy(Xsub_it, Xnew_it, nindices);
+
+        delete Xnew;
+
+//        i_init = i_end+1;
+        i_init = i+1;
+
+        end = boost::posix_time::microsec_clock::local_time();
+        diff = end-begin;
+
+        *times_it = diff.total_milliseconds();
+        ++times_it;
+
+        ++guesses_mat_it;
+    }
+
+
+    delete [] indices;
+    delete [] KtK;
+    delete [] Kty;
+
+    delete opt_tmp;
+
+
+//    vout.X = Xsub(1:i_end,:);
+    paramsel->addOpt("X", new OptMatrix<gMat2D<T> >(*Xsub_mat));
+
+//    vout.C = alpha;
+    paramsel->addOpt("C", new OptMatrix<gMat2D<T> >(*alpha_mat));
+
+//    vout.guesses = guesses;
+    paramsel->addOpt("guesses", new OptMatrix<gMat2D<T> >(*guesses_mat));
 
 }
+
 
 template <typename T>
 gMat2D<T>* NystromWrapper<T>::eval(const gMat2D<T> &X)
@@ -415,6 +656,8 @@ gMat2D<T>* NystromWrapper<T>::eval(const gMat2D<T> &X)
     GurlsOptionsList *opt = this->opt;
     const gMat2D<T> &alpha_mat = opt->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.C");
     const gMat2D<T> &X_mat = opt->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.X");
+
+
     const T *const alpha = alpha_mat.getData();
 
     const unsigned long n = X.rows();
@@ -447,6 +690,7 @@ gMat2D<T>* NystromWrapper<T>::eval(const gMat2D<T> &X)
     dot(predKernel_K.getData(), alpha, y->getData(), n, n_nystrom, n_nystrom, t, n, t, CblasNoTrans, CblasNoTrans, CblasColMajor);
 
     tmp_optimizer->removeOpt("X", false);
+
     delete opt_tmp;
     delete predKernel;
 
@@ -454,7 +698,7 @@ gMat2D<T>* NystromWrapper<T>::eval(const gMat2D<T> &X)
 }
 
 template <typename T>
-gMat2D<T>* NystromWrapper<T>::eval_ls(const gMat2D<T> &X)
+gMat2D<T>* NystromWrapper<T>::eval_largescale(const gMat2D<T> &X)
 {
     GurlsOptionsList *opt = this->opt;
     const gMat2D<T> &alpha_mat = opt->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.alpha");
@@ -510,6 +754,7 @@ gMat2D<T>* NystromWrapper<T>::eval_ls(const gMat2D<T> &X)
     return y_mat;
 }
 
+
 template <typename T>
 void NystromWrapper<T>::setNNystrom(unsigned long n_nystrom)
 {
@@ -518,26 +763,68 @@ void NystromWrapper<T>::setNNystrom(unsigned long n_nystrom)
 }
 
 template <typename T>
-void NystromWrapper<T>::setNParams(unsigned long nparams)
+void NystromWrapper<T>::rescale(gMat2D<T> &y)
 {
-    this->opt->removeOpt("nparams");
-    this->opt->addOpt("nparams", new OptNumber(nparams));
+    const unsigned long n = y.rows();
+    const unsigned long t = y.cols();
+
+    T* yt = new T[y.getSize()];
+
+    transpose(y.getData(), n, t, yt);
+
+
+    //unsigned long counts[2] = {0, 0};
+    unsigned long *counts = new unsigned long [t];
+    set(counts, 0ul, t);
+
+    unsigned long *maxIndices = new unsigned long [n];
+    unsigned long *m_it = maxIndices;
+
+
+    T *it = yt;
+    for(unsigned long i=0; i<n; ++i, it+=t)
+    {
+        unsigned long mindex = std::max_element(it, it+t)-it;
+
+        *m_it++ = mindex;
+        ++counts[mindex];
+    }
+
+    delete [] yt;
+
+    unsigned long *coeffs = new unsigned long [t];
+    set(coeffs, 0ul, t);
+    for(unsigned long i=0; i<t; ++i)
+    {
+        for(unsigned long j=0; j<t; ++j)
+            if(i!=j)
+                coeffs[i] += counts[j];
+    }
+
+    it = y.getData();
+    m_it = maxIndices;
+
+    for(unsigned long i=0; i<n; ++i, ++it, ++m_it)
+//        scal(t, (T)(counts[!(*m_it)]), it, n);
+        scal(t, (T)(coeffs[*m_it]), it, n);
+
+
+    delete [] counts;
+    delete [] coeffs;
+
+
+    delete [] maxIndices;
+
 }
 
 template <typename T>
-void NystromWrapper<T>::setKernelType(const std::string &type)
+unsigned long* NystromWrapper<T>::getIndices(const gMat2D<T>&y, const unsigned long n, const unsigned long t, const unsigned long n_nystrom, unsigned long &length)
 {
-    GurlsOptionsList* kernel = this->opt->template getOptAs<GurlsOptionsList>("kernel");
-    kernel->removeOpt("type");
-    kernel->addOpt("type", type);
-}
+    unsigned long *indices = new unsigned long[n];
+    randperm(n, indices, true, 0);
 
-template <typename T>
-void NystromWrapper<T>::setSigma(double sigma)
-{
-    GurlsOptionsList* paramsel = this->opt->template getOptAs<GurlsOptionsList>("paramsel");
-    paramsel->removeOpt("sigma");
-    paramsel->addOpt("sigma", new OptNumber(sigma));
+    length = n;
+    return indices;
 }
 
 }
