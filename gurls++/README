@@ -82,7 +82,7 @@ these variables and how to set them to appropriate values.
 
  $ make
 
-6. Install the library(ies) to the path defined at configuration time
+6. Install the library to the path defined at configuration time
 
  $ make install
 
@@ -171,7 +171,7 @@ Documentation
 =============
 
 - Quick intructions on how to run the libraries for a default case can be found here: 
-	https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World
+	https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World_in_GURLS-2
 
 - A User manual with several examples can be found here:
 	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage-2
@@ -186,7 +186,7 @@ Documentation
 - C++ Code Documentation can be found at: http://cbcl.github.io/GURLS/
 
 - The list of all the available methods of the libraries can be found at
-	https://github.com/CBCL/GURLS/wiki/4-Available-methods
+	https://github.com/CBCL/GURLS/wiki/4-Available-methods#wiki-GURLS-2
 
 - Further documentation	
 	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
