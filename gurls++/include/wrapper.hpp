@@ -76,7 +76,7 @@ void GurlsWrapper<T>::setSplitProportion(double value)
 }
 
 template <typename T>
-void GurlsWrapper<T>::setProblemType(GurlsWrapper::ProblemType value)
+void GurlsWrapper<T>::setProblemType(typename GurlsWrapper::ProblemType value)
 {
     probType = value;
 
@@ -102,7 +102,7 @@ KernelWrapper<T>::KernelWrapper(const std::string &name): GurlsWrapper<T>(name)
 }
 
 template <typename T>
-void KernelWrapper<T>::setKernelType(KernelWrapper::KernelType value)
+void KernelWrapper<T>::setKernelType(typename KernelWrapper::KernelType value)
 {
     std::string &type = this->opt->template getOptValue<OptString>("kernel.type");
 
