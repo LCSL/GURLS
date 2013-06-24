@@ -48,7 +48,7 @@
 #include <iostream>
 #include <string>
 
-#include "wrapper.h"
+#include "recrlswrapper.h"
 #include "rlsprimal.h"
 #include "primal.h"
 
@@ -74,7 +74,7 @@ bool checkMatrices(const gMat2D<T>& m1, const gMat2D<T>& m2);
   */
 int main(int argc, char* argv[])
 {
-    srand(time(NULL));
+    srand(static_cast<unsigned int>(time(NULL)));
 
 //    std::cout.precision(16);
 //    std::cout.setf( std::ios::fixed, std::ios::floatfield);
@@ -98,11 +98,11 @@ int main(int argc, char* argv[])
     std::string ytrFileName = std::string(argv[1]) + "/ytr.txt";
 
 
-    RecursiveRLSWrapper* wrapper;
+    RecursiveRLSWrapper<T>* wrapper;
     if(retrain)
-        wrapper = new RecursiveRLSRetrainWrapper("recursiveRLSretrain");
+        wrapper = new RecursiveRLSRetrainWrapper<T>("recursiveRLSretrain");
     else
-        wrapper = new RecursiveRLSWrapper("recursiveRLS");
+        wrapper = new RecursiveRLSWrapper<T>("recursiveRLS");
 
     try
     {
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
         if(retrain)
         {
             std::cout << "Retraining model..." << std::endl;
-            dynamic_cast<RecursiveRLSRetrainWrapper*>(wrapper)->retrain();
+            dynamic_cast<RecursiveRLSRetrainWrapper<T>*>(wrapper)->retrain();
         }
 
         // Test on independent test set
@@ -215,7 +215,6 @@ const gMat2D<T>* standardRLS(const gMat2D<T> &Xtr_tot, const gMat2D<T> &ytr_tot,
 
     gMat2D<T> &lambdas = paramsel->getOptValue< OptMatrix<gMat2D<T> > >("lambdas");
     scal(lambdas.getSize(), lambdasScaleFactor, lambdas.getData(), 1);
-
 
     RLSPrimal<T> optimizer;
     stdOpt->addOpt("optimizer", optimizer.execute(Xtr_tot, ytr_tot, *stdOpt));

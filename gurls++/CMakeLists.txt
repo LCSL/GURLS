@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
+if ( ${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
+    message( FATAL_ERROR "You are trying to run CMake from the gurls++ directory, instead of just from the top directory")
+endif()
+
 project(gurls++)
 
 set(GURLSLIBRARY gurls++)
@@ -14,7 +18,6 @@ file(GLOB gurls_headers ${HDRDIR}*.h*)
 file(GLOB gurls_sources ${SRCDIR}*.cpp)
 
 include_directories( BEFORE ${HDRDIR} )
-
 
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
 target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES})
@@ -51,14 +54,16 @@ set(GURLS_LINK_LIBRARIES
     ${GurlsDependencies_LIBRARIES}
 )
 
-set(GURLSPP_BUILD_DEMO OFF CACHE BOOL "")
+set(GURLSPP_BUILD_DEMO ON CACHE BOOL "")
 if(GURLSPP_BUILD_DEMO)
     add_all_executables(${DEMODIR} ${GURLS_LINK_LIBRARIES})
 endif(GURLSPP_BUILD_DEMO)
 
 set(GURLSPP_BUILD_TEST OFF CACHE BOOL "")
+mark_as_advanced(FORCE GURLSPP_BUILD_TEST)
 if(GURLSPP_BUILD_TEST)
-    set(GURLS_DATA_DIR "" CACHE PATH "Path to the Gurls++ data directory")
+    set(GURLSPP_DATA_DIR "" CACHE PATH "Path to the Gurls++ data directory")
+    mark_as_advanced(FORCE GURLSPP_DATA_DIR)
 
     if(GURLSPP_DATA_DIR STREQUAL "")
         message(WARNING, "GURLSPP_DATA_DIR value is set to an empty string. Please be sure this is the right configuration for you")
@@ -70,6 +75,7 @@ if(GURLSPP_BUILD_TEST)
 endif(GURLSPP_BUILD_TEST)
 
 set(GURLSPP_BUILD_MISC OFF CACHE BOOL "")
+mark_as_advanced(FORCE GURLSPP_BUILD_MISC)
 if(GURLSPP_BUILD_MISC)
     add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
 endif(GURLSPP_BUILD_MISC)

@@ -14,14 +14,8 @@ Table of Contents
 Introduction
 ============
 
-GURLS - (Grand Unified Regularized Least Squares) is a MATLAB software package
-for regression and (multiclass) classifiers based on the Regularized Least Squares
-(RLS) loss function. GURLS main properties are:
-
-- Automatic parameter selection.
-- Great modularity, each method can be used independently.
-- Wide range of optimization routines.
-- Easy expansion
+GURLS - (Grand Unified Regularized Least Squares) is a MATLAB software package for regression and 
+(multiclass) classifiers based on the Regularized Least Squares (RLS) loss function. 
 
 Installation
 ============
@@ -30,29 +24,33 @@ Open MATLAB and execute:
 
 >> run('PACKAGEROOT/gurls/utils/gurls_install.m');
 
-where PACKAGEROOT is where you unzipped the GURLS package.
-This will add all the important directories to your path. Run 'savepath' if
-you want the installation to be permanent.
+where PACKAGEROOT is where you unzipped the GURLS package. This will add all the important directories 
+to your path. Run 'savepath' if you want the installation to be permanent.
 
 Documentation
 =============
 
-- User's Guide:
-	A User's Guide with help files for each available method is available
-	in the gurls-manual.pdf file.
-
-- Developer's Guide
-	A simple developer's guides is available in the gurls-manual.pdf file.
-	GURLS is designed for easy expansion. Give it a try!
+- GURLS design is described here:
+	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-Design
 
 - Demos
 	GURLS has exstensively commented demos in the "demo" subdirectory. 
 	Have a look, and run gurlsdemo.m. We feel this is the best way to learn how to use
 	these packages.
 
-- Further Documentation
-	* A collection of the most useful and common pipelines can be found here:
-	  https://github.com/CBCL/GURLS/wiki/User-Manual
+- A User manual with several examples can be found here:
+	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage
+
+- A collection of the most useful and common pipelines can be found here:
+	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-Examples_in_GURLS
+
+- The list of all the available methods of the libraries can be found at
+	https://github.com/CBCL/GURLS/wiki/4-Available-methods#GURLS_tasks
+	
+- Developer's Guide
+	A simple developer's guides is available in the gurls-manual.pdf file.
+	GURLS is designed for easy expansion. Give it a try!
+
 
 Quick and Dirty
 ===============

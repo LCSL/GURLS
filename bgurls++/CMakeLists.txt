@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.6)
 
+if ( ${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
+    message( FATAL_ERROR "You are trying to run CMake from the bgurls++ directory, instead of just from the top directory")
+endif()
+
 project(bgurls++)
 
 get_filename_component(GURLS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../gurls++" ABSOLUTE)
@@ -63,8 +67,6 @@ if(GURLS_USE_EXTERNAL_HDF5)
     set(ZLIB_FOUND ON)
 
 else(GURLS_USE_EXTERNAL_HDF5)
-
-#	set(CMAKE_PREFIX_PATH "/opt/GURLS/bgurls++/external" ${CMAKE_PREFIX_PATH})
 
     find_package(MPI REQUIRED)
 
@@ -173,6 +175,7 @@ if(BGURLSPP_BUILD_DEMO)
 endif(BGURLSPP_BUILD_DEMO)
 
 #set(BGURLSPP_BUILD_TEST OFF CACHE BOOL "")
+#mark_as_advanced(FORCE BGURLSPP_BUILD_TEST)
 #if(BGURLSPP_BUILD_TEST)
 #    set(BGURLSPP_DATA_DIR "" CACHE PATH "Path to the bGURLS++ data directory")
 #
@@ -186,6 +189,7 @@ endif(BGURLSPP_BUILD_DEMO)
 #endif(BGURLSPP_BUILD_TEST)
 
 set(BGURLSPP_BUILD_MISC OFF CACHE BOOL "")
+mark_as_advanced(FORCE BGURLSPP_BUILD_MISC)
 if(BGURLSPP_BUILD_MISC)
     add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
 endif(BGURLSPP_BUILD_MISC)
