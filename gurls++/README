@@ -132,8 +132,6 @@ command-line interface.
     - GURLS_BUILD_GURLSPP (ON): Build GURLS++. If set to ON CMake also evaluates the variables
     - GURLSPP_BUILD_DEMO (ON): Enable the building of the GURLS++ demo programs;
     - GURLSPP_BUILD_DOC (OFF): Enable the building of the GURLS++documentation using doxygen;
-    - BGURLSPP_BUILD_DEMO (OFF): Enable the building of the BGURLS++demo programs;
-    - BGURLSPP_BUILD_DOC (OFF): Enable the building of the BGURLS++documentation using doxygen;
     - GURLS_USE_BINARY_ARCHIVES (ON): If set to ON, all data structures are stored in binary (rather than text) 
       files, saving storage space and time;
     - GURLS_USE_EXTERNALS (ON): Enable automatic building of external dependencies.
