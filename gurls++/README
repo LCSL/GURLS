@@ -27,6 +27,10 @@ The GURLS webpage can be found at: http://lcsl.mit.edu/gurls.html
 
 Installation
 ============
+
+You can download the precompiled binaries here
+	https://github.com/CBCL/GURLS/tree/master/precompiled-binaries
+and start using GURLS++, however such a version may be not optimized for your machine.
  
 1) Dependencies
 ---------------
