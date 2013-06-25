@@ -64,3 +64,6 @@ Documentation
 	
 	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive 
 	  RLS API 
+
+	* The description of the available methods, demos and data for each package can be found at
+	 	https://github.com/CBCL/GURLS/wiki/4-Code-Description
