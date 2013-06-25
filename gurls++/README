@@ -31,6 +31,8 @@ Installation
 You can download the precompiled binaries here
 	https://github.com/CBCL/GURLS/tree/master/precompiled-binaries
 and start using GURLS++, however such a version may be not optimized for your machine.
+
+If you want a version which is optimized for your machine, follow the steps described in the rest of the section.
  
 1) Dependencies
 ---------------
