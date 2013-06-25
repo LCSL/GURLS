@@ -34,9 +34,12 @@ Documentation
 =============
 
 - A User manual with several examples can be found here:
-  https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage
+   https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage
 
 - Demos
   bGURLS has exstensively commented demos in the "demo" subdirectory. 
-	Have a look, and run gurlsdemo.m. We feel this is the best way to learn how to use
-	these packages.
+  Have a look, and run gurlsdemo.m. We feel this is the best way to learn how to use these packages.
+	
+- Description of the available methods, demos and data for each package can be found at
+	https://github.com/CBCL/GURLS/wiki/4-Code-Description#wiki-bGURLS
+
