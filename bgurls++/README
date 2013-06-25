@@ -189,10 +189,10 @@ Documentation
 
 - C++ Code Documentation can be found at: http://cbcl.github.io/GURLS/
 
-- The list of all the available methods of the libraries can be found at
-	https://github.com/CBCL/GURLS/wiki/4-Available-methods#wiki-bGURLS_tasks-2
-
 - Further documentation	
+	* Description of the available methods, demos and data for each package can be found at
+		https://github.com/CBCL/GURLS/wiki/4-Code-Description#wiki-bGURLS-2
+
 	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
           together with the Developer's Guide. GURLS is designed for easy expansion. Give it a try!
 	  Remark: GURLS++ is still under development please contact the authors before starting your own development.
