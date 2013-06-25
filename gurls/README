@@ -51,10 +51,13 @@ Documentation
 	A simple developer's guides is available in the gurls-manual.pdf file.
 	GURLS is designed for easy expansion. Give it a try!
 
+- Description of the available methods, demos and data for each package can be found at
+	https://github.com/CBCL/GURLS/wiki/4-Code-Description#wiki-GURLS
+
 
 Quick and Dirty
 ===============
-A straightforward example of GURLS uage can be found in gurls_helloworld.m, which employs the Quick and Dirty utilities.
+A straightforward example of GURLS usage can be found in gurls_helloworld.m, which employs the Quick and Dirty utilities.
 Below we describe more in details how to use them on your data.
 
 Put your training data in a n-by-d matrix X with each row being a data sample.
