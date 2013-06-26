@@ -1,7 +1,7 @@
 function vout = paramsel_gpregrSigLamGrid(X,y,opt)
 % paramsel_gpregrSigLamGrid(X,Y,OPT)
-% Performs parameter selection for gaussian process regression.
-% The leave-one-out approach is used.
+% Performs parameter selection for gaussian process regression by 
+% maximizing the likelihood.
 % It selects both the noise level lambda and the kernel parameter sigma.
 %
 % INPUTS:
@@ -13,19 +13,18 @@ function vout = paramsel_gpregrSigLamGrid(X,y,opt)
 %   fields with default values set through the defopt function:
 %		- kernel.type
 %		- nlambda
-%       - hoperf
 %
 %   For more information on standard OPT fields
 %   see also defopt
 % 
 % OUTPUT: structure with the following fields:
-% -lambdas: value of the regularization parameter lambda
-%           minimizing the validation error, replicated in a TX1 array 
-%           where T is the number of classes
+% -lambda_guesses: matrix of guesses for the regularization parameter lambda
+% -sigmas: array of guesses for kernel parameter sigma
+% -perf: matrix with the average likelihood over the class for each pair of 
+%        parameters sigma and lambda
+% -lambdas: array of values of the regularization parameter lambda
+%           minimizing the validation error for each class
 % -sigma: value of the kernel parameter minimizing the validation error
-
-%savevars = {'LOOSQE','M','sigmas','guesses'};
-savevars = [];
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
@@ -72,8 +71,6 @@ end
 % only on K so we can still sum and minimize.
 %
 % We have to be a bit careful when minimizing.
-%
-% TODO: select a lambda for each class fixing sigma.
 
 vout.sigmas = sigmas;
 vout.lambda_guesses = guesses;
@@ -86,8 +83,3 @@ vout.perf = M;
 vout.sigma = opt.sigmamin*(q^(m-1));
 % opt lambda
 vout.lambdas = guesses(m,n)*ones(1,T);
-% This is awesome
-if numel(savevars) > 0
-	[ST,I] = dbstack();
-	save(ST(1).name,savevars{:});
-end	

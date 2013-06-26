@@ -1,7 +1,7 @@
 function vout = paramsel_gpregrLambdaGrid(X,y,opt)
-% paramsel_gpregrLambdaGrid(X,Y,OPT) TODO to be completed
-% Performs parameter selection for gaussian process regression.
-% The hold-out approach is used.
+% paramsel_gpregrLambdaGrid(X,Y,OPT)
+% Performs parameter selection for gaussian process regression by 
+% maximizing the likelihood.
 %
 % INPUTS:
 % -X: input data matrix
@@ -10,19 +10,17 @@ function vout = paramsel_gpregrLambdaGrid(X,y,opt)
 %   fields that need to be set through previous gurls tasks:
 %		- kernel.K (set by the kernel_* routines)
 %   fields with default values set through the defopt function:
-%		- kernel.type
-%		- nlambda
-%       - hoperf
+%       - nlambda
 %
 %   For more information on standard OPT fields
 %   see also defopt
 % 
 % OUTPUT: struct with the following fields:
+% -guesses: array of guesses for the regularization parameter lambda 
+% -perf: matrix with the likelihood for each value of the regularization
+%        parameter and for each class
 % -lambdas: array of values of the regularization parameter lambda
 %           minimizing the validation error for each class
-% -looe: loo{1} is a matrix with the validation error for each lambda guess 
-%        and for each class
-% -guesses: array of guesses for the regularization parameter lambda 
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
@@ -33,17 +31,26 @@ n = size(y,1);
         
 [Q,L] = eig(opt.kernel.K);
 L = double(diag(L));
-	
 tot = opt.nlambda;
-guesses = paramsel_lambdaguesses(L, n, n, opt);
-    
+
+L = sort(L,'descend');
+% maximum eigenvalue
+lmax = L(1);
+CumSumEig = cumsum(L);
+firstPercentile = find(CumSumEig./CumSumEig(end)>.999,1,'first');
+lmin = max(L(firstPercentile), 200*sqrt(eps));
+powers = linspace(0,1,tot);
+guesses = lmin.*(lmax/lmin).^(powers);
+
 for i = 1:tot
     opt.paramsel.lambdas = guesses(i);
     opt.rls = rls_gpregr(X,y,opt);
     perf(i,:) = opt.rls.logprob;
+    vout.datafit(i,:) = opt.rls.datafit;
+    vout.penalty(i,:) = opt.rls.penalty;
 
-end	
-[dummy,idx] = max(perf,[],1);	
+end
+[dummy,idx] = max(perf,[],1);
 
 vout.lambdas = guesses(idx);
 vout.perf = perf;

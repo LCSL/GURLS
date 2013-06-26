@@ -7,16 +7,20 @@ function vout = paramsel_loogpregr(X,y,opt)
 % -X: input data matrix
 % -Y: labels matrix
 % -OPT: structure of options with the following fields:
+%   fields that need to be set through previous gurls tasks:
+%		- kernel.K (set by the kernel_* routines)
+%   fields with default values set through the defopt function:
+%		- nlambda
 %
 %   For more information on standard OPT fields
 %   see also defopt
 % 
 % OUTPUT: struct with the following fields:
-% -lambdas: array of values of the regularization parameter lambda
-%           minimizing the validation error for each class
+% -guesses: array of guesses for the regularization parameter lambda 
 % -perf: perf is a matrix with the validation error for each lambda guess 
 %        and for each class
-% -guesses: array of guesses for the regularization parameter lambda 
+% -lambdas: array of values of the regularization parameter lambda
+%           minimizing the validation error for each class
 
 
 if isfield (opt,'paramsel')
