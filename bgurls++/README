@@ -8,151 +8,191 @@ Table of Contents
 
 - Introduction
 - Installation
-- Configuration
-
+   - Dependencies
+   - Automatic dependencies building
+   - Installing GURLS++ on Linux
+   - Installing GURLS++ on Windows
+   - Configuration
+- Documentation
 
 Introduction
 ===========
 
 bGURLS++ - ((big) Grand Unified Regularized Least Squares) is a C++ software package
 for training linear multiclass classifiers based on the Regularized Least Squares
-(RLS) loss function.
+(RLS) loss function in the Big Learning Scenario.
 
-- Automatic parameter selection.
-- Great modularity, each method can be used independently.
-- Easy expansion
 
 Installation
 ============
+You can download the precompiled binaries here
+	https://github.com/CBCL/GURLS/tree/master/precompiled-binaries
+and start using bGURLS++, however such a version may be not optimized for your machine.
 
-In the following we assume the the source code of bGURLS++ is located at $bGURLS_ROOT. 
+Conversely, if you want a version of GURLS++ and bGURLS++ optimized for your machine, 
+follow the steps described in the rest of the section.
+ 
+1) Dependencies
+---------------
 
--Installing bGURLS++ on Linux 
+bGURLS++ depends on several external libraries:
+
+- A Blas/Lapack implementation. Currently we support:
+  - AMD’s ACML (only for 64 bits);
+  - ATLAS;
+  - Intel’s MKL;
+  - Netlib’s reference implementation: http://www.netlib.org/blas and http://www.netlib.org/lapack/;
+  - OpenBLAS (Currently only under Linux);
+  - Boost’s (v1.46.0 or higher) libraries serialization, date_time, filesystem, unit_test_framework, system, signals.
+  - MPI. BGURLS++ has been successfully tested with MPICH http://www.mpich.org/;
+  - Zlib http://www.mpich.org/;
+  - LibHDF5 v1.8.9 http://www.hdfgroup.org/HDF5/ compiled enabling parallel support and zlib 
+    (Libhdf5 v1.8.10 or higher is proved to not work properly);
+
+2) Automatic dependencies building
+----------------------------------
+
+The bGURLS++ CMake configurator suppports automatic downloading and building 
+of all dependencies by setting the GURLS_USE_EXTERNALS variable to ON (See section 
+Configuriation below for details). 
+Due to licence restrictions, on Windows this "Superbuild" system does not permit to automatically 
+install a blas/lapack implementation so users must install manually blas/lapack libraries.
+
+3) Installing bGURLS++ on Linux
+-------------------------------
 
 Below we describe how to build and install bGURLS++ on Ubuntu (tested on Ubuntu 12.04). 
-For other distributions, the same packages must be installed with the distribution-specific method. 
-  	
-1. Install the cmake build system (www.cmake.org/) 
-	$ sudo apt-get install cmake 
-	
-2. Install your favourite Blas/Lapack implementation. Currently we support: 
-	- ATLAS: http://math-atlas.sourceforge.net; 
-	- AMD's ACML: http://developer.amd.com/libraries/acml; 
-	- Intel's MKL: http://software.intel.com/en-us/articles/intel-mkl; 
-	- Netlib's reference implementation: http://www.netlib.org/blas and http: //www.netlib.org/lapack/. 
-	As an example, to install Netlib's Blas and Lapack run the following command: 
-	$ sudo apt-get install libblas-dev libblas3gf liblapack-dev liblapack3gf 
+For other distributions, the same packages must be installed with the distribution-specific method.
 
-3. Install Boost's libraries date_time and serialization 
-	$ sudo apt-get install libboost-serialization1.46.1 
-	libboost-serialization1.46-dev 
-	libboost-date-time1.46.1 libboost-date-time1.46-dev 
+1. Install the cmake build system (www.cmake.org/)
+ 
+ $ sudo apt-get install cmake cmake-curses-gui
+ 
+2. To link against some Blas and Lapack implementations you may need a fortran compiler e.g. for gfortran:
 
-4. Install an MPI implementation (e.g. OpenMPI)
-	$ sudo apt-get install libopenmpi-dev openmpi-bin openmpi-doc
+ $ sudo apt-get install gfortran
 
-5. Build libNetCDF C and C++ libraries
-	Download "The netCDF C library and utilities" and "The netCDF legacy and 
-	netCDF-4 C++ libraries" from the official netCDF website 
-	(http://www.unidata.ucar.edu/downloads/netcdf/index.jsp) and build them.
-	Building bGURLS++ using the libNetCDF packages provided by Ubuntu generates compiler errors.
+3. Create a build directory (e.g. "build") for GURLS++
 
-6. To link against some Blas and Lapack implementations you may need a fortran 
-   compiler e.g. for Netlib's Blas and Lapack: 
-	$ sudo apt-get install gfortran 
+ $ cd $GURLS_ROOT
+ $ mkdir build
+ 
+4. Run cmake into the build directory
 
-7. Create a build directory (e.g. "build") for bGURLS++ 
-	$ cd $bGURLS_ROOT 
-	$ mkdir build 
+ $ cd build
+ $ ccmake ..
 
-8. Run cmake into the build directory 
-	$ cd build 
-	$ ccmake .. 
+The last command will show the CMake interface, which must be used to set the values of some variables 
+used for building and installing bGURLS++. See the section Configuration below for more information on 
+these variables and how to set them to appropriate values.
 
-	The last command will show the CMake interface, which must be used to set the values 
-	of some variables used for building and installing bGURLS++. See the section "Configuration"
-	below for more information on these variables and how to set them to appropriate values. 
+5. Start building
 
-9. Start bGURLS++ building
-	$ make 
+ $ make
 
-10. Install bGURLS++ to the path defined at configuration time 
-	$ make install
+6. Install the library to the path defined at configuration time
 
+ $ make install
 
-- Installing bGURLS++ on Windows 
-Below we describe how to build and install bGURLS++ on Windows with Visual Studio (tested 
-with VS Express 2010 on Windows 7 and with VS Express 2008 on Windows Vista). 
+The command wil also install to the same path all the dependencies that user chose to build automatically.
 
-1. Install the CMake build system downloading the installer from http://cmake.org/cmake/resources/software.html. 
+4) Installing bGURLS++ on Windows
+--------------------------------
 
-2. Install your favourite Blas/Lapack implementation. Currently we support: 
-	- ATLAS: http://math-atlas.sourceforge.net; 
-	- AMD's ACML: http://developer.amd.com/libraries/acml; 
-	- Intel's MKL: http://software.intel.com/en-us/articles/intel-mkl. 
-	Under Windows ACML is probably the easiest choice, since they provide the library binaries for free. 
+Below we describe how to build and install bGURLS++ on Windows with Visual Studio (tested with 
+VS Express 2010 and VS Express 2008).
 
-3. Install Boost's date_time and serialization libraries following the instructions 
-   on Boost's website: http://www.boost.org/doc/libs/1_50_0/more/getting_started/windows.html. 
+1. Install the CMake build system downloading the installer from http://cmake.org/cmake/resources/software.html.
 
-4. Install your favourite MPI implementation
-   E.g. MPICH2 (http://www.mpich.org) provides precompiled binaries.
+2. Install your favourite Blas/Lapack implementation. Under Windows AMD’s ACML is probably the easiest choice, 
+since they provide the library binaries for free, however it supports only compilers with 64 bits.
 
-5. Install libNetCDF C and C++ libraries
-   Download "The netCDF C library and utilities" and "The netCDF legacy and netCDF-4 C++ libraries"
-   from the official netCDF website (http://www.unidata.ucar.edu/downloads/netcdf/index.jsp) and build them.
-   Alternatively you may try the precompiled binaries from http://www.unidata.ucar.edu/software/netcdf/win_netcdf/.
+3. Create a build directory (e.g. $GURLSROOT/build).
 
-6. Create a build directory (e.g. $bGURLS_ROOT/build) for bGURLS++. 
+4. Run the CMake GUI. You will have to set the source directory to $GURLSROOT directory, and the build directory 
+   to the directory created at the previous step. After pressing the configure button, you will have 
+   to chose the generator for the project (e.g. Visual Studio 10). 
+   On Windows you may encounter the error message "error in conﬁguration process, project files may be invalid", 
+   check that the you have writing rights to the path specified in the variable CMAKE_INSTALL_PREFIX. 
+   If this is not the case, change such a variable to a folder to which you have writing rights and 
+   press 'configure'. Now you have to set the values of some variables used for building and installing the 
+   libraries according to your preferences. See the section Configuration below for more information on these 
+   variables and how to set them to appropriate values. 
+   After having configured the build options, press the generate button to create the solution file.
 
-7. Run the CMake GUI. 
-   You will have to set the source directory to the root directory holding bGURLS++ source 
-   code, and the build directory to the directory created at the previous step. 
-   After pressing the configure button, you have to set the values of some variables used for 
-   building and installing bGURLS++. See the section "Configuration" below for more 
-   information on these variables and how to set them to appropriate values. After having 
-   configured the build options, press the generate button to create the solution file. 
+5. Open the generated solution under Visual Studio and build it.
 
-8. Build bGURLS++ by opening and building the solution under Visual Studio. 
-
-9. Install bGURLS++ by explicitely building the install project included in the solution (it is 
-   not automatically built when building the solution). 
+6. Optional: install bGURLS++ by explicitely building the install project included in the solution 
+  (it is not automatically built when building the solution).
 
 
-Configuration
+5) Configuring bGURLS++
+----------------------
+
+The configuration step is carried out using CMake. In the following we describe the configuration process 
+using the GUI of CMake, e.g. under Windows or Mac. A similar process shall be followed when using the 
+command-line interface.
+
+1. Press 'configure', and CMake will try to determine the correct values for all variables. 
+
+2. After the first configuration a list of variables is displayed. The following variables should be checked:
+    - CMAKE_INSTALL_PREFIX The path where the library will be installed to;
+    - GURLS_BUILD_GURLSPP (ON): Build GURLS++. If set to ON CMake also evaluates the variables
+    - GURLSPP_BUILD_DEMO (ON): Enable the building of the GURLS++ demo programs;
+    - GURLSPP_BUILD_DOC (OFF): Enable the building of the GURLS++documentation using doxygen;
+    - GURLS_BUILD_BGURLSPP (ON): Build bGURLS++. If set to ON CMake also evaluates the variables
+    - BGURLSPP_BUILD_DEMO (OFF): Enable the building of the BGURLS++demo programs;
+    - BGURLSPP_BUILD_DOC (OFF): Enable the building of the BGURLS++documentation using doxygen;
+    - GURLS_USE_BINARY_ARCHIVES (ON): If set to ON, all data structures are stored in binary (rather than text) 
+      files, saving storage space and time;
+    - GURLS_USE_EXTERNALS (ON): Enable automatic building of external dependencies.
+      If set to ON CMake also evaluates the variables
+        - GURLS_USE_EXTERNAL_BLAS_LAPACK (ON): Enable automatic building of blas and lapack, 
+          using OpenBLAS (LINUX-ONLY).
+        - GURLS_USE_EXTERNAL_BOOST (ON): Enable automatic building of boost. If set to OFF, press 'advanced' 
+          to visualize the variables related to the BOOST library, typically you have to specify only the 
+          variable BOOST_INCLUDE_DIR;
+        - GURLS_USE_EXTERNAL_HDF5 (OFF): Enable automatic building of libHDF5 and its dependencies(MPICH and zlib). 
+          Used only if GURLS_BUILD_BGURLSPP is set to ON.
+        For each variable which is set to OFF, you must specify the path to the corresponding library.
+      If GURLS_USE_EXTERNALS is set to OFF you have to manually specify the path to all of the above libraries.
+
+3. If CMake does not find some required library, an error message will be displayed. Change the path to required 
+   library and press 'configure' again.
+   
+4. In the main screen you may change a number of variables. Most of them can be left unchanged, but some must be 
+   set to appropriate values. The following are the variables whose values should be checked:
+    - BLAS_LAPACK_IMPLEMENTATION. Allows user to specify an implementation of the Blas/Lapack routines. 
+      Available choices are: ACML, ATLAS, MKL, NETLIB, OPENBLAS (under linux). Depending on the choice you make, 
+      CMake will try to find the libraries in standard locations in the system. Normally this process should run 
+      fine, however, in case the libraries have been installed in some non-standard directory, you may have 
+      to manually specify their location.
+      
+5. Once all variables have been set, press 'configure' again, and CMake will check the settings. As in step (3), 
+   if something is wrong an error message will be displayed and you will have to go back to the main screen to 
+   tweak the configuration.
+
+6. When the settings are correct, the option ’generate’ will appear. Press 'generate'. CMake will generate the 
+   files and exit.
+
+After the build files (e.g. the Makefile under Linux) have been generated, you can proceed as explained above.
+
+
+Documentation
 =============
-The configuration step is carried out using CMake. 
-Using the command-line interface you will be presented with a textual menu, where you 
-can change the values of some variables and configure the building settings accordingly. 
 
-1. At the beginning no variable is set, and a message EMPTY CACHE is shown. 
+- Quick intructions on how to run the libraries for a default case can be found here: 
+	https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World_in_bGURLS-2
 
-2. Press [c] for 'configure', and CMake will try to determine the correct values for all variables, 
-   such as the location of required libraries. 
+- A User manual with several examples can be found here:
+	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-bGURLS_Usage-2
 
-3. If CMake does not find some required library, an error message will be displayed. 
-   In this case press [e] to exit help and go to the main screen. 
+- C++ Code Documentation can be found at: http://cbcl.github.io/GURLS/
 
-4. In the main screen you may change a number of variables. Most of them can be left 
-   unchanged, but some must be set to appropriate values. The following are the variables 
-   whose values should be checked: 
-	- GURLS_ROOT. Directory containing GURLS++ code.
-	- BLAS_LAPACK_IMPLEMENTATION. Allows user to specify an implementation of the Blas/Lapack routines. 
-	  Available choices are: ACML, ATLAS, MKL, NETLIB (under linux). 
-	  Depending on the choice you make, CMake will try to find the libraries in standard locations in the system.
-	  Normally this process should run fine, however, in case the libraries have been installed 
-	  in some non-standard directory, you may have to manually specify their location.
-	- USE_BINARY_ARCHIVES. If set to ON, all data structures in bGURLS are stored in 
-	  binary (rather than text) files, saving storage space and time. 
-	- BUILD_DEMO. Enable the building of the demo programs. 
-	- CMAKE_INSTALL_PREFIX. This is the path where the library will be installed to. 
+- Further documentation	
+	* Description of the available methods, demos and data for each package can be found at
+		https://github.com/CBCL/GURLS/wiki/4-Code-Description#wiki-bGURLS-2
 
-5. Once all variables have been set, press [c] again, and CMake will check the settings. 
-   As in step (3), if something is wrong an error message will be displayed and you will have 
-   to go back to the main screen to tweak the configuration. 
-
-6. When the settings are correct, the option to 'generate' the files required for the actual build will appear. 
-   Press [g]. CMake will generate the files and exit. 
-
-After the build files (e.g. the Makefile under Linux) have been generated, you can proceed as explained above. 
-The same procedure outlined above is used when using the GUI of CMake, e.g. under Windows or Mac. 
+	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
+          together with the Developer's Guide. GURLS is designed for easy expansion. Give it a try!
+	  Remark: GURLS++ is still under development please contact the authors before starting your own development.

@@ -27,6 +27,12 @@ The GURLS webpage can be found at: http://lcsl.mit.edu/gurls.html
 
 Installation
 ============
+
+You can download the precompiled binaries here
+	https://github.com/CBCL/GURLS/tree/master/precompiled-binaries
+and start using GURLS++, however such a version may be not optimized for your machine.
+
+If you want a version which is optimized for your machine, follow the steps described in the rest of the section.
  
 1) Dependencies
 ---------------
@@ -183,8 +189,8 @@ Documentation
 	
 - C++ Code Documentation can be found at: http://cbcl.github.io/GURLS/
 
-- The list of all the available methods of the libraries can be found at
-	https://github.com/CBCL/GURLS/wiki/4-Available-methods#wiki-GURLS_tasks-2
+- Description of the available methods, demos and data for each package can be found at
+	https://github.com/CBCL/GURLS/wiki/4-Code-Description#wiki-GURLS-2
 
 - Further documentation	
 	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
