@@ -454,7 +454,7 @@ void distance_transposed(const T* A, const T* B, const int cols, const int A_row
             for(int k=0; k<cols; ++k)
             {
                 //          d(i,j) = d(i,j) + (a(i,k) - b(j,k))^2;
-                const double diff = A[i+A_rows*k]-B[j+B_rows*k];
+                const T diff = A[i+A_rows*k]-B[j+B_rows*k];
                 D[i+A_rows*j] += diff*diff;
             }
 
@@ -487,7 +487,7 @@ void distance_transposed_vm(const T* A, const T* B, const int cols, const int B_
         for(int k=0; k<cols; ++k)
         {
 //            d(j) = d(j) + (a(k) - b(j,k))^2;
-            const double diff = *A_it - *B_it;
+            const T diff = *A_it - *B_it;
             Dj += diff*diff;
 
             A_it += incrA;
