@@ -110,6 +110,8 @@ public:
 //    virtual void importModel(const std::string &fileName);
 
     virtual void setNparams(unsigned long value);
+    virtual void setParam(double value);
+
     virtual void setSplitProportion(double value);
     virtual void setProblemType(ProblemType value);
 

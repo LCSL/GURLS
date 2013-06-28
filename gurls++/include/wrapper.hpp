@@ -12,7 +12,7 @@ GurlsWrapper<T>::GurlsWrapper(const std::string& name):opt(NULL), name(name)
     opt = new GurlsOptionsList(name, true);
 
     setSplitProportion(0.2);
-    setNparams(1);
+    setNparams(20);
     setProblemType(CLASSIFICATION);
 }
 
@@ -67,6 +67,23 @@ template <typename T>
 void GurlsWrapper<T>::setNparams(unsigned long value)
 {
     opt->getOptValue<OptNumber>("nlambda") = value;
+
+    if(opt->hasOpt("paramsel.lambdas"))
+        opt->getOptAs<GurlsOptionsList>("paramsel")->removeOpt("lambdas");
+}
+
+template <typename T>
+void GurlsWrapper<T>::setParam(double value)
+{
+    if(!opt->hasOpt("paramsel"))
+        opt->addOpt("paramsel", new GurlsOptionsList("paramsel"));
+
+    if(opt->hasOpt("paramsel.lambdas"))
+        opt->getOptValue<OptNumber>("paramsel.lambdas") = value;
+    else
+        opt->getOptAs<GurlsOptionsList>("paramsel")->addOpt("lambdas", new OptNumber(value));
+
+    setNparams(1);
 }
 
 template <typename T>
