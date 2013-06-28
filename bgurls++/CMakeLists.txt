@@ -1,83 +1,107 @@
+# Copyright (C) 2011-2013  Istituto Italiano di Tecnologia, Massachussets Institute of Techology
+# Authors: Elena Ceseracciu <elena.ceseracciu@iit.it>, Matteo Santoro <msantoro@mit.edu>
+
 cmake_minimum_required(VERSION 2.6)
 
 if ( ${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR} )
     message( FATAL_ERROR "You are trying to run CMake from the bgurls++ directory, instead of just from the top directory")
 endif()
 
-project(bgurls++)
-
-get_filename_component(GURLS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../gurls++" ABSOLUTE)
-
 set(GURLSLIBRARY bgurls++)
-set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-set(HDRDIR ${CMAKE_CURRENT_SOURCE_DIR}/include/)
-set(DEMODIR ${CMAKE_CURRENT_SOURCE_DIR}/demo/)
-set(TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
-set(MISCDIR ${CMAKE_CURRENT_SOURCE_DIR}/misc/)
+project(${GURLSLIBRARY})
 
-set(GURLS_SRCDIR ${GURLS_ROOT}/src/)
-set(GURLS_HDRDIR ${GURLS_ROOT}/include/)
-
-add_definitions( -D_BGURLS )
+#get_filename_component(GURLS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../gurls++" ABSOLUTE)
 
 
-file(GLOB bgurls_headers RELATIVE ${PROJECT_SOURCE_DIR} ${HDRDIR}*.h*)
-file(GLOB gurls_headers RELATIVE ${PROJECT_SOURCE_DIR} ${GURLS_HDRDIR}*.h*)
-set(gurls_headers ${gurls_headers} ${bgurls_headers})
+#set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+#set(DEMODIR ${CMAKE_CURRENT_SOURCE_DIR}/demo/)
+#set(TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
+#set(MISCDIR ${CMAKE_CURRENT_SOURCE_DIR}/misc/)
 
-file(GLOB bgurls_sources RELATIVE ${PROJECT_SOURCE_DIR} ${SRCDIR}*.cpp)
-file(GLOB gurls_sources RELATIVE ${PROJECT_SOURCE_DIR} ${GURLS_SRCDIR}*.cpp)
-set(gurls_sources ${gurls_sources} ${bgurls_sources})
+#set(GURLS_SRCDIR ${GURLS_ROOT}/src/)
+#set(GURLS_HDRDIR ${GURLS_ROOT}/include/)
 
-include_directories( ${HDRDIR} ${GURLS_HDRDIR})
+# add_definitions( -D_BGURLS )
 
 
-if(GURLS_USE_EXTERNAL_HDF5)
+#file(GLOB bgurls_headers RELATIVE ${PROJECT_SOURCE_DIR} ${HDRDIR}*.h*)
+#file(GLOB gurls_headers RELATIVE ${PROJECT_SOURCE_DIR} ${GURLS_HDRDIR}*.h*)
+set(gurls_headers       include/bgurls.h
+                        include/bigarray.h
+                        include/bigarray.hpp
+                        include/bigmath.h
+                        include/bigoptimization.h
+                        include/bigoptimizer_rlspegasos.h
+                        include/bigoptimizer_rlsprimal.h
+                        include/bigoptlist.h
+                        include/bigparamsel_calibratesgd.h
+                        include/bigparamsel.h
+                        include/bigparamsel_hoprimal.h
+                        include/bigperf.h
+                        include/bigperf_macroavg.h
+                        include/bigpred.h
+                        include/bigpred_primal.h
+                        include/bigsplit.h
+                        include/bigsplit_ho.h
+                        include/mpi_utils.h
+    )
 
-    if(WIN32)
-      set(prefix "")
-      set(suffix ".lib")
-    else()
-      set(prefix "lib")
-      set(suffix ".a")
-    endif()
+set(gurls_sources       src/bigarray.cpp
+                        src/bigmath.cpp
+                        src/bigoptlist.cpp
+                        src/mpi_utils.cpp
+    )
+set(BGURLS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ ${GURLS_INCLUDE_DIRS} ${MPI_CXX_INCLUDE_PATH} ${HDF5_INCLUDE_DIRS})
 
-    set(MPI_COMPILE_FLAGS "")
-    set(MPI_LINK_FLAGS "-Wl,-rpath  -Wl,${GURLS_EXTERNALS_PREFIX}/lib")
-    set(MPI_INCLUDE_PATH ${GURLS_EXTERNALS_PREFIX}/include)
+include_directories( ${BGURLS_INCLUDE_DIRS} )
+add_definitions(${HDF5_DEFINITIONS})
 
-    set(HDF5_INCLUDE_DIRS ${GURLS_EXTERNALS_PREFIX}/include)
-    set(HDF5_LIBRARY_DIRS ${GURLS_EXTERNALS_PREFIX}/lib)
-    set(HDF5_DEFINITIONS -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_BSD_SOURCE)
-
-    set(ZLIB_INCLUDE_DIRS ${GURLS_EXTERNALS_PREFIX}/include)
-    set(ZLIB_LIBRARY_DIRS ${GURLS_EXTERNALS_PREFIX}/lib)
-    set(ZLIB_DEFINITIONS "")
-
-    set(MPI_LIBRARIES mpichcxx mpich opa mpl rt pthread)
-    set(HDF5_LIBRARIES m ${prefix}hdf5${suffix})
-    if(MSVC)
-        set(ZLIB_LIBRARIES zlibstatic.lib)
-    else()
-        set(ZLIB_LIBRARIES libz.a)
-    endif()
-
-    set(MPI_FOUND ON)
-    set(HDF5_FOUND ON)
-    set(ZLIB_FOUND ON)
-
-else(GURLS_USE_EXTERNAL_HDF5)
-
-    find_package(MPI REQUIRED)
-
-    find_package(HDF5 COMPONENTS C REQUIRED)
-    mark_as_advanced(HDF5_DIR)
-
-    find_package(ZLIB REQUIRED)
-
-    #set ( ZLIB_LIBRARIES ${HDF5_z_LIBRARY})
-
-endif(GURLS_USE_EXTERNAL_HDF5)
+# if(GURLS_USE_EXTERNAL_HDF5)
+# 
+#     if(WIN32)
+#       set(prefix "")
+#       set(suffix ".lib")
+#     else()
+#       set(prefix "lib")
+#       set(suffix ".a")
+#     endif()
+# 
+#     set(MPI_COMPILE_FLAGS "")
+#     set(MPI_LINK_FLAGS "-Wl,-rpath  -Wl,${GURLS_EXTERNALS_PREFIX}/lib")
+#     set(MPI_INCLUDE_PATH ${GURLS_EXTERNALS_PREFIX}/include)
+# 
+#     set(HDF5_INCLUDE_DIRS ${GURLS_EXTERNALS_PREFIX}/include)
+#     set(HDF5_LIBRARY_DIRS ${GURLS_EXTERNALS_PREFIX}/lib)
+#     set(HDF5_DEFINITIONS -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_BSD_SOURCE)
+# 
+#     set(ZLIB_INCLUDE_DIRS ${GURLS_EXTERNALS_PREFIX}/include)
+#     set(ZLIB_LIBRARY_DIRS ${GURLS_EXTERNALS_PREFIX}/lib)
+#     set(ZLIB_DEFINITIONS "")
+# 
+#     set(MPI_LIBRARIES mpichcxx mpich opa mpl rt pthread)
+#     set(HDF5_LIBRARIES m ${prefix}hdf5${suffix})
+#     if(MSVC)
+#         set(ZLIB_LIBRARIES zlibstatic.lib)
+#     else()
+#         set(ZLIB_LIBRARIES libz.a)
+#     endif()
+# 
+#     set(MPI_FOUND ON)
+#     set(HDF5_FOUND ON)
+#     set(ZLIB_FOUND ON)
+# 
+# else(GURLS_USE_EXTERNAL_HDF5)
+# 
+#     find_package(MPI REQUIRED)
+# 
+#     find_package(HDF5 COMPONENTS C REQUIRED)
+#     mark_as_advanced(HDF5_DIR)
+# 
+#     find_package(ZLIB REQUIRED)
+# 
+#     #set ( ZLIB_LIBRARIES ${HDF5_z_LIBRARY})
+# 
+# endif(GURLS_USE_EXTERNAL_HDF5)
 
 
 #message("MPI_COMPILE_FLAGS=${MPI_COMPILE_FLAGS}")
@@ -97,23 +121,24 @@ endif(GURLS_USE_EXTERNAL_HDF5)
 #message("ZLIB_LIBRARIES=${ZLIB_LIBRARIES}")
 
 
-if(MPI_FOUND)
-    set(CMAKE_CXX_COMPILE_FLAGS ${CMAKE_CXX_COMPILE_FLAGS} ${MPI_COMPILE_FLAGS})
-    set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_LINK_FLAGS})
-    include_directories(${MPI_INCLUDE_PATH})
-endif(MPI_FOUND)
+# if(MPI_FOUND)
+    set(CMAKE_CXX_COMPILE_FLAGS ${CMAKE_CXX_COMPILE_FLAGS} ${MPI_CXX_COMPILE_FLAGS})
+    set(CMAKE_CXX_LINK_FLAGS ${CMAKE_CXX_LINK_FLAGS} ${MPI_CXX_LINK_FLAGS})
+#     include_directories(${MPI_INCLUDE_PATH})
+# endif(MPI_FOUND)
+# 
+# if(HDF5_FOUND)
+#     include_directories(${HDF5_INCLUDE_DIRS})
+#     link_directories(${HDF5_LIBRARY_DIRS})
+#     add_definitions(${HDF5_DEFINITIONS})
+# endif(HDF5_FOUND)
+# 
+# if(ZLIB_FOUND)
+#     include_directories(${ZLIB_INCLUDE_DIRS})
+#     link_directories(${ZLIB_LIBRARY_DIRS})
+#     add_definitions(${ZLIB_DEFINITIONS})
+# endif(ZLIB_FOUND)
 
-if(HDF5_FOUND)
-    include_directories(${HDF5_INCLUDE_DIRS})
-    link_directories(${HDF5_LIBRARY_DIRS})
-    add_definitions(${HDF5_DEFINITIONS})
-endif(HDF5_FOUND)
-
-if(ZLIB_FOUND)
-    include_directories(${ZLIB_INCLUDE_DIRS})
-    link_directories(${ZLIB_LIBRARY_DIRS})
-    add_definitions(${ZLIB_DEFINITIONS})
-endif(ZLIB_FOUND)
 
 
 option(BGURLSPP_USE_MPI_IO "Access HDF5 files using MPI_IO instead of MPI_POSIX" OFF)
@@ -121,15 +146,16 @@ if(BGURLSPP_USE_MPI_IO)
     add_definitions(-DUSE_MPIIO)
 endif(BGURLSPP_USE_MPI_IO)
 
-
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
-target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES} ${MPI_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(${GURLSLIBRARY} ${GURLS_LIBRARIES} ${MPI_CXX_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES}) #add gurls++ libs
+message("gurls libraries  ${GURLS_LIBRARIES} ")
+set(BGURLS_LIBRARIES ${GURLSLIBRARY} ${GURLS_LIBRARIES} ${MPI_CXX_LIBRARIES} ${HDF5_LIBRARIES} ${ZLIB_LIBRARIES} CACHE INTERNAL "")
 
 if(GURLS_USE_EXTERNAL_BOOST)
-    add_dependencies(${GURLSLIBRARY} boost)
+    add_dependencies(${GURLSLIBRARY} buildBoost)
 endif(GURLS_USE_EXTERNAL_BOOST)
 if(GURLS_USE_EXTERNAL_HDF5)
-    add_dependencies(${GURLSLIBRARY} hdf5)
+    add_dependencies(${GURLSLIBRARY} buildHdf5)
 endif(GURLS_USE_EXTERNAL_HDF5)
 
 INSTALL(TARGETS ${GURLSLIBRARY}
@@ -151,15 +177,15 @@ if(MSVC)
 endif(MSVC)
 
 
-set(GURLS_LINK_LIBRARIES
-    ${GURLSLIBRARY}
-    ${GurlsDependencies_LIBRARIES}
-    ${MPI_LIBRARIES}
-    ${HDF5_LIBRARIES}
-    ${ZLIB_LIBRARIES}
-)
+# set(GURLS_LINK_LIBRARIES
+#     ${GURLSLIBRARY}
+#     gurls++ #mancano le dipendenze di gurls++
+#     ${MPI_LIBRARIES}
+#     ${HDF5_LIBRARIES}
+#     ${ZLIB_LIBRARIES}
+# )
 
-set(BGURLSPP_BUILD_DEMO ON CACHE BOOL "")
+option(BGURLSPP_BUILD_DEMO "" ON)
 if(BGURLSPP_BUILD_DEMO)
 
     #SET(MATIO_INCLUDE_DIR "" CACHE PATH "Libmatio include dir")
@@ -170,8 +196,8 @@ if(BGURLSPP_BUILD_DEMO)
     #include_directories( ${MATIO_INCLUDE_DIR})
     #link_directories(${MATIO_LIBRARIES_DIR})
 
-    add_all_executables(${DEMODIR} ${GURLS_LINK_LIBRARIES})
-
+    #add_all_executables(${DEMODIR} ${GURLS_LINK_LIBRARIES})
+    add_subdirectory(demo)
 endif(BGURLSPP_BUILD_DEMO)
 
 #set(BGURLSPP_BUILD_TEST OFF CACHE BOOL "")
@@ -188,14 +214,15 @@ endif(BGURLSPP_BUILD_DEMO)
 #    add_all_executables(${TESTDIR} ${GURLS_LINK_LIBRARIES})
 #endif(BGURLSPP_BUILD_TEST)
 
-set(BGURLSPP_BUILD_MISC OFF CACHE BOOL "")
+option(BGURLSPP_BUILD_MISC "" OFF)
 mark_as_advanced(FORCE BGURLSPP_BUILD_MISC)
 if(BGURLSPP_BUILD_MISC)
-    add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
+    add_subdirectory(misc)
+#    add_all_executables(${MISCDIR} ${GURLS_LINK_LIBRARIES})
 endif(BGURLSPP_BUILD_MISC)
 
 # add a target to generate API documentation with Doxygen
-set(BGURLSPP_BUILD_DOC OFF CACHE BOOL "Build Doxygen documentation")
+option(BGURLSPP_BUILD_DOC "Build Doxygen documentation" OFF)
 if(BGURLSPP_BUILD_DOC)
     find_package(Doxygen REQUIRED)
 
