@@ -79,12 +79,11 @@ public:
     gMat2D<T>* eval_largescale(const gMat2D<T> &X);
 
 
-
 //    using GurlsWrapper<T>::eval;
 
-    void setNNystrom(unsigned long n_nystrom);
+    void setParam(double value);
 
-    void rescale(gMat2D<T> &y);
+//    void rescale(gMat2D<T> &y);
 
 protected:
     unsigned long *getIndices(const gMat2D<T>&y, const unsigned long n, const unsigned long t, const unsigned long n_nystrom, unsigned long &length);
