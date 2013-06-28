@@ -50,14 +50,15 @@ namespace gurls
 /**
   * \ingroup Wrappers
   * \brief RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update
-  * of the RLS estimator without retraining.
+  * of the RLS estimator with retraining capability.
   *
   * Initial parameter selection and training are carried out on a initial set of samples. The
   * computation of the RLS estimator is carried out by the class RLSPrimalRecInit,
   * which stores all information necessary for efficient recursive update in the options structure.
   * Once the information about initial training is stored in the options structure, given a
-  * new input–output pair, the RLS estimator can be efficiently updated via the method update().
-  * Every time a new input-output pair is available, method update() can be invoked again.
+  * new input-output pair, the RLS estimator can be efficiently updated via the method update().
+  * Every time a new input-output pair is available, method update() can be invoked again. Parameter selection
+  * and RLS estimation ( method retrain()) can be repeated after any number of online updates.
   * Finally, the eval() method can be used on test data.
   */
 template<typename T>
@@ -94,52 +95,6 @@ public:
       * \returns Matrix of predicted labels
       */
     gMat2D<T>* eval(const gMat2D<T> &X);
-
-
-    using GurlsWrapper<T>::eval;
-
-};
-
-/**
-  * \ingroup Wrappers
-  * \brief RecursiveRLSRetrainWrapper is the sub-class of GurlsWrapper that implements recursive update
-  * of the RLS estimator with retraining capability.
-  *
-  * Initial parameter selection and training are carried out on a initial set of samples. The
-  * computation of the RLS estimator is carried out by the class RLSPrimalRecInit,
-  * which stores all information necessary for efficient recursive update in the options structure.
-  * Once the information about initial training is stored in the options structure, given a
-  * new input–output pair, the RLS estimator can be efficiently updated via the method update().
-  * Every time a new input-output pair is available, method update() can be invoked again. Parameter selection
-  * and RLS estimation ( method retrain()) can be repeated after any number of online updates.
-  * Finally, the eval() method can be used on test data.
-  */
-template<typename T>
-class RecursiveRLSRetrainWrapper: public RecursiveRLSWrapper<T>
-{
-public:
-    /**
-      * Constructor
-      *
-      * \param name Name of the option's structure that will be initialized
-      */
-    RecursiveRLSRetrainWrapper(const std::string& name);
-
-    /**
-      * Initial parameter selection and training
-      *
-      * \param X Input data matrix
-      * \param Y Labels matrix
-      */
-    void train(const gMat2D<T> &X, const gMat2D<T> &y);
-
-    /**
-      * Estimator update
-      *
-      * \param X Input data vector
-      * \param Y Labels vector
-      */
-    void update(const gVec<T> &X, const gVec<T> &y);
 
     /**
       * Selection of the new regularization parameter.
