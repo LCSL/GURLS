@@ -757,9 +757,12 @@ gMat2D<T>* NystromWrapper<T>::eval_largescale(const gMat2D<T> &X)
 template <typename T>
 void NystromWrapper<T>::setParam(double value)
 {
-    setNparams(1);
+    this->setNparams(1);
 
-    this->opt->getOptValue<OptNumber>("n_nystrom") = value;
+    if(this->opt->hasOpt("n_nystrom"))
+        this->opt->template getOptValue<OptNumber>("n_nystrom") = value;
+    else
+        this->opt->addOpt("n_nystrom", new OptNumber(value));
 }
 
 //template <typename T>
