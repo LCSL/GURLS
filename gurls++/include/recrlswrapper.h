@@ -52,14 +52,12 @@ namespace gurls
   * \brief RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update
   * of the RLS estimator with retraining capability.
   *
-  * Initial parameter selection and training are carried out on a initial set of samples. The
-  * computation of the RLS estimator is carried out by the class RLSPrimalRecInit,
+  * Initial parameter selection and training are carried out on a initial set of samples via method train() 
   * which stores all information necessary for efficient recursive update in the options structure.
-  * Once the information about initial training is stored in the options structure, given a
-  * new input-output pair, the RLS estimator can be efficiently updated via the method update().
-  * Every time a new input-output pair is available, method update() can be invoked again. Parameter selection
-  * and RLS estimation ( method retrain()) can be repeated after any number of online updates.
-  * Finally, the eval() method can be used on test data.
+  * Once the information about initial training is stored, given a new input-output pair, 
+  * the RLS estimator can be efficiently updated via the method update().
+  * Every time a new input-output pair is available, method update() can be invoked again. Parameter selection and RLS estimation ( method retrain()) can be repeated after any number of online updates.
+  * Finally, the eval() method estimates the output for new data.
   */
 template<typename T>
 class RecursiveRLSWrapper: public GurlsWrapper<T>

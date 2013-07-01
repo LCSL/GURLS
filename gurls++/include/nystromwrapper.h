@@ -49,7 +49,13 @@ namespace gurls
 
 /**
   * \ingroup Wrappers
-  * \brief
+  * \brief NystromWrapper is the sub-class of GurlsWrapper that allows to train a possibly non linear model 
+  * for large data sets, for which the complete nxn kernel matrix may not fit into RAM. 
+  * NystromWrapper implements Nystrom Reguarization, which solves the kernel Least Square problem approximately, 
+  * by replacing the kernel matrix with a randomized low rank approximation. The default kernel is the Gaussian kernel.
+  * The regularization parameter, which coincides with the rank is estimated by the wrapper via method train().
+  * The eval() method estimates the output for new data.
+  *
   */
 template<typename T>
 class NystromWrapper: public KernelWrapper<T>

@@ -49,7 +49,9 @@ namespace gurls
 
 /**
   * \ingroup Wrappers
-  * \brief
+  * \brief RLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a linear model. 
+  * The regularization parameter is estimated by the wrapper (default) or explicitely given in input by the user via method train().
+  * The eval() method estimates the output for new data.
   *
   */
 template<typename T>

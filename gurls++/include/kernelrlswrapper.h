@@ -49,8 +49,9 @@ namespace gurls
 
 /**
   * \ingroup Wrappers
-  * \brief
-  *
+  * \brief KernelRLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a possibly non-linear model by resorting to kernel methods. 
+  * The regularization parameter (and the kernel parameter) is estimated by the wrapper (default) or explicitely given in input by the user via method train().
+  * The eval() method estimates the output for new data.  *
   */
 template<typename T>
 class KernelRLSWrapper: public KernelWrapper<T>
