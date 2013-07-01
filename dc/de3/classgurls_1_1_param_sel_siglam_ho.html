@@ -350,7 +350,7 @@ template&lt;typename T &gt; </div>
     T* row = <span class="keyword">new</span> T[t];
 
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> nholdouts = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">long</span><span class="keyword">&gt;</span>(opt.getOptAsNumber(<span class="stringliteral">&quot;nholdouts&quot;</span>));
-    T* work = <span class="keyword">new</span> T[std::max(nholdouts, t+1)];
+    T* work = <span class="keyword">new</span> T[nholdouts];
 
 <span class="comment">//    for i = 1:opt.nsigma</span>
     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;nsigma; ++i)
@@ -379,7 +379,7 @@ template&lt;typename T &gt; </div>
         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j=0;j&lt;nlambda;++j)
         {
             <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(perf_median, nlambda, t, j, row);
-            perf[j] = <a class="code" href="../../db/d4e/namespacegurls.html#a4dc32791921222de5ddf5b4874a7f974" title="Computes the sum of all elements of a vector.">sumv</a>(row, t, work);
+            perf[j] = <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(row, t);
         }
 
 <span class="comment">//        guesses(i,:) = median(cell2mat(paramsel.guesses&#39;),1);</span>
@@ -504,7 +504,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../dc/de3/classgurls_1_1_param_sel_siglam_ho.html">ParamSelSiglamHo</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

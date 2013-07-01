@@ -805,7 +805,19 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00874"></a>00874     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a58f2e24d9280b3bece4af72bc9c433da" title="Prototype for Lapack DGELSS.">dgelss_</a>( m, n, nrhs, a, lda, b, ldb, s, rcond, rank, work, lwork, info);
 <a name="l00875"></a>00875 }
 <a name="l00876"></a>00876 
-<a name="l00877"></a>00877 }
+<a name="l00880"></a>00880 <span class="keyword">template</span>&lt;&gt;
+<a name="l00881"></a><a class="code" href="../../db/d4e/namespacegurls.html#a006445be54f71fa4cb0d5b10b9d2f626">00881</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">swap</a>( <span class="keywordtype">int</span> n, <span class="keywordtype">float</span> *x, <span class="keywordtype">int</span> incx, <span class="keywordtype">float</span> *y, <span class="keywordtype">int</span> incy)
+<a name="l00882"></a>00882 {
+<a name="l00883"></a>00883     <a class="code" href="../../dd/df1/blas__lapack_8h.html#af62c82da55644958407e62d9410eb302" title="Prototype for Blas SSWAP.">sswap_</a>(&amp;n, x, &amp;incx, y, &amp;incy);
+<a name="l00884"></a>00884 }
+<a name="l00885"></a>00885 
+<a name="l00889"></a>00889 <span class="keyword">template</span>&lt;&gt;
+<a name="l00890"></a><a class="code" href="../../db/d4e/namespacegurls.html#a10f8f9bd5319436f8f9c5d954dc030ae">00890</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">swap</a>( <span class="keywordtype">int</span> n, <span class="keywordtype">double</span> *x, <span class="keywordtype">int</span> incx, <span class="keywordtype">double</span> *y, <span class="keywordtype">int</span> incy)
+<a name="l00891"></a>00891 {
+<a name="l00892"></a>00892     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a9a48a93cd6cc23964843ae3874459210" title="Prototype for Blas DSWAP.">dswap_</a>(&amp;n, x, &amp;incx, y, &amp;incy);
+<a name="l00893"></a>00893 }
+<a name="l00894"></a>00894 
+<a name="l00895"></a>00895 }
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -826,7 +838,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>gmath.cpp</b>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:03 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

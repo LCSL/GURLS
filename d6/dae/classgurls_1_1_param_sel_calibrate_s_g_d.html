@@ -234,8 +234,6 @@ template&lt;typename T &gt; </div>
 
     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* idx = <span class="keyword">new</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>[n]; <span class="comment">//will use only the first subsize elements</span>
     T* lambdas = <span class="keyword">new</span> T[n_estimates];
-    T* work = <span class="keyword">new</span> T[std::max(n_estimates+1, std::max(X.cols(), Y.cols()))];
-
 
     gMat2D&lt;T&gt; Mx(subsize, t);
     gMat2D&lt;T&gt; My(subsize, Y.cols());
@@ -247,7 +245,7 @@ template&lt;typename T &gt; </div>
         <a class="code" href="../../db/d4e/namespacegurls.html#a75f6afe3bf7f7be79d66714593f5c7bc" title="Generates a vector containing a random permutation of the values from start to start+n inclusive...">randperm</a>(n, idx);
 
 <span class="comment">//        M = X(idx,:);</span>
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, t, idx, subsize, Mx.getData()<span class="comment">/*, work*/</span>);
+        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, t, idx, subsize, Mx.getData());
 
 <span class="comment">//        if ~exist([opt.calibfile &#39;.mat&#39;],&#39;file&#39;)</span>
 <span class="comment">//            fprintf(&#39;\n\tCalibrating...&#39;);</span>
@@ -260,7 +258,7 @@ template&lt;typename T &gt; </div>
 <span class="comment">//            tmp.singlelambda = opt.singlelambda;</span>
 
 <span class="comment">//            gurls(M,y(idx,:),tmp,1);</span>
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), Y.rows(), Y.cols(), idx, subsize, My.getData()<span class="comment">/*, work*/</span>);
+        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), Y.rows(), Y.cols(), idx, subsize, My.getData());
 
         g.run(Mx, My, *tmp, <span class="stringliteral">&quot;one&quot;</span>);
 
@@ -298,7 +296,7 @@ template&lt;typename T &gt; </div>
 
 <span class="comment">//    params.lambdas = mean(lambdas);</span>
     gMat2D&lt;T&gt; *lambda = <span class="keyword">new</span> gMat2D&lt;T&gt;(1,1);
-    lambda-&gt;getData()[0] = <a class="code" href="../../db/d4e/namespacegurls.html#a4dc32791921222de5ddf5b4874a7f974" title="Computes the sum of all elements of a vector.">sumv</a>(lambdas, n_estimates, work)/n_estimates;
+    lambda-&gt;getData()[0] = <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(lambdas, n_estimates)/n_estimates;
     paramsel-&gt;addOpt(<span class="stringliteral">&quot;lambdas&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*lambda));
 
 
@@ -309,7 +307,6 @@ template&lt;typename T &gt; </div>
 
     <span class="keyword">delete</span> tmp;
     <span class="keyword">delete</span>[] lambdas;
-    <span class="keyword">delete</span>[] work;
 
     <span class="keywordflow">return</span> paramsel;
 }
@@ -396,7 +393,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d6/dae/classgurls_1_1_param_sel_calibrate_s_g_d.html">ParamSelCalibrateSGD</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

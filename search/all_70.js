@@ -31,5 +31,6 @@ var searchData=
   ['predkerneltraintest',['PredKernelTrainTest',['../d3/dd7/classgurls_1_1_pred_kernel_train_test.html',1,'gurls']]],
   ['predprimal',['PredPrimal',['../d8/d06/classgurls_1_1_pred_primal.html',1,'gurls']]],
   ['printall',['printAll',['../dc/d34/classgurls_1_1_gurls_options_list.html#a7464fb753696da7cb6637f1bfa719f20',1,'gurls::GurlsOptionsList']]],
+  ['probtype',['probType',['../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb',1,'gurls::GurlsWrapper']]],
   ['push_5fback',['push_back',['../da/d90/classgurls_1_1_opt_array.html#a8d6dabe2d456204db6967e14aacf0f22',1,'gurls::OptArray']]]
 ];

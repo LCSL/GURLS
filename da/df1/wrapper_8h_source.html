@@ -101,77 +101,130 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="title">wrapper.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef GURLS_WRAPPER_H</span>
-<a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define GURLS_WRAPPER_H</span>
-<a name="l00003"></a>00003 <span class="preprocessor"></span>
-<a name="l00004"></a>00004 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00005"></a>00005 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00006"></a>00006 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
-<a name="l00007"></a>00007 
-<a name="l00008"></a>00008 <span class="keyword">namespace </span>gurls
-<a name="l00009"></a>00009 {
-<a name="l00010"></a>00010 
-<a name="l00015"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">00015</a> <span class="keyword">class </span><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers.">GurlsWrapper</a>
-<a name="l00016"></a>00016 {
-<a name="l00017"></a>00017 <span class="keyword">protected</span>:
-<a name="l00018"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">00018</a>     <span class="keyword">typedef</span> <span class="keywordtype">double</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a>;   
-<a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="keyword">public</span>:
-<a name="l00026"></a>00026     <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aaf0be6461aae1d244296cfffaa0b47f5" title="Constructor.">GurlsWrapper</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>);
-<a name="l00027"></a>00027 
-<a name="l00031"></a>00031     <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aff7022c28458fe1cab2fdbc8dcc7941f" title="Destructor.">~GurlsWrapper</a>();
-<a name="l00032"></a>00032 
-<a name="l00039"></a>00039     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aac409539e1a97897b0f87244700b9f0e" title="Initial parameter selection and training.">train</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;y) = 0;
-<a name="l00040"></a>00040 
-<a name="l00047"></a>00047     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a766265bc77041c4f172fdf6203d25073" title="Estimator update.">update</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;y) = 0;
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">  * The GURLS Package in C++</span>
+<a name="l00003"></a>00003 <span class="comment">  *</span>
+<a name="l00004"></a>00004 <span class="comment">  * Copyright (C) 2011-1013, IIT@MIT Lab</span>
+<a name="l00005"></a>00005 <span class="comment">  * All rights reserved.</span>
+<a name="l00006"></a>00006 <span class="comment">  *</span>
+<a name="l00007"></a>00007 <span class="comment">  * author:  M. Santoro</span>
+<a name="l00008"></a>00008 <span class="comment">  * email:   msantoro@mit.edu</span>
+<a name="l00009"></a>00009 <span class="comment">  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html</span>
+<a name="l00010"></a>00010 <span class="comment">  *</span>
+<a name="l00011"></a>00011 <span class="comment">  * Redistribution and use in source and binary forms, with or without</span>
+<a name="l00012"></a>00012 <span class="comment">  * modification, are permitted provided that the following conditions</span>
+<a name="l00013"></a>00013 <span class="comment">  * are met:</span>
+<a name="l00014"></a>00014 <span class="comment">  *</span>
+<a name="l00015"></a>00015 <span class="comment">  *     * Redistributions of source code must retain the above</span>
+<a name="l00016"></a>00016 <span class="comment">  *       copyright notice, this list of conditions and the following</span>
+<a name="l00017"></a>00017 <span class="comment">  *       disclaimer.</span>
+<a name="l00018"></a>00018 <span class="comment">  *     * Redistributions in binary form must reproduce the above</span>
+<a name="l00019"></a>00019 <span class="comment">  *       copyright notice, this list of conditions and the following</span>
+<a name="l00020"></a>00020 <span class="comment">  *       disclaimer in the documentation and/or other materials</span>
+<a name="l00021"></a>00021 <span class="comment">  *       provided with the distribution.</span>
+<a name="l00022"></a>00022 <span class="comment">  *     * Neither the name(s) of the copyright holders nor the names</span>
+<a name="l00023"></a>00023 <span class="comment">  *       of its contributors or of the Massacusetts Institute of</span>
+<a name="l00024"></a>00024 <span class="comment">  *       Technology or of the Italian Institute of Technology may be</span>
+<a name="l00025"></a>00025 <span class="comment">  *       used to endorse or promote products derived from this software</span>
+<a name="l00026"></a>00026 <span class="comment">  *       without specific prior written permission.</span>
+<a name="l00027"></a>00027 <span class="comment">  *</span>
+<a name="l00028"></a>00028 <span class="comment">  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</span>
+<a name="l00029"></a>00029 <span class="comment">  * &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT</span>
+<a name="l00030"></a>00030 <span class="comment">  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS</span>
+<a name="l00031"></a>00031 <span class="comment">  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE</span>
+<a name="l00032"></a>00032 <span class="comment">  * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,</span>
+<a name="l00033"></a>00033 <span class="comment">  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,</span>
+<a name="l00034"></a>00034 <span class="comment">  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;</span>
+<a name="l00035"></a>00035 <span class="comment">  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER</span>
+<a name="l00036"></a>00036 <span class="comment">  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT</span>
+<a name="l00037"></a>00037 <span class="comment">  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN</span>
+<a name="l00038"></a>00038 <span class="comment">  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<a name="l00039"></a>00039 <span class="comment">  * POSSIBILITY OF SUCH DAMAGE.</span>
+<a name="l00040"></a>00040 <span class="comment">  */</span>
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042 <span class="preprocessor">#ifndef GURLS_WRAPPER_H</span>
+<a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define GURLS_WRAPPER_H</span>
+<a name="l00044"></a>00044 <span class="preprocessor"></span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
 <a name="l00048"></a>00048 
-<a name="l00056"></a>00056     <span class="keyword">virtual</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740" title="Estimates label for a new input point.">eval</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;X, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *index = NULL);
-<a name="l00057"></a>00057 
-<a name="l00064"></a>00064     <span class="keyword">virtual</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740" title="Estimates label for a new input point.">eval</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X) = 0;
-<a name="l00065"></a>00065 
-<a name="l00069"></a>00069     <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0c863c5be6665fff213c53c21a5e7275" title="Returns a const reference to the options structure.">getOpt</a>() <span class="keyword">const</span>;
+<a name="l00049"></a>00049 <span class="keyword">namespace </span>gurls
+<a name="l00050"></a>00050 {
+<a name="l00051"></a>00051 
+<a name="l00056"></a>00056 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00057"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">00057</a> <span class="keyword">class </span><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers.">GurlsWrapper</a>
+<a name="l00058"></a>00058 {
+<a name="l00059"></a>00059 <span class="keyword">public</span>:
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061     <span class="keyword">enum</span> ProblemType{CLASSIFICATION, REGRESSION};
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 
+<a name="l00069"></a>00069     <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#abcc5da870f0149ba91f719cdd3aa39e5" title="Constructor.">GurlsWrapper</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>);
 <a name="l00070"></a>00070 
-<a name="l00071"></a>00071 <span class="keyword">protected</span>:
-<a name="l00075"></a>00075     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e" title="Checks if model has already been trained.">trainedModel</a>();
-<a name="l00076"></a>00076 
-<a name="l00077"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197">00077</a>     std::string <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>;       
-<a name="l00078"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e">00078</a>     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> *<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>;  
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 };
-<a name="l00081"></a>00081 
-<a name="l00096"></a><a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">00096</a> <span class="keyword">class </span><a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update of the RLS esti...">RecursiveRLSWrapper</a>: <span class="keyword">public</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers.">GurlsWrapper</a>
-<a name="l00097"></a>00097 {
-<a name="l00098"></a>00098 <span class="keyword">public</span>:
-<a name="l00104"></a>00104     <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a1d4cda0559759eabb8e6b717c00aa27a" title="Constructor.">RecursiveRLSWrapper</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>);
+<a name="l00074"></a>00074     <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a153c2e8710f652a1a95c588a0aed1edc" title="Destructor.">~GurlsWrapper</a>();
+<a name="l00075"></a>00075 
+<a name="l00082"></a>00082     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a75da78cb7639c0429312feb8e51f994d" title="Initial parameter selection and training.">train</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;y) = 0;
+<a name="l00083"></a>00083 
+<a name="l00091"></a>00091     <span class="keyword">virtual</span> T <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936" title="Estimates label for a new input point.">eval</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;X, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *index = NULL);
+<a name="l00092"></a>00092 
+<a name="l00099"></a>00099     <span class="keyword">virtual</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936" title="Estimates label for a new input point.">eval</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X) = 0;
+<a name="l00100"></a>00100 
+<a name="l00104"></a>00104     <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0614c0414bd0db62a08b01174b2ab71d" title="Returns a const reference to the options structure.">getOpt</a>() <span class="keyword">const</span>;
 <a name="l00105"></a>00105 
-<a name="l00112"></a>00112     <span class="keywordtype">void</span> <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a88574e3f26281bae6e8bc03144548999" title="Initial parameter selection and training.">train</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;y);
-<a name="l00113"></a>00113 
-<a name="l00120"></a>00120     <span class="keywordtype">void</span> <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a9ef0c2dbd6680142b51fbdb26ed7d24a" title="Estimator update.">update</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;y);
-<a name="l00121"></a>00121 
-<a name="l00128"></a>00128     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a6bbb9f908cdd8fbe96ba7df0693f5df8" title="Estimates label for an input matrix.">eval</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X);
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131     <span class="keyword">using</span> <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a6bbb9f908cdd8fbe96ba7df0693f5df8" title="Estimates label for an input matrix.">GurlsWrapper::eval</a>;
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 };
+<a name="l00111"></a>00111     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0133c1e355a22f51a9fe964f4f2a98a1" title="Saves the computed model to file.">saveModel</a>(<span class="keyword">const</span> std::string &amp;fileName);
+<a name="l00112"></a>00112 
+<a name="l00118"></a>00118     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0de63a5c93769292ac9cdd730d45fb9e" title="Loads a computed model from a file.">loadModel</a>(<span class="keyword">const</span> std::string &amp;fileName);
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120 <span class="comment">//    virtual void exportModel(const std::string &amp;fileName);</span>
+<a name="l00121"></a>00121 <span class="comment">//    virtual void importModel(const std::string &amp;fileName);</span>
+<a name="l00122"></a>00122 
+<a name="l00127"></a>00127     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> value);
+<a name="l00128"></a>00128 
+<a name="l00133"></a>00133     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8">setParam</a>(<span class="keywordtype">double</span> value);
 <a name="l00134"></a>00134 
-<a name="l00150"></a><a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html">00150</a> <span class="keyword">class </span><a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html" title="RecursiveRLSRetrainWrapper is the sub-class of GurlsWrapper that implements recursive update of the R...">RecursiveRLSRetrainWrapper</a>: <span class="keyword">public</span> <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update of the RLS esti...">RecursiveRLSWrapper</a>
-<a name="l00151"></a>00151 {
-<a name="l00152"></a>00152 <span class="keyword">public</span>:
-<a name="l00158"></a>00158     <a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#aa22a672032563ea4b576c2f6e5d43dad" title="Constructor.">RecursiveRLSRetrainWrapper</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>);
-<a name="l00159"></a>00159 
-<a name="l00166"></a>00166     <span class="keywordtype">void</span> <a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#a0663cfca88cba931c26a03f3dc848daa" title="Initial parameter selection and training.">train</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;y);
-<a name="l00167"></a>00167 
-<a name="l00174"></a>00174     <span class="keywordtype">void</span> <a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#af90f4999fec41f03c6e1e8ace5f36f1b" title="Estimator update.">update</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a> &amp;y);
-<a name="l00175"></a>00175 
-<a name="l00181"></a>00181     <span class="keywordtype">void</span> <a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#ad6129d179ae6142d0ccf16694a99d3f2" title="Selection of the new regularization parameter.">retrain</a>();
-<a name="l00182"></a>00182 
-<a name="l00183"></a>00183 <span class="keyword">protected</span>:
-<a name="l00184"></a><a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#ac346c941696119fc691c3fa1e6cbc8c9">00184</a>     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#ac346c941696119fc691c3fa1e6cbc8c9" title="Total number of samples used for training.">nTot</a>; 
-<a name="l00185"></a>00185 };
+<a name="l00139"></a>00139     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb">setSplitProportion</a>(<span class="keywordtype">double</span> value);
+<a name="l00140"></a>00140 
+<a name="l00145"></a>00145     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6">setProblemType</a>(ProblemType value);
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148 <span class="keyword">protected</span>:
+<a name="l00152"></a>00152     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c" title="Checks if model has already been trained.">trainedModel</a>();
+<a name="l00153"></a>00153 
+<a name="l00154"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311">00154</a>     std::string <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>;       
+<a name="l00155"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467">00155</a>     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> *<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>;  
+<a name="l00156"></a>00156 
+<a name="l00157"></a><a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb">00157</a>     ProblemType <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb" title="Problem type.">probType</a>;   
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159 };
+<a name="l00160"></a>00160 
+<a name="l00165"></a>00165 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00166"></a><a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html">00166</a> <span class="keyword">class </span><a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html" title="KernelWrapper is the base class for all gurls++ wrappers.">KernelWrapper</a> : <span class="keyword">public</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers.">GurlsWrapper</a>&lt;T&gt;
+<a name="l00167"></a>00167 {
+<a name="l00168"></a>00168 <span class="keyword">public</span>:
+<a name="l00169"></a>00169     <span class="keyword">enum</span> KernelType{RBF, LINEAR<span class="comment">/*, CHISQUARED*/</span>};                   
+<a name="l00170"></a>00170 
+<a name="l00176"></a>00176     <a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#a8ed444338d50aa1ffa2d493bb8b9a0ff" title="Constructor.">KernelWrapper</a>(<span class="keyword">const</span> std::string&amp; <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>);
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178 
+<a name="l00185"></a>00185     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#af6bc7e2db3344647c0f176b99a49fa6a" title="Initial parameter selection and training.">train</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;y) = 0;
 <a name="l00186"></a>00186 
-<a name="l00187"></a>00187 }
-<a name="l00188"></a>00188 <span class="preprocessor">#endif //GURLS_WRAPPER_H</span>
+<a name="l00187"></a>00187 
+<a name="l00192"></a>00192     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#a18f7f3ef9026aee802fe6109e502bbf9">setKernelType</a>(KernelType value);
+<a name="l00193"></a>00193 
+<a name="l00198"></a>00198     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#a7cba2b219eb7740abf262be632bfb3bc">setSigma</a>(<span class="keywordtype">double</span> value);
+<a name="l00199"></a>00199 
+<a name="l00204"></a>00204     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#af5b069b7f1d2751fd4395423758efcd9">setNSigma</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> value);
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206 <span class="keyword">protected</span>:
+<a name="l00207"></a><a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#aeba38aef7c9b9098f7bd6836d92922b3">00207</a>     KernelType <a class="code" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#aeba38aef7c9b9098f7bd6836d92922b3" title="Kernel type used in train and eval.">kType</a>;   
+<a name="l00208"></a>00208 };
+<a name="l00209"></a>00209 
+<a name="l00210"></a>00210 }
+<a name="l00211"></a>00211 
+<a name="l00212"></a>00212 <span class="preprocessor">#include&quot;wrapper.hpp&quot;</span>
+<a name="l00213"></a>00213 
+<a name="l00214"></a>00214 <span class="preprocessor">#endif //GURLS_WRAPPER_H</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -192,7 +245,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>wrapper.h</b>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

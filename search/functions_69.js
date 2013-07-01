@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['icholwrapper',['ICholWrapper',['../df/d35/classgurls_1_1_i_chol_wrapper.html#a71e6a1aef6618ba4969cfbf91688b800',1,'gurls::ICholWrapper']]],
   ['indicesofequalsto',['indicesOfEqualsTo',['../db/d4e/namespacegurls.html#a8ac8d49555f8c0a752a51f302a2611e0',1,'gurls']]],
   ['indicesofmax',['indicesOfMax',['../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea',1,'gurls']]],
   ['inv',['inv',['../db/d4e/namespacegurls.html#aa07000abad8e75e5ea43aa92b9b62447',1,'gurls::inv(const gMat2D&lt; T &gt; &amp;A, gMat2D&lt; T &gt; &amp;Ainv, InversionAlgorithm alg=LU)'],['../db/d4e/namespacegurls.html#aaefdcbd8f4882f2e980cde947d470f54',1,'gurls::inv(const gMat2D&lt; float &gt; &amp;A, gMat2D&lt; float &gt; &amp;Ainv, InversionAlgorithm alg)']]],

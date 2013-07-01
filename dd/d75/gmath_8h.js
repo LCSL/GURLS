@@ -88,9 +88,11 @@ var gmath_8h =
     [ "subMatrixFromColumns", "db/d4e/namespacegurls.html#aaed8f970da9e1fc94319ba8579b88986", null ],
     [ "subMatrixFromRows", "db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c", null ],
     [ "sum", "db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f", null ],
-    [ "sumv", "db/d4e/namespacegurls.html#a4dc32791921222de5ddf5b4874a7f974", null ],
+    [ "sum_col", "db/d4e/namespacegurls.html#a6ad5abc1e6f16da6c801ad8a93dfb731", null ],
+    [ "sumv", "db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250", null ],
     [ "svd", "db/d4e/namespacegurls.html#ac363704394a8b83cc1929f35864064ef", null ],
     [ "svd", "db/d4e/namespacegurls.html#a89bed76dd7920ad067ca0f5548feafdd", null ],
+    [ "swap", "db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e", null ],
     [ "syev", "db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da", null ],
     [ "transpose", "db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e", null ],
     [ "trsm", "db/d4e/namespacegurls.html#a736d5bda0bca8dff4586fc1de89eedc9", null ]

@@ -43,10 +43,14 @@ var hierarchy =
         [ "gurls::OptTaskSequence", "dc/d25/classgurls_1_1_opt_task_sequence.html", null ]
       ] ]
     ] ],
-    [ "gurls::GurlsWrapper", "d5/d55/classgurls_1_1_gurls_wrapper.html", [
-      [ "gurls::RecursiveRLSWrapper", "d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html", [
-        [ "gurls::RecursiveRLSRetrainWrapper", "d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html", null ]
-      ] ]
+    [ "gurls::GurlsWrapper< T >", "d5/d55/classgurls_1_1_gurls_wrapper.html", [
+      [ "gurls::ICholWrapper< T >", "df/d35/classgurls_1_1_i_chol_wrapper.html", null ],
+      [ "gurls::KernelWrapper< T >", "d1/db4/classgurls_1_1_kernel_wrapper.html", [
+        [ "gurls::KernelRLSWrapper< T >", "da/d5c/classgurls_1_1_kernel_r_l_s_wrapper.html", null ],
+        [ "gurls::NystromWrapper< T >", "d2/d25/classgurls_1_1_nystrom_wrapper.html", null ]
+      ] ],
+      [ "gurls::RecursiveRLSWrapper< T >", "d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html", null ],
+      [ "gurls::RLSWrapper< T >", "d0/d09/classgurls_1_1_r_l_s_wrapper.html", null ]
     ] ],
     [ "gurls::Kernel< T >", "dc/d0c/classgurls_1_1_kernel.html", [
       [ "gurls::KernelChisquared< T >", "dc/d82/classgurls_1_1_kernel_chisquared.html", null ],

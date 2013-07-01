@@ -25,7 +25,8 @@ var classgurls_1_1_gurls_options_list =
     [ "hasOpt", "dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b", null ],
     [ "isA", "dc/d34/classgurls_1_1_gurls_options_list.html#a1518c3b6556cf5f32e30d9de435cf7f4", null ],
     [ "load", "dc/d34/classgurls_1_1_gurls_options_list.html#a496536defe8447d982a4799c1db8cdbd", null ],
-    [ "operator<<", "dc/d34/classgurls_1_1_gurls_options_list.html#aaff51a7af9f84b93bdc5ec84be03807e", null ],
+    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#aaa798e1552e96f68e358ec5a89ee7500", null ],
+    [ "operator<<", "dc/d34/classgurls_1_1_gurls_options_list.html#a98e22967178cb64d27244021028b7819", null ],
     [ "operator[]", "dc/d34/classgurls_1_1_gurls_options_list.html#af593ff797328d46f0e645303131234ed", null ],
     [ "printAll", "dc/d34/classgurls_1_1_gurls_options_list.html#a7464fb753696da7cb6637f1bfa719f20", null ],
     [ "removeOpt", "dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011", null ],
@@ -35,6 +36,7 @@ var classgurls_1_1_gurls_options_list =
     [ "toString", "dc/d34/classgurls_1_1_gurls_options_list.html#ae3ae1e5a5a967145304bb08bf3d18a44", null ],
     [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#ab8ca962235eb774ea2c322df52f50afd", null ],
     [ "operator<<", "dc/d34/classgurls_1_1_gurls_options_list.html#a56fd983ad9e424f6f112491a6670f49d", null ],
+    [ "operator<<", "dc/d34/classgurls_1_1_gurls_options_list.html#a0c7003d736ab7e42835940d0035d88e0", null ],
     [ "name", "dc/d34/classgurls_1_1_gurls_options_list.html#ab2c515136d45f9f2caa69051cef75cc3", null ],
     [ "table", "dc/d34/classgurls_1_1_gurls_options_list.html#afaaf60920252145fad8c4eae8c06e4fd", null ],
     [ "type", "d5/dcc/classgurls_1_1_gurls_option.html#aea0687b6adb753e8693061721142905d", null ]

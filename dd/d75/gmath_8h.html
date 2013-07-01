@@ -433,14 +433,21 @@ template&lt;&gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f">gurls::sum</a> (const T *A, T *result, const int A_rows, const int A_cols, const int res_length)  throw (gException)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sums all elements along the rows of a matrix.  <a href="#a77ab8b750db64540cedadd69b6ba433f"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a4dc32791921222de5ddf5b4874a7f974">gurls::sumv</a> (const T *V, const int len, T *work)  throw (gException)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the sum of all elements of a vector.  <a href="#a4dc32791921222de5ddf5b4874a7f974"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a6ad5abc1e6f16da6c801ad8a93dfb731">gurls::sum_col</a> (const T *A, T *result, const int A_rows, const int A_cols)  throw (gException)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sums all elements along the columns of a matrix.  <a href="#a6ad5abc1e6f16da6c801ad8a93dfb731"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250">gurls::sumv</a> (const T *V, const int len)  throw (gException)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the sum of all elements of a vector.  <a href="#a2f1802e90fc6d89dcc35bfef3c369250"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#ac363704394a8b83cc1929f35864064ef">gurls::svd</a> (const gMat2D&lt; T &gt; &amp;A, gMat2D&lt; T &gt; &amp;U, gVec&lt; T &gt; &amp;W, gMat2D&lt; T &gt; &amp;Vt)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the SVD decomposition of a general rectangular matrix: A = U*W*Vt.  <a href="#ac363704394a8b83cc1929f35864064ef"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a89bed76dd7920ad067ca0f5548feafdd">gurls::svd</a> (const T *A, T *&amp;U, T *&amp;S, T *&amp;Vt, const int A_rows, const int A_cols, int &amp;U_rows, int &amp;U_cols, int &amp;S_len, int &amp;Vt_rows, int &amp;Vt_cols, bool econ=false)  throw (gException)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes singular value decomposition of an input matrix A such that A = U*diag(S)*Vt.  <a href="#a89bed76dd7920ad067ca0f5548feafdd"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a07ed08cb9d78507e8d2c849d1cce648e"></a><!-- doxytag: member="gmath.h::swap" ref="a07ed08cb9d78507e8d2c849d1cce648e" args="(int n, T *x, int incx, T *y, int incy)" -->
+template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e">gurls::swap</a> (int n, T *x, int incx, T *y, int incy)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Template function to call BLAS *SWAP routines. <br/></td></tr>
 <tr><td class="memTemplParams" colspan="2"><a class="anchor" id="a6ec8c883faab27e2907625bf8e7677da"></a><!-- doxytag: member="gmath.h::syev" ref="a6ec8c883faab27e2907625bf8e7677da" args="(char *jobz, char *uplo, int *n, T *a, int *lda, T *w, T *work, int *lwork, int *info)" -->
 template&lt;typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da">gurls::syev</a> (char *jobz, char *uplo, int *n, T *a, int *lda, T *w, T *work, int *lwork, int *info)</td></tr>
@@ -476,7 +483,7 @@ template&lt;typename T &gt; </td></tr>
     <ul>
       <li class="navelem"><a class="el" href="../../dd/d75/gmath_8h.html">gmath.h</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

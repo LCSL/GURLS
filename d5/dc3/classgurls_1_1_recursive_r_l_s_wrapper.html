@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GURLS++: gurls::RecursiveRLSWrapper Class Reference</title>
+<title>GURLS++: gurls::RecursiveRLSWrapper&lt; T &gt; Class Template Reference</title>
 
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
@@ -100,77 +100,97 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">gurls::RecursiveRLSWrapper Class Reference<div class="ingroups"><a class="el" href="../../d7/df3/group___wrappers.html">Wrappers</a></div></div>  </div>
+<div class="title">gurls::RecursiveRLSWrapper&lt; T &gt; Class Template Reference<div class="ingroups"><a class="el" href="../../d7/df3/group___wrappers.html">Wrappers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="gurls::RecursiveRLSWrapper" --><!-- doxytag: inherits="gurls::GurlsWrapper" -->
-<p><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update of the RLS esti...">RecursiveRLSWrapper</a> is the sub-class of <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers.">GurlsWrapper</a> that implements recursive update of the RLS estimator without retraining.  
+<p><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update of the RLS esti...">RecursiveRLSWrapper</a> is the sub-class of <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers.">GurlsWrapper</a> that implements recursive update of the RLS estimator with retraining capability.  
  <a href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../dc/d3d/recrlswrapper_8h_source.html">recrlswrapper.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for gurls::RecursiveRLSWrapper:</div>
+Inheritance diagram for gurls::RecursiveRLSWrapper&lt; T &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.png" usemap="#gurls::RecursiveRLSWrapper_map" alt=""/>
-  <map id="gurls::RecursiveRLSWrapper_map" name="gurls::RecursiveRLSWrapper_map">
-<area href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers." alt="gurls::GurlsWrapper" shape="rect" coords="0,0,215,24"/>
-<area href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html" title="RecursiveRLSRetrainWrapper is the sub-class of GurlsWrapper that implements recursive update of the R..." alt="gurls::RecursiveRLSRetrainWrapper" shape="rect" coords="0,112,215,136"/>
+  <img src="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.png" usemap="#gurls::RecursiveRLSWrapper&lt; T &gt;_map" alt=""/>
+  <map id="gurls::RecursiveRLSWrapper&lt; T &gt;_map" name="gurls::RecursiveRLSWrapper&lt; T &gt;_map">
+<area href="../../d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers." alt="gurls::GurlsWrapper&lt; T &gt;" shape="rect" coords="0,0,206,24"/>
 </map>
  </div></div>
 
 <p><a href="../../d1/d62/classgurls_1_1_recursive_r_l_s_wrapper-members.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>ProblemType</b> { <b>CLASSIFICATION</b>, 
+<b>REGRESSION</b>
+ }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740">eval</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X, unsigned long *index=NULL)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for a new input point.  <a href="#ab69930af5bb84391fb8d0b411f1b8740"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a6bbb9f908cdd8fbe96ba7df0693f5df8">eval</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for an input matrix.  <a href="#a6bbb9f908cdd8fbe96ba7df0693f5df8"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c863c5be6665fff213c53c21a5e7275"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::getOpt" ref="a0c863c5be6665fff213c53c21a5e7275" args="() const " -->
-const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0c863c5be6665fff213c53c21a5e7275">getOpt</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936">eval</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;X, unsigned long *index=NULL)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for a new input point.  <a href="#a44a30ea6e847c63ca439984886773936"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a7003559511b8dfc5dc1d77f5cd1d636b">eval</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for an input matrix.  <a href="#a7003559511b8dfc5dc1d77f5cd1d636b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0614c0414bd0db62a08b01174b2ab71d"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::getOpt" ref="a0614c0414bd0db62a08b01174b2ab71d" args="() const " -->
+virtual const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0614c0414bd0db62a08b01174b2ab71d">getOpt</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a const reference to the options structure. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a1d4cda0559759eabb8e6b717c00aa27a">RecursiveRLSWrapper</a> (const std::string &amp;<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197">name</a>)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a1d4cda0559759eabb8e6b717c00aa27a"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a88574e3f26281bae6e8bc03144548999">train</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;y)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial parameter selection and training.  <a href="#a88574e3f26281bae6e8bc03144548999"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a9ef0c2dbd6680142b51fbdb26ed7d24a">update</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X, const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;y)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimator update.  <a href="#a9ef0c2dbd6680142b51fbdb26ed7d24a"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-types"></a>
-Protected Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68a8c674bbda707010a122e58c31a69b"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::T" ref="a68a8c674bbda707010a122e58c31a69b" args="" -->
-typedef double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Data type for matrices cells. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0de63a5c93769292ac9cdd730d45fb9e">loadModel</a> (const std::string &amp;fileName)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a computed model from a file.  <a href="#a0de63a5c93769292ac9cdd730d45fb9e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a36f0840afcf018de61274d8f9cd05a4c">RecursiveRLSWrapper</a> (const std::string &amp;<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311">name</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a36f0840afcf018de61274d8f9cd05a4c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a3d3b4206d935f3310ae54a5df643fb8c">retrain</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selection of the new regularization parameter.  <a href="#a3d3b4206d935f3310ae54a5df643fb8c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0133c1e355a22f51a9fe964f4f2a98a1">saveModel</a> (const std::string &amp;fileName)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the computed model to file.  <a href="#a0133c1e355a22f51a9fe964f4f2a98a1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a> (unsigned long value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8">setParam</a> (double value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6">setProblemType</a> (ProblemType value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb">setSplitProportion</a> (double value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#abd238af1298c3fcc46a6263e69b297c4">train</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;y)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial parameter selection and training.  <a href="#abd238af1298c3fcc46a6263e69b297c4"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a22c8fbcc96dab7665b8618782fbbf25c">update</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;X, const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;y)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimator update.  <a href="#a22c8fbcc96dab7665b8618782fbbf25c"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16ac0260ddc5e5fdb12135ed420a9f2e"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::trainedModel" ref="a16ac0260ddc5e5fdb12135ed420a9f2e" args="()" -->
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e">trainedModel</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af070548acc0b5660bcdb42b4239b3d7c"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::trainedModel" ref="af070548acc0b5660bcdb42b4239b3d7c" args="()" -->
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c">trainedModel</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if model has already been trained. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f3e14a9666ef2ea30222dc46910c197"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::name" ref="a9f3e14a9666ef2ea30222dc46910c197" args="" -->
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197">name</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a540c6f2bd4a79e081f42e7311070b311"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::name" ref="a540c6f2bd4a79e081f42e7311070b311" args="" -->
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311">name</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the options structure. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f155aef1502148ecfca96cfe83a807e"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::opt" ref="a4f155aef1502148ecfca96cfe83a807e" args="" -->
-<a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e">opt</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a55afbf3112b3d43f3a93065323d6ce98"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::nTot" ref="a55afbf3112b3d43f3a93065323d6ce98" args="" -->
+unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98">nTot</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Total number of samples used for training. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a08a466bb5d2cad9c2bdbf5c49003d467"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::opt" ref="a08a466bb5d2cad9c2bdbf5c49003d467" args="" -->
+<a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467">opt</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Options structure where information about initial training is stored. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7b202e0de7f9ddea8a7bfdd6e9ac8cb"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::probType" ref="af7b202e0de7f9ddea8a7bfdd6e9ac8cb" args="" -->
+ProblemType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb">probType</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Problem type. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Initial parameter selection and training are carried out on a initial set of samples. The computation of the RLS estimator is carried out by the class <a class="el" href="../../d2/d8f/classgurls_1_1_r_l_s_primal_rec_init.html" title="RLSPrimalRecInit is the sub-class of Optimizer that implements RLS with the primal formulation...">RLSPrimalRecInit</a>, which stores all information necessary for efficient recursive update in the options structure. Once the information about initial training is stored in the options structure, given a new set of input–output pairs (possibly also just one pair), the RLS estimator can be efficiently updated via the method <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a9ef0c2dbd6680142b51fbdb26ed7d24a" title="Estimator update.">update()</a>. Every time a new set of input-output pairs is available, method <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a9ef0c2dbd6680142b51fbdb26ed7d24a" title="Estimator update.">update()</a> can be invoked again. Finally, the <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a6bbb9f908cdd8fbe96ba7df0693f5df8" title="Estimates label for an input matrix.">eval()</a> method can be used on test data. </p>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class gurls::RecursiveRLSWrapper&lt; T &gt;</h3>
 
-<p>Definition at line <a class="el" href="../../da/df1/wrapper_8h_source.html#l00096">96</a> of file <a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a>.</p>
+<p>Initial parameter selection and training are carried out on a initial set of samples via method <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#abd238af1298c3fcc46a6263e69b297c4" title="Initial parameter selection and training.">train()</a> which stores all information necessary for efficient recursive update in the options structure. Once the information about initial training is stored, given a new input-output pair, the RLS estimator can be efficiently updated via the method <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a22c8fbcc96dab7665b8618782fbbf25c" title="Estimator update.">update()</a>. Every time a new input-output pair is available, method <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a22c8fbcc96dab7665b8618782fbbf25c" title="Estimator update.">update()</a> can be invoked again. Parameter selection and RLS estimation ( method <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a3d3b4206d935f3310ae54a5df643fb8c" title="Selection of the new regularization parameter.">retrain()</a>) can be repeated after any number of online updates. Finally, the <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a7003559511b8dfc5dc1d77f5cd1d636b" title="Estimates label for an input matrix.">eval()</a> method estimates the output for new data. </p>
+
+<p>Definition at line <a class="el" href="../../dc/d3d/recrlswrapper_8h_source.html#l00063">63</a> of file <a class="el" href="../../dc/d3d/recrlswrapper_8h_source.html">recrlswrapper.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a1d4cda0559759eabb8e6b717c00aa27a"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::RecursiveRLSWrapper" ref="a1d4cda0559759eabb8e6b717c00aa27a" args="(const std::string &amp;name)" -->
+<a class="anchor" id="a36f0840afcf018de61274d8f9cd05a4c"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::RecursiveRLSWrapper" ref="a36f0840afcf018de61274d8f9cd05a4c" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a1d4cda0559759eabb8e6b717c00aa27a">RecursiveRLSWrapper::RecursiveRLSWrapper</a> </td>
+          <td class="memname"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">gurls::RecursiveRLSWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">RecursiveRLSWrapper</a> </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -186,20 +206,25 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00053">53</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
-<div class="fragment"><pre class="fragment">:<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aaf0be6461aae1d244296cfffaa0b47f5" title="Constructor.">GurlsWrapper</a>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>) {}
+<p>Definition at line <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html#l00009">9</a> of file <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html">recrlswrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">                                                                : GurlsWrapper&lt;T&gt;(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>)
+{
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;template getOptValue&lt;OptNumber&gt;(<span class="stringliteral">&quot;nholdouts&quot;</span>) = 1.0;
+}
 </pre></div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ab69930af5bb84391fb8d0b411f1b8740"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::eval" ref="ab69930af5bb84391fb8d0b411f1b8740" args="(const gVec&lt; T &gt; &amp;X, unsigned long *index=NULL)" -->
+<a class="anchor" id="a44a30ea6e847c63ca439984886773936"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::eval" ref="a44a30ea6e847c63ca439984886773936" args="(const gVec&lt; T &gt; &amp;X, unsigned long *index=NULL)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">GurlsWrapper::T</a> <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740">GurlsWrapper::eval</a> </td>
+          <td class="memname">T <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a7003559511b8dfc5dc1d77f5cd1d636b">eval</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em>, </td>
         </tr>
         <tr>
@@ -225,21 +250,21 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Estimated label </dd></dl>
 
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00016">16</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00026">26</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
 <div class="fragment"><pre class="fragment">{
-    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e" title="Checks if model has already been trained.">trainedModel</a>())
-        <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
+    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c" title="Checks if model has already been trained.">trainedModel</a>())
+        <span class="keywordflow">throw</span> gException(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
 
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>X_mat(1, X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>());
-    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(X_mat.getData(), X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>());
+    gMat2D&lt;T&gt;X_mat(1, X.getSize());
+    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(X_mat.getData(), X.getData(), X.getSize());
 
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* pred_mat = <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740" title="Estimates label for a new input point.">eval</a>(X_mat);
+    gMat2D&lt;T&gt;* pred_mat = <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936" title="Estimates label for a new input point.">eval</a>(X_mat);
 
-    <span class="keyword">const</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a>* pred = pred_mat-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size = pred_mat-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>();
+    <span class="keyword">const</span> T* pred = pred_mat-&gt;getData();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size = pred_mat-&gt;getSize();
 
-    <span class="keyword">const</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a>* max = std::max_element(pred, pred+size);
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a> ret = *max;
+    <span class="keyword">const</span> T* max = std::max_element(pred, pred+size);
+    T ret = *max;
     <span class="keywordflow">if</span>(index != NULL)
         *index = max-pred;
 
@@ -249,14 +274,16 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </pre></div>
 </div>
 </div>
-<a class="anchor" id="a6bbb9f908cdd8fbe96ba7df0693f5df8"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::eval" ref="a6bbb9f908cdd8fbe96ba7df0693f5df8" args="(const gMat2D&lt; T &gt; &amp;X)" -->
+<a class="anchor" id="a7003559511b8dfc5dc1d77f5cd1d636b"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::eval" ref="a7003559511b8dfc5dc1d77f5cd1d636b" args="(const gMat2D&lt; T &gt; &amp;X)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">GurlsWrapper::T</a> &gt; * <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a6bbb9f908cdd8fbe96ba7df0693f5df8">RecursiveRLSWrapper::eval</a> </td>
+          <td class="memname"><a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; * <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">gurls::RecursiveRLSWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a7003559511b8dfc5dc1d77f5cd1d636b">eval</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em></td><td>)</td>
           <td><code> [virtual]</code></td>
         </tr>
@@ -271,20 +298,20 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Matrix of predicted labels </dd></dl>
 
-<p>Implements <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a49f8c9994b8f1e7e09c96ded70933472">gurls::GurlsWrapper</a>.</p>
+<p>Implements <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a8b9c175e83de86ac5582038d3bcacc17">gurls::GurlsWrapper&lt; T &gt;</a>.</p>
 
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00098">98</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html#l00156">156</a> of file <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html">recrlswrapper.hpp</a>.</p>
 <div class="fragment"><pre class="fragment">{
-    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e" title="Checks if model has already been trained.">trainedModel</a>())
-        <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
+    <span class="keywordflow">if</span>(!this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c" title="Checks if model has already been trained.">trainedModel</a>())
+        <span class="keywordflow">throw</span> gException(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
 
     <a class="code" href="../../d8/d06/classgurls_1_1_pred_primal.html" title="PredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the...">gurls::PredPrimal&lt;T&gt;</a> predTask;
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> y;
+    gMat2D&lt;T&gt; y;
 
-    <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt;* result = predTask.<a class="code" href="../../d8/d06/classgurls_1_1_pred_primal.html#a0daf1932d11aa14d9ae31e7233bac93f" title="Computes the predictions of the linear classifier stored in the field optimizer of opt and computed u...">execute</a>(X, y, *<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>);
+    OptMatrix&lt;gMat2D&lt;T&gt; &gt;* result = predTask.<a class="code" href="../../d8/d06/classgurls_1_1_pred_primal.html#a0daf1932d11aa14d9ae31e7233bac93f" title="Computes the predictions of the linear classifier stored in the field optimizer of opt and computed u...">execute</a>(X, y, *(this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>));
 
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; pred_mat = result-&gt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a686e6896611474b7dfdd09e38e64d2a6" title="Returns the matrix.">getValue</a>();
-    result-&gt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#acfd739dd3ea40687f5114e2aa06d4eb2" title="Remove ownership for matrix pointer.">detachValue</a>();
+    gMat2D&lt;T&gt;&amp; pred_mat = result-&gt;getValue();
+    result-&gt;detachValue();
     <span class="keyword">delete</span> result;
 
     <span class="keywordflow">return</span> &amp;pred_mat;
@@ -292,81 +319,285 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </pre></div>
 </div>
 </div>
-<a class="anchor" id="a88574e3f26281bae6e8bc03144548999"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::train" ref="a88574e3f26281bae6e8bc03144548999" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;y)" -->
+<a class="anchor" id="a0de63a5c93769292ac9cdd730d45fb9e"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::loadModel" ref="a0de63a5c93769292ac9cdd730d45fb9e" args="(const std::string &amp;fileName)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a88574e3f26281bae6e8bc03144548999">RecursiveRLSWrapper::train</a> </td>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0de63a5c93769292ac9cdd730d45fb9e">loadModel</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>X</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [virtual]</code></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fileName</em></td><td>)</td>
+          <td><code> [virtual, inherited]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">X</td><td>Input data matrix </td></tr>
-    <tr><td class="paramname">Y</td><td>Labels matrix </td></tr>
+    <tr><td class="paramname">fileName</td><td>name of the file containing the data to load </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aac409539e1a97897b0f87244700b9f0e">gurls::GurlsWrapper</a>.</p>
-
-<p>Reimplemented in <a class="el" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#a0663cfca88cba931c26a03f3dc848daa">gurls::RecursiveRLSRetrainWrapper</a>.</p>
-
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00055">55</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00061">61</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
 <div class="fragment"><pre class="fragment">{
-    <span class="keywordflow">if</span>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a> != NULL)
-        <span class="keyword">delete</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>;
-
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a> = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>, <span class="keyword">true</span>);
-
-    <a class="code" href="../../dc/d25/classgurls_1_1_opt_task_sequence.html" title="OptTaskSequence is an option containing a sequence of task that forms a pipeline.">OptTaskSequence</a> *seq = <span class="keyword">new</span> <a class="code" href="../../dc/d25/classgurls_1_1_opt_task_sequence.html" title="OptTaskSequence is an option containing a sequence of task that forms a pipeline.">OptTaskSequence</a>();
-    *seq &lt;&lt; <span class="stringliteral">&quot;split:ho&quot;</span> &lt;&lt; <span class="stringliteral">&quot;paramsel:hoprimal&quot;</span> &lt;&lt; <span class="stringliteral">&quot;optimizer:rlsprimalrecinit&quot;</span>;
-
-    <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> * process = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;processes&quot;</span>, <span class="keyword">false</span>);
-
-    <a class="code" href="../../db/d52/classgurls_1_1_opt_process.html" title="OptProcess is an option containing a sequence of actions that form a Gurls process.">OptProcess</a>* process1 = <span class="keyword">new</span> <a class="code" href="../../db/d52/classgurls_1_1_opt_process.html" title="OptProcess is an option containing a sequence of actions that form a Gurls process.">OptProcess</a>();
-    *process1 &lt;&lt; GURLS::computeNsave &lt;&lt; GURLS::computeNsave &lt;&lt; GURLS::computeNsave;
-    process-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;one&quot;</span>, process1);
-
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;seq&quot;</span>, seq);
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;processes&quot;</span>, process);
-
-    <a class="code" href="../../d4/dbe/classgurls_1_1_g_u_r_l_s.html" title="GURLS is the class that implements a GURLS process.">GURLS</a> G;
-    G.<a class="code" href="../../d4/dbe/classgurls_1_1_g_u_r_l_s.html#a383087a974a8ead4e0c1ed6fa189cf3f" title="Implements a GURLS process and stores results of each GULRS task in opt.">run</a>(X, y, *<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>, std::string(<span class="stringliteral">&quot;one&quot;</span>));
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a496536defe8447d982a4799c1db8cdbd" title="Deserializes the list from file.">load</a>(fileName);
 }
 </pre></div>
 </div>
 </div>
-<a class="anchor" id="a9ef0c2dbd6680142b51fbdb26ed7d24a"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::update" ref="a9ef0c2dbd6680142b51fbdb26ed7d24a" args="(const gVec&lt; T &gt; &amp;X, const gVec&lt; T &gt; &amp;y)" -->
+<a class="anchor" id="a3d3b4206d935f3310ae54a5df643fb8c"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::retrain" ref="a3d3b4206d935f3310ae54a5df643fb8c" args="()" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a9ef0c2dbd6680142b51fbdb26ed7d24a">RecursiveRLSWrapper::update</a> </td>
+          <td class="memname">void <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">gurls::RecursiveRLSWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a3d3b4206d935f3310ae54a5df643fb8c">retrain</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Selection is performed via hold-out validation using the subset Xva,yva of the total training set as validation set. </p>
+
+<p>Definition at line <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html#l00174">174</a> of file <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html">recrlswrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    GurlsOptionsList* kernel = this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;template getOptAs&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;kernel&quot;</span>);
+    <span class="keyword">const</span> gMat2D&lt;T&gt; &amp;Xva = kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;Xva&quot;</span>);
+    <span class="keyword">const</span> gMat2D&lt;T&gt; &amp;yva = kernel-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;yva&quot;</span>);
+
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> nva = Xva.rows();
+
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>);
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
+
+    GurlsOptionsList* split = this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;template getOptAs&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;split&quot;</span>);
+    split-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;indices&quot;</span>);
+    split-&gt;removeOpt(<span class="stringliteral">&quot;lasts&quot;</span>);
+
+
+    gMat2D&lt;unsigned long&gt;* indices = <span class="keyword">new</span> gMat2D&lt;unsigned long&gt;(1, <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a>);
+    gMat2D&lt;unsigned long&gt;* lasts = <span class="keyword">new</span> gMat2D&lt;unsigned long&gt;(1, 1);
+
+    <span class="keyword">set</span>(indices-&gt;getData(), 0ul, <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a>-nva);
+    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> * it = indices-&gt;getData() + (<a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a>-nva);
+    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;nva; ++i, ++it)
+        *it = i;
+
+    lasts-&gt;getData()[0] = (<a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a>-nva);
+
+    split-&gt;addOpt(<span class="stringliteral">&quot;indices&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;unsigned long&gt; &gt;(*indices));
+    split-&gt;addOpt(<span class="stringliteral">&quot;lasts&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;unsigned long&gt; &gt;(*lasts));
+
+
+    ParamSelHoPrimal&lt;T&gt; paramselTask;
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>, paramselTask.execute(Xva, yva, *(this-&gt;opt)));
+
+
+    RLSPrimalRecInit&lt;T&gt; optimizerTask;
+    gMat2D&lt;T&gt; emptyMat;
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;nTot&quot;</span>, <span class="keyword">new</span> OptNumber(<a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a>));
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>, optimizerTask.execute(emptyMat, emptyMat, *(this-&gt;opt)));
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;nTot&quot;</span>);
+
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a0133c1e355a22f51a9fe964f4f2a98a1"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::saveModel" ref="a0133c1e355a22f51a9fe964f4f2a98a1" args="(const std::string &amp;fileName)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0133c1e355a22f51a9fe964f4f2a98a1">saveModel</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fileName</em></td><td>)</td>
+          <td><code> [virtual, inherited]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileName</td><td>name of the file where data will be saved </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00055">55</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a68a16c348ae0f5f949a0097393810f41" title="Serializes the list to file.">save</a>(fileName);
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a38efad37063c60d1a63bcffb1368e707"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::setNparams" ref="a38efad37063c60d1a63bcffb1368e707" args="(unsigned long value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned long&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual, inherited]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00067">67</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptNumber&gt;(<span class="stringliteral">&quot;nlambda&quot;</span>) = value;
+
+    <span class="keywordflow">if</span>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>) &amp;&amp; value &gt; 1.0)
+    {
+        std::cout &lt;&lt; <span class="stringliteral">&quot;Warning: ignoring previous values of the regularization parameter&quot;</span> &lt;&lt; std::endl;
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a1e3d2445536a446436eef89aef68a321" title="Returns a pointer to a T option mapped with a key.">getOptAs</a>&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;paramsel&quot;</span>)-&gt;removeOpt(<span class="stringliteral">&quot;lambdas&quot;</span>);
+    }
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="afacc664e3a01a1cc3f59a1dbdfa520f8"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::setParam" ref="afacc664e3a01a1cc3f59a1dbdfa520f8" args="(double value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8">setParam</a> </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual, inherited]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="../../d2/d25/classgurls_1_1_nystrom_wrapper.html#aa094580be9dc2dc749ddd8ca6cd5f7ea">gurls::NystromWrapper&lt; T &gt;</a>.</p>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00079">79</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>))
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>, <span class="keyword">new</span> GurlsOptionsList(<span class="stringliteral">&quot;paramsel&quot;</span>));
+
+    <span class="keywordflow">if</span>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>))
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>).getData()[0] = (T)value;
+    <span class="keywordflow">else</span>
+    {
+        gMat2D&lt;T&gt; * lambdas = <span class="keyword">new</span> gMat2D&lt;T&gt;(1,1);
+        lambdas-&gt;getData()[0] = (T)value;
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a1e3d2445536a446436eef89aef68a321" title="Returns a pointer to a T option mapped with a key.">getOptAs</a>&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;paramsel&quot;</span>)-&gt;addOpt(<span class="stringliteral">&quot;lambdas&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*lambdas));
+    }
+
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a>(1);
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a1e66490224a45ee6844ec1dbdf62fca6"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::setProblemType" ref="a1e66490224a45ee6844ec1dbdf62fca6" args="(ProblemType value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6">setProblemType</a> </td>
+          <td>(</td>
+          <td class="paramtype">typename <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">GurlsWrapper</a>&lt; T &gt;::ProblemType&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual, inherited]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00103">103</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb" title="Problem type.">probType</a> = value;
+
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptString&gt;(<span class="stringliteral">&quot;hoperf&quot;</span>) = (value == CLASSIFICATION)? <span class="stringliteral">&quot;macroavg&quot;</span>: <span class="stringliteral">&quot;rmse&quot;</span>;
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="aba5932d94e8ca2f4cf8753498b11e7bb"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::setSplitProportion" ref="aba5932d94e8ca2f4cf8753498b11e7bb" args="(double value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb">setSplitProportion</a> </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual, inherited]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00097">97</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptNumber&gt;(<span class="stringliteral">&quot;hoproportion&quot;</span>) = value;
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="abd238af1298c3fcc46a6263e69b297c4"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::train" ref="abd238af1298c3fcc46a6263e69b297c4" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;y)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">gurls::RecursiveRLSWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#abd238af1298c3fcc46a6263e69b297c4">train</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>y</em>&#160;</td>
         </tr>
         <tr>
@@ -379,41 +610,194 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <div class="memdoc">
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">X</td><td>Input data vector </td></tr>
-    <tr><td class="paramname">Y</td><td>Labels vector </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">X</td><td>Input data matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Y</td><td>Labels matrix </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a766265bc77041c4f172fdf6203d25073">gurls::GurlsWrapper</a>.</p>
+<p>Implements <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a75da78cb7639c0429312feb8e51f994d">gurls::GurlsWrapper&lt; T &gt;</a>.</p>
 
-<p>Reimplemented in <a class="el" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#af90f4999fec41f03c6e1e8ace5f36f1b">gurls::RecursiveRLSRetrainWrapper</a>.</p>
-
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00078">78</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html#l00015">15</a> of file <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html">recrlswrapper.hpp</a>.</p>
 <div class="fragment"><pre class="fragment">{
-    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e" title="Checks if model has already been trained.">trainedModel</a>())
-        <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;split&quot;</span>);
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>);
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;kernel&quot;</span>);
 
-    <a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html" title="RLSPrimalRecUpdate is the sub-class of Optimizer that implements RLS with the primal formulation...">RLSPrimalRecUpdate&lt;T&gt;</a> optimizer;
 
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>();
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>();
+    SplitHo&lt;T&gt; splitTask;
+    GurlsOptionsList* split = splitTask.execute(X, y, *(this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>));
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;split&quot;</span>, split);
 
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>X_mat(1, d);
-    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(X_mat.getData(), X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), d);
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>y_mat(1, t);
-    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(y_mat.getData(), y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), t);
 
-    <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* ret = optimizer.<a class="code" href="../../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html#a0712b0fb0b96f2cd1dd1cdaed5246844" title="Computes a classifier for the primal formulation of RLS, using a recursive update, starting from an initial estimator found in opt.optimizer.">execute</a>(X_mat, y_mat, *<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>);
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>, ret);
+    <span class="keyword">const</span> gMat2D&lt;unsigned long&gt;&amp; split_indices = split-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;unsigned long&gt; &gt; &gt;(<span class="stringliteral">&quot;indices&quot;</span>);
+    <span class="keyword">const</span> gMat2D&lt;unsigned long&gt;&amp; split_lasts = split-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;unsigned long&gt; &gt; &gt;(<span class="stringliteral">&quot;lasts&quot;</span>);
+
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.rows();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.cols();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = y.cols();
+
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> last = split_lasts.getData()[0];
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> nva = n-last;
+
+    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* va = <span class="keyword">new</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>[nva];
+    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(va, split_indices.getData()+last, nva);
+
+    gMat2D&lt;T&gt;* Xva = <span class="keyword">new</span> gMat2D&lt;T&gt;(nva, d);
+    gMat2D&lt;T&gt;* yva = <span class="keyword">new</span> gMat2D&lt;T&gt;(nva, t);
+
+    <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, d, va, nva, Xva-&gt;getData());
+    <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(y.getData(), n, t, va, nva, yva-&gt;getData());
+
+    gMat2D&lt;T&gt;* XtX = <span class="keyword">new</span> gMat2D&lt;T&gt;(d, d);
+    gMat2D&lt;T&gt;* Xty = <span class="keyword">new</span> gMat2D&lt;T&gt;(d, t);
+
+
+    <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), X.getData(), XtX-&gt;getData(), n, d, n, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+    <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), y.getData(), Xty-&gt;getData(), n, d, n, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+
+    GurlsOptionsList* kernel = <span class="keyword">new</span> GurlsOptionsList(<span class="stringliteral">&quot;kernel&quot;</span>);
+    kernel-&gt;addOpt(<span class="stringliteral">&quot;XtX&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*XtX));
+    kernel-&gt;addOpt(<span class="stringliteral">&quot;Xty&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*Xty));
+
+    kernel-&gt;addOpt(<span class="stringliteral">&quot;Xva&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*Xva));
+    kernel-&gt;addOpt(<span class="stringliteral">&quot;yva&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*yva));
+
+    <a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a> = n;
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;kernel&quot;</span>, kernel);
+
+    ParamSelHoPrimal&lt;T&gt; paramselTask;
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>, paramselTask.execute(X, y, *(this-&gt;opt)));
+
+
+    RLSPrimalRecInit&lt;T&gt; optimizerTask;
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>, optimizerTask.execute(X, y, *(this-&gt;opt)));
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a22c8fbcc96dab7665b8618782fbbf25c"></a><!-- doxytag: member="gurls::RecursiveRLSWrapper::update" ref="a22c8fbcc96dab7665b8618782fbbf25c" args="(const gVec&lt; T &gt; &amp;X, const gVec&lt; T &gt; &amp;y)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">gurls::RecursiveRLSWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a22c8fbcc96dab7665b8618782fbbf25c">update</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">X</td><td>Input data vector </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Y</td><td>Labels vector </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html#l00074">74</a> of file <a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html">recrlswrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <span class="keywordflow">if</span>(!this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c" title="Checks if model has already been trained.">trainedModel</a>())
+        <span class="keywordflow">throw</span> gException(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
+
+    RLSPrimalRecUpdate&lt;T&gt; optimizer;
+
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.getSize();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = y.getSize();
+
+    gMat2D&lt;T&gt;X_mat(1, d);
+    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(X_mat.getData(), X.getData(), d);
+    gMat2D&lt;T&gt;y_mat(1, t);
+    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(y_mat.getData(), y.getData(), t);
+
+    GurlsOptionsList* ret = optimizer.execute(X_mat, y_mat, *(this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>));
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
+    this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>, ret);
+
+    ++<a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a>;
+
+    gMat2D&lt;T&gt;* xtx = <span class="keyword">new</span> gMat2D&lt;T&gt;(d,d);
+    gMat2D&lt;T&gt;* xty = <span class="keyword">new</span> gMat2D&lt;T&gt;(d,t);
+
+    <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), X.getData(), xtx-&gt;getData(), 1, d, 1, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+    <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), y.getData(), xty-&gt;getData(), 1, d, 1, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+
+    GurlsOptionsList* kernel = this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;template getOptAs&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;kernel&quot;</span>);
+
+    <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; XtX = kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;XtX&quot;</span>);
+    <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; Xty = kernel-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;Xty&quot;</span>);
+
+    <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d*d, (T)1.0, XtX.getData(), 1, xtx-&gt;getData(), 1);
+    <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d*t, (T)1.0, Xty.getData(), 1, xty-&gt;getData(), 1);
+
+    kernel-&gt;removeOpt(<span class="stringliteral">&quot;XtX&quot;</span>);
+    kernel-&gt;addOpt(<span class="stringliteral">&quot;XtX&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*xtx));
+
+    kernel-&gt;removeOpt(<span class="stringliteral">&quot;Xty&quot;</span>);
+    kernel-&gt;addOpt(<span class="stringliteral">&quot;Xty&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*xty));
+
+
+    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> proportion = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">long</span><span class="keyword">&gt;</span>(<a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e" title="Rounds an input value to the nearest integer.">gurls::round</a>(1.0/this-&gt;<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a45c4d02344b2c83c3641f4b41034e320" title="Returns a numeric option mapped with a key.">getOptAsNumber</a>(<span class="stringliteral">&quot;hoproportion&quot;</span>)));
+
+    <span class="keywordflow">if</span>(<a class="code" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a55afbf3112b3d43f3a93065323d6ce98" title="Total number of samples used for training.">nTot</a> % proportion == 0)
+    {
+        <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; Xva = kernel-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;Xva&quot;</span>);
+        <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; yva = kernel-&gt;getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;yva&quot;</span>);
+
+        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> nva = Xva.rows();
+        <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> nva_new = nva+1;
+
+
+        gMat2D&lt;T&gt;* Xva_new = <span class="keyword">new</span> gMat2D&lt;T&gt;(nva_new, d);
+
+        <span class="keyword">const</span> T* old_it = Xva.getData();
+        T* new_it = Xva_new-&gt;getData();
+        <span class="keywordflow">for</span>(<span class="keyword">const</span> T* end = new_it+(nva_new*d); new_it&lt; end; old_it+=nva, new_it +=nva_new)
+            <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(new_it, old_it, nva);
+
+        <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Xva_new-&gt;getData()+nva, X.getData(), d, nva_new, 1);
+
+        kernel-&gt;removeOpt(<span class="stringliteral">&quot;Xva&quot;</span>);
+        kernel-&gt;addOpt(<span class="stringliteral">&quot;Xva&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*Xva_new));
+
+
+        gMat2D&lt;T&gt;* yva_new = <span class="keyword">new</span> gMat2D&lt;T&gt;(nva_new, t);
+
+        old_it = yva.getData();
+        new_it = yva_new-&gt;getData();
+        <span class="keywordflow">for</span>(<span class="keyword">const</span> T* end = new_it+(nva_new*t); new_it&lt; end; old_it+=nva, new_it +=nva_new)
+            <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(new_it, old_it, nva);
+
+        <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(yva_new-&gt;getData()+nva, y.getData(), t, nva_new, 1);
+
+        kernel-&gt;removeOpt(<span class="stringliteral">&quot;yva&quot;</span>);
+        kernel-&gt;addOpt(<span class="stringliteral">&quot;yva&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*yva_new));
+
+    }
 }
 </pre></div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li><a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a></li>
-<li><a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a></li>
+<li><a class="el" href="../../dc/d3d/recrlswrapper_8h_source.html">recrlswrapper.h</a></li>
+<li><a class="el" href="../../d3/d4b/recrlswrapper_8hpp_source.html">recrlswrapper.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -436,7 +820,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html">RecursiveRLSWrapper</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:05 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

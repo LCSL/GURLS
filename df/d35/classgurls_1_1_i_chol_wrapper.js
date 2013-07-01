@@ -1,0 +1,27 @@
+var classgurls_1_1_i_chol_wrapper =
+[
+    [ "ProblemType", "d5/d55/classgurls_1_1_gurls_wrapper.html#a33801da70971d6a77844857b926772ec", null ],
+    [ "ICholWrapper", "df/d35/classgurls_1_1_i_chol_wrapper.html#a71e6a1aef6618ba4969cfbf91688b800", null ],
+    [ "computeNewKcol", "df/d35/classgurls_1_1_i_chol_wrapper.html#a986b23cc6f2a770ab302cf1eacf816c9", null ],
+    [ "eval", "df/d35/classgurls_1_1_i_chol_wrapper.html#abd8583f09358618df362bfe5e64c246a", null ],
+    [ "eval", "d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936", null ],
+    [ "eval_ls", "df/d35/classgurls_1_1_i_chol_wrapper.html#ab438c17a0b6020cc527e0540c1b6e4db", null ],
+    [ "getOpt", "d5/d55/classgurls_1_1_gurls_wrapper.html#a0614c0414bd0db62a08b01174b2ab71d", null ],
+    [ "loadModel", "d5/d55/classgurls_1_1_gurls_wrapper.html#a0de63a5c93769292ac9cdd730d45fb9e", null ],
+    [ "saveModel", "d5/d55/classgurls_1_1_gurls_wrapper.html#a0133c1e355a22f51a9fe964f4f2a98a1", null ],
+    [ "setNparams", "d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707", null ],
+    [ "setNRank", "df/d35/classgurls_1_1_i_chol_wrapper.html#ada0f173d2b0fbfee892ff7fbdd9eec96", null ],
+    [ "setParam", "d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8", null ],
+    [ "setProblemType", "d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6", null ],
+    [ "setRankMax", "df/d35/classgurls_1_1_i_chol_wrapper.html#ae4b1821f7f67538949ff76a8bdbbbfca", null ],
+    [ "setSigma", "df/d35/classgurls_1_1_i_chol_wrapper.html#ac9c6c3e106b6dd33e42ba871fa61ea7f", null ],
+    [ "setSplitProportion", "d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb", null ],
+    [ "setXva", "df/d35/classgurls_1_1_i_chol_wrapper.html#a67cadf4acd16a2a1505412e5941de8c7", null ],
+    [ "setyva", "df/d35/classgurls_1_1_i_chol_wrapper.html#a6e7338727dc99711f4dab73cf16de643", null ],
+    [ "train", "df/d35/classgurls_1_1_i_chol_wrapper.html#a8c185b347bd2437b403f56c6ccf69235", null ],
+    [ "trainedModel", "d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c", null ],
+    [ "update", "df/d35/classgurls_1_1_i_chol_wrapper.html#a3a40b18fecd952e5ac018c0371aad0af", null ],
+    [ "name", "d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311", null ],
+    [ "opt", "d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467", null ],
+    [ "probType", "d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb", null ]
+];

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GURLS++: gurls::GurlsWrapper Class Reference</title>
+<title>GURLS++: gurls::GurlsWrapper&lt; T &gt; Class Template Reference</title>
 
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <link href="../../doxygen.css" rel="stylesheet" type="text/css" />
@@ -100,12 +100,12 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div id="doc-content">
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">gurls::GurlsWrapper Class Reference<div class="ingroups"><a class="el" href="../../d7/df3/group___wrappers.html">Wrappers</a></div></div>  </div>
+<div class="title">gurls::GurlsWrapper&lt; T &gt; Class Template Reference<div class="ingroups"><a class="el" href="../../d7/df3/group___wrappers.html">Wrappers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="gurls::GurlsWrapper" -->
@@ -114,65 +114,83 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for gurls::GurlsWrapper:</div>
+Inheritance diagram for gurls::GurlsWrapper&lt; T &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../d5/d55/classgurls_1_1_gurls_wrapper.png" usemap="#gurls::GurlsWrapper_map" alt=""/>
-  <map id="gurls::GurlsWrapper_map" name="gurls::GurlsWrapper_map">
-<area href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update of the RLS esti..." alt="gurls::RecursiveRLSWrapper" shape="rect" coords="0,56,215,80"/>
-<area href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html" title="RecursiveRLSRetrainWrapper is the sub-class of GurlsWrapper that implements recursive update of the R..." alt="gurls::RecursiveRLSRetrainWrapper" shape="rect" coords="0,112,215,136"/>
+  <img src="../../d5/d55/classgurls_1_1_gurls_wrapper.png" usemap="#gurls::GurlsWrapper&lt; T &gt;_map" alt=""/>
+  <map id="gurls::GurlsWrapper&lt; T &gt;_map" name="gurls::GurlsWrapper&lt; T &gt;_map">
+<area href="../../df/d35/classgurls_1_1_i_chol_wrapper.html" alt="gurls::ICholWrapper&lt; T &gt;" shape="rect" coords="0,56,206,80"/>
+<area href="../../d1/db4/classgurls_1_1_kernel_wrapper.html" title="KernelWrapper is the base class for all gurls++ wrappers." alt="gurls::KernelWrapper&lt; T &gt;" shape="rect" coords="216,56,422,80"/>
+<area href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update of the RLS esti..." alt="gurls::RecursiveRLSWrapper&lt; T &gt;" shape="rect" coords="432,56,638,80"/>
+<area href="../../d0/d09/classgurls_1_1_r_l_s_wrapper.html" title="RLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a linear m..." alt="gurls::RLSWrapper&lt; T &gt;" shape="rect" coords="648,56,854,80"/>
+<area href="../../da/d5c/classgurls_1_1_kernel_r_l_s_wrapper.html" title="KernelRLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a po..." alt="gurls::KernelRLSWrapper&lt; T &gt;" shape="rect" coords="108,112,314,136"/>
+<area href="../../d2/d25/classgurls_1_1_nystrom_wrapper.html" title="NystromWrapper is the sub-class of GurlsWrapper that allows to train a possibly non linear model for ..." alt="gurls::NystromWrapper&lt; T &gt;" shape="rect" coords="324,112,530,136"/>
 </map>
  </div></div>
 
 <p><a href="../../d2/d0f/classgurls_1_1_gurls_wrapper-members.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>ProblemType</b> { <b>CLASSIFICATION</b>, 
+<b>REGRESSION</b>
+ }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740">eval</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X, unsigned long *index=NULL)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for a new input point.  <a href="#ab69930af5bb84391fb8d0b411f1b8740"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a49f8c9994b8f1e7e09c96ded70933472">eval</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X)=0</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for an input matrix.  <a href="#a49f8c9994b8f1e7e09c96ded70933472"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c863c5be6665fff213c53c21a5e7275"></a><!-- doxytag: member="gurls::GurlsWrapper::getOpt" ref="a0c863c5be6665fff213c53c21a5e7275" args="() const " -->
-const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0c863c5be6665fff213c53c21a5e7275">getOpt</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936">eval</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;X, unsigned long *index=NULL)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for a new input point.  <a href="#a44a30ea6e847c63ca439984886773936"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a8b9c175e83de86ac5582038d3bcacc17">eval</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimates label for an input matrix.  <a href="#a8b9c175e83de86ac5582038d3bcacc17"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0614c0414bd0db62a08b01174b2ab71d"></a><!-- doxytag: member="gurls::GurlsWrapper::getOpt" ref="a0614c0414bd0db62a08b01174b2ab71d" args="() const " -->
+virtual const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0614c0414bd0db62a08b01174b2ab71d">getOpt</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a const reference to the options structure. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aaf0be6461aae1d244296cfffaa0b47f5">GurlsWrapper</a> (const std::string &amp;<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197">name</a>)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aaf0be6461aae1d244296cfffaa0b47f5"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aac409539e1a97897b0f87244700b9f0e">train</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;y)=0</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial parameter selection and training.  <a href="#aac409539e1a97897b0f87244700b9f0e"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a766265bc77041c4f172fdf6203d25073">update</a> (const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;X, const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;y)=0</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimator update.  <a href="#a766265bc77041c4f172fdf6203d25073"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff7022c28458fe1cab2fdbc8dcc7941f"></a><!-- doxytag: member="gurls::GurlsWrapper::~GurlsWrapper" ref="aff7022c28458fe1cab2fdbc8dcc7941f" args="()" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aff7022c28458fe1cab2fdbc8dcc7941f">~GurlsWrapper</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#abcc5da870f0149ba91f719cdd3aa39e5">GurlsWrapper</a> (const std::string &amp;<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311">name</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#abcc5da870f0149ba91f719cdd3aa39e5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0de63a5c93769292ac9cdd730d45fb9e">loadModel</a> (const std::string &amp;fileName)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a computed model from a file.  <a href="#a0de63a5c93769292ac9cdd730d45fb9e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0133c1e355a22f51a9fe964f4f2a98a1">saveModel</a> (const std::string &amp;fileName)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the computed model to file.  <a href="#a0133c1e355a22f51a9fe964f4f2a98a1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a> (unsigned long value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8">setParam</a> (double value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6">setProblemType</a> (ProblemType value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb">setSplitProportion</a> (double value)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a75da78cb7639c0429312feb8e51f994d">train</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;y)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initial parameter selection and training.  <a href="#a75da78cb7639c0429312feb8e51f994d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a153c2e8710f652a1a95c588a0aed1edc"></a><!-- doxytag: member="gurls::GurlsWrapper::~GurlsWrapper" ref="a153c2e8710f652a1a95c588a0aed1edc" args="()" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a153c2e8710f652a1a95c588a0aed1edc">~GurlsWrapper</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-types"></a>
-Protected Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68a8c674bbda707010a122e58c31a69b"></a><!-- doxytag: member="gurls::GurlsWrapper::T" ref="a68a8c674bbda707010a122e58c31a69b" args="" -->
-typedef double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Data type for matrices cells. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16ac0260ddc5e5fdb12135ed420a9f2e"></a><!-- doxytag: member="gurls::GurlsWrapper::trainedModel" ref="a16ac0260ddc5e5fdb12135ed420a9f2e" args="()" -->
-virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e">trainedModel</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af070548acc0b5660bcdb42b4239b3d7c"></a><!-- doxytag: member="gurls::GurlsWrapper::trainedModel" ref="af070548acc0b5660bcdb42b4239b3d7c" args="()" -->
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c">trainedModel</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if model has already been trained. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f3e14a9666ef2ea30222dc46910c197"></a><!-- doxytag: member="gurls::GurlsWrapper::name" ref="a9f3e14a9666ef2ea30222dc46910c197" args="" -->
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197">name</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a540c6f2bd4a79e081f42e7311070b311"></a><!-- doxytag: member="gurls::GurlsWrapper::name" ref="a540c6f2bd4a79e081f42e7311070b311" args="" -->
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311">name</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the options structure. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f155aef1502148ecfca96cfe83a807e"></a><!-- doxytag: member="gurls::GurlsWrapper::opt" ref="a4f155aef1502148ecfca96cfe83a807e" args="" -->
-<a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e">opt</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a08a466bb5d2cad9c2bdbf5c49003d467"></a><!-- doxytag: member="gurls::GurlsWrapper::opt" ref="a08a466bb5d2cad9c2bdbf5c49003d467" args="" -->
+<a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467">opt</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Options structure where information about initial training is stored. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7b202e0de7f9ddea8a7bfdd6e9ac8cb"></a><!-- doxytag: member="gurls::GurlsWrapper::probType" ref="af7b202e0de7f9ddea8a7bfdd6e9ac8cb" args="" -->
+ProblemType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb">probType</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Problem type. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="../../da/df1/wrapper_8h_source.html#l00015">15</a> of file <a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a>.</p>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class gurls::GurlsWrapper&lt; T &gt;</h3>
+
+
+<p>Definition at line <a class="el" href="../../da/df1/wrapper_8h_source.html#l00057">57</a> of file <a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aaf0be6461aae1d244296cfffaa0b47f5"></a><!-- doxytag: member="gurls::GurlsWrapper::GurlsWrapper" ref="aaf0be6461aae1d244296cfffaa0b47f5" args="(const std::string &amp;name)" -->
+<a class="anchor" id="abcc5da870f0149ba91f719cdd3aa39e5"></a><!-- doxytag: member="gurls::GurlsWrapper::GurlsWrapper" ref="abcc5da870f0149ba91f719cdd3aa39e5" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aaf0be6461aae1d244296cfffaa0b47f5">GurlsWrapper::GurlsWrapper</a> </td>
+          <td class="memname"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">GurlsWrapper</a> </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -188,20 +206,29 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00008">8</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
-<div class="fragment"><pre class="fragment">:<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a4f155aef1502148ecfca96cfe83a807e" title="Options structure where information about initial training is stored.">opt</a>(NULL), <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a9f3e14a9666ef2ea30222dc46910c197" title="Name of the options structure.">name</a>) {}
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00010">10</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">                                                  :<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>(NULL), <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>)
+{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a> = <span class="keyword">new</span> GurlsOptionsList(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a540c6f2bd4a79e081f42e7311070b311" title="Name of the options structure.">name</a>, <span class="keyword">true</span>);
+
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb">setSplitProportion</a>(0.2);
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a>(20);
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6">setProblemType</a>(CLASSIFICATION);
+}
 </pre></div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ab69930af5bb84391fb8d0b411f1b8740"></a><!-- doxytag: member="gurls::GurlsWrapper::eval" ref="ab69930af5bb84391fb8d0b411f1b8740" args="(const gVec&lt; T &gt; &amp;X, unsigned long *index=NULL)" -->
+<a class="anchor" id="a44a30ea6e847c63ca439984886773936"></a><!-- doxytag: member="gurls::GurlsWrapper::eval" ref="a44a30ea6e847c63ca439984886773936" args="(const gVec&lt; T &gt; &amp;X, unsigned long *index=NULL)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">GurlsWrapper::T</a> <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740">GurlsWrapper::eval</a> </td>
+          <td class="memname">T <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936">eval</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em>, </td>
         </tr>
         <tr>
@@ -227,21 +254,21 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Estimated label </dd></dl>
 
-<p>Definition at line <a class="el" href="../../dd/d95/wrapper_8cpp_source.html#l00016">16</a> of file <a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00026">26</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
 <div class="fragment"><pre class="fragment">{
-    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a16ac0260ddc5e5fdb12135ed420a9f2e" title="Checks if model has already been trained.">trainedModel</a>())
-        <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
+    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af070548acc0b5660bcdb42b4239b3d7c" title="Checks if model has already been trained.">trainedModel</a>())
+        <span class="keywordflow">throw</span> gException(<span class="stringliteral">&quot;Error, Train Model First&quot;</span>);
 
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>X_mat(1, X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>());
-    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(X_mat.getData(), X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>());
+    gMat2D&lt;T&gt;X_mat(1, X.getSize());
+    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(X_mat.getData(), X.getData(), X.getSize());
 
-    <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* pred_mat = <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740" title="Estimates label for a new input point.">eval</a>(X_mat);
+    gMat2D&lt;T&gt;* pred_mat = <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936" title="Estimates label for a new input point.">eval</a>(X_mat);
 
-    <span class="keyword">const</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a>* pred = pred_mat-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
-    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size = pred_mat-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>();
+    <span class="keyword">const</span> T* pred = pred_mat-&gt;getData();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size = pred_mat-&gt;getSize();
 
-    <span class="keyword">const</span> <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a>* max = std::max_element(pred, pred+size);
-    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b" title="Data type for matrices cells.">T</a> ret = *max;
+    <span class="keyword">const</span> T* max = std::max_element(pred, pred+size);
+    T ret = *max;
     <span class="keywordflow">if</span>(index != NULL)
         *index = max-pred;
 
@@ -251,14 +278,16 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </pre></div>
 </div>
 </div>
-<a class="anchor" id="a49f8c9994b8f1e7e09c96ded70933472"></a><!-- doxytag: member="gurls::GurlsWrapper::eval" ref="a49f8c9994b8f1e7e09c96ded70933472" args="(const gMat2D&lt; T &gt; &amp;X)=0" -->
+<a class="anchor" id="a8b9c175e83de86ac5582038d3bcacc17"></a><!-- doxytag: member="gurls::GurlsWrapper::eval" ref="a8b9c175e83de86ac5582038d3bcacc17" args="(const gMat2D&lt; T &gt; &amp;X)=0" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt;<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a>&gt;* <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#ab69930af5bb84391fb8d0b411f1b8740">gurls::GurlsWrapper::eval</a> </td>
+          <td class="memname">virtual <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt;T&gt;* <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a44a30ea6e847c63ca439984886773936">eval</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em></td><td>)</td>
           <td><code> [pure virtual]</code></td>
         </tr>
@@ -273,24 +302,228 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Matrix of predicted labels </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a6bbb9f908cdd8fbe96ba7df0693f5df8">gurls::RecursiveRLSWrapper</a>.</p>
+<p>Implemented in <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a7003559511b8dfc5dc1d77f5cd1d636b">gurls::RecursiveRLSWrapper&lt; T &gt;</a>, <a class="el" href="../../d2/d25/classgurls_1_1_nystrom_wrapper.html#af474b1de2a83fc66a3970a70c1405b60">gurls::NystromWrapper&lt; T &gt;</a>, <a class="el" href="../../df/d35/classgurls_1_1_i_chol_wrapper.html#abd8583f09358618df362bfe5e64c246a">gurls::ICholWrapper&lt; T &gt;</a>, <a class="el" href="../../d0/d09/classgurls_1_1_r_l_s_wrapper.html#acec4698ed1e013e9a6ab4b35d850b785">gurls::RLSWrapper&lt; T &gt;</a>, and <a class="el" href="../../da/d5c/classgurls_1_1_kernel_r_l_s_wrapper.html#abe41afca40f38a7592a54e88db01ea4c">gurls::KernelRLSWrapper&lt; T &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aac409539e1a97897b0f87244700b9f0e"></a><!-- doxytag: member="gurls::GurlsWrapper::train" ref="aac409539e1a97897b0f87244700b9f0e" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;y)=0" -->
+<a class="anchor" id="a0de63a5c93769292ac9cdd730d45fb9e"></a><!-- doxytag: member="gurls::GurlsWrapper::loadModel" ref="a0de63a5c93769292ac9cdd730d45fb9e" args="(const std::string &amp;fileName)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aac409539e1a97897b0f87244700b9f0e">gurls::GurlsWrapper::train</a> </td>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0de63a5c93769292ac9cdd730d45fb9e">loadModel</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fileName</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileName</td><td>name of the file containing the data to load </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00061">61</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a496536defe8447d982a4799c1db8cdbd" title="Deserializes the list from file.">load</a>(fileName);
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a0133c1e355a22f51a9fe964f4f2a98a1"></a><!-- doxytag: member="gurls::GurlsWrapper::saveModel" ref="a0133c1e355a22f51a9fe964f4f2a98a1" args="(const std::string &amp;fileName)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a0133c1e355a22f51a9fe964f4f2a98a1">saveModel</a> </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fileName</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileName</td><td>name of the file where data will be saved </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00055">55</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a68a16c348ae0f5f949a0097393810f41" title="Serializes the list to file.">save</a>(fileName);
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a38efad37063c60d1a63bcffb1368e707"></a><!-- doxytag: member="gurls::GurlsWrapper::setNparams" ref="a38efad37063c60d1a63bcffb1368e707" args="(unsigned long value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned long&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00067">67</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptNumber&gt;(<span class="stringliteral">&quot;nlambda&quot;</span>) = value;
+
+    <span class="keywordflow">if</span>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>) &amp;&amp; value &gt; 1.0)
+    {
+        std::cout &lt;&lt; <span class="stringliteral">&quot;Warning: ignoring previous values of the regularization parameter&quot;</span> &lt;&lt; std::endl;
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a1e3d2445536a446436eef89aef68a321" title="Returns a pointer to a T option mapped with a key.">getOptAs</a>&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;paramsel&quot;</span>)-&gt;removeOpt(<span class="stringliteral">&quot;lambdas&quot;</span>);
+    }
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="afacc664e3a01a1cc3f59a1dbdfa520f8"></a><!-- doxytag: member="gurls::GurlsWrapper::setParam" ref="afacc664e3a01a1cc3f59a1dbdfa520f8" args="(double value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8">setParam</a> </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="../../d2/d25/classgurls_1_1_nystrom_wrapper.html#aa094580be9dc2dc749ddd8ca6cd5f7ea">gurls::NystromWrapper&lt; T &gt;</a>.</p>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00079">79</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <span class="keywordflow">if</span>(!<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>))
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;paramsel&quot;</span>, <span class="keyword">new</span> GurlsOptionsList(<span class="stringliteral">&quot;paramsel&quot;</span>));
+
+    <span class="keywordflow">if</span>(<a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>))
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;paramsel.lambdas&quot;</span>).getData()[0] = (T)value;
+    <span class="keywordflow">else</span>
+    {
+        gMat2D&lt;T&gt; * lambdas = <span class="keyword">new</span> gMat2D&lt;T&gt;(1,1);
+        lambdas-&gt;getData()[0] = (T)value;
+        <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a1e3d2445536a446436eef89aef68a321" title="Returns a pointer to a T option mapped with a key.">getOptAs</a>&lt;GurlsOptionsList&gt;(<span class="stringliteral">&quot;paramsel&quot;</span>)-&gt;addOpt(<span class="stringliteral">&quot;lambdas&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*lambdas));
+    }
+
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707">setNparams</a>(1);
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a1e66490224a45ee6844ec1dbdf62fca6"></a><!-- doxytag: member="gurls::GurlsWrapper::setProblemType" ref="a1e66490224a45ee6844ec1dbdf62fca6" args="(ProblemType value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6">setProblemType</a> </td>
+          <td>(</td>
+          <td class="paramtype">typename <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">GurlsWrapper</a>&lt; T &gt;::ProblemType&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00103">103</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#af7b202e0de7f9ddea8a7bfdd6e9ac8cb" title="Problem type.">probType</a> = value;
+
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptString&gt;(<span class="stringliteral">&quot;hoperf&quot;</span>) = (value == CLASSIFICATION)? <span class="stringliteral">&quot;macroavg&quot;</span>: <span class="stringliteral">&quot;rmse&quot;</span>;
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="aba5932d94e8ca2f4cf8753498b11e7bb"></a><!-- doxytag: member="gurls::GurlsWrapper::setSplitProportion" ref="aba5932d94e8ca2f4cf8753498b11e7bb" args="(double value)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#aba5932d94e8ca2f4cf8753498b11e7bb">setSplitProportion</a> </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html#l00097">97</a> of file <a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a>.</p>
+<div class="fragment"><pre class="fragment">{
+    <a class="code" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a08a466bb5d2cad9c2bdbf5c49003d467" title="Options structure where information about initial training is stored.">opt</a>-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;OptNumber&gt;(<span class="stringliteral">&quot;hoproportion&quot;</span>) = value;
+}
+</pre></div>
+</div>
+</div>
+<a class="anchor" id="a75da78cb7639c0429312feb8e51f994d"></a><!-- doxytag: member="gurls::GurlsWrapper::train" ref="a75da78cb7639c0429312feb8e51f994d" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;y)=0" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">gurls::GurlsWrapper</a>&lt; T &gt;::<a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a75da78cb7639c0429312feb8e51f994d">train</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>y</em>&#160;</td>
         </tr>
         <tr>
@@ -303,55 +536,19 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <div class="memdoc">
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">X</td><td>Input data matrix </td></tr>
-    <tr><td class="paramname">Y</td><td>Labels matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">X</td><td>Input data matrix </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Y</td><td>Labels matrix </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#a0663cfca88cba931c26a03f3dc848daa">gurls::RecursiveRLSRetrainWrapper</a>, and <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a88574e3f26281bae6e8bc03144548999">gurls::RecursiveRLSWrapper</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a766265bc77041c4f172fdf6203d25073"></a><!-- doxytag: member="gurls::GurlsWrapper::update" ref="a766265bc77041c4f172fdf6203d25073" args="(const gVec&lt; T &gt; &amp;X, const gVec&lt; T &gt; &amp;y)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a766265bc77041c4f172fdf6203d25073">gurls::GurlsWrapper::update</a> </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>X</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="../../df/d32/classgurls_1_1g_vec.html">gVec</a>&lt; <a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html#a68a8c674bbda707010a122e58c31a69b">T</a> &gt; &amp;&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td><code> [pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">X</td><td>Input data vector </td></tr>
-    <tr><td class="paramname">Y</td><td>Labels vector </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implemented in <a class="el" href="../../d1/dbd/classgurls_1_1_recursive_r_l_s_retrain_wrapper.html#af90f4999fec41f03c6e1e8ace5f36f1b">gurls::RecursiveRLSRetrainWrapper</a>, and <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#a9ef0c2dbd6680142b51fbdb26ed7d24a">gurls::RecursiveRLSWrapper</a>.</p>
+<p>Implemented in <a class="el" href="../../d1/db4/classgurls_1_1_kernel_wrapper.html#af6bc7e2db3344647c0f176b99a49fa6a">gurls::KernelWrapper&lt; T &gt;</a>, <a class="el" href="../../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html#abd238af1298c3fcc46a6263e69b297c4">gurls::RecursiveRLSWrapper&lt; T &gt;</a>, <a class="el" href="../../d2/d25/classgurls_1_1_nystrom_wrapper.html#a58e8f409e7893e1a5ccba74253ad4f2a">gurls::NystromWrapper&lt; T &gt;</a>, <a class="el" href="../../d0/d09/classgurls_1_1_r_l_s_wrapper.html#a858d3a83c5f2f4ac72ecd417ada1c970">gurls::RLSWrapper&lt; T &gt;</a>, <a class="el" href="../../da/d5c/classgurls_1_1_kernel_r_l_s_wrapper.html#a2be25a77e7414f508e5ddd8c79e56c58">gurls::KernelRLSWrapper&lt; T &gt;</a>, and <a class="el" href="../../df/d35/classgurls_1_1_i_chol_wrapper.html#a8c185b347bd2437b403f56c6ccf69235">gurls::ICholWrapper&lt; T &gt;</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="../../da/df1/wrapper_8h_source.html">wrapper.h</a></li>
-<li><a class="el" href="../../dd/d95/wrapper_8cpp_source.html">wrapper.cpp</a></li>
+<li><a class="el" href="../../d8/d7c/wrapper_8hpp_source.html">wrapper.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div>
@@ -374,7 +571,7 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d5/d55/classgurls_1_1_gurls_wrapper.html">GurlsWrapper</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

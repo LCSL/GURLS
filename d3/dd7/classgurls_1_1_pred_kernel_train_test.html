@@ -218,23 +218,17 @@ template&lt;typename T &gt; </div>
 <span class="comment">//                opt.predkernel.distance = distance(X&#39;,opt.rls.X&#39;);</span>
         gMat2D&lt;T&gt; *dist = <span class="keyword">new</span> gMat2D&lt;T&gt;(xr, rls_xr);
 
-        T* Xt = <span class="keyword">new</span> T[xc*xr];
-        T* rls_Xt = <span class="keyword">new</span> T[xc*rls_xr];
+        <a class="code" href="../../db/d4e/namespacegurls.html#a506923827bb6ab78e9944facc9afcf13" title="Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean dis...">distance_transposed</a>(X.getData(), rls_X.getData(), xc, xr, rls_xr, dist-&gt;getData());
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a>(X.getData(), xr, xc, Xt);
-        <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a>(rls_X.getData(), rls_xr, xc, rls_Xt);
-
-        <a class="code" href="../../db/d4e/namespacegurls.html#a40bfc3247c329bd81a818af3383c42c5" title="Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean dis...">distance</a>(Xt, rls_Xt, xc, xr, rls_xr, dist-&gt;getData());
-
-        <span class="keyword">delete</span>[] Xt;
-        <span class="keyword">delete</span>[] rls_Xt;
 
 <span class="comment">//                fk.distance = opt.predkernel.distance;</span>
-        predkernel-&gt;addOpt(<span class="stringliteral">&quot;distance&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt; (*dist));
+<span class="comment">//        predkernel-&gt;addOpt(&quot;distance&quot;, new OptMatrix&lt;gMat2D&lt;T&gt; &gt; (*dist));</span>
 
 
-        K = <span class="keyword">new</span> gMat2D&lt;T&gt;(xr, rls_xr);
-        <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(K-&gt;getData(), dist-&gt;getData(), dist-&gt;getSize());
+<span class="comment">//        K = new gMat2D&lt;T&gt;(xr, rls_xr);</span>
+<span class="comment">//        copy(K-&gt;getData(), dist-&gt;getData(), dist-&gt;getSize());</span>
+
+        K = dist;
 
 <span class="comment">//            fk.K = exp(-(opt.predkernel.distance)/(opt.paramsel.sigma^2));</span>
         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(K-&gt;getSize(), (T)(-1.0/pow(sigma, 2)), K-&gt;getData(), 1);
@@ -357,7 +351,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d3/dd7/classgurls_1_1_pred_kernel_train_test.html">PredKernelTrainTest</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

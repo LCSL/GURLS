@@ -3,7 +3,7 @@ var classgurls_1_1_opt_matrix =
     [ "ValueType", "de/d63/classgurls_1_1_opt_matrix.html#a497597d7d340e396a2a111a2e6c2f680", null ],
     [ "MatrixType", "d3/dfe/classgurls_1_1_opt_matrix_base.html#a6af16d68562e1aaa340c96bc43403efc", null ],
     [ "OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#ae12a99ebd4b22d732265a831bfd7232e", null ],
-    [ "OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#aafac47a311657b4bd610e2ee11dec471", null ],
+    [ "OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#a9fe9232c46e17d689d5dd0695048d280", null ],
     [ "~OptMatrix", "de/d63/classgurls_1_1_opt_matrix.html#a0296b7f4abad68c2de5f7f48ef725fdd", null ],
     [ "detachValue", "de/d63/classgurls_1_1_opt_matrix.html#acfd739dd3ea40687f5114e2aa06d4eb2", null ],
     [ "dynacast", "de/d63/classgurls_1_1_opt_matrix.html#afcdaab9bb024c4b065db65730359264b", null ],

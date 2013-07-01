@@ -185,7 +185,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00103"></a>00103 
 <a name="l00107"></a>00107     <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html" title="BaseArray is the base class for all classes implementing vectors and matrices as arrays of cells...">BaseArray&lt;T&gt;</a>&amp; <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a2e84fd5238db6db3975237d1f1a5e3cc" title="Copies values form vector other to this one.">operator=</a>(<span class="keyword">const</span> T&amp; val);
 <a name="l00108"></a>00108 
-<a name="l00112"></a><a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a8608b69a1be00636c9c52196e4ed97a2">00112</a>     <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a8608b69a1be00636c9c52196e4ed97a2" title="Destructor.">~BaseArray</a>(){ <span class="keywordflow">if</span> (this-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a78e709d308cb750f4ae822d3e2f8ce81" title="Flag indicating whether vector has ownership of (and has to deallocate in destructor) the pointed buf...">isowner</a> &amp;&amp; <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#aa70af29dc0921cdbb2defc4746593c29" title="Pointer to the data buffer.">data</a> != NULL) { <span class="keyword">delete</span>[] this-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#aa70af29dc0921cdbb2defc4746593c29" title="Pointer to the data buffer.">data</a>; } }
+<a name="l00112"></a><a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a8608b69a1be00636c9c52196e4ed97a2">00112</a>     <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a8608b69a1be00636c9c52196e4ed97a2" title="Destructor.">~BaseArray</a>(){ <span class="keywordflow">if</span> (this-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a78e709d308cb750f4ae822d3e2f8ce81" title="Flag indicating whether vector has ownership of (and has to deallocate in destructor) the pointed buf...">isowner</a> &amp;&amp; <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#aa70af29dc0921cdbb2defc4746593c29" title="Pointer to the data buffer.">data</a> != NULL &amp;&amp; <a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a89db034d82d16c763cfd3f9e2979407b" title="Data buffer length.">size</a> &gt; 0) { <span class="keyword">delete</span>[] this-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#aa70af29dc0921cdbb2defc4746593c29" title="Pointer to the data buffer.">data</a>; } }
 <a name="l00113"></a>00113 
 <a name="l00117"></a>00117     <span class="keywordtype">void</span> <span class="keyword">set</span>(<span class="keyword">const</span> T * v, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> start = 0);
 <a name="l00118"></a>00118 
@@ -278,7 +278,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>basearray.h</b>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:03 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:35 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

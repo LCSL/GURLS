@@ -1,6 +1,8 @@
 var utils_8h =
 [
     [ "distance", "db/d4e/namespacegurls.html#a40bfc3247c329bd81a818af3383c42c5", null ],
+    [ "distance_transposed", "db/d4e/namespacegurls.html#a506923827bb6ab78e9944facc9afcf13", null ],
+    [ "distance_transposed_vm", "db/d4e/namespacegurls.html#a2f5abe81f955fe01b9c78e369a9f1264", null ],
     [ "GInverseDiagonal", "db/d4e/namespacegurls.html#ad8033740d34139ac1e186b93f3da1ab5", null ],
     [ "GInverseDiagonal", "db/d4e/namespacegurls.html#a5b05dad32d28b0406bf8cff158e7d457", null ],
     [ "precrec_driver", "db/d4e/namespacegurls.html#acb4047b769eb39affe91e125f8ecb6df", null ],

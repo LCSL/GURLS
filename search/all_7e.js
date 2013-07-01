@@ -3,7 +3,7 @@ var searchData=
   ['_7ebasearray',['~BaseArray',['../d9/d8b/classgurls_1_1_base_array.html#a8608b69a1be00636c9c52196e4ed97a2',1,'gurls::BaseArray']]],
   ['_7egurlsoption',['~GurlsOption',['../d5/dcc/classgurls_1_1_gurls_option.html#a33a9b28af21f2cd1cd5f162af1b79db3',1,'gurls::GurlsOption']]],
   ['_7egurlsoptionslist',['~GurlsOptionsList',['../dc/d34/classgurls_1_1_gurls_options_list.html#a746cae00f52699bfce4d11c7ece4b526',1,'gurls::GurlsOptionsList']]],
-  ['_7egurlswrapper',['~GurlsWrapper',['../d5/d55/classgurls_1_1_gurls_wrapper.html#aff7022c28458fe1cab2fdbc8dcc7941f',1,'gurls::GurlsWrapper']]],
+  ['_7egurlswrapper',['~GurlsWrapper',['../d5/d55/classgurls_1_1_gurls_wrapper.html#a153c2e8710f652a1a95c588a0aed1edc',1,'gurls::GurlsWrapper']]],
   ['_7eoptarray',['~OptArray',['../da/d90/classgurls_1_1_opt_array.html#aa8c84400c4ab388f8d7430f9e24ba2ed',1,'gurls::OptArray']]],
   ['_7eoptfunction',['~OptFunction',['../d8/d4b/classgurls_1_1_opt_function.html#a576d46d37dfd6b38d9f2513522da6340',1,'gurls::OptFunction']]],
   ['_7eoptmatrix',['~OptMatrix',['../de/d63/classgurls_1_1_opt_matrix.html#a0296b7f4abad68c2de5f7f48ef725fdd',1,'gurls::OptMatrix']]],

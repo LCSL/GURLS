@@ -272,8 +272,8 @@ template&lt;typename T &gt; </div>
         gMat2D&lt;T&gt; Xva(n-last, d);
         gMat2D&lt;T&gt; yva(n-last, t);
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, d, va, n-last, Xva.getData());
-        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), n, t, va, n-last, yva.getData());
+        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), X.rows(), d, va, n-last, Xva.getData());
+        <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(Y.getData(), Y.rows(), t, va, n-last, yva.getData());
 
         T* Xtr = NULL;
         <span class="keywordflow">if</span>(hasXt)
@@ -515,7 +515,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html">ParamSelHoPrimal</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

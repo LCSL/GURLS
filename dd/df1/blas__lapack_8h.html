@@ -172,6 +172,8 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Lapack DPOTRF.  <a href="#a185783af38726169420bb873bb3b706f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#a9f3a532154194ac4fc097770a4b28a63">dscal_</a> (int *n, double *a, double *x, int *incx)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Blas DSCAL.  <a href="#a9f3a532154194ac4fc097770a4b28a63"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#a9a48a93cd6cc23964843ae3874459210">dswap_</a> (int *n, double *sx, int *incx, double *sy, int *incy)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Blas DSWAP.  <a href="#a9a48a93cd6cc23964843ae3874459210"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#a6c377356f7bcc6c052e05cebca08d5d5">dsyev_</a> (char *jobz, char *uplo, int *n, double *a, int *lda, double *w, double *work, int *lwork, int *info)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Lapack DSYEV.  <a href="#a6c377356f7bcc6c052e05cebca08d5d5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#a7bac3b37dac2afcfa2ed35b9298152f9">dtrsm_</a> (char *side, char *uplo, char *transa, char *diag, int *m, int *n, double *alpha, double *a, int *lda, double *b, int *ldb)</td></tr>
@@ -206,6 +208,8 @@ Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Lapack SPOTRF.  <a href="#a71a840a262640444343d7344d71f6f9c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#a8eea0062fb47c65901804399dd339640">sscal_</a> (int *n, float *a, float *x, int *incx)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Blas SSCAL.  <a href="#a8eea0062fb47c65901804399dd339640"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#af62c82da55644958407e62d9410eb302">sswap_</a> (int *n, float *sx, int *incx, float *sy, int *incy)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Blas SSWAP.  <a href="#af62c82da55644958407e62d9410eb302"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#a3542c7fe010f0561a7c0e42c0f671491">ssyev_</a> (char *jobz, char *uplo, int *n, float *a, int *lda, float *w, float *work, int *lwork, int *info)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype for Lapack SSYEV.  <a href="#a3542c7fe010f0561a7c0e42c0f671491"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/df1/blas__lapack_8h.html#adf3bfde0a411931f406821eb7c217031">strsm_</a> (char *side, char *uplo, char *transa, char *diag, int *m, int *n, float *alpha, float *a, int *lda, float *b, int *ldb)</td></tr>
@@ -1127,6 +1131,52 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Scales a vector by a constant </p>
+
+</div>
+</div>
+<a class="anchor" id="a9a48a93cd6cc23964843ae3874459210"></a><!-- doxytag: member="blas_lapack.h::dswap_" ref="a9a48a93cd6cc23964843ae3874459210" args="(int *n, double *sx, int *incx, double *sy, int *incy)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../dd/df1/blas__lapack_8h.html#a9a48a93cd6cc23964843ae3874459210">dswap_</a> </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>sx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>incx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>sy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>incy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Interchanges two vectors. Uses unrolled loops for increments equal to 1. </p>
 
 </div>
 </div>
@@ -2320,6 +2370,52 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="af62c82da55644958407e62d9410eb302"></a><!-- doxytag: member="blas_lapack.h::sswap_" ref="af62c82da55644958407e62d9410eb302" args="(int *n, float *sx, int *incx, float *sy, int *incy)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../dd/df1/blas__lapack_8h.html#af62c82da55644958407e62d9410eb302">sswap_</a> </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>sx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>incx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>sy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>incy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Interchanges two vectors. Uses unrolled loops for increments equal to 1. </p>
+
+</div>
+</div>
 <a class="anchor" id="a3542c7fe010f0561a7c0e42c0f671491"></a><!-- doxytag: member="blas_lapack.h::ssyev_" ref="a3542c7fe010f0561a7c0e42c0f671491" args="(char *jobz, char *uplo, int *n, float *a, int *lda, float *w, float *work, int *lwork, int *info)" -->
 <div class="memitem">
 <div class="memproto">
@@ -2500,7 +2596,7 @@ Functions</h2></td></tr>
     <ul>
       <li class="navelem"><a class="el" href="../../dd/df1/blas__lapack_8h.html">blas_lapack.h</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

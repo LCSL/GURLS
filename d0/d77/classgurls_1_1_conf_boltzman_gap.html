@@ -209,7 +209,6 @@ template&lt;typename T &gt; </div>
     <span class="keyword">const</span> T* expscores = pred.getData();
 
     T <a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f" title="Sums all elements along the rows of a matrix.">sum</a>;
-    T* work = <span class="keyword">new</span> T[t+1];
     T* rowT = <span class="keyword">new</span> T[t];
 
     gMat2D&lt;T&gt; *conf = <span class="keyword">new</span> gMat2D&lt;T&gt;(n,1);
@@ -221,14 +220,13 @@ template&lt;typename T &gt; </div>
         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(expscores, n, t, i, rowT);
         <a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b" title="In place computation of the exponential for each element of a vector.">exp</a>(rowT, t);
 
-        sum = <a class="code" href="../../db/d4e/namespacegurls.html#a4dc32791921222de5ddf5b4874a7f974" title="Computes the sum of all elements of a vector.">sumv</a>(rowT, t, work);
+        sum = <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(rowT, t);
         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(t, (T)(1.0/sum), rowT, 1);
 
         <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">std::sort</a>(rowT,rowT+t);
         confidence[i] =  rowT[t-1]-rowT[t-2];
     }
 
-    <span class="keyword">delete</span> [] work;
     <span class="keyword">delete</span> [] rowT;
 
     GurlsOptionsList* ret = <span class="keyword">new</span> GurlsOptionsList(<span class="stringliteral">&quot;confidence&quot;</span>);
@@ -296,7 +294,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d0/d77/classgurls_1_1_conf_boltzman_gap.html">ConfBoltzmanGap</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -230,7 +230,7 @@ template&lt;typename T &gt; </div>
 
     <a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb" title="Generates a row vector containing the standard deviation of the elements of each column of an input m...">stdDev</a>(Y.getData(), n, t, stdY, work);
 
-    <span class="keyword">const</span> T lmax = <a class="code" href="../../db/d4e/namespacegurls.html#a4dc32791921222de5ddf5b4874a7f974" title="Computes the sum of all elements of a vector.">sumv</a>(stdY, t, work)/((T)t);
+    <span class="keyword">const</span> T lmax = <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(stdY, t)/((T)t);
 
 <span class="comment">//    lmin = mean(std(y))*10^-5;</span>
     <span class="keyword">const</span> T lmin = lmax * (T)1.0e-5;
@@ -540,7 +540,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d6/d89/classgurls_1_1_param_sel_ho_g_p_regr.html">ParamSelHoGPRegr</a>      </li>
 
-    <li class="footer">Generated on Mon May 13 2013 09:27:04 for GURLS++ by
+    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

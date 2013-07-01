@@ -18,6 +18,7 @@ var blas__lapack_8h =
     [ "dorgqr_", "dd/df1/blas__lapack_8h.html#ab3579a02e437f3c8e3f7be42edfc3283", null ],
     [ "dpotrf_", "dd/df1/blas__lapack_8h.html#a185783af38726169420bb873bb3b706f", null ],
     [ "dscal_", "dd/df1/blas__lapack_8h.html#a9f3a532154194ac4fc097770a4b28a63", null ],
+    [ "dswap_", "dd/df1/blas__lapack_8h.html#a9a48a93cd6cc23964843ae3874459210", null ],
     [ "dsyev_", "dd/df1/blas__lapack_8h.html#a6c377356f7bcc6c052e05cebca08d5d5", null ],
     [ "dtrsm_", "dd/df1/blas__lapack_8h.html#a7bac3b37dac2afcfa2ed35b9298152f9", null ],
     [ "saxpy_", "dd/df1/blas__lapack_8h.html#a50d328977f8375da0ba94a4280fe0b41", null ],
@@ -35,6 +36,7 @@ var blas__lapack_8h =
     [ "sorgqr_", "dd/df1/blas__lapack_8h.html#abf85cbc2eb134b1d6bfdc80d423b2e06", null ],
     [ "spotrf_", "dd/df1/blas__lapack_8h.html#a71a840a262640444343d7344d71f6f9c", null ],
     [ "sscal_", "dd/df1/blas__lapack_8h.html#a8eea0062fb47c65901804399dd339640", null ],
+    [ "sswap_", "dd/df1/blas__lapack_8h.html#af62c82da55644958407e62d9410eb302", null ],
     [ "ssyev_", "dd/df1/blas__lapack_8h.html#a3542c7fe010f0561a7c0e42c0f671491", null ],
     [ "strsm_", "dd/df1/blas__lapack_8h.html#adf3bfde0a411931f406821eb7c217031", null ]
 ];
