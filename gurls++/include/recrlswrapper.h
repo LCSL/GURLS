@@ -75,16 +75,16 @@ public:
     /**
       * Initial parameter selection and training
       *
-      * \param X Input data matrix
-      * \param Y Labels matrix
+      * \param[in] X Input data matrix
+      * \param[in] Y Labels matrix
       */
     void train(const gMat2D<T> &X, const gMat2D<T> &y);
 
     /**
       * Estimator update
       *
-      * \param X Input data vector
-      * \param Y Labels vector
+      * \param[in] X Input data vector
+      * \param[in] Y Labels vector
       */
     void update(const gVec<T> &X, const gVec<T> &y);
 

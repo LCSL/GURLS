@@ -47,6 +47,10 @@
 namespace gurls
 {
 
+/**
+  * \ingroup Wrappers
+  * \brief
+  */
 template<typename T>
 class NystromWrapper: public KernelWrapper<T>
 {
@@ -61,11 +65,17 @@ public:
     /**
       * Initial parameter selection and training
       *
-      * \param X Input data matrix
-      * \param Y Labels matrix
+      * \param[in] X Input data matrix
+      * \param[in] Y Labels matrix
       */
     void train(const gMat2D<T> &X, const gMat2D<T> &y);
 
+    /**
+      * Initial parameter selection and training, optimized for large_scale data
+      *
+      * \param[in] X Input data matrix
+      * \param[in] Y Labels matrix
+      */
     void train_largescale(const gMat2D<T> &X, const gMat2D<T> &y);
 
     /**
@@ -76,11 +86,18 @@ public:
       */
     gMat2D<T>* eval(const gMat2D<T> &X);
 
+    /**
+      * Estimates label for an input matrix, optimized for large_scale data
+      *
+      * \param[in] X Input matrix
+      * \returns Matrix of predicted labels
+      */
     gMat2D<T>* eval_largescale(const gMat2D<T> &X);
 
-
-//    using GurlsWrapper<T>::eval;
-
+    /**
+      *
+      * \param[in] value
+      */
     void setParam(double value);
 
 //    void rescale(gMat2D<T> &y);
