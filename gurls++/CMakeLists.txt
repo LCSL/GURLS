@@ -8,13 +8,6 @@ endif()
 set(GURLSLIBRARY gurls++)
 project(${GURLSLIBRARY})
 
-#set(SRCDIR ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-
-#set(DEMODIR ${CMAKE_CURRENT_SOURCE_DIR}/demo/)
-#set(TESTDIR ${CMAKE_CURRENT_SOURCE_DIR}/test/)
-#set(MISCDIR ${CMAKE_CURRENT_SOURCE_DIR}/misc/)
-
-
 set(gurls_headers   include/basearray.h
                     include/basearray.hpp
                     include/blas_lapack.h
@@ -101,10 +94,11 @@ set(gurls_sources   src/gmath.cpp
                     src/optlist.cpp
                     src/optmatrix.cpp
     )
-set(GURLS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE INTERNAL "")
+set(Gurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 #if (GURLS_USE_BOOST) #should change something in the code as well...
-    list(APPEND GURLS_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-    set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES} ${Boost_LIBRARIES}) #should use only the serialization one?
+    list(APPEND Gurls++_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+    set (Gurls++_INCLUDE_DIRS ${Gurls++_INCLUDE_DIRS} CACHE INTERNAL "")
+    set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_DATE_TIME_LIBRARY}) #should use only the serialization one?
 #else(GURLS_USE_BOOST)
 #    set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES})
 #endif(GURLS_USE_BOOST)
@@ -113,7 +107,7 @@ set(GURLS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE INTERNAL "")
 #     add_definitions( -D_BGURLS )
 # endif()
 
-include_directories( BEFORE ${GURLS_INCLUDE_DIRS} )
+include_directories( BEFORE ${Gurls++_INCLUDE_DIRS} )
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
 
 target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES})
@@ -127,12 +121,16 @@ if(GURLS_USE_EXTERNAL_BOOST)
 endif(GURLS_USE_EXTERNAL_BOOST)
 
 
-INSTALL(TARGETS ${GURLSLIBRARY}
+install(TARGETS ${GURLSLIBRARY} EXPORT Gurls++targets-install
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
-INSTALL (FILES ${gurls_headers} DESTINATION include/gurls++)
+
+install (FILES ${gurls_headers} DESTINATION include/gurls++)
+install(EXPORT Gurls++targets-install DESTINATION lib)
+
+export(TARGETS gurls++ FILE ${gurls_BINARY_DIR}/Gurls++targets-buildtree.cmake)
 
 if(MSVC)
 
@@ -146,7 +144,7 @@ if(MSVC)
 
 endif(MSVC)
 
-set(GURLS_LIBRARIES
+set(Gurls++_LIBRARIES
     ${GURLSLIBRARY}
     ${GurlsDependencies_LIBRARIES} CACHE INTERNAL ""
 )

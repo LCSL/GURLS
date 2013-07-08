@@ -1,12 +1,12 @@
 # Copyright (C) 2011-2013  Istituto Italiano di Tecnologia, Massachussets Institute of Techology
 # Authors: Elena Ceseracciu <elena.ceseracciu@iit.it>, Matteo Santoro <msantoro@mit.edu>
-include_directories(${GURLS_INCLUDE_DIRS})
+include_directories(${Gurls++_INCLUDE_DIRS})
 
 add_executable(GURLSloocvprimal GURLSloocvprimal.cpp)
-target_link_libraries(GURLSloocvprimal ${GURLS_LIBRARIES})
+target_link_libraries(GURLSloocvprimal ${Gurls++_LIBRARIES})
 
 add_executable(helloworld helloworld.cpp)
-target_link_libraries(helloworld ${GURLS_LIBRARIES})
+target_link_libraries(helloworld ${Gurls++_LIBRARIES})
 
 add_executable(recursiveRLS recursiveRLS.cpp)
-target_link_libraries(recursiveRLS ${GURLS_LIBRARIES})
+target_link_libraries(recursiveRLS ${Gurls++_LIBRARIES})
