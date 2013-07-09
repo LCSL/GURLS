@@ -49,17 +49,18 @@ for nh = 1:opt.nholdouts
     opt.predkernel.K = K(va,tr);
     opt.predkernel.Ktest = diag(K(va,va));
 
-    [Q,L] = eig(opt.kernel.K); %%%%%%%%%%%%%%%%%%%%%%%%%     [Q,L] = eig(opt.kernel.K(tr,tr));
-	L = double(diag(L));
-	
-	tot = opt.nlambda;
-	
-    L = sort(L,'descend');
-    % maximum eigenvalue
-    lmax = L(1);
-    CumSumEig = cumsum(L);
-    firstPercentile = find(CumSumEig./CumSumEig(end)>.999,1,'first');
-    lmin = max(L(firstPercentile), 200*sqrt(eps));
+    tot = opt.nlambda;
+    
+    if isfield(opt,'lambdamin')
+        lmin = opt.lambdamin;
+    else
+        lmin = 0.001;
+    end
+    if isfield(opt,'lambdamax')
+        lmax = opt.lambdamax;
+    else
+        lmax = 10;
+    end
     powers = linspace(0,1,tot);
     guesses = lmin.*(lmax/lmin).^(powers);
     

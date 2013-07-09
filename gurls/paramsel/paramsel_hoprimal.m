@@ -32,8 +32,13 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
-    vout = rmfield(vout,'perf');
-    vout = rmfield(vout,'guesses');
+    
+    if isfield(opt.paramsel,'perf')
+        vout = rmfield(vout,'perf');
+    end
+    if isfield(opt.paramsel,'guesses')
+        vout = rmfield(vout,'guesses');
+    end
 end
 
 savevars = [];

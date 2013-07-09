@@ -23,7 +23,6 @@ noise = opt.singlelambda(opt.paramsel.lambdas);
 n = size(opt.kernel.K,1);
 
 cfr.L = chol(opt.kernel.K + noise^2*eye(n));
-
 cfr.alpha = cfr.L\(cfr.L'\y);
 cfr.X = X;
 for t = 1:size(y,2);

@@ -29,18 +29,28 @@ end
 
 n = size(y,1);
         
-[Q,L] = eig(opt.kernel.K);
-L = double(diag(L));
-tot = opt.nlambda;
-
-L = sort(L,'descend');
-% maximum eigenvalue
-lmax = L(1);
-CumSumEig = cumsum(L);
-firstPercentile = find(CumSumEig./CumSumEig(end)>.999,1,'first');
-lmin = max(L(firstPercentile), 200*sqrt(eps));
+if isfield(opt,'lambdamin')
+    lmin = opt.lambdamin;
+else
+    lmin = 0.001;
+end
+if isfield(opt,'lambdamax')
+    lmax = opt.lambdamax;
+else
+    lmax = 10;
+end
 powers = linspace(0,1,tot);
 guesses = lmin.*(lmax/lmin).^(powers);
+	
+
+% L = sort(L,'descend');
+% % maximum eigenvalue
+% lmax = L(1);
+% CumSumEig = cumsum(L);
+% firstPercentile = find(CumSumEig./CumSumEig(end)>.999,1,'first');
+% lmin = max(L(firstPercentile), 200*sqrt(eps));
+% powers = linspace(0,1,tot);
+% guesses = lmin.*(lmax/lmin).^(powers);
 
 for i = 1:tot
     opt.paramsel.lambdas = guesses(i);
