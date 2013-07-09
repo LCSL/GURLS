@@ -21,8 +21,7 @@ The GRAND UNIFIED REGULARIZED LEAST SQUARES software library comprises the follo
  matrices by means of memory-mapped storage and a simple distributed task manager.
 
 -GURLS++, a C++ standalone implementation of GURLS, with additional simple API's for specific learning 
- pipelines (currently only the Recursive RLS and Nystrom Regularization API are available though we are 
- planning to add soon new API's)
+ pipelines
 
 -bGURLS++, a  C++ standalone implementation of bGURLS.
 
