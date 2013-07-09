@@ -48,7 +48,25 @@ switch opt.kernel.type
 								( (X(i,:) - opt.rls.X(j,:)).^2 ) ./ ...
 								( 0.5*(X(i,:) + opt.rls.X(j,:)) + eps));
 			end
+        end
+        
+    case {'quasiperiodic'}
+		fk.type = 'quasiperiodic';
+		if ~isfield(opt,'predkernel')
+			opt.predkernel.type = 'quasiperiodic';
 		end
+		if ~isfield(opt.predkernel,'distance')
+			opt.predkernel.distance = square_distance(X',opt.rls.X');
+        end
+        fk.distance = opt.predkernel.distance;
+        
+        D = opt.predkernel.distance;
+        fk.K = opt.paramsel.alpha*exp(-sin(((D.^(1/2)).*(pi/opt.period))).^2);
+        fk.K = fk.K + (1-opt.paramsel.alpha)*exp(-D./(opt.paramsel.sigma^2));
+        if isfield(opt.rls,'L')
+            fk.Ktest = ones(size(X,1),1);
+        end
+
 end	
  
 		
