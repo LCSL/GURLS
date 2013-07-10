@@ -4,7 +4,7 @@
  * Copyright (C) 2011-1013, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
+ * author:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,82 +39,70 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * \ingroup Tutorials
- * \file
- */
+#ifndef _GURLS_SPLIT_H_
+#define _GURLS_SPLIT_H_
 
-#include <iostream>
-#include <string>
 
-#include "gurls++/gvec.h"
-#include "gurls++/gmat2d.h"
+#include <stdexcept>
 #include "gurls++/optlist.h"
-#include "quickanddirty.h"
 
-using namespace gurls;
+namespace gurls
+{
+
+template<typename T>
+class SplitHo;
 
 /**
-  * Main function
-  */
-int main(int argc, char* argv[])
+ * \ingroup Exceptions
+ *
+ * \brief BadSplitCreation is thrown when \ref factory tries to generate an unknown split method
+ */
+class BadSplitCreation : public std::logic_error
 {
-    typedef double T;
+public:
 
-    if(argc != 2)
+    /**
+     * Exception constructor.
+     */
+    BadSplitCreation(std::string type): logic_error("Cannot create type " + type) {}
+};
+
+/**
+ * \ingroup Split
+ * \brief Split is the class that splits data into pair(s) of training and test samples
+ */
+template<typename T>
+class Split
+{
+public:
+
+    /**
+     * Splits data into pair(s) of training and test samples, to be used for cross-validation
+     * \param X not used
+     * \param Y labels matrix
+     * \param opt options with the different required fields based on the sub-class
+     *
+     * \return a GurlsOptionList
+     */
+    virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
+
+    /**
+     * Factory function returning a pointer to the newly created object.
+     *
+     * \warning The returned pointer is a plain, un-managed pointer. The calling
+     * function is responsible of deallocating the object.
+     */
+    static Split<T> *factory(const std::string& id) throw(BadSplitCreation)
     {
-        std::cout << "Usage: " << argv[0] << " <gurls++ data directory>" << std::endl;
-        return EXIT_SUCCESS;
+        if(id == "ho")
+            return new SplitHo<T>;
+
+        throw BadSplitCreation(id);
     }
-
-    gMat2D<T> Xtr, Xte, ytr, yte;
-
-    std::string XtrFileName = std::string(argv[1]) + "/Xtr.txt";
-    std::string ytrFileName = std::string(argv[1]) + "/ytr_onecolumn.txt";
-    std::string XteFileName = std::string(argv[1]) + "/Xte.txt";
-    std::string yteFileName = std::string(argv[1]) + "/yte_onecolumn.txt";
-
-    try
-    {
-        //load the training data
-        Xtr.readCSV(XtrFileName);
-        ytr.readCSV(ytrFileName);
-
-        //load the test data
-        Xte.readCSV(XteFileName);
-        yte.readCSV(yteFileName);
+};
 
 
-        //train the classifer
-        GurlsOptionsList* opt = gurls_train(Xtr, ytr);
-
-        //predict the labels for the test set and asses prediction accuracy
-        gurls_test(Xte, yte, *opt);
-
-
-        const gMat2D<T>& acc = opt->getOptValue<OptMatrix<gMat2D<T> > >("acc");
-        const int max = static_cast<int>(*std::max_element(ytr.getData(), ytr.getData()+ytr.getSize()));
-        const int accs = acc.getSize();
-
-        std::cout.precision(4);
-
-        std::cout << std::endl << "Prediction accurcay is:" << std::endl;
-
-        for(int i=1; i<= max; ++i)
-            std::cout << "\tClass " << i << "\t";
-
-        std::cout << std::endl;
-
-        for(int i=0; i< accs; ++i)
-            std::cout << "\t" << acc.getData()[i]*100.0 << "%\t";
-
-        std::cout << std::endl;
-
-        return EXIT_SUCCESS;
-    }
-    catch (gException& e)
-    {
-        std::cout << e.getMessage() << std::endl;
-        return EXIT_FAILURE;
-    }
 }
+
+#endif // _GURLS_SPLIT_H_
+

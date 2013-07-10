@@ -1,4 +1,4 @@
-#include "optmatrix.h"
+#include "gurls++/optmatrix.h"
 
 namespace gurls
 {

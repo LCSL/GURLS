@@ -39,82 +39,62 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+
+#ifndef _GURLS_NORML2_H_
+#define _GURLS_NORML2_H_
+
+
+#include "gurls++/norm.h"
+#include "gurls++/gmath.h"
+
+#include <limits>
+
+namespace gurls {
+
 /**
- * \ingroup Tutorials
- * \file
+ * \ingroup Norms
+ * \brief NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.
  */
 
-#include <iostream>
-#include <string>
-
-#include "gurls++/gvec.h"
-#include "gurls++/gmat2d.h"
-#include "gurls++/optlist.h"
-#include "quickanddirty.h"
-
-using namespace gurls;
-
-/**
-  * Main function
-  */
-int main(int argc, char* argv[])
+template <typename T>
+class NormL2: public Norm<T>
 {
-    typedef double T;
+public:
+    /**
+     * Spheriphies the data according to the l2 norm.
+     * \param X input data matrix
+     * \param Y not used
+     * \param opt not used
+     * \return spheriphied input data matrix
+     */
+    gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+};
 
-    if(argc != 2)
+template<typename T>
+gMat2D<T>* NormL2<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& /*opt*/) throw(gException)
+{
+    const unsigned long m = X.rows();
+    const unsigned long n = X.cols();
+
+    T norm;
+
+    gMat2D<T>* retX = new gMat2D<T>(m, n);
+    copy(retX->getData(), X.getData(), retX->getSize());
+    T*rx = retX->getData();
+
+    const T epsilon = std::numeric_limits<T>::epsilon();
+
+//    for j = 1:size(X,1)
+    for(unsigned long j=0; j<m; ++j)
     {
-        std::cout << "Usage: " << argv[0] << " <gurls++ data directory>" << std::endl;
-        return EXIT_SUCCESS;
+//        X(j,:) = X(j,:)/(norm(X(j,:)) + eps);
+        norm = nrm2(n, rx+j, m) + epsilon;
+        scal(n, (T)1.0/norm, rx+j, m);
     }
 
-    gMat2D<T> Xtr, Xte, ytr, yte;
-
-    std::string XtrFileName = std::string(argv[1]) + "/Xtr.txt";
-    std::string ytrFileName = std::string(argv[1]) + "/ytr_onecolumn.txt";
-    std::string XteFileName = std::string(argv[1]) + "/Xte.txt";
-    std::string yteFileName = std::string(argv[1]) + "/yte_onecolumn.txt";
-
-    try
-    {
-        //load the training data
-        Xtr.readCSV(XtrFileName);
-        ytr.readCSV(ytrFileName);
-
-        //load the test data
-        Xte.readCSV(XteFileName);
-        yte.readCSV(yteFileName);
-
-
-        //train the classifer
-        GurlsOptionsList* opt = gurls_train(Xtr, ytr);
-
-        //predict the labels for the test set and asses prediction accuracy
-        gurls_test(Xte, yte, *opt);
-
-
-        const gMat2D<T>& acc = opt->getOptValue<OptMatrix<gMat2D<T> > >("acc");
-        const int max = static_cast<int>(*std::max_element(ytr.getData(), ytr.getData()+ytr.getSize()));
-        const int accs = acc.getSize();
-
-        std::cout.precision(4);
-
-        std::cout << std::endl << "Prediction accurcay is:" << std::endl;
-
-        for(int i=1; i<= max; ++i)
-            std::cout << "\tClass " << i << "\t";
-
-        std::cout << std::endl;
-
-        for(int i=0; i< accs; ++i)
-            std::cout << "\t" << acc.getData()[i]*100.0 << "%\t";
-
-        std::cout << std::endl;
-
-        return EXIT_SUCCESS;
-    }
-    catch (gException& e)
-    {
-        std::cout << e.getMessage() << std::endl;
-        return EXIT_FAILURE;
-    }
+    return retX;
 }
+
+}
+
+#endif //_GURLS_NORML2_H_

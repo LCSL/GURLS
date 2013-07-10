@@ -83,7 +83,7 @@ if(GURLS_BUILD_GURLSPP)
 	configure_file(cmake-modules/Gurls++Config.cmake.in ${PROJECT_BINARY_DIR}/Gurls++Config.cmake @ONLY)
 	
 	#Gurls++Config.cmake for installation
-	set (export_include_dirs "${CMAKE_INSTALL_PREFIX}/include/gurls++")
+	set (export_include_dirs "${CMAKE_INSTALL_PREFIX}/include")
 	set (generated_export_file "Gurls++targets-install.cmake")
 	configure_file(cmake-modules/Gurls++Config.cmake.in ${PROJECT_BINARY_DIR}/Gurls++ConfigForInstall.cmake @ONLY)
 	install(FILES ${PROJECT_BINARY_DIR}/Gurls++ConfigForInstall.cmake DESTINATION lib RENAME Gurls++Config.cmake)

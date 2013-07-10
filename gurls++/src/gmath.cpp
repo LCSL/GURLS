@@ -39,11 +39,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gmath.h"
+#include "gurls++/gmath.h"
 
-#include "gmat2d.h"
-#include "gvec.h"
-#include "exports.h"
+#include "gurls++/gmat2d.h"
+#include "gurls++/gvec.h"
+#include "gurls++/exports.h"
 
 namespace gurls {
 
