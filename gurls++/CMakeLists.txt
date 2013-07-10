@@ -94,10 +94,10 @@ set(gurls_sources   src/gmath.cpp
                     src/optlist.cpp
                     src/optmatrix.cpp
     )
-set(Gurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+set(Gurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE INTERNAL "")
+include_directories (${Gurls++_INCLUDE_DIRS})
 #if (GURLS_USE_BOOST) #should change something in the code as well...
-    list(APPEND Gurls++_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-    set (Gurls++_INCLUDE_DIRS ${Gurls++_INCLUDE_DIRS} CACHE INTERNAL "")
+	include_directories (${Boost_INCLUDE_DIRS} )
     set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_DATE_TIME_LIBRARY}) #should use only the serialization one?
 #else(GURLS_USE_BOOST)
 #    set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES})
