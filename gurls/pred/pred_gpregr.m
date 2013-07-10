@@ -17,6 +17,6 @@ n = size(y,1);
 pred.vars = zeros(n,1);
 for i = 1:n;
     v = opt.rls.L'\opt.predkernel.K(i,:)';
-    pred.vars(i) = v'*v;
+    pred.vars(i) = v'*v; 
 end
 pred.vars = opt.predkernel.Ktest - pred.vars;

@@ -8,8 +8,6 @@ function vout = paramsel_siglamloogpregr(X,y,opt)
 % -X: input data matrix
 % -Y: labels matrix
 % -OPT: struct of options with the following fields:
-%   fields that need to be set through previous gurls tasks:
-%		- kernel.K (set by the kernel_* routines)
 %   fields with default values set through the defopt function:
 %		- kernel.type
 %		- nlambda
@@ -62,7 +60,8 @@ sigmas = zeros(1,opt.nsigma);
 for i = 1:opt.nsigma
 	sigmas(i) = (opt.sigmamin*(q^(i-1)));
 	opt.paramsel.sigma = sigmas(i);
-	opt.kernel = kernel_rbf(X,y,opt);
+    kerfun = str2func(['kernel_' opt.kernel.type]);
+	opt.kernel = kerfun(X,[],opt);
 	paramsel = paramsel_loogpregr(X,y,opt);
 	perf(i,:,:) = paramsel.perf;
 	guesses(i,:) = paramsel.guesses;
@@ -80,11 +79,9 @@ M = sum(perf,3); % sum over classes
 [dummy,i] = max(M(:));
 [m,n] = ind2sub(size(M),i);
 
-% opt sigma
 vout.sigma = opt.sigmamin*(q^(m-1));
-% opt lambda
 vout.lambdas = guesses(m,n)*ones(1,T);
-% This is awesome
+
 if numel(savevars) > 0
 	[ST,I] = dbstack();
 	save(ST(1).name,savevars{:});

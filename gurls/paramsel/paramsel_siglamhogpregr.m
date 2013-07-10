@@ -1,19 +1,17 @@
 function vout = paramsel_siglamhogpregr(X,y,opt)
 % paramsel_siglamhogpregr(X,Y,OPT)
 % Performs parameter selection for gaussian process regression.
-% The leave-one-out approach is used.
+% The hold-out approach is used.
 % It selects both the noise level lambda and the kernel parameter sigma.
 %
 % INPUTS:
 % -X: input data matrix
 % -Y: labels matrix
 % -OPT: struct of options with the following fields:
-%   fields that need to be set through previous gurls tasks:
-%		- kernel.K (set by the kernel_* routines)
 %   fields with default values set through the defopt function:
 %		- kernel.type
 %		- nlambda
-%       - hoperf
+%               - hoperf
 %
 %   For more information on standard OPT fields
 %   see also defopt
@@ -24,14 +22,12 @@ function vout = paramsel_siglamhogpregr(X,y,opt)
 %           where T is the number of classes
 % -sigma: value of the kernel parameter minimizing the validation error
 
-%savevars = {'LOOSQE','M','sigmas','guesses'};
 savevars = [];
 
 if isfield (opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
 end
-
 [n,T]  = size(y);
 if ~isfield(opt,'kernel')
 	opt.kernel.type = 'rbf';
@@ -62,8 +58,9 @@ sigmas = zeros(1,opt.nsigma);
 for i = 1:opt.nsigma
 	sigmas(i) = (opt.sigmamin*(q^(i-1)));
 	opt.paramsel.sigma = sigmas(i);
-	opt.kernel = kernel_rbf(X,y,opt);
-	paramsel = paramsel_hogpregr(X,y,opt);
+    kerfun = str2func(['kernel_' opt.kernel.type]);
+	opt.kernel = kerfun(X,[],opt);
+    paramsel = paramsel_hogpregr(X,y,opt);
     nh = numel(paramsel.perf);
 	PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',opt.nlambda*T,nh),2),T,opt.nlambda)';
 	guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
@@ -82,12 +79,10 @@ vout.lambda_guesses = guesses;
 M = sum(PERF,3); % sum over classes
 [dummy,i] = max(M(:));
 [m,n] = ind2sub(size(M),i);
-% opt sigma
 vout.perf = M;
 vout.sigma = opt.sigmamin*(q^(m-1));
-% opt lambda
 vout.lambdas = guesses(m,n)*ones(1,T);
-% This is awesome
+
 if numel(savevars) > 0
 	[ST,I] = dbstack();
 	save(ST(1).name,savevars{:});

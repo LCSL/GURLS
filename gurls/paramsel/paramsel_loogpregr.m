@@ -32,9 +32,20 @@ end
 tot = opt.nlambda;
 K = opt.kernel.K;
 
-lmax = mean(std(y));
-lmin = mean(std(y))*10^-5;
-guesses = lmin.*(lmax/lmin).^linspace(0,1,tot);
+
+if isfield(opt,'lambdamin')
+    lmin = opt.lambdamin;
+else
+    lmin = 0.001;
+end
+if isfield(opt,'lambdamax')
+    lmax = opt.lambdamax;
+else
+    lmax = 10;
+end
+powers = linspace(0,1,tot);
+guesses = lmin.*(lmax/lmin).^(powers);
+
 
 perf = zeros(tot,T);
 for k = 1:n;

@@ -58,11 +58,6 @@ typedef double T;
 // size of first batch to be used for initialization
 const unsigned long n0 = 100;
 
-const T errCoeff = 1.0e-10;
-
-const gMat2D<T>* standardRLS(const gMat2D<T> &Xtr_tot, const gMat2D<T> &ytr_tot, const gMat2D<T> &Xte_tot, const GurlsOptionsList &opt, T lambdasScaleFactor);
-bool checkMatrices(const gMat2D<T>& m1, const gMat2D<T>& m2);
-
 /**
   * Main function
   *
@@ -82,14 +77,9 @@ int main(int argc, char* argv[])
 
     if(argc < 2 || argc > 3)
     {
-        std::cout << "Usage: " << argv[0] << " <gurls++ data directory> [--retrain]" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <gurls++ data directory>" << std::endl;
         return EXIT_SUCCESS;
     }
-
-    bool retrain = false;
-
-    if(argc == 3)
-        retrain = (std::string(argv[2]) == "--retrain");
 
     gMat2D<T> Xtr_tot, Xte_tot, ytr_tot;
 
@@ -98,17 +88,12 @@ int main(int argc, char* argv[])
     std::string ytrFileName = std::string(argv[1]) + "/ytr.txt";
 
 
-    RecursiveRLSWrapper<T>* wrapper;
-    if(retrain)
-        wrapper = new RecursiveRLSRetrainWrapper<T>("recursiveRLSretrain");
-    else
-        wrapper = new RecursiveRLSWrapper<T>("recursiveRLS");
+    RecursiveRLSWrapper<T> wrapper("recursiveRLS");
 
     try
     {
-        std::cout << "Running recursive RLS with" << (retrain? std::string(""): std::string("out")) << " retraining..." << std::endl;
-
         // Load data files
+        std::cout << "Loading data files..." << std::endl;
         Xtr_tot.readCSV(XtrFileName);
         Xte_tot.readCSV(XteFileName);
         ytr_tot.readCSV(ytrFileName);
@@ -118,7 +103,6 @@ int main(int argc, char* argv[])
         const unsigned long n = Xtr_tot.rows();
         const unsigned long d = Xtr_tot.cols();
         const unsigned long t = ytr_tot.cols();
-        const unsigned long nte = Xte_tot.rows();
 
         gMat2D<T> Xtr(n0, d);
         gMat2D<T> ytr(n0, t);
@@ -133,11 +117,11 @@ int main(int argc, char* argv[])
 
         // Initialize model
         std::cout << "Training model..." << std::endl;
-        wrapper->train(Xtr, ytr);
+        wrapper.train(Xtr, ytr);
 
 
         // Update RLS estimator recursively
-        std::cout << "\nUpdating estimator..." << std::endl;
+        std::cout << "Updating estimator..." << std::endl;
 
         gVec<T> Xnew(d);
         gVec<T> ynew(t);
@@ -149,133 +133,27 @@ int main(int argc, char* argv[])
             getRow(ytr_tot.getData(), n, t, i, ynew.getData());
 
             // Update estimator with a new input pair
-            wrapper->update(Xnew, ynew);
+            wrapper.update(Xnew, ynew);
         }
 
         // Reinitialize model
-        if(retrain)
-        {
-            std::cout << "Retraining model..." << std::endl;
-            dynamic_cast<RecursiveRLSRetrainWrapper<T>*>(wrapper)->retrain();
-        }
+        std::cout << "Retraining model..." << std::endl;
+        wrapper.retrain();
 
         // Test on independent test set
         std::cout << "Testing..." << std::endl;
+        gMat2D<T>* rec_result = wrapper.eval(Xte_tot);
 
-        // Option 1: Test on entire data set
-        gMat2D<T>* rec_result = wrapper->eval(Xte_tot);
-
-
-        // Option 2: Test iteratively row-by-row
-        for(unsigned long i=0; i<nte; ++i)
-        {
-            getRow(Xte_tot.getData(), nte, d, i, Xnew.getData());
-
-            unsigned long index;
-            double ret = wrapper->eval(Xnew, &index);
-
-            // Check that solutions coincide
-            if(!le(std::abs((*rec_result)(i, index) - ret), errCoeff*std::abs(ret)))
-            {
-                std::cout << "Iteration " << i << " : error detected" << std::endl;
-                std::cout << " " << (*rec_result)(i, index) << " " << ret << std::endl;
-            }
-        }
-
-
-        // Check against standard RLS
-        std::cout << "Checking against standard RLS..." << std::endl;
-        T alpha = retrain? (T)1.0 : ((T)n0/(T)n);
-        const gMat2D<T>* std_result = standardRLS(Xtr_tot, ytr_tot, Xte_tot, wrapper->getOpt(), alpha);
-        bool check = checkMatrices(*rec_result, *std_result);
+        std::cout << "Saving predictions matrix..." << std::endl;
+        rec_result->saveCSV("pred_RecRLS.txt");
 
         delete rec_result;
-        delete std_result;
 
-        if(check)
-            return EXIT_SUCCESS;
-
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
     catch (gException& e)
     {
         std::cout << e.getMessage() << std::endl;
         return EXIT_FAILURE;
     }
-
-}
-
-const gMat2D<T>* standardRLS(const gMat2D<T> &Xtr_tot, const gMat2D<T> &ytr_tot, const gMat2D<T> &Xte_tot, const GurlsOptionsList &opt, T lambdasScaleFactor)
-{
-    GurlsOptionsList* stdOpt = new GurlsOptionsList(opt);
-    stdOpt->removeOpt("optimizer");
-    stdOpt->removeOpt("pred");
-
-    GurlsOptionsList* paramsel = stdOpt->getOptAs<GurlsOptionsList>("paramsel");
-
-    gMat2D<T> &lambdas = paramsel->getOptValue< OptMatrix<gMat2D<T> > >("lambdas");
-    scal(lambdas.getSize(), lambdasScaleFactor, lambdas.getData(), 1);
-
-    RLSPrimal<T> optimizer;
-    stdOpt->addOpt("optimizer", optimizer.execute(Xtr_tot, ytr_tot, *stdOpt));
-
-    PredPrimal<T> predprimal;
-    gMat2D<T> empty_y;
-    OptMatrix<gMat2D<T> >* pred = predprimal.execute(Xte_tot, empty_y, *stdOpt);
-
-    const gMat2D<T>& result2 = pred->getValue();
-
-    pred->detachValue();
-
-    delete stdOpt;
-
-    return &result2;
-}
-
-bool checkMatrices(const gMat2D<T>& m1, const gMat2D<T>& m2)
-{
-    if(m1.rows()!= m2.rows() || m1.cols()!= m2.cols())
-    {
-        std::ostringstream str;
-
-        str << "Dimensions error: (" <<
-                     m1.rows() << "x" << m1.cols() << ") vs (" <<
-                     m2.rows() << "x" << m2.cols() << ");" << std::endl;
-
-        throw gException(str.str());
-    }
-
-    const T* r1_it = m1.getData();
-    const T* r2_it = m2.getData();
-    const unsigned long size = m1.getSize();
-
-    T min_diff = DBL_MAX;
-    T max_diff = -1;
-    int errorCount = 0;
-
-    for(const T* r1_end = r1_it+size; r1_it < r1_end; ++r1_it, ++r2_it)
-    {
-        if(!le(std::abs(*r1_it - *r2_it), errCoeff*std::abs(*r2_it)))
-        {
-            T diff = fabs(*r1_it - *r2_it);
-            //std::cerr << "Error " << *r1_it << " vs " << *r2_it << ", diff: " << fabs(*r1_it - *r2_it) << std::endl;
-
-            if(lt (diff, min_diff))
-                min_diff = diff;
-            if(gt(diff, max_diff))
-                max_diff = diff;
-
-            ++errorCount;
-        }
-    }
-
-    std::cout << "Errors found: " << errorCount << std::endl;
-    if(errorCount > 0)
-    {
-        std::cout << " Min error: " << min_diff << std::endl << " Max error: " << max_diff << std::endl;
-        return false;
-    }
-
-    return true;
-
 }

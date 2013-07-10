@@ -12,7 +12,7 @@ GurlsWrapper<T>::GurlsWrapper(const std::string& name):opt(NULL), name(name)
     opt = new GurlsOptionsList(name, true);
 
     setSplitProportion(0.2);
-    setNparams(1);
+    setNparams(20);
     setProblemType(CLASSIFICATION);
 }
 
@@ -67,6 +67,30 @@ template <typename T>
 void GurlsWrapper<T>::setNparams(unsigned long value)
 {
     opt->getOptValue<OptNumber>("nlambda") = value;
+
+    if(opt->hasOpt("paramsel.lambdas") && value > 1.0)
+    {
+        std::cout << "Warning: ignoring previous values of the regularization parameter" << std::endl;
+        opt->getOptAs<GurlsOptionsList>("paramsel")->removeOpt("lambdas");
+    }
+}
+
+template <typename T>
+void GurlsWrapper<T>::setParam(double value)
+{
+    if(!opt->hasOpt("paramsel"))
+        opt->addOpt("paramsel", new GurlsOptionsList("paramsel"));
+
+    if(opt->hasOpt("paramsel.lambdas"))
+        opt->getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas").getData()[0] = (T)value;
+    else
+    {
+        gMat2D<T> * lambdas = new gMat2D<T>(1,1);
+        lambdas->getData()[0] = (T)value;
+        opt->getOptAs<GurlsOptionsList>("paramsel")->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambdas));
+    }
+
+    setNparams(1);
 }
 
 template <typename T>
@@ -91,11 +115,11 @@ bool GurlsWrapper<T>::trainedModel()
 
 
 template <typename T>
-KernelWrapper<T>::KernelWrapper(const std::string &name): GurlsWrapper<T>(name)
+KernelWrapper<T>::KernelWrapper(const std::string &name): GurlsWrapper<T>(name), kType(RBF)
 {
-    GurlsOptionsList *kernel = new GurlsOptionsList("kernel");
-    this->opt->addOpt("kernel", kernel);
-    kernel->addOpt("type", "rbf");
+//    GurlsOptionsList *kernel = new GurlsOptionsList("kernel");
+//    this->opt->addOpt("kernel", kernel);
+//    kernel->addOpt("type", "rbf");
 
     GurlsOptionsList *paramsel = new GurlsOptionsList("paramsel");
     this->opt->addOpt("paramsel", paramsel);
@@ -104,17 +128,19 @@ KernelWrapper<T>::KernelWrapper(const std::string &name): GurlsWrapper<T>(name)
 template <typename T>
 void KernelWrapper<T>::setKernelType(typename KernelWrapper::KernelType value)
 {
-    std::string &type = this->opt->template getOptValue<OptString>("kernel.type");
+    kType = value;
 
-    switch(value)
-    {
-    case RBF:
-        type = std::string("rbf");
-    case LINEAR:
-        type = std::string("linear");
-    case CHISQUARED:
-        type = std::string("chisquared");
-    }
+//    std::string &type = this->opt->template getOptValue<OptString>("kernel.type");
+
+//    switch(value)
+//    {
+//    case RBF:
+//        type = std::string("rbf");
+//    case LINEAR:
+//        type = std::string("linear");
+//    case CHISQUARED:
+//        type = std::string("chisquared");
+//    }
 }
 
 template <typename T>
@@ -126,6 +152,20 @@ void KernelWrapper<T>::setSigma(double value)
     {
         GurlsOptionsList* paramsel = this->opt->template getOptAs<GurlsOptionsList>("paramsel");
         paramsel->addOpt("sigma", new OptNumber(value));
+    }
+
+    setNSigma(1);
+}
+
+template <typename T>
+void KernelWrapper<T>::setNSigma(unsigned long value)
+{
+    this->opt->template getOptValue<OptNumber>("nsigma") = value;
+
+    if(this->opt->hasOpt("paramsel.sigma") && value > 1.0)
+    {
+        std::cout << "Warning: ignoring previous values of the kernel parameter" << std::endl;
+        this->opt->template getOptAs<GurlsOptionsList>("paramsel")->removeOpt("sigma");
     }
 }
 

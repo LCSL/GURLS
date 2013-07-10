@@ -76,8 +76,8 @@ public:
     /**
       * Initial parameter selection and training
       *
-      * \param X Input data matrix
-      * \param Y Labels matrix
+      * \param[in] X Input data matrix
+      * \param[in] Y Labels matrix
       */
     virtual void train(const gMat2D<T> &X, const gMat2D<T> &y) = 0;
 
@@ -103,14 +103,45 @@ public:
       */
     virtual const GurlsOptionsList& getOpt() const;
 
+    /**
+      * Saves the computed model to file
+      *
+      * \param fileName name of the file where data will be saved
+      */
     virtual void saveModel(const std::string &fileName);
+
+    /**
+      * Loads a computed model from a file
+      *
+      * \param fileName name of the file containing the data to load
+      */
     virtual void loadModel(const std::string &fileName);
 
 //    virtual void exportModel(const std::string &fileName);
 //    virtual void importModel(const std::string &fileName);
 
+    /**
+      *
+      * \param[in] value
+      */
     virtual void setNparams(unsigned long value);
+
+    /**
+      *
+      * \param[in] value
+      */
+    virtual void setParam(double value);
+
+    /**
+      *
+      * \param[in] value
+      */
     virtual void setSplitProportion(double value);
+
+    /**
+      *
+      * \param[in] value
+      */
     virtual void setProblemType(ProblemType value);
 
 
@@ -123,22 +154,57 @@ protected:
     std::string name;       ///< Name of the options structure
     GurlsOptionsList *opt;  ///< Options structure where information about initial training is stored
 
-    ProblemType probType;
+    ProblemType probType;   ///< Problem type
 
 };
 
+/**
+  * \ingroup Wrappers
+  * \brief KernelWrapper is the base class for all gurls++ wrappers
+  */
 template<typename T>
 class KernelWrapper : public GurlsWrapper<T>
 {
 public:
-    enum KernelType{RBF, LINEAR, CHISQUARED};
+    enum KernelType{RBF, LINEAR/*, CHISQUARED*/};                   ///<
 
+    /**
+      * Constructor
+      *
+      * \param name Name of the options structure that will be initialized
+      */
     KernelWrapper(const std::string& name);
 
+
+    /**
+      * Initial parameter selection and training
+      *
+      * \param X Input data matrix
+      * \param Y Labels matrix
+      */
     virtual void train(const gMat2D<T> &X, const gMat2D<T> &y) = 0;
 
+
+    /**
+      *
+      * \param value
+      */
     virtual void setKernelType(KernelType value);
+
+    /**
+      *
+      * \param value
+      */
     virtual void setSigma(double value);
+
+    /**
+      *
+      * \param value
+      */
+    virtual void setNSigma(unsigned long value);
+
+protected:
+    KernelType kType;   ///< Kernel type used in train and eval
 };
 
 }

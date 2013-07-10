@@ -5,87 +5,14 @@
 
 namespace gurls
 {
-
 template <typename T>
-RecursiveRLSWrapper<T>::RecursiveRLSWrapper(const std::string& name):GurlsWrapper<T>(name) {}
-
-template <typename T>
-void RecursiveRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
-{
-    this->opt->removeOpt("split");
-    this->opt->removeOpt("paramsel");
-    this->opt->removeOpt("optimizer");
-
-    this->opt->removeOpt("seq");
-    this->opt->removeOpt("processes");
-
-    OptTaskSequence *seq = new OptTaskSequence();
-    *seq << "split:ho" << "paramsel:hoprimal" << "optimizer:rlsprimalrecinit";
-
-    GurlsOptionsList * process = new GurlsOptionsList("processes", false);
-
-    OptProcess* process1 = new OptProcess();
-    *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
-    process->addOpt("one", process1);
-
-    this->opt->addOpt("seq", seq);
-    this->opt->addOpt("processes", process);
-
-    GURLS G;
-    G.run(X, y, *(this->opt), std::string("one"));
-}
-
-template <typename T>
-void RecursiveRLSWrapper<T>::update(const gVec<T> &X, const gVec<T> &y)
-{
-    if(!this->trainedModel())
-        throw gException("Error, Train Model First");
-
-    RLSPrimalRecUpdate<T> optimizer;
-
-    const unsigned long d = X.getSize();
-    const unsigned long t = y.getSize();
-
-    gMat2D<T>X_mat(1, d);
-    copy(X_mat.getData(), X.getData(), d);
-    gMat2D<T>y_mat(1, t);
-    copy(y_mat.getData(), y.getData(), t);
-
-    GurlsOptionsList* ret = optimizer.execute(X_mat, y_mat, *(this->opt));
-    this->opt->removeOpt("optimizer");
-    this->opt->addOpt("optimizer", ret);
-}
-
-template <typename T>
-gMat2D<T>* RecursiveRLSWrapper<T>::eval(const gMat2D<T> &X)
-{
-    if(!this->trainedModel())
-        throw gException("Error, Train Model First");
-
-    gurls::PredPrimal<T> predTask;
-    gMat2D<T> y;
-
-    OptMatrix<gMat2D<T> >* result = predTask.execute(X, y, *(this->opt));
-
-    gMat2D<T>& pred_mat = result->getValue();
-    result->detachValue();
-    delete result;
-
-    return &pred_mat;
-}
-
-
-
-
-
-template <typename T>
-RecursiveRLSRetrainWrapper<T>::RecursiveRLSRetrainWrapper(const std::string &name): RecursiveRLSWrapper<T>(name)
+RecursiveRLSWrapper<T>::RecursiveRLSWrapper(const std::string &name): GurlsWrapper<T>(name)
 {
     this->opt->template getOptValue<OptNumber>("nholdouts") = 1.0;
 }
 
 template <typename T>
-void RecursiveRLSRetrainWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
+void RecursiveRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 {
     this->opt->removeOpt("split");
     this->opt->removeOpt("paramsel");
@@ -144,12 +71,24 @@ void RecursiveRLSRetrainWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y
 }
 
 template <typename T>
-void RecursiveRLSRetrainWrapper<T>::update(const gVec<T> &X, const gVec<T> &y)
+void RecursiveRLSWrapper<T>::update(const gVec<T> &X, const gVec<T> &y)
 {
-    RecursiveRLSWrapper<T>::update(X, y);
+    if(!this->trainedModel())
+        throw gException("Error, Train Model First");
+
+    RLSPrimalRecUpdate<T> optimizer;
 
     const unsigned long d = X.getSize();
     const unsigned long t = y.getSize();
+
+    gMat2D<T>X_mat(1, d);
+    copy(X_mat.getData(), X.getData(), d);
+    gMat2D<T>y_mat(1, t);
+    copy(y_mat.getData(), y.getData(), t);
+
+    GurlsOptionsList* ret = optimizer.execute(X_mat, y_mat, *(this->opt));
+    this->opt->removeOpt("optimizer");
+    this->opt->addOpt("optimizer", ret);
 
     ++nTot;
 
@@ -214,7 +153,25 @@ void RecursiveRLSRetrainWrapper<T>::update(const gVec<T> &X, const gVec<T> &y)
 }
 
 template <typename T>
-void RecursiveRLSRetrainWrapper<T>::retrain()
+gMat2D<T>* RecursiveRLSWrapper<T>::eval(const gMat2D<T> &X)
+{
+    if(!this->trainedModel())
+        throw gException("Error, Train Model First");
+
+    gurls::PredPrimal<T> predTask;
+    gMat2D<T> y;
+
+    OptMatrix<gMat2D<T> >* result = predTask.execute(X, y, *(this->opt));
+
+    gMat2D<T>& pred_mat = result->getValue();
+    result->detachValue();
+    delete result;
+
+    return &pred_mat;
+}
+
+template <typename T>
+void RecursiveRLSWrapper<T>::retrain()
 {
     GurlsOptionsList* kernel = this->opt->template getOptAs<GurlsOptionsList>("kernel");
     const gMat2D<T> &Xva = kernel->getOptValue<OptMatrix<gMat2D<T> > >("Xva");

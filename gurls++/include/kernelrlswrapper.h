@@ -39,8 +39,8 @@
   * POSSIBILITY OF SUCH DAMAGE.
   */
 
-#ifndef GURLS_NYSTROMWRAPPER_H
-#define GURLS_NYSTROMWRAPPER_H
+#ifndef GURLS_KERNELRLSWRAPPER_H
+#define GURLS_KERNELRLSWRAPPER_H
 
 #include "wrapper.h"
 
@@ -49,16 +49,12 @@ namespace gurls
 
 /**
   * \ingroup Wrappers
-  * \brief NystromWrapper is the sub-class of GurlsWrapper that allows to train a possibly non linear model 
-  * for large data sets, for which the complete nxn kernel matrix may not fit into RAM. 
-  * NystromWrapper implements Nystrom Reguarization, which solves the kernel Least Square problem approximately, 
-  * by replacing the kernel matrix with a randomized low rank approximation. The default kernel is the Gaussian kernel.
-  * The regularization parameter, which coincides with the rank is estimated by the wrapper via method train().
-  * The eval() method estimates the output for new data.
-  *
+  * \brief KernelRLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a possibly non-linear model by resorting to kernel methods. 
+  * The regularization parameter (and the kernel parameter) is estimated by the wrapper (default) or explicitely given in input by the user via method train().
+  * The eval() method estimates the output for new data.  *
   */
 template<typename T>
-class NystromWrapper: public KernelWrapper<T>
+class KernelRLSWrapper: public KernelWrapper<T>
 {
 public:
     /**
@@ -66,23 +62,15 @@ public:
       *
       * \param name Name of the option's structure that will be initialized
       */
-    NystromWrapper(const std::string& name);
+    KernelRLSWrapper(const std::string& name);
 
     /**
       * Initial parameter selection and training
       *
-      * \param[in] X Input data matrix
-      * \param[in] Y Labels matrix
+      * \param X Input data matrix
+      * \param Y Labels matrix
       */
     void train(const gMat2D<T> &X, const gMat2D<T> &y);
-
-    /**
-      * Initial parameter selection and training, optimized for large_scale data
-      *
-      * \param[in] X Input data matrix
-      * \param[in] Y Labels matrix
-      */
-    void train_largescale(const gMat2D<T> &X, const gMat2D<T> &y);
 
     /**
       * Estimates label for an input matrix
@@ -91,30 +79,10 @@ public:
       * \returns Matrix of predicted labels
       */
     gMat2D<T>* eval(const gMat2D<T> &X);
-
-    /**
-      * Estimates label for an input matrix, optimized for large_scale data
-      *
-      * \param[in] X Input matrix
-      * \returns Matrix of predicted labels
-      */
-    gMat2D<T>* eval_largescale(const gMat2D<T> &X);
-
-    /**
-      *
-      * \param[in] value
-      */
-    void setParam(double value);
-
-//    void rescale(gMat2D<T> &y);
-
-protected:
-    unsigned long *getIndices(const gMat2D<T>&y, const unsigned long n, const unsigned long t, const unsigned long n_nystrom, unsigned long &length);
-
 };
 
 }
 
-#include "nystromwrapper.hpp"
+#include "kernelrlswrapper.hpp"
 
-#endif //GURLS_NYSTROMWRAPPER_H
+#endif //GURLS_KERNELRLSWRAPPER_H
