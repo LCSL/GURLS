@@ -4,8 +4,8 @@
  * Copyright (C) 2011-2013, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  P.K. Mallapragada, M. Santoro and A. Tacchetti
- * email:   {pavan_m / msantoro / atacchet}@mit.edu
+ * authors:  M. Santoro
+ * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,68 +40,52 @@
  */
 
 
-#ifndef _GURLS_BIGPREDPRIMAL_H
-#define _GURLS_BIGPREDPRIMAL_H
+#ifndef _GURLS_BIGCALIBRATESGD_H_
+#define _GURLS_BIGCALIBRATESGD_H_
 
-//#include <cstdio>
-//#include <cstring>
-//#include <iostream>
-//#include <cmath>
-//#include <algorithm>
 
-//#include "gmath.h"
-//#include "options.h"
-//#include "optlist.h"
-
-#include "optmatrix.h"
-
-#include "bigarray.h"
-#include "bigpred.h"
-#include "bigmath.h"
-
-#include <mpi.h>
+#include "bgurls++/bigparamsel.h"
+#include "bgurls++/bigarray.h"
 
 namespace gurls {
 
 /**
-* \ingroup Prediction
-* \brief BigPredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the primal formulation
-*/
+ * \ingroup ParameterSelection
+ * \brief BigParamselCalibrateSGD is the sub-class of BigParamSelection that implements parameter selection for pegasos
+ */
 
 template <typename T>
-class BigPredPrimal: public BigPrediction<T >
+class BigParamSelCalibrateSGD: public BigParamSelection<T>
 {
 
 public:
-   /**
-    * Computes the predictions of the linear classifier stored in the field optimizer of opt and computed using the primal formulation on the samples passed in the X matrix.
-    * \param X input data matrix
-    * \param Y labels matrix
-    * \param opt options with the following:
-    *  - optimizer (settable with the class Optimizers and its subclasses)
-    *  - tmpfile path of a file used to store and load temporary data
-    *  - memlimit maximum amount memory to be used performing matrix multiplications
-    *
-    * The task can be entirely run in parallel
-    *
-    * \return a list containing the matrix of predicted labels
-    */
-  GurlsOptionsList* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
+    /**
+     * Performs parameter selection when one wants to solve the problem using rls_pegasos.
+     * \param X input data bigarray
+     * \param Y labels bigarray
+     * \param opt options with the following:
+     *  - subsize (default)
+     *  - calibfile (default)
+     *  - hoperf (default)
+     *  - singlelambda (default)
+     *  - nlambda (default)
+     *
+     * \return paramsel, a GurlsOptionList with the following fields:
+     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
+     *  - W = RLS coefficient vector
+     */
+    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
 };
 
 template <typename T>
-GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& /*Y*/, const GurlsOptionsList &opt)
+GurlsOptionsList *BigParamSelCalibrateSGD<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList &/*opt*/)
 {
-    const BigArray<T>& W = opt.getOptValue<OptMatrix<BigArray<T> >  >("optimizer.W");
+    // TODO
 
-    BigArray<T>* scores = matMult_AB(X, W, opt.getOptAsString("files.pred_filename"));
-
-    GurlsOptionsList* ret = new GurlsOptionsList("pred");
-    ret->addOpt("pred", new OptMatrix<BigArray<T> >(*scores));
-
-    return ret;
+    return new GurlsOptionsList("paramsel");
 }
 
 
 }
-#endif // _GURLS_BIGPREDPRIMAL_H
+
+#endif // _GURLS_BIGCALIBRATESGD_H_

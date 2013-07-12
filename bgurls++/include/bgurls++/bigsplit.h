@@ -42,8 +42,8 @@
 #ifndef _GURLS_BIGSPLIT_H_
 #define _GURLS_BIGSPLIT_H_
 
-#include "optlist.h"
-#include "bigarray.h"
+#include "gurls++/optlist.h"
+#include "bgurls++/bigarray.h"
 
 namespace gurls
 {

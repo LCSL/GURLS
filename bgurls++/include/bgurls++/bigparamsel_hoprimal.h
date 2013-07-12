@@ -44,11 +44,11 @@
 #define _GURLS_BIGHOPRIMAL_H_
 
 
-#include "bigparamsel.h"
-#include "optmatrix.h"
-#include "bigmath.h"
-#include "bigpred_primal.h"
-#include "bigperf.h"
+#include "bgurls++/bigparamsel.h"
+#include "gurls++/optmatrix.h"
+#include "bgurls++/bigmath.h"
+#include "bgurls++/bigpred_primal.h"
+#include "bgurls++/bigperf.h"
 
 
 namespace gurls

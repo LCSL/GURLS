@@ -46,7 +46,7 @@
 #include <gurls++/options.h>
 
 #ifdef _BGURLS
-#include <bigarray.h>
+#include <bgurls++/bigarray.h>
 #endif
 
 namespace gurls
@@ -269,13 +269,13 @@ public:
 #ifdef _BGURLS
 
 template <>
-bool OptMatrix<BigArray<float> >::hasBigArray() const;
+bool OptMatrix<BigArray<float> >::hasBigArray() const{return true;};
 
 template <>
-bool OptMatrix <BigArray<double> >::hasBigArray() const;
+bool OptMatrix <BigArray<double> >::hasBigArray() const{return true;};
 
 template <>
-bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const;
+bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const{return true;};
 
 #endif
 

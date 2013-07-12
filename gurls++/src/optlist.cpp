@@ -50,7 +50,7 @@
 #include "gurls++/optfunction.h"
 #include "gurls++/optlist.h"
 #ifdef _BGURLS
-#include "bigarray.h"
+#include "bgurls++/bigarray.h"
 #endif
 #include "gurls++/serialization.h"
 

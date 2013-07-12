@@ -43,10 +43,10 @@
 #ifndef _GURLS_BIGOPTIMIZATION_H_
 #define _GURLS_BIGOPTIMIZATION_H_
 
-#include "options.h"
-#include "optlist.h"
-#include "bigarray.h"
-#include "optimization.h"
+#include "gurls++/options.h"
+#include "gurls++/optlist.h"
+#include "bgurls++/bigarray.h"
+#include "gurls++/optimization.h"
 
 namespace gurls
 {

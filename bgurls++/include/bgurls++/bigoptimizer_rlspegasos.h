@@ -40,52 +40,60 @@
  */
 
 
-#ifndef _GURLS_BIGCALIBRATESGD_H_
-#define _GURLS_BIGCALIBRATESGD_H_
+#ifndef _GURLS_BIGRLSPEGASOS_H_
+#define _GURLS_BIGRLSPEGASOS_H_
 
+#include "bgurls++/bigarray.h"
+#include "bgurls++/bigoptimization.h"
+#include "gurls++/utils.h"
 
-#include "bigparamsel.h"
-#include "bigarray.h"
 
 namespace gurls {
 
 /**
- * \ingroup ParameterSelection
- * \brief BigParamselCalibrateSGD is the sub-class of BigParamSelection that implements parameter selection for pegasos
+ * \ingroup Optimization
+ * \brief BigRLSPegasos is the sub-class of BigOptimizer that implements the Pegaosos algorithm
  */
 
 template <typename T>
-class BigParamSelCalibrateSGD: public BigParamSelection<T>
+class BigRLSPegasos: public BigOptimizer<T>
 {
-
 public:
     /**
-     * Performs parameter selection when one wants to solve the problem using rls_pegasos.
+     * Computes a classifier for the primal formulation of RLS.
+     * The optimization is carried out using a stochastic gradient descent algorithm.
+     * The regularization parameter is set to the one found in the field paramsel of opt.
+     * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
+     *
      * \param X input data bigarray
      * \param Y labels bigarray
      * \param opt options with the following:
-     *  - subsize (default)
-     *  - calibfile (default)
-     *  - hoperf (default)
      *  - singlelambda (default)
-     *  - nlambda (default)
+     *  - epochs (default)
+     *  - paramsel (settable with the class ParamSelection and its subclasses)
+     *  - Xte (test input data matrix, needed for accuracy evaluation)
+     *  - yte (test labels matrix, needed for accuracy evaluation)
      *
-     * \return paramsel, a GurlsOptionList with the following fields:
-     *  - lambdas = array of values of the regularization parameter lambda minimizing the validation error for each class
-     *  - W = RLS coefficient vector
+     * \return returns a list containing the following fields:
+     *  - W = matrix of coefficient vectors of rls estimator for each class
+     *  - W_sum = sum of the classifiers across iterations
+     *  - t0 = stepsize parameter
+     *  - count = number of iterations
+     *  - acc_last = accuracy of the solution computed in the last iteration
+     *  - acc_avg = average accuracy across iterations
+     *
      */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
+    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt);
 };
 
+
 template <typename T>
-GurlsOptionsList *BigParamSelCalibrateSGD<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList &/*opt*/)
+GurlsOptionsList* BigRLSPegasos<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList& /*opt*/)
 {
     // TODO
 
-    return new GurlsOptionsList("paramsel");
+    return new GurlsOptionsList("optimizer");
 }
 
-
 }
-
-#endif // _GURLS_BIGCALIBRATESGD_H_
+#endif // _GURLS_BIGRLSPEGASOS_H_

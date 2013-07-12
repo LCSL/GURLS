@@ -4,9 +4,9 @@
   * Copyright (C) 2011-2013, IIT@MIT Lab
   * All rights reserved.
   *
- * author:  M. Santoro
- * email:   msantoro@mit.edu
- * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
+  * author:  M. Santoro
+  * email:   msantoro@mit.edu
+  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions
@@ -40,42 +40,40 @@
   */
 
 
-#ifndef _GURLS_BIGPARAMSEL_H_
-#define _GURLS_BIGPARAMSEL_H_
+#ifndef _GURLS_BIGPERF_H_
+#define _GURLS_BIGPERF_H_
 
 
-#include "options.h"
-#include "optlist.h"
-#include "bigarray.h"
-#include "paramsel.h"
+#include "gurls++/options.h"
+#include "gurls++/optlist.h"
+#include "bgurls++/bigarray.h"
+#include "gurls++/perf.h"
 
 namespace gurls
 {
 
 template <typename T>
-class BigParamSelCalibrateSGD;
-
-template <typename T>
-class BigParamSelHoPrimal;
+class BigPerfMacroAvg;
 
 
 /**
- * \ingroup ParameterSelection
- * \brief BigParamSelection is the class that implements parameter selection
+ * \ingroup Performance
+ * \brief BigPerformance is the class that evaluates prediction performance
  */
 template <typename T>
-class BigParamSelection
+class BigPerformance
 {
 public:
-
     /**
-     * Implements the selection of the regularization parameter(s)
+     * Evaluates prediction performance
+     *
      * \param X input data matrix
      * \param Y labels matrix
      * \param opt options with the different required fields based on the sub-class
-     * \return adds to opt the field paramsel
+     *
+     * \return adds the field perf to opt:
      */
-    virtual GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList *execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * Factory function returning a pointer to the newly created object.
@@ -83,17 +81,16 @@ public:
      * \warning The returned pointer is a plain, un-managed pointer. The calling
      * function is responsible of deallocating the object.
      */
-    static BigParamSelection<T>* factory(const std::string& id) throw(BadParamSelectionCreation)
+    static BigPerformance<T>* factory(const std::string& id) throw(BadPerformanceCreation)
     {
-        if(id == "calibratesgd")
-            return new BigParamSelCalibrateSGD<T>;
-        if(id == "hoprimal")
-            return new BigParamSelHoPrimal<T>;
+        if(id == "macroavg")
+            return new BigPerfMacroAvg<T>;
 
-        throw BadParamSelectionCreation(id);
+        throw BadPerformanceCreation(id);
     }
+
 };
 
 }
 
-#endif // _GURLS_BIGPARAMSEL_H_
+#endif // _GURLS_BIGPERF_H

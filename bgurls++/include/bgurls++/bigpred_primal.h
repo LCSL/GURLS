@@ -4,8 +4,8 @@
  * Copyright (C) 2011-2013, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
- * email:   msantoro@mit.edu
+ * authors:  P.K. Mallapragada, M. Santoro and A. Tacchetti
+ * email:   {pavan_m / msantoro / atacchet}@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,60 +40,68 @@
  */
 
 
-#ifndef _GURLS_BIGRLSPEGASOS_H_
-#define _GURLS_BIGRLSPEGASOS_H_
+#ifndef _GURLS_BIGPREDPRIMAL_H
+#define _GURLS_BIGPREDPRIMAL_H
 
-#include "bigarray.h"
-#include "bigoptimization.h"
-#include "utils.h"
+//#include <cstdio>
+//#include <cstring>
+//#include <iostream>
+//#include <cmath>
+//#include <algorithm>
 
+//#include "gmath.h"
+//#include "options.h"
+//#include "optlist.h"
+
+#include "gurls++/optmatrix.h"
+
+#include "bgurls++/bigarray.h"
+#include "bgurls++/bigpred.h"
+#include "bgurls++/bigmath.h"
+
+#include <mpi.h>
 
 namespace gurls {
 
 /**
- * \ingroup Optimization
- * \brief BigRLSPegasos is the sub-class of BigOptimizer that implements the Pegaosos algorithm
- */
+* \ingroup Prediction
+* \brief BigPredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the primal formulation
+*/
 
 template <typename T>
-class BigRLSPegasos: public BigOptimizer<T>
+class BigPredPrimal: public BigPrediction<T >
 {
+
 public:
-    /**
-     * Computes a classifier for the primal formulation of RLS.
-     * The optimization is carried out using a stochastic gradient descent algorithm.
-     * The regularization parameter is set to the one found in the field paramsel of opt.
-     * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
-     *
-     * \param X input data bigarray
-     * \param Y labels bigarray
-     * \param opt options with the following:
-     *  - singlelambda (default)
-     *  - epochs (default)
-     *  - paramsel (settable with the class ParamSelection and its subclasses)
-     *  - Xte (test input data matrix, needed for accuracy evaluation)
-     *  - yte (test labels matrix, needed for accuracy evaluation)
-     *
-     * \return returns a list containing the following fields:
-     *  - W = matrix of coefficient vectors of rls estimator for each class
-     *  - W_sum = sum of the classifiers across iterations
-     *  - t0 = stepsize parameter
-     *  - count = number of iterations
-     *  - acc_last = accuracy of the solution computed in the last iteration
-     *  - acc_avg = average accuracy across iterations
-     *
-     */
-    GurlsOptionsList* execute(const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList &opt);
+   /**
+    * Computes the predictions of the linear classifier stored in the field optimizer of opt and computed using the primal formulation on the samples passed in the X matrix.
+    * \param X input data matrix
+    * \param Y labels matrix
+    * \param opt options with the following:
+    *  - optimizer (settable with the class Optimizers and its subclasses)
+    *  - tmpfile path of a file used to store and load temporary data
+    *  - memlimit maximum amount memory to be used performing matrix multiplications
+    *
+    * The task can be entirely run in parallel
+    *
+    * \return a list containing the matrix of predicted labels
+    */
+  GurlsOptionsList* execute( const BigArray<T>& X, const BigArray<T>& Y, const GurlsOptionsList& opt);
 };
 
-
 template <typename T>
-GurlsOptionsList* BigRLSPegasos<T>::execute(const BigArray<T>& /*X*/, const BigArray<T>& /*Y*/, const GurlsOptionsList& /*opt*/)
+GurlsOptionsList* BigPredPrimal<T>::execute(const BigArray<T>& X, const BigArray<T>& /*Y*/, const GurlsOptionsList &opt)
 {
-    // TODO
+    const BigArray<T>& W = opt.getOptValue<OptMatrix<BigArray<T> >  >("optimizer.W");
 
-    return new GurlsOptionsList("optimizer");
+    BigArray<T>* scores = matMult_AB(X, W, opt.getOptAsString("files.pred_filename"));
+
+    GurlsOptionsList* ret = new GurlsOptionsList("pred");
+    ret->addOpt("pred", new OptMatrix<BigArray<T> >(*scores));
+
+    return ret;
 }
 
+
 }
-#endif // _GURLS_BIGRLSPEGASOS_H_
+#endif // _GURLS_BIGPREDPRIMAL_H

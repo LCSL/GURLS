@@ -39,7 +39,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "bigmath.h"
+#include "bgurls++/bigmath.h"
 
 namespace gurls
 {

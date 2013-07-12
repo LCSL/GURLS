@@ -45,7 +45,7 @@
 
 #include <hdf5.h>
 
-#include <gmat2d.h>
+#include <gurls++/gmat2d.h>
 #include <string>
 
 #include <boost/serialization/base_object.hpp>
@@ -213,6 +213,6 @@ protected:
 
 }
 
-#include<bigarray.hpp>
+#include<bgurls++/bigarray.hpp>
 
 #endif // _GURLS_BIGARRAY_H_

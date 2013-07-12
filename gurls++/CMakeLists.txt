@@ -96,20 +96,12 @@ set(gurls_sources   src/gmath.cpp
                     src/optlist.cpp
                     src/optmatrix.cpp
     )
+
 set(Gurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
-include_directories (${Gurls++_INCLUDE_DIRS})
-#if (GURLS_USE_BOOST) #should change something in the code as well...
-	include_directories (${Boost_INCLUDE_DIRS} )
-    set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_DATE_TIME_LIBRARY}) #should use only the serialization one?
-#else(GURLS_USE_BOOST)
-#    set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES})
-#endif(GURLS_USE_BOOST)
+include_directories (${Gurls++_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-# if(GURLS_BUILD_BGURLSPP)
-#     add_definitions( -D_BGURLS )
-# endif()
+set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
 
-include_directories( BEFORE ${Gurls++_INCLUDE_DIRS} )
 add_library(${GURLSLIBRARY} ${GURLS_LIB_LINK} ${gurls_headers} ${gurls_sources} )
 
 target_link_libraries(${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES})
@@ -138,18 +130,16 @@ if(MSVC)
 
     set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_FLAGS "/EHa")
 
-    if(GURLS_BUILD_SHARED_LIBS)
-        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_EXPORTS")
+#    if(GURLS_BUILD_SHARED_LIBS)
+#        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_EXPORTS")
 #    else()
 #        set_target_properties(${GURLSLIBRARY} PROPERTIES COMPILE_DEFINITIONS "_GURLS_STATIC")
-    endif(GURLS_BUILD_SHARED_LIBS)
+#    endif(GURLS_BUILD_SHARED_LIBS)
 
 endif(MSVC)
 
-set(Gurls++_LIBRARIES
-    ${GURLSLIBRARY}
-    ${GurlsDependencies_LIBRARIES} CACHE INTERNAL ""
-)
+set(Gurls++_LIBRARY ${GURLSLIBRARY} CACHE INTERNAL "")
+set(Gurls++_LIBRARIES ${GURLSLIBRARY} ${GurlsDependencies_LIBRARIES} ) #to compile test executables
 
 option(GURLSPP_BUILD_DEMO "" ON)
 if(GURLSPP_BUILD_DEMO)

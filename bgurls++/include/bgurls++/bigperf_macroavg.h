@@ -43,12 +43,12 @@
 #ifndef _GURLS_BIGMACROAVG_H_
 #define _GURLS_BIGMACROAVG_H_
 
-#include "optlist.h"
-#include "bigperf.h"
-#include "utils.h"
-#include "optmatrix.h"
-#include "bigarray.h"
-#include "bigmath.h"
+#include "gurls++/optlist.h"
+#include "bgurls++/bigperf.h"
+#include "gurls++/utils.h"
+#include "gurls++/optmatrix.h"
+#include "bgurls++/bigarray.h"
+#include "bgurls++/bigmath.h"
 
 namespace gurls
 {

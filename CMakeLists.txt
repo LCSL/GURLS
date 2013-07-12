@@ -10,7 +10,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
-
+set(export_definitions)
 set(EXTERNAL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/external)
 set(BLAS_LAPACK_IMPLEMENTATION "OPENBLAS" CACHE STRING "Possible values: ACML, ATLAS, MKL, NETLIB, OPENBLAS")
 if(WIN32)
@@ -33,13 +33,13 @@ if(GURLS_BUILD_GURLSPP)
     if(HDF5_FOUND)
         option(GURLS_BUILD_BGURLSPP "Build Bgurls++" OFF)
     else()
-        option(GURLS_BUILD_BGURLSPP "Build Bgurls++" OFF)
+        set(GURLS_BUILD_BGURLSPP OFF FORCE)
     endif()
 
     option(GURLS_USE_BINARY_ARCHIVES "If ON all the data structures in GURLS are saved/loaded using binary files." ON)
 
     if(GURLS_USE_BINARY_ARCHIVES)
-        add_definitions(-DUSE_BINARY_ARCHIVES)
+        set(export_definitions ${export_definitions} -DUSE_BINARY_ARCHIVES)
     endif(GURLS_USE_BINARY_ARCHIVES)
 
     if(GURLS_USE_EXTERNAL_BLAS_LAPACK OR GURLS_USE_EXTERNAL_BOOST OR GURLS_USE_EXTERNAL_HDF5)
@@ -50,17 +50,22 @@ if(GURLS_BUILD_GURLSPP)
     endif()
 
     if(GURLS_BUILD_SHARED_LIBS)
-        set(GURLS_LIB_LINK SHARED)
+		
+		set(GURLS_LIB_LINK SHARED)
+		if (MSVC)
+			set(export_definitions ${export_definitions} -D_GURLS_EXPORTS)
+		endif()
     else(GURLS_BUILD_SHARED_LIBS)
         set(GURLS_LIB_LINK STATIC)
-        add_definitions( -D_GURLS_STATIC)
+        set(export_definitions ${export_definitions} -D_GURLS_STATIC)
     endif(GURLS_BUILD_SHARED_LIBS)
 
     #add_definitions( -Wall )
     if(MSVC)
-        add_definitions(-D_SCL_SECURE_NO_WARNINGS)
+        set(export_definitions ${export_definitions} -D_SCL_SECURE_NO_WARNINGS)
     endif(MSVC)
 
+	add_definitions(${export_definitions})
 	#Actually build something
     if(GURLS_BUILD_GURLSPP)
         add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/gurls++)
@@ -75,18 +80,14 @@ if(GURLS_BUILD_GURLSPP)
 	set (export_include_dirs ${Gurls++_INCLUDE_DIRS})
 	set (generated_export_file "Gurls++targets-buildtree.cmake")
 	set (export_libraries)
-	set (export_definitions)
+	
 	
 	if (GURLS_BUILD_GURLSPP)
-		set (export_libraries ${export_libraries} gurls++)
-		get_property(gurlspp_export_definitions DIRECTORY gurls++ PROPERTY COMPILE_DEFINITIONS) 
-		set (export_definitions ${export_definitions} ${gurlspp_export_definitions})
+		set (export_libraries ${export_libraries} ${Gurls++_LIBRARY})
 	endif()
-	if (GURLS_BUILD_BGURLSPP)
-		set (export_libraries ${export_libraries} bgurls++)
-		get_property(bgurlspp_export_definitions DIRECTORY bgurls++ PROPERTY COMPILE_DEFINITIONS) 
-		set (export_definitions ${export_definitions} ${bgurlspp_export_definitions}) #TODO there may be duplicates...
-	endif()
+	#if (GURLS_BUILD_BGURLSPP) #not ready for this yet...
+	#	set (export_libraries ${export_libraries} ${BGurls++_LIBRARY})
+	#endif()
 	configure_file(cmake-modules/Gurls++Config.cmake.in ${PROJECT_BINARY_DIR}/Gurls++Config.cmake @ONLY)
 	
 	#Gurls++Config.cmake for installation

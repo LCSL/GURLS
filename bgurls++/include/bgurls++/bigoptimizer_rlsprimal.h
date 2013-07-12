@@ -44,11 +44,11 @@
 #define _GURLS_BIGRLSPRIMAL_H_
 
 
-#include "optmatrix.h"
-#include "optfunction.h"
-#include "bigoptimization.h"
-#include "bigmath.h"
-#include "utils.h"
+#include "gurls++/optmatrix.h"
+#include "gurls++/optfunction.h"
+#include "bgurls++/bigoptimization.h"
+#include "bgurls++/bigmath.h"
+#include "gurls++/utils.h"
 
 namespace gurls
 {

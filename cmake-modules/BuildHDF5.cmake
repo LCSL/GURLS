@@ -127,11 +127,11 @@ include(ExternalProject)
                 -DHDF5_DISABLE_COMPILER_WARNINGS=ON
                 -DHDF5_ENABLE_PARALLEL=ON
                 -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
-#                 -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIRSEFIX}/include
-#                 -DZLIB_LIBRARY=${ZLIB_LIBRARIES}
-#                 -DZLIB_USE_EXTERNAL=OFF
+                 -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+                 -DZLIB_LIBRARY=${ZLIB_LIBRARIES}
+                 -DZLIB_USE_EXTERNAL=OFF
         )
-        set(HDF5_LIBRARIES ${EXTERNAL_PREFIX}/lib/hdf5.lib)
+        set(HDF5_LIBRARIES optimized ${EXTERNAL_PREFIX}/lib/hdf5.lib debug ${EXTERNAL_PREFIX}/lib/hdf5d.lib)
     else()
         ExternalProject_add(buildHdf5
             URL http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.9/src/hdf5-1.8.9.tar.gz
@@ -149,7 +149,7 @@ include(ExternalProject)
     endif()
 
     set_target_properties(buildHdf5 PROPERTIES EXCLUDE_FROM_ALL 1)
-    message ("external prefix: ")
+	set(HDF5_FOUND TRUE)
     set(HDF5_INCLUDE_DIRS ${EXTERNAL_PREFIX}/include CACHE INTERNAL "")
     set(HDF5_LIBRARY_DIRS ${EXTERNAL_PREFIX}/lib CACHE INTERNAL "")
     set(HDF5_DEFINITIONS -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_BSD_SOURCE)

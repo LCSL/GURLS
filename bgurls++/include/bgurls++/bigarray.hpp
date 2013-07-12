@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include <exceptions.h>
+#include <gurls++/exceptions.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>

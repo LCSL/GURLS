@@ -44,11 +44,11 @@
 #define _GURLS_BIGSPLITHO_H_
 
 
-#include "bigsplit.h"
-#include "bigarray.h"
-#include "bigmath.h"
-#include "optmatrix.h"
-#include "mpi_utils.h"
+#include "bgurls++/bigsplit.h"
+#include "bgurls++/bigarray.h"
+#include "bgurls++/bigmath.h"
+#include "gurls++/optmatrix.h"
+#include "bgurls++/mpi_utils.h"
 
 #include <boost/filesystem.hpp>
 

@@ -47,23 +47,23 @@
 
 #include <mpi.h>
 
-#include "bgurls.h"
-#include "exceptions.h"
-#include "gvec.h"
-#include "gmat2d.h"
-#include "gmath.h"
-#include "norm.h"
-#include "options.h"
-#include "optlist.h"
+#include "bgurls++/bgurls.h"
+#include "gurls++/exceptions.h"
+#include "gurls++/gvec.h"
+#include "gurls++/gmat2d.h"
+#include "gurls++/gmath.h"
+#include "gurls++/norm.h"
+#include "gurls++/options.h"
+#include "gurls++/optlist.h"
 
 
-#include "paramsel.h"
-#include "optimization.h"
-#include "pred.h"
-#include "utils.h"
+#include "gurls++/paramsel.h"
+#include "gurls++/optimization.h"
+#include "gurls++/pred.h"
+#include "gurls++/utils.h"
 
-#include "bigarray.h"
-#include "bigmath.h"
+#include "bgurls++/bigarray.h"
+#include "bgurls++/bigmath.h"
 
 #include <boost/filesystem/path.hpp>
 

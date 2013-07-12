@@ -49,10 +49,10 @@
 #ifndef _GURLS_BIGMATH_H_
 #define _GURLS_BIGMATH_H_
 
-#include "gmath.h"
-#include "bigarray.h"
+#include "gurls++/gmath.h"
+#include "bgurls++/bigarray.h"
 
-#include "mpi_utils.h"
+#include "bgurls++/mpi_utils.h"
 
 namespace gurls
 {

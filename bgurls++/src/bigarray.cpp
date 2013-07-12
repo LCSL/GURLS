@@ -1,4 +1,4 @@
-#include "bigarray.h"
+#include "bgurls++/bigarray.h"
 
 namespace gurls
 {

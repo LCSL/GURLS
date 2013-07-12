@@ -43,11 +43,11 @@
 #ifndef _GURLS_BIGPRED_H_
 #define _GURLS_BIGPRED_H_
 
-#include "options.h"
-#include "optlist.h"
-#include "bigarray.h"
+#include "gurls++/options.h"
+#include "gurls++/optlist.h"
+#include "bgurls++/bigarray.h"
 
-#include "pred.h"
+#include "gurls++/pred.h"
 
 namespace gurls
 {
