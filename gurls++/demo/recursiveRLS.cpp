@@ -48,9 +48,9 @@
 #include <iostream>
 #include <string>
 
-#include "recrlswrapper.h"
-#include "rlsprimal.h"
-#include "primal.h"
+#include "gurls++/recrlswrapper.h"
+#include "gurls++/rlsprimal.h"
+#include "gurls++/primal.h"
 
 using namespace gurls;
 typedef double T;
