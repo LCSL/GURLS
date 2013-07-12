@@ -104,6 +104,18 @@ if(GURLS_BUILD_GURLSPP)
 
 	add_custom_target(uninstall
 		COMMAND ${CMAKE_COMMAND} -P "${PROJECT_BINARY_DIR}/gurls-uninstall.cmake")
+	
+	if( (BLAS_LAPACK_IMPLEMENTATION STREQUAL "OPENBLAS") AND WIN32 AND NOT CMAKE_CL64)
+		set(dllDir ${CMAKE_SOURCE_DIR}/dependencies/win32/bin)
+		set(files_to_copy ${dllDir}/libgcc_s_sjlj-1.dll
+                   ${dllDir}/libgfortran-3.dll
+				   ${dllDir}/libopenblas.dll
+				   ${dllDir}/libquadmath-0.dll
+				   ${dllDir}/libwinpthread-1.dll)
+
+		file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+		install(FILES ${files_to_copy} DESTINATION bin)
+endif()
 
 else(GURLS_BUILD_GURLSPP)
     message(WARNING "You have disabled compilation!")
