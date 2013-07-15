@@ -46,7 +46,7 @@
 #include <numeric>
 #include <vector>
 
-#include "options.h"
+#include "gurls++/options.h"
 
 using namespace std;
 

@@ -47,9 +47,9 @@
 #include <iostream>
 #include <string>
 
-#include "gvec.h"
-#include "gmat2d.h"
-#include "optlist.h"
+#include "gurls++/gvec.h"
+#include "gurls++/gmat2d.h"
+#include "gurls++/optlist.h"
 #include "quickanddirty.h"
 
 using namespace gurls;

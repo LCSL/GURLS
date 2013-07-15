@@ -42,11 +42,11 @@
 #ifndef _GURLS_QUICKANDDIRTY_H_
 #define _GURLS_QUICKANDDIRTY_H_
 
-#include "gurls.h"
-#include "gmat2d.h"
-#include "gmath.h"
-#include "optlist.h"
-#include "options.h"
+#include "gurls++/gurls.h"
+#include "gurls++/gmat2d.h"
+#include "gurls++/gmath.h"
+#include "gurls++/optlist.h"
+#include "gurls++/options.h"
 
 #include <vector>
 

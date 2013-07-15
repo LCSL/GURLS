@@ -45,13 +45,13 @@
  */
 
 #include <iostream>
-#include "gurls.h"
-#include "exceptions.h"
-#include "gmat2d.h"
-#include "options.h"
-#include "optlist.h"
+#include "gurls++/gurls.h"
+#include "gurls++/exceptions.h"
+#include "gurls++/gmat2d.h"
+#include "gurls++/options.h"
+#include "gurls++/optlist.h"
 
-#include "gmath.h"
+#include "gurls++/gmath.h"
 
 using namespace gurls;
 using namespace std;

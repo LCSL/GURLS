@@ -1,4 +1,4 @@
-#include "optfunction.h"
+#include "gurls++/optfunction.h"
 
 #include <ostream>
 

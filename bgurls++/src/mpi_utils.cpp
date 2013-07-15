@@ -39,8 +39,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "exports.h"
-#include "mpi_utils.h"
+#include "gurls++/exports.h"
+#include "bgurls++/mpi_utils.h"
 
 
 namespace gurls

@@ -46,13 +46,13 @@
 #include <numeric>
 #include <vector>
 
-#include "options.h"
-#include "optfunction.h"
-#include "optlist.h"
+#include "gurls++/options.h"
+#include "gurls++/optfunction.h"
+#include "gurls++/optlist.h"
 #ifdef _BGURLS
-#include "bigarray.h"
+#include "bgurls++/bigarray.h"
 #endif
-#include "serialization.h"
+#include "gurls++/serialization.h"
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
