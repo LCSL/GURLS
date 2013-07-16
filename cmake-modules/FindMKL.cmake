@@ -101,3 +101,5 @@ if(NOT MSVC)
     -lm
     )
 endif(NOT MSVC)
+
+set(MKL_FOUND TRUE)

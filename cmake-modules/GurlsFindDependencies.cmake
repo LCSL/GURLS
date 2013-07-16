@@ -68,7 +68,7 @@ else(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
 
 endif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
 
-if (NOT BLAS_LAPACK_FOUND)
+if(NOT BLAS_LAPACK_FOUND)
     option(GURLS_USE_EXTERNAL_BLAS_LAPACK "build external project Openblas" OFF)
 endif()
 
@@ -90,7 +90,7 @@ mark_as_advanced(Boost_DIR)
         add_definitions(-DBOOST_ALL_NO_LIB)
     endif()
 
-if (NOT Boost_FOUND)
+if(NOT Boost_FOUND)
     option(GURLS_USE_EXTERNAL_BOOST "build external project Boost" OFF)
 endif()
 

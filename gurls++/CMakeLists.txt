@@ -98,7 +98,9 @@ set(gurls_sources   src/gmath.cpp
     )
 
 set(Gurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
-include_directories (${Gurls++_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories(${Gurls++_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${BLAS_LAPACK_INCLUDE_DIRS})
+add_definitions(${BLAS_LAPACK_DEFINITIONS})
+link_directories(${BLAS_LAPACK_LIBRARY_DIRS})
 
 set (GurlsDependencies_LIBRARIES ${BLAS_LAPACK_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
 
@@ -151,11 +153,11 @@ mark_as_advanced(FORCE GURLSPP_BUILD_TEST)
 if(GURLSPP_BUILD_TEST)
 #     set(GURLSPP_DATA_DIR "" CACHE PATH "Path to the Gurls++ data directory")
 #     mark_as_advanced(FORCE GURLSPP_DATA_DIR)
-# 
+#
 #     if(GURLSPP_DATA_DIR STREQUAL "")
 #         message(WARNING, "GURLSPP_DATA_DIR value is set to an empty string. Please be sure this is the right configuration for you")
 #     endif(GURLSPP_DATA_DIR STREQUAL "")
-# 
+#
 #     add_definitions(-DGURLS_DATA_DIR="${GURLSPP_DATA_DIR}")
    add_subdirectory(test)
 #   add_all_executables(${TESTDIR} ${GURLS_LINK_LIBRARIES})

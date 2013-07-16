@@ -46,7 +46,9 @@ set(gurls_sources   ../gurls++/src/gmath.cpp
 
 set(BGurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE INTERNAL "" )
 
-include_directories( ${BGurls++_INCLUDE_DIRS} ${Gurls++_INCLUDE_DIRS} ${MPI_CXX_INCLUDE_PATH} ${HDF5_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories( ${BGurls++_INCLUDE_DIRS} ${Gurls++_INCLUDE_DIRS} ${MPI_CXX_INCLUDE_PATH} ${HDF5_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${BLAS_LAPACK_INCLUDE_DIRS})
+add_definitions(${BLAS_LAPACK_DEFINITIONS})
+link_directories(${BLAS_LAPACK_LIBRARY_DIRS})
 add_definitions(${HDF5_DEFINITIONS})
 set(export_definitions ${export_definitions} ${HDF5_DEFINITIONS}) #TODO check if needed here
 
