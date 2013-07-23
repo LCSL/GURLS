@@ -105,18 +105,31 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
 
 //    lmax = mean(std(y));
 
-    T* work = new T[t+n];
-    T* stdY = new T[t];
+//    T* work = new T[t+n];
+//    T* stdY = new T[t];
 
-    stdDev(Y.getData(), n, t, stdY, work);
+//    stdDev(Y.getData(), n, t, stdY, work);
 
-    const T lmax = sumv(stdY, t)/((T)t);
+//    const T lmax = sumv(stdY, t)/((T)t);
 
-    delete[] work;
-    delete[] stdY;
+//    delete[] work;
+//    delete[] stdY;
 
-//    lmin = mean(std(y))*10^-5;
-    const T lmin = lmax * (T)1.0e-5;
+////    lmin = mean(std(y))*10^-5;
+//    const T lmin = lmax * (T)1.0e-5;
+
+    T lmin;
+    T lmax;
+
+    if(opt.hasOpt("lambdamin"))
+        lmin = opt.getOptAsNumber("lambdamin");
+    else
+        lmin = 0.001;
+
+    if(opt.hasOpt("lambdamax"))
+        lmax = opt.getOptAsNumber("lambdamax");
+    else
+        lmax = 10;
 
 //    guesses = lmin.*(lmax/lmin).^linspace(0,1,tot);
     gMat2D<T> *guesses_mat = new gMat2D<T>(tot, 1);
@@ -231,7 +244,9 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
 //            for t = 1:T
             for(unsigned long j = 0; j<t; ++j)
 //                perf(i,t) = opt.perf.forho(t)+perf(i,t)./n;
+//                perf(i,t) = opt.perf.forho(t)./n+perf(i,t);
                 perf[i+(tot*j)] += forho.getData()[j]/n;
+                //perf[i+(tot*j)] = forho.getData()[j]/n+perf[i+(tot*j)];
 
 
             delete perf_list;
@@ -267,7 +282,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
 
 //    [dummy,idx] = max(perf,[],1);
     unsigned long* idx = new unsigned long[t];
-    work = NULL;
+    T* work = NULL;
     indicesOfMax(perf, tot, t, idx, work, 1);
 
 

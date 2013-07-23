@@ -122,7 +122,7 @@ GurlsOptionsList *PredKernelTrainTest<T>::execute(const gMat2D<T>& X, const gMat
         scal(K->getSize(), (T)(-1.0/pow(sigma, 2)), K->getData(), 1);
         exp(K->getData(), K->getSize());
 
-        if(!optimizer->hasOpt("L"))
+        if(optimizer->hasOpt("L"))
         {
             gMat2D<T> *Ktest = new gMat2D<T>(xr, 1);
             set(Ktest->getData(), (T)1.0, xr);

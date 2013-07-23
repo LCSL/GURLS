@@ -99,6 +99,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
     nestedOpt->copyOpt("nlambda", opt);
     nestedOpt->copyOpt("hoperf", opt);
+    nestedOpt->copyOpt("singlelambda", opt);
 
 //    if ~isfield(opt,'kernel')
     if(!opt.hasOpt("kernel"))
@@ -121,12 +122,10 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
 //    if ~isfield(opt.kernel,'distance')
     if(!kernel->hasOpt("distance"))
     {
-//        opt.kernel.distance = squareform(pdist(X)).^2;
         distance = new gMat2D<T>(n, n);
 
-        squareform(X.getData(), n, d, distance->getData(), n);
-
-        mult(distance->getData(), distance->getData(), distance->getData(), n*n);
+//        opt.kernel.distance = square_distance(X',X');
+        distance_transposed(X.getData(), X.getData(), d, n, n, distance->getData());
 
         kernel->addOpt("distance", new OptMatrix<gMat2D<T> >(*distance));
     }
@@ -137,16 +136,16 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
 //    if ~isfield(opt,'sigmamin')
     if(!opt.hasOpt("sigmamin"))
     {
-//        D = sort(squareform(opt.kernel.distance.^(1/2)));
-
         int d_len = n*(n-1)/2;
         T* distLinearized = new T[d_len];
 
-        const int size = distance->cols();
+//        D = sort(opt.kernel.distance(tril(true(n),-1)));
+
+        const unsigned long size = distance->cols();
         T* it = distLinearized;
         T* d_it = distance->getData();
 
-        for(int i=1; i< size; ++i)
+        for(unsigned long i=1; i< size; ++i)
         {
             gurls::copy(it , d_it+i, size - i);
 
@@ -171,7 +170,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
 //    if ~isfield(opt,'sigmamax')
     if(!opt.hasOpt("sigmamax"))
     {
-//        opt.sigmamax = max(max(opt.kernel.distance.^(1/2)));
+//        opt.sigmamax = sqrt(max(max(opt.kernel.distance)));
         double sigmaMax = sqrt(*std::max_element(distance->getData(), distance->getData()+distance->getSize()));
         nestedOpt->addOpt("sigmamax", new OptNumber(sigmaMax));
     }
@@ -237,7 +236,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
         nestedOpt->addOpt("kernel", rbf_kernel);
 
 //        paramsel = paramsel_loogpregr(X,y,opt);
-        GurlsOptionsList* paramsel_loogp = loogp.execute(X, Y, opt);
+        GurlsOptionsList* paramsel_loogp = loogp.execute(X, Y, *nestedOpt);
 
 //        perf(i,:,:) = paramsel.perf;
         gMat2D<T> &perf_mat = paramsel_loogp->getOptValue<OptMatrix<gMat2D<T> > >("perf"); // nlambda x t
@@ -261,7 +260,6 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
     delete nestedOpt;
 
 //    M = sum(perf,3); % sum over classes
-
 //    [dummy,i] = max(M(:));
     int i = std::max_element(perf, perf +(nsigma*nlambda)) - perf;
 

@@ -116,20 +116,20 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
     unsigned long *va;
 
 
-    T* work = new T[t+n];
+    T lmin;
+    T lmax;
 
-//    lmax = mean(std(y));
-    T* stdY = new T[t];
+    if(opt.hasOpt("lambdamin"))
+        lmin = opt.getOptAsNumber("lambdamin");
+    else
+        lmin = 0.001;
 
-    stdDev(Y.getData(), n, t, stdY, work);
+    if(opt.hasOpt("lambdamax"))
+        lmax = opt.getOptAsNumber("lambdamax");
+    else
+        lmax = 10;
 
-    const T lmax = sumv(stdY, t)/((T)t);
 
-//    lmin = mean(std(y))*10^-5;
-    const T lmin = lmax * (T)1.0e-5;
-
-    delete[] stdY;
-    delete[] work;
 
 //    guesses = lmin.*(lmax/lmin).^linspace(0,1,tot);
     T* guesses = new T[tot];
@@ -144,7 +144,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
     delete[] linspc;
 
     GurlsOptionsList* nestedOpt = new GurlsOptionsList("nested");
-//    nestedOpt->copyOpt<T>("singlelambda", opt);
+    nestedOpt->copyOpt("singlelambda", opt);
 
 
     GurlsOptionsList* tmpPredKernel = new GurlsOptionsList("predkernel");
@@ -247,13 +247,13 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
             lambda->getData()[0] = guesses[i];
 
 //            opt.rls = rls_gpregr(X(tr,:),y(tr,:),opt);
-            GurlsOptionsList* ret_rlsgp = rlsgp.execute(subXtr, subYtr, opt);
+            GurlsOptionsList* ret_rlsgp = rlsgp.execute(subXtr, subYtr, *nestedOpt);
 
             nestedOpt->removeOpt("optimizer");
             nestedOpt->addOpt("optimizer", ret_rlsgp);
 
 //            tmp = pred_gpregr(X(va,:),y(va,:),opt);
-            GurlsOptionsList * pred_list = predgp.execute(subXva, subYva, opt);
+            GurlsOptionsList * pred_list = predgp.execute(subXva, subYva, *nestedOpt);
 
 //            opt.pred = tmp.means;
             nestedOpt->removeOpt("pred");
@@ -265,7 +265,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 
 
 //            opt.perf = opt.hoperf([],y(va,:),opt);
-            GurlsOptionsList * perf_list = perfClass->execute(subXva, subYva, opt);
+            GurlsOptionsList * perf_list = perfClass->execute(subXva, subYva, *nestedOpt);
             gMat2D<T>& forho = perf_list->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
 //            for t = 1:T
@@ -276,7 +276,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
         }
 
 //        [dummy,idx] = max(perf,[],1);
-        work = NULL;
+        T* work = NULL;
         unsigned long* idx = new unsigned long[t];
         indicesOfMax(perf, tot, t, idx, work, 1);
 

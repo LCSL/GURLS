@@ -88,6 +88,7 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
     nestedOpt->copyOpt("nholdouts", opt);
     nestedOpt->copyOpt("hoperf", opt);
     nestedOpt->copyOpt("split", opt);
+    nestedOpt->copyOpt("singlelambda", opt);
 
 
 //    if ~isfield(opt,'kernel')
@@ -109,31 +110,30 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
 //    if ~isfield(opt.kernel,'distance')
     if(!kernel->hasOpt("distance"))
     {
-//        opt.kernel.distance = squareform(pdist(X)).^2;
         distance = new gMat2D<T>(n, n);
 
-        squareform(X.getData(), n, d, distance->getData(), n);
-
-        mult(distance->getData(), distance->getData(), distance->getData(), n*n);
+//        opt.kernel.distance = square_distance(X',X');
+        distance_transposed(X.getData(), X.getData(), d, n, n, distance->getData());
 
         kernel->addOpt("distance", new OptMatrix<gMat2D<T> >(*distance));
     }
     else
         distance = &(kernel->getOptValue<OptMatrix<gMat2D<T> > >("distance"));
 
+
 //    if ~isfield(opt,'sigmamin')
     if(!opt.hasOpt("sigmamin"))
     {
-//        D = sort(squareform(opt.kernel.distance.^(1/2)));
-
         int d_len = n*(n-1)/2;
         T* distLinearized = new T[d_len];
 
-        const int size = distance->cols();
+//        D = sort(opt.kernel.distance(tril(true(n),-1)));
+
+        const unsigned long size = distance->cols();
         T* it = distLinearized;
         T* d_it = distance->getData();
 
-        for(int i=1; i< size; ++i)
+        for(unsigned long i=1; i< size; ++i)
         {
             gurls::copy(it , d_it+i, size - i);
 
@@ -144,7 +144,7 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
         std::sort(distLinearized, distLinearized + d_len);
 
         //        firstPercentile = round(0.01*numel(D)+0.5);
-        int firstPercentile = gurls::round((T)0.01 * d_len + (T)0.5);
+        int firstPercentile = gurls::round((T)0.01 * d_len + (T)0.5)-1;
 
         // 	opt.sigmamin = D(firstPercentile);
         nestedOpt->addOpt("sigmamin", new OptNumber(sqrt( distLinearized[firstPercentile]) ));
@@ -158,9 +158,9 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
 //    if ~isfield(opt,'sigmamax')
     if(!opt.hasOpt("sigmamax"))
     {
-//        opt.sigmamax = max(max(opt.kernel.distance.^(1/2)));
+//        opt.sigmamax = sqrt(max(max(opt.kernel.distance)));
         double sigmaMax = sqrt(*std::max_element(distance->getData(), distance->getData()+distance->getSize()));
-        nestedOpt->addOpt("sigmamax", new OptNumber(sqrt(sigmaMax)));
+        nestedOpt->addOpt("sigmamax", new OptNumber(sigmaMax));
     }
     else
         nestedOpt->copyOpt("sigmamax", opt);
