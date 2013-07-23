@@ -114,6 +114,7 @@ gMat2D<T>* KernelRLSWrapper<T>::eval(const gMat2D<T> &X)
         break;
     case KernelWrapper<T>::RBF:
         pred = new PredDual<T>();
+        this->opt->removeOpt("predkernel");
         this->opt->addOpt("predkernel", predkTrainTest.execute(X, empty, *(this->opt)));
     }
 
