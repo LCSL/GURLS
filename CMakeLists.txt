@@ -78,7 +78,7 @@ if(GURLS_BUILD_GURLSPP)
     ### WRITE CMAKE CONFIG FILES
     #Gurls++Config.cmake for build tree
     set (export_include_dirs ${Gurls++_INCLUDE_DIRS})
-    set (generated_export_file "Gurls++targets-buildtree.cmake")
+    set (generated_export_file "Gurlstargets-buildtree.cmake")
     set (export_libraries)
 
 
@@ -88,13 +88,13 @@ if(GURLS_BUILD_GURLSPP)
     #if (GURLS_BUILD_BGURLSPP) #not ready for this yet...
     #	set (export_libraries ${export_libraries} ${BGurls++_LIBRARY})
     #endif()
-    configure_file(cmake-modules/Gurls++Config.cmake.in ${PROJECT_BINARY_DIR}/Gurls++Config.cmake @ONLY)
+    configure_file(cmake-modules/GurlsConfig.cmake.in ${PROJECT_BINARY_DIR}/GurlsConfig.cmake @ONLY)
 
     #Gurls++Config.cmake for installation
     set (export_include_dirs "${CMAKE_INSTALL_PREFIX}/include")
-    set (generated_export_file "Gurls++targets-install.cmake")
-    configure_file(cmake-modules/Gurls++Config.cmake.in ${PROJECT_BINARY_DIR}/Gurls++ConfigForInstall.cmake @ONLY)
-    install(FILES ${PROJECT_BINARY_DIR}/Gurls++ConfigForInstall.cmake DESTINATION lib RENAME Gurls++Config.cmake)
+    set (generated_export_file "Gurlstargets-install.cmake")
+    configure_file(cmake-modules/GurlsConfig.cmake.in ${PROJECT_BINARY_DIR}/GurlsConfigForInstall.cmake @ONLY)
+    install(FILES ${PROJECT_BINARY_DIR}/GurlsConfigForInstall.cmake DESTINATION lib RENAME GurlsConfig.cmake)
 
     # uninstall target
     configure_file(

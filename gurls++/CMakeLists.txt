@@ -126,7 +126,7 @@ install(TARGETS ${GURLSLIBRARY} EXPORT Gurls++targets-install
 install (FILES ${gurls_headers} DESTINATION include/gurls++)
 install(EXPORT Gurls++targets-install DESTINATION lib)
 
-export(TARGETS gurls++ FILE ${gurls_BINARY_DIR}/Gurls++targets-buildtree.cmake)
+export(TARGETS gurls++ FILE ${gurls_BINARY_DIR}/Gurlstargets-buildtree.cmake)
 
 if(MSVC)
 
