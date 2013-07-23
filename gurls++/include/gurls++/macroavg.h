@@ -177,15 +177,15 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
 //            p.forplot(t) = p.acc(t);
 //        end
 //        for t = (length(PerClass)+1):T
-//            p.acc(t) = 1;
-//            p.forho(t) = 1;
-//            p.forplot(t) = 1;
+//            p.acc(t) = 0;
+//            p.forho(t) = 0;
+//            p.forplot(t) = 0;
 //        end
 
         copy(acc, perClass, perClass_length);
 
         if(perClass_length < cols)
-            set(acc+perClass_length, (T)1.0, cols-perClass_length);
+            set(acc+perClass_length, (T)0.0, cols-perClass_length);
 
         delete[] perClass;
 
