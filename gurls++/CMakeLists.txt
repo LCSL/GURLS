@@ -64,6 +64,8 @@ set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/predkernel.h
                     include/gurls++/predkerneltraintest.h
                     include/gurls++/primal.h
+                    include/gurls++/randfeatswrapper.h
+                    include/gurls++/randfeatswrapper.hpp
                     include/gurls++/rbfkernel.h
                     include/gurls++/recrlswrapper.h
                     include/gurls++/recrlswrapper.hpp
