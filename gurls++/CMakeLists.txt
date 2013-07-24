@@ -26,6 +26,8 @@ set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/gmat2d.h
                     include/gurls++/gmat2d.hpp
                     include/gurls++/gmath.h
+                    include/gurls++/gprwrapper.h
+                    include/gurls++/gprwrapper.hpp
                     include/gurls++/gurls.h
                     include/gurls++/gurls.hpp
                     include/gurls++/gvec.h
