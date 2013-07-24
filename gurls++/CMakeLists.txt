@@ -76,6 +76,8 @@ set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/rlsprimalrecinit.h
                     include/gurls++/rlsprimalrecupdate.h
                     include/gurls++/rlsprimalr.h
+                    include/gurls++/rlswrapper.h
+                    include/gurls++/rlswrapper.hpp
                     include/gurls++/rmse.h
                     include/gurls++/serialization.h
                     include/gurls++/siglam.h
