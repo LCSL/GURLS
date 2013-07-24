@@ -187,4 +187,3 @@ if(GURLSPP_BUILD_DOC)
         message(WARNING "Doxygen documentation was enabled, but the Doxygen package was not found.")
     endif(Doxygen_FOUND)
 endif(GURLSPP_BUILD_DOC)
-
