@@ -42,14 +42,14 @@
 #ifndef GURLS_RLSWRAPPER_H
 #define GURLS_RLSWRAPPER_H
 
-#include "wrapper.h"
+#include "gurls++/wrapper.h"
 
 namespace gurls
 {
 
 /**
   * \ingroup Wrappers
-  * \brief RLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a linear model. 
+  * \brief RLSWrapper is the sub-class of GurlsWrapper that implements Regularized Least Squares with a linear model.
   * The regularization parameter is estimated by the wrapper (default) or explicitely given in input by the user via method train().
   * The eval() method estimates the output for new data.
   *
