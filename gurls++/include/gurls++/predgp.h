@@ -79,7 +79,7 @@ public:
 };
 
 template <typename T>
-GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList &opt)
+GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList &opt)
 {
 //    pred.means = opt.predkernel.K*opt.rls.alpha;
 
@@ -105,7 +105,7 @@ GurlsOptionsList *PredGPRegr<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>
     dot(K.getData(), alpha.getData(), means_mat->getData(), kr, kc, alpha.rows(), alpha.cols(), kr, alpha.cols(), CblasNoTrans, CblasNoTrans, CblasColMajor);
 
 
-    const unsigned long n = Y.rows();
+    const unsigned long n = X.rows();
 
 //    pred.vars = zeros(n,1);
     gMat2D<T> *vars_mat = new gMat2D<T>(n, 1);
