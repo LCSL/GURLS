@@ -119,14 +119,14 @@ if(GURLS_USE_EXTERNAL_BOOST)
 endif(GURLS_USE_EXTERNAL_BOOST)
 
 
-install(TARGETS ${GURLSLIBRARY} EXPORT Gurls++targets-install
+install(TARGETS ${GURLSLIBRARY} EXPORT Gurlstargets-install
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 
 install (FILES ${gurls_headers} DESTINATION include/gurls++)
-install(EXPORT Gurls++targets-install DESTINATION lib)
+install(EXPORT Gurlstargets-install DESTINATION lib)
 
 export(TARGETS gurls++ FILE ${gurls_BINARY_DIR}/Gurlstargets-buildtree.cmake)
 
