@@ -175,15 +175,15 @@ option(GURLSPP_BUILD_DOC "Build Doxygen documentation" OFF)
 if(GURLSPP_BUILD_DOC)
     find_package(Doxygen)
 
-    if (Doxygen_FOUND)
+    if (DOXYGEN_FOUND)
         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
         add_custom_target(gurlsppdoc
             ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             COMMENT "Generating API documentation with Doxygen" VERBATIM
             )
-    else(Doxygen_FOUND)
+    else(DOXYGEN_FOUND)
         message(WARNING "Doxygen documentation was enabled, but the Doxygen package was not found.")
-    endif(Doxygen_FOUND)
+    endif(DOXYGEN_FOUND)
 endif(GURLSPP_BUILD_DOC)
 
