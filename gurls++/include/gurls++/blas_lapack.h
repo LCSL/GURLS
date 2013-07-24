@@ -5,7 +5,7 @@
 /**
  * \ingroup LinearAlgebra
  * \file
- * \brief Contains protptypes for BLAS level 1, 2, 3 and Lapack routines.
+ * \brief Contains prototypes for BLAS level 1, 2, 3 and Lapack routines.
  */
 
 namespace gurls
