@@ -30,6 +30,11 @@ public:
     GPRWrapper(const std::string& name);
 
     /**
+      * Destructor
+      */
+    ~GPRWrapper();
+
+    /**
       * Initial parameter selection and training
       *
       * \param X Input data matrix
@@ -44,10 +49,22 @@ public:
       * \returns Matrix of predicted labels
       */
     gMat2D<T>* eval(const gMat2D<T> &X);
+
+    /**
+      * Estimates label for an input matrix
+      *
+      * \param[in] X Input matrix
+      * \returns Matrix of predicted labels
+      */
+    gMat2D<T>* eval(const gMat2D<T> &X, gMat2D<T> &vars);
+
+protected:
+
+    GurlsOptionsList *norm;
 };
 
 }
 
 #include "gprwrapper.hpp"
 
-#endif //GURLS_KERNELRLSWRAPPER_H
+#endif //GURLS_GPRWRAPPER_H
