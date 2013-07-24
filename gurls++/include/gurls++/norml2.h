@@ -46,6 +46,7 @@
 
 #include "gurls++/norm.h"
 #include "gurls++/gmath.h"
+#include "gurls++/optmatrix.h"
 
 #include <limits>
 
@@ -67,32 +68,36 @@ public:
      * \param opt not used
      * \return spheriphied input data matrix
      */
-    gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
 };
 
 template<typename T>
-gMat2D<T>* NormL2<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& /*opt*/) throw(gException)
+GurlsOptionsList* NormL2<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList& /*opt*/) throw(gException)
 {
     const unsigned long m = X.rows();
     const unsigned long n = X.cols();
 
-    T norm;
 
     gMat2D<T>* retX = new gMat2D<T>(m, n);
     copy(retX->getData(), X.getData(), retX->getSize());
-    T*rx = retX->getData();
+    T *rx_it = retX->getData();
 
     const T epsilon = std::numeric_limits<T>::epsilon();
+    const T one = (T)1.0;
+    T norm2;
 
 //    for j = 1:size(X,1)
-    for(unsigned long j=0; j<m; ++j)
+    for(unsigned long j=0; j<m; ++j, ++rx_it)
     {
 //        X(j,:) = X(j,:)/(norm(X(j,:)) + eps);
-        norm = nrm2(n, rx+j, m) + epsilon;
-        scal(n, (T)1.0/norm, rx+j, m);
+        norm2 = nrm2(n, rx_it, m) + epsilon;
+        scal(n, one/norm2, rx_it, m);
     }
 
-    return retX;
+    GurlsOptionsList* norm = new GurlsOptionsList("norm");
+    norm->addOpt("X", new OptMatrix<gMat2D<T> >(*retX));
+
+    return norm;
 }
 
 }

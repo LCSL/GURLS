@@ -142,7 +142,7 @@ public:
      * \param opt options with the different required fields based on the sub-class
      * \return spherified input data matrix
      */
-    virtual gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt) = 0;
+    virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
      * Factory function returning a pointer to the newly created object.

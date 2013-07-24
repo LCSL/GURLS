@@ -46,6 +46,7 @@
 
 #include "gurls++/norm.h"
 #include "gurls++/gmath.h"
+#include "gurls++/optmatrix.h"
 
 #include <string>
 
@@ -63,68 +64,82 @@ public:
     /**
      * Normalizes the input data matrix X, centering them and rescaling it so that each dimension has std. deviation 1. Then saves stats in a file with name root specified in the field name of opt
      * \param X input data matrix
-     * \param Y not used
+     * \param Y input data matrix
      * \param opt not used
      *
-     * \return spheriphied input data matrix
-     * \return adds the field name to opt
+     * \return spheriphied input data matrix with mean and standard deviation
      */
-    gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
+
+protected:
+    void centerRescale(gMat2D<T> &M, T *stdDevs, const T *means);
 };
 
 template<typename T>
-gMat2D<T>* NormZScore<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList* NormZScore<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& /*opt*/) throw(gException)
 {
-//    savevars = {'meanX','stdX'};
-
 //    [n,d] = size(X);
     const unsigned long n = X.rows();
     const unsigned long d = X.cols();
+    const unsigned long t = Y.cols();
 
 //    meanX = mean(X);
 
-    gMat2D<T> v_meanX (1, d);
-    T* meanX = v_meanX.getData();
-    mean(X.getData(), meanX, n, d, d);
+    gMat2D<T> *v_meanX = new gMat2D<T>(1, d);
+    mean(X.getData(), v_meanX->getData(), n, d, d);
+
+    gMat2D<T> *v_meanY = new gMat2D<T>(1, t);
+    mean(Y.getData(), v_meanY->getData(), n, t, t);
 
 //    stdX = std(X) + eps;
 //    X = X - repmat(meanX, n, 1);
 //    X = X./repmat(stdX, n, 1);
 
-    gMat2D<T> v_stdX (1, d);
-    T* stdX = v_stdX.getData();
+    gMat2D<T> *v_stdX = new gMat2D<T>(1, d);
+    gMat2D<T> *v_stdY = new gMat2D<T>(1, t);
 
-    gMat2D<T>* retX = new gMat2D<T>(n, d);
+    gMat2D<T> *retX = new gMat2D<T>(n, d);
     copy(retX->getData(), X.getData(), retX->getSize());
 
-    for(unsigned long i=0; i<d; ++i)
+    gMat2D<T> *retY = new gMat2D<T>(n, t);
+    copy(retY->getData(), Y.getData(), retY->getSize());
+
+    centerRescale(*retX, v_stdX->getData(), v_meanX->getData());
+    centerRescale(*retY, v_stdY->getData(), v_meanY->getData());
+
+    GurlsOptionsList* norm = new GurlsOptionsList("norm");
+    norm->addOpt("X", new OptMatrix<gMat2D<T> >(*retX));
+    norm->addOpt("meanX", new OptMatrix<gMat2D<T> >(*v_meanX));
+    norm->addOpt("stdX", new OptMatrix<gMat2D<T> >(*v_stdX));
+
+    norm->addOpt("Y", new OptMatrix<gMat2D<T> >(*retY));
+    norm->addOpt("meanY", new OptMatrix<gMat2D<T> >(*v_meanY));
+    norm->addOpt("stdY", new OptMatrix<gMat2D<T> >(*v_stdY));
+
+    return norm;
+}
+
+template<typename T>
+void NormZScore<T>::centerRescale(gMat2D<T> &M, T *stdDevs, const T *means)
+{
+    const unsigned long n = M.rows();
+    const unsigned long d = M.cols();
+
+    const T epsilon = std::numeric_limits<T>::epsilon();
+
+    T* column = M.getData();
+    T* std_it = stdDevs;
+    const T* mean_it = means;
+    for(unsigned long i=0; i<d; ++i, column+=n, ++std_it, ++mean_it)
     {
-        T* column = retX->getData()+(n*i);
+        axpy(n, (T)-1.0, mean_it, 0, column, 1);
 
-        axpy(n, (T)-1.0, meanX+i, 0, column, 1);
+        T norm = nrm2(n, column, 1);
+        T stdDev = sqrt( (norm*norm) / (n-1)) + epsilon;
 
-        stdX[i] = sqrt( pow(nrm2(n, column, 1), 2) / (n-1)) + std::numeric_limits<T>::epsilon();
-
-        scal(n, (T)1.0/stdX[i], column, 1);
+        *std_it = stdDev;
+        scal(n, (T)1.0/stdDev, column, 1);
     }
-
-//    if numel(savevars) > 0
-//        [ST,I] = dbstack();
-//        save([opt.name '_' ST(1).name],savevars{:}, '-v7');
-//    end
-
-    std::string name = opt.getOptAsString("name");
-
-
-    std::string fileName;
-
-    fileName = name + "_norm_zscore_meanX.txt";
-    v_meanX.save(fileName);
-
-    fileName = name + "_norm_zscore_stdX.txt";
-    v_stdX.save(fileName);
-
-    return retX;
 }
 
 }

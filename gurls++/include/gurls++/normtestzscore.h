@@ -46,6 +46,7 @@
 
 #include "gurls++/norm.h"
 #include "gurls++/gmath.h"
+#include "gurls++/optmatrix.h"
 
 namespace gurls {
 
@@ -59,54 +60,78 @@ class NormTestZScore: public Norm<T>
 {
 public:
     /**
-     * Spheriphies test data using the same mean and std deviation computed for the training set, previously computed and stored in the file with name root specified in the field name of opt by the NormZScore sub-class of the class Norm.
+     * Spheriphies test data using the same mean and std deviation computed for the training set,
+     * previously computed and stored in opt by the NormZScore sub-class of the class Norm.
      * \param X input data matrix
-     * \param Y not used
+     * \param Y input data matrix
      * \param opt option list with the following field:
-     *  - name (settable with the NormZScore sub-class of the class Norm)
+     *  - meanX
+     *  - meanY
+     *  - stdX
+     *  - stdY
      *
      * \return spheriphied input data matrix
      */
-    gMat2D<T>* execute(const gMat2D<T>& X, const gMat2D<T>& Y, GurlsOptionsList& opt)  throw(gException);
+    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
+
+protected:
+    void centerRescale(gMat2D<T> &M, const T *stdDevs, const T *means);
 };
 
 template<typename T>
-gMat2D<T>* NormTestZScore<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList* NormTestZScore<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException)
 {
 //    [n,d] = size(X);
     const unsigned long n = X.rows();
     const unsigned long d = X.cols();
+    const unsigned long m = Y.rows();
+    const unsigned long t = Y.cols();
 
-    std::string name = opt.getOptAsString("name");
+    GurlsOptionsList* norm = new GurlsOptionsList("norm");
 
-    gMat2D<T> v_meanX;
-    gMat2D<T> v_stdX;
-
-    std::string fileName;
-
-    fileName = name + "_norm_zscore_meanX.txt";
-    v_meanX.load(fileName);
-
-    fileName = name + "_norm_zscore_stdX.txt";
-    v_stdX.load(fileName);
-
-    T* meanX = v_meanX.getData();
-    T* stdX = v_stdX.getData();
-
-    gMat2D<T>* retX = new gMat2D<T>(n, d);
-    copy(retX->getData(), X.getData(), retX->getSize());
-
-//    X = X - repmat(meanX, n, 1);
-//    X = X./repmat(stdX, n, 1);
-    for(unsigned long i=0; i<d; ++i)
+    if(n > 0ul && d > 0ul)
     {
-        T* column = retX->getData()+(n*i);
+        const gMat2D<T> &v_meanX = opt.getOptValue<OptMatrix<gMat2D<T> > >("meanX");
+        const gMat2D<T> &v_stdX = opt.getOptValue<OptMatrix<gMat2D<T> > >("stdX");
 
-        axpy(n, (T)-1.0, meanX+i, 0, column, 1);
-        scal(n, (T)1.0/stdX[i], column, 1);
+        gMat2D<T>* retX = new gMat2D<T>(n, d);
+        copy(retX->getData(), X.getData(), retX->getSize());
+
+        centerRescale(*retX, v_stdX.getData(), v_meanX.getData());
+        norm->addOpt("X", new OptMatrix<gMat2D<T> >(*retX));
     }
 
-    return retX;
+    if(m > 0ul && t > 0ul)
+    {
+        const gMat2D<T> &v_meanY = opt.getOptValue<OptMatrix<gMat2D<T> > >("meanY");
+        const gMat2D<T> &v_stdY = opt.getOptValue<OptMatrix<gMat2D<T> > >("stdY");
+
+        gMat2D<T>* retY = new gMat2D<T>(m, t);
+        copy(retY->getData(), Y.getData(), retY->getSize());
+
+        centerRescale(*retY, v_stdY.getData(), v_meanY.getData());
+        norm->addOpt("Y", new OptMatrix<gMat2D<T> >(*retY));
+    }
+
+    return norm;
+}
+
+template<typename T>
+void NormTestZScore<T>::centerRescale(gMat2D<T> &M, const T *stdDevs, const T *means)
+{
+    const unsigned long n = M.rows();
+    const unsigned long d = M.cols();
+
+    //    X = X - repmat(meanX, n, 1);
+    //    X = X./repmat(stdX, n, 1);
+    T* column = M.getData();
+    const T* std_it = stdDevs;
+    const T* mean_it = means;
+    for(unsigned long i=0; i<d; ++i, column+=n, ++std_it, ++mean_it)
+    {
+        axpy(n, (T)-1.0, mean_it, 0, column, 1);
+        scal(n, (T)1.0/(*std_it), column, 1);
+    }
 }
 
 }

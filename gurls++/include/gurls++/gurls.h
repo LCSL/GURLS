@@ -318,9 +318,9 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 else if (!reg1.compare("norm"))
                 {
                     taskNorm = Norm<T>::factory(reg2);
-                    gMat2D<T>* X1 = taskNorm->execute(X, y, opt);
-                    delete X1;
-                    throw gException("Unused return value");
+                    GurlsOption* ret = taskNorm->execute(X, y, opt);
+                    opt.removeOpt("norm");
+                    opt.addOpt("norm", ret);
 
                     delete taskNorm;
                 }
