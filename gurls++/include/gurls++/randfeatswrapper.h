@@ -66,6 +66,11 @@ public:
     RandomFeaturesWrapper(const std::string& name);
 
     /**
+      * Destructor
+      */
+    ~RandomFeaturesWrapper();
+
+    /**
       * Initial parameter selection and training
       *
       * \param[in] X Input data matrix
@@ -82,6 +87,10 @@ public:
       */
     gMat2D<T> *eval(const gMat2D<T> &X);
 
+    /**
+      *
+      * \param value
+      */
     void setNRandFeats(unsigned long value);
 
 protected:

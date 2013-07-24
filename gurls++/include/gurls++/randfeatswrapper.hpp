@@ -20,6 +20,13 @@ RandomFeaturesWrapper<T>::RandomFeaturesWrapper(const std::string &name): RLSWra
 }
 
 template <typename T>
+RandomFeaturesWrapper<T>::~RandomFeaturesWrapper()
+{
+    if(W != NULL)
+        delete W;
+}
+
+template <typename T>
 void RandomFeaturesWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 {
 
