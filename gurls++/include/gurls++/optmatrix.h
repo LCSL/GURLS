@@ -262,7 +262,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
 };
 
@@ -284,7 +284,7 @@ bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const{return true;};
   * Writes an OptMatrix to a stream
   */
 template <typename T>
-std::ostream& OptMatrix<T>::operator << (std::ostream& os)
+std::ostream& OptMatrix<T>::operator << (std::ostream& os) const
 {
     return os << std::endl << this->getValue();
 }

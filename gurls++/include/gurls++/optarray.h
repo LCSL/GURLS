@@ -134,17 +134,17 @@ public:
     /**
       * Returns a pointer to the i-th option into the array
       */
-    GurlsOption* operator[] (unsigned long i);
+    GurlsOption* operator[] (unsigned long i) const;
 
     /**
       * Writes an OptArray to a stream
       */
-    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, OptArray& opt);
+    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const OptArray& opt);
 
     /**
       * Writes the array to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
     /**
       * Serializes the array to file

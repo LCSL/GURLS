@@ -227,7 +227,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
 
 protected:

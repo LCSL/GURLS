@@ -83,7 +83,7 @@ const OptArray* OptArray::dynacast(const GurlsOption* opt)
     throw gException(gurls::Exception_Illegal_Dynamic_Cast);
 }
 
-GurlsOption* OptArray::operator[] (unsigned long i)
+GurlsOption* OptArray::operator[] (unsigned long i) const
 {
     if ( i >= value->size() )
         throw gException(gurls::Exception_Index_Out_of_Bound);
@@ -94,7 +94,7 @@ GurlsOption* OptArray::operator[] (unsigned long i)
 /**
   * Writes an OptArray to a stream
   */
-GURLS_EXPORT std::ostream& operator<<(std::ostream& os, OptArray& opt)
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const OptArray& opt)
 {
     os << endl << "~~~~~~~ OptArray: " << endl;
 
@@ -108,7 +108,7 @@ GURLS_EXPORT std::ostream& operator<<(std::ostream& os, OptArray& opt)
     return os;
 }
 
-std::ostream& OptArray::operator<<(std::ostream& os)
+std::ostream& OptArray::operator<<(std::ostream& os) const
 {
     return os << *this;
 }

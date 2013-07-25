@@ -55,7 +55,7 @@ const OptFunction* OptFunction::dynacast(const GurlsOption* opt)
     throw gException(gurls::Exception_Illegal_Dynamic_Cast);
 }
 
-GURLS_EXPORT std::ostream& OptFunction::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptFunction::operator<<(std::ostream& os) const
 {
     os << "Pointer to the function <" << this->getName()
        << "> whose signature is: T (*func)(T*, int)" ;

@@ -55,23 +55,23 @@ namespace gurls{
 /**
   * Writes a GurlsOption to a stream
   */
-GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOption& opt)
+GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const GurlsOption& opt)
 {
     opt.operator <<(os);
     return os;
 }
 
-GURLS_EXPORT std::ostream& OptString::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptString::operator<<(std::ostream& os) const
 {
     return os << this->getValue();
 }
 
-GURLS_EXPORT std::ostream& OptNumber::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptNumber::operator<<(std::ostream& os) const
 {
     return os << this->getValue();
 }
 
-GURLS_EXPORT std::ostream& OptStringList::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptStringList::operator<<(std::ostream& os) const
 {
     const std::vector<std::string>& V = this->getValue();
     std::vector<std::string>::const_iterator it = V.begin();
@@ -89,11 +89,11 @@ GURLS_EXPORT std::ostream& OptStringList::operator<<(std::ostream& os)
     return os;
 }
 
-GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os) const
 {
-    std::vector<double>& V = this->getValue();
-    std::vector<double>::iterator it = V.begin();
-    std::vector<double>::iterator end = V.end();
+    const std::vector<double>& V = this->getValue();
+    std::vector<double>::const_iterator it = V.begin();
+    std::vector<double>::const_iterator end = V.end();
 
     os << "(";
     if(!V.empty())
@@ -106,16 +106,16 @@ GURLS_EXPORT std::ostream& OptNumberList::operator<<(std::ostream& os)
     return os;
 }
 
-GURLS_EXPORT std::ostream& OptProcess::operator<<(std::ostream& os)
+GURLS_EXPORT std::ostream& OptProcess::operator<<(std::ostream& os) const
 {
     os << "( ";
 
     if(!value->empty())
     {
-        ValueType::iterator end = value->end();
+        ValueType::const_iterator end = value->end();
         --end;
 
-        for(ValueType::iterator it = value->begin(); it != end; ++it)
+        for(ValueType::const_iterator it = value->begin(); it != end; ++it)
             os << actionNames()[*it] << ", ";
 
         os << actionNames()[*end];
@@ -143,11 +143,6 @@ bool GurlsOption::isA(OptTypes id) const
 const std::type_info& GurlsOption::getDataID()
 {
     return typeid(GurlsOption);
-}
-
-std::ostream& GurlsOption::operator<<(std::ostream& os)
-{
-    return os;
 }
 
 
@@ -457,7 +452,7 @@ OptString::OptString(const std::string& str): GurlsOption(StringOption),value(st
 
 OptString::OptString(const std::wstring& str): GurlsOption(StringOption)
 {
-	value = std::string(str.begin(), str.end());
+    value = std::string(str.begin(), str.end());
 }
 
 OptString::~OptString()

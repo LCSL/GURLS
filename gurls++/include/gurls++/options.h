@@ -122,12 +122,12 @@ public:
     /**
       * Writes an option to a stream
       */
-    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, GurlsOption& opt);
+    friend GURLS_EXPORT std::ostream& operator<<(std::ostream& os, const GurlsOption& opt);
 
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const = 0;
 };
 
 #ifdef _WIN32
@@ -217,7 +217,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
 };
 
@@ -296,7 +296,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
     /**
       * Removes all contents in the list
@@ -385,7 +385,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
 };
 
@@ -470,7 +470,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
     /**
       * Removes all contents in the list
@@ -663,7 +663,7 @@ public:
     /**
       * Writes the option to a stream
       */
-    virtual std::ostream& operator<<(std::ostream& os);
+    virtual std::ostream& operator<<(std::ostream& os) const;
 
 };
 
