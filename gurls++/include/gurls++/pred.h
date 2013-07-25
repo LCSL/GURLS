@@ -48,12 +48,11 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include <exception>
-#include <stdexcept>
 
 #include "gurls++/gmath.h"
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
+#include "gurls++/exceptions.h"
 
 
 namespace gurls
@@ -73,13 +72,13 @@ class PredGPRegr;
  *
  * \brief BadPredictionCreation is thrown when \ref factory tries to generate an unknown prediction method
  */
-class BadPredictionCreation : public std::logic_error
+class BadPredictionCreation : public gException
 {
 public:
     /**
      * Exception constructor.
      */
-    BadPredictionCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadPredictionCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

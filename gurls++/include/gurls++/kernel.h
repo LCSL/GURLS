@@ -51,7 +51,7 @@
 //#include "gvec.h"
 //#include "gmat2d.h"
 
-#include <stdexcept>
+#include "gurls++/exceptions.h"
 
 #include "gurls++/optlist.h"
 
@@ -73,13 +73,13 @@ class KernelChisquared;
  *
  * \brief BadKernelCreation is thrown when \ref factory tries to generate an unknown kernel
  */
-class BadKernelCreation : public std::logic_error
+class BadKernelCreation : public gException
 {
 public:
     /**
      * Exception constructor.
      */
-    BadKernelCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadKernelCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

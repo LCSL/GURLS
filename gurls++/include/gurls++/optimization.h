@@ -48,8 +48,6 @@
 #include <algorithm>
 #include <map>
 #include <string>
-#include <exception>
-#include <stdexcept>
 
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
@@ -93,14 +91,14 @@ class RLSPrimalRecUpdate;
  *
  * \brief BadOptimizerCreation is thrown when \ref factory tries to generate an unknown optimizer
  */
-class BadOptimizerCreation : public std::logic_error
+class BadOptimizerCreation : public gException
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadOptimizerCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadOptimizerCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

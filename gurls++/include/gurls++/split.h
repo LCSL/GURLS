@@ -43,8 +43,8 @@
 #define _GURLS_SPLIT_H_
 
 
-#include <stdexcept>
 #include "gurls++/optlist.h"
+#include "gurls++/exceptions.h"
 
 namespace gurls
 {
@@ -57,14 +57,14 @@ class SplitHo;
  *
  * \brief BadSplitCreation is thrown when \ref factory tries to generate an unknown split method
  */
-class BadSplitCreation : public std::logic_error
+class BadSplitCreation : public gException
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadSplitCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadSplitCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

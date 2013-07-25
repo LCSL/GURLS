@@ -48,12 +48,11 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include <exception>
-#include <stdexcept>
 
 #include "gurls++/gmath.h"
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
+#include "gurls++/exceptions.h"
 
 
 namespace gurls
@@ -73,14 +72,14 @@ class PerfRmse;
  *
  * \brief BadPerformanceCreation is thrown when \ref factory tries to generate an unknown performance evaluator
  */
-class BadPerformanceCreation : public std::logic_error
+class BadPerformanceCreation : public gException
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadPerformanceCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadPerformanceCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

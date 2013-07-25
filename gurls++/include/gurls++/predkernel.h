@@ -42,10 +42,10 @@
 #ifndef _GURLS_PREDKERNEL_H_
 #define _GURLS_PREDKERNEL_H_
 
-#include <stdexcept>
 
 #include "gurls++/gmat2d.h"
 #include "gurls++/optlist.h"
+#include "gurls++/exceptions.h"
 
 namespace gurls
 {
@@ -58,14 +58,14 @@ class PredKernelTrainTest;
  *
  * \brief BadPredKernelCreation is thrown when \ref factory tries to generate an unknown prediction kernel
  */
-class BadPredKernelCreation : public std::logic_error
+class BadPredKernelCreation : public gException
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadPredKernelCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadPredKernelCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

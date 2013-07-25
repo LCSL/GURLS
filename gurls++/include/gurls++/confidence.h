@@ -43,8 +43,8 @@
 #define _GURLS_CONFIDENCE_H_
 
 
-#include <stdexcept>
 #include "gurls++/optlist.h"
+#include "gurls++/exceptions.h"
 
 namespace gurls
 {
@@ -66,13 +66,13 @@ class ConfMaxScore;
  *
  * \brief BadConfidenceCreation is thrown when \ref factory tries to generate an unknown confidence method
  */
-class BadConfidenceCreation : public std::logic_error
+class BadConfidenceCreation : public gException
 {
 public:
     /**
      * Exception constructor.
      */
-    BadConfidenceCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadConfidenceCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

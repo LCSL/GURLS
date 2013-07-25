@@ -48,13 +48,14 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include <stdexcept>
+
 
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
 #include "gurls++/gmat2d.h"
 #include "gurls++/gvec.h"
 #include "gurls++/gmath.h"
+#include "gurls++/exceptions.h"
 
 namespace gurls
 {
@@ -109,13 +110,13 @@ class ParamSelSiglamHoGPRegr;
  *
  * \brief BadParamSelectionCreation is thrown when \ref factory tries to generate an unknown parameter selection method
  */
-class BadParamSelectionCreation : public std::logic_error
+class BadParamSelectionCreation : public gException
 {
 public:
     /**
      * Exception constructor.
      */
-    BadParamSelectionCreation(std::string type): logic_error("Cannot create type " + type) {}
+    BadParamSelectionCreation(std::string type): gException("Cannot create type " + type) {}
 };
 
 /**

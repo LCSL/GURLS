@@ -42,7 +42,6 @@
 #ifndef _GURLS_NORM_H_
 #define _GURLS_NORM_H_
 
-#include <stdexcept>
 #include <cstring>
 #include <cmath>
 
@@ -116,14 +115,14 @@ class NormTestZScore;
  *
  * \brief BadNormCreation is thrown when \ref factory tries to generate an unknown norm
  */
-class BadNormCreation : public std::logic_error
+class BadNormCreation : public gException
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadNormCreation(const std::string& type): logic_error("Cannot create type " + type) {}
+    BadNormCreation(const std::string& type): gException("Cannot create type " + type) {}
 };
 
 /**
