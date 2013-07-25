@@ -605,12 +605,6 @@ void cholesky(const T* matrix, const int rows, const int cols, T* result, bool u
 }
 
 /**
-  * Template function to call LAPACK *POTRF routines
-  */
-template<typename T>
-int potrf_(char *UPLO, int *n, T *a, int *lda , int *info);
-
-/**
   * Computes the element-by-element multiplicative inverse of an input matrix
   *
   * \param matrix input matrix
@@ -912,18 +906,6 @@ void copyLocations(const unsigned long* locs, const T* src, const int locs_len, 
         *ptr_v = src[val];
     }
 }
-
-/**
-  * Template function to call BLAS *AXPY routines
-  */
-template <typename T>
-void axpy(const int N, const T alpha, const T *X, const int incX, T *Y, const int incY);
-
-/**
-  * Template function to call BLAS *DOT routines
-  */
-template <typename T>
-T dot(const int N, const T *X, const int incX, const T *Y, const int incY);
 
 /**
   * Computes the sum of all elements of a vector
@@ -1321,13 +1303,6 @@ void mldivide_squared(const T* A, T* B,
 
 
 /**
-  * Template function to call BLAS *TRSM routines
-  */
-template <typename T>
-void trsm(const CBLAS_SIDE Side, const CBLAS_UPLO Uplo, const CBLAS_TRANSPOSE TransA, const CBLAS_DIAG Diag,
-                 const int M, const int N, const T alpha, const T *A, const int lda, T *B, const int ldb);
-
-/**
   * Computes singular value decomposition of an input matrix A such that  A = U*diag(S)*Vt.
   *
   * \param A Input matrix to be decomposed
@@ -1427,12 +1402,6 @@ void svd(const T* A, T*& U, T*& S, T*& Vt,
 }
 
 /**
-  * Template function to call BLAS *GESVD routines
-  */
-template<typename T>
-int gesvd_(char *jobu, char *jobvt, int *m, int *n, T *a, int *lda, T *s, T *u, int *ldu, T *vt, int *ldvt, T *work, int *lwork, int *info);
-
-/**
   * Generates a vector containing a random permutation of the values from start to start+n inclusive
   */
 template<typename T>
@@ -1463,44 +1432,6 @@ void getRow(const T* M, const int rows, const int cols, const int row_index , T*
 {
     copy(row, M+row_index, cols, 1, rows);
 }
-
-/**
-  * Template function to call BLAS *NRM2 routines
-  */
-template<typename T>
-T nrm2(const int N, const T* X, const int incX);
-
-/**
-  * Template function to call BLAS *SCAL routines
-  */
-template<typename T>
-void scal(const int N, const T alpha, T *X, const int incX);
-
-
-/**
-  * Template function to call BLAS *GEMV routines
-  */
-template<typename T>
-void gemv(const CBLAS_TRANSPOSE TransA,
-          const int M, const int N, const T alpha, const T *A, const int lda,
-          const T *X, const int incX,
-          const T beta, T *Y, const int incY);
-
-/**
-  * Template function to call LAPACK *SYEV routines
-  */
-template<typename T>
-void syev( char* jobz, char* uplo, int* n, T* a, int* lda, T* w, T* work, int* lwork, int* info);
-
-
-/**
-  * Template function to call BLAS *GEMM routines
-  */
-template<typename T>
-void gemm(const CBLAS_TRANSPOSE TransA, const CBLAS_TRANSPOSE TransB,
-          const int M, const int N, const int K, const T alpha, const T *A, const int lda,
-          const T *B, const int ldb,
-          const T beta, T *C, const int ldc);
 
 /**
   * Computes the eigenvalues/eigenvectors of a squared and symmetric input matrix.
@@ -1677,18 +1608,6 @@ int round(const T value)
 
     return gt(value,(T)0.0)? ((int)(value+0.5)): ((int)(value-0.5));
 }
-
-/**
-  * Template function to call LAPACK *GEQP3 routines
-  */
-template<typename T>
-void geqp3( int *m, int *n, T *A, int *lda, int *jpvt, T *tau, T *work, int *lwork, int *info);
-
-/**
-  * Template function to call LAPACK *ORGQR routines
-  */
-template<typename T>
-void orgqr(int *m, int *n, int *k, T *a, int *lda, T *tau, T *work, int *lwork, int *info);
 
 /**
   * Computes an economy-size QR decomposition of an input matrix A so that A(:,E) = Q*R.
@@ -1878,18 +1797,6 @@ void median(const T* M, const int rows, const int cols, const int dimension, T* 
         throw gException(Exception_Illegal_Argument_Value);
     }
 }
-
-/**
-  * Template function to call LAPACK *GELSS routines
-  */
-template<typename T>
-int gelss( int *m, int *n, int* nrhs, T *a, int *lda, T* b, int *ldb, T *s, T *rcond, int *rank, T *work, int *lwork, int *info);
-
-/**
-  * Template function to call BLAS *SWAP routines
-  */
-template<typename T>
-void swap( int n, T *x, int incx, T *y, int incy);
 
 }
 

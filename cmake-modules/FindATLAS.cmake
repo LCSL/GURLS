@@ -1,6 +1,6 @@
 FIND_PATH(ATLAS_INCLUDE_DIR cblas.h  /usr/include /usr/local/include /usr/local/include/atlas)
 
-SET(ATLAS_LIB_SEARCH_DIRS /usr/lib/sse2 /usr/lib/atlas/sse2 /usr/local/lib/atlas)
+SET(ATLAS_LIB_SEARCH_DIRS /usr/lib/sse2 /usr/lib/atlas/sse2 /usr/local/lib/atlas /usr/lib/atlas-base)
 	
 FIND_LIBRARY( ATLAS_LIBS NAMES atlas PATHS ${ATLAS_LIB_SEARCH_DIRS})
 FIND_LIBRARY( ATLAS_BLAS_LIBS NAMES f77blas ptf77blas PATHS ${ATLAS_LIB_SEARCH_DIRS})
@@ -22,3 +22,5 @@ ELSE(ATLAS_FOUND)
      MESSAGE(FATAL_ERROR "Could not find ATLAS")
   ENDIF (ATLAS_FIND_REQUIRED)
 ENDIF (ATLAS_FOUND)
+
+set(ATLAS_INCLUDE_DIRS ${ATLAS_INCLUDE_DIR})

@@ -11,6 +11,7 @@ project(${GURLSLIBRARY})
 set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/basearray.hpp
                     include/gurls++/blas_lapack.h
+                    include/gurls++/blas_lapack.hpp
                     include/gurls++/boltzmangap.h
                     include/gurls++/boltzman.h
                     include/gurls++/calibratesgd.h
@@ -95,7 +96,8 @@ set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/wrapper.hpp
     )
 
-set(gurls_sources   src/gmath.cpp
+set(gurls_sources   src/blas_lapack.cpp
+                    src/gmath.cpp
                     src/optarray.cpp
                     src/optfunction.cpp
                     src/options.cpp

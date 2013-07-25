@@ -5,7 +5,7 @@
 /**
  * \ingroup LinearAlgebra
  * \file
- * \brief Contains protptypes for BLAS level 1, 2, 3 and Lapack routines.
+ * \brief Contains prototypes for BLAS level 1, 2, 3 and Lapack routines.
  */
 
 namespace gurls
@@ -443,5 +443,7 @@ void sorgqr_(int *m, int *n, int *k, float *a, int *lda, float *tau, float *work
 void dorgqr_(int *m, int *n, int *k, double *a, int *lda, double *tau, double *work, int *lwork, int *info);
 
 }
+
+#include"gurls++/blas_lapack.hpp"
 
 #endif //BLAS_LAPACK_H
