@@ -17,5 +17,5 @@ function [scores] = pred_randfeats(X, y, opt)
 % OUTPUT:
 % -scores: matrix of predicted labels
 
-    G = rp_apply_real(X',opt.kernel.W)';
+    G = rp_apply_real(X',opt.rls.proj)';
 	scores = G*opt.rls.W;	

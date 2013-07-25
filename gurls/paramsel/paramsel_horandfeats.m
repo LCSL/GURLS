@@ -51,25 +51,22 @@ for nh = 1:opt.nholdouts
 	[n,d] = size(X(tr,:));
 	[n,T]  = size(y(tr,:));
     
-    kernel = kernel_randfeats(X(tr,:), y(tr,:), opt);
-	opt.kernel.W = kernel.W;
+    
+    if or(opt.randfeats.samplesize < 0, opt.randfeats.samplesize > n)
+        ni = n;
+    else 
+        ni = opt.randfeats.samplesize;
+    end
+
+    [XtX,Xty,opt.rls.proj] = rp_factorize_large_real(X(tr,:)',y(tr,:)',opt.randfeats.D,'gaussian',ni);
     
 	tot = opt.nlambda;
-	[Q,L] = eig(kernel.XtX);
+	[Q,L] = eig(XtX);
 	Q = double(Q);
 	L = double(diag(L));
-	QtXtY = Q'*kernel.Xty;
+	QtXtY = Q'*Xty;
     
 	guesses = paramsel_lambdaguesses(L, min(n,opt.randfeats.D*2), n, opt);
-    
-% % ensuring eigenvalues are sorted
-% eigvals = sort(L,'descend');
-% % maximum eigenvalue
-% lmax = eigvals(1);
-% lmin = max(eigvals(min(n,opt.randfeats.D*2)), 200*sqrt(eps));
-% powers = linspace(0,1,tot);
-% guesses = lmin.*(lmax/lmin).^(powers);
-% guesses = guesses/n;
 
 	perf = zeros(tot,T);
 	for i = 1:tot
@@ -86,8 +83,6 @@ for nh = 1:opt.nholdouts
 	vout.guesses{nh} = guesses;
 end
 
-% figure
-% plot(perf)
 
 if numel(vout.lambdas_round) > 1
 	lambdas = cell2mat(vout.lambdas_round');

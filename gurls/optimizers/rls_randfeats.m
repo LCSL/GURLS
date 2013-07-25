@@ -1,4 +1,4 @@
-function [cfr] = rls_randfeats (X, y, opt)
+function [rls] = rls_randfeats (X, y, opt)
 
 % rls_primalRF(X,y,opt)
 % computes a classifier for the primal formulation of RLS using the Random
@@ -33,10 +33,18 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 %fprintf('\tSolving primal RLS...\n');
 
-[n,d] = size(X);
+n = size(X,1);
 
-cfr.W = rls_primal_driver( opt.kernel.XtX, opt.kernel.Xty, n, lambda );
+if or(opt.randfeats.samplesize < 0, opt.randfeats.samplesize > n)
+    ni = n;
+else 
+    ni = opt.randfeats.samplesize;
+end
 
-cfr.C = [];
-cfr.X = [];
+[XtX,Xty,rls.proj] = rp_factorize_large_real(X',y',opt.randfeats.D,'gaussian',ni);
+
+
+rls.W = rls_primal_driver( XtX, Xty, n, lambda );
+rls.C = [];
+rls.X = [];
 
