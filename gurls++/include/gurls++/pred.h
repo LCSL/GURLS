@@ -67,6 +67,9 @@ class PredDual;
 template <typename T>
 class PredGPRegr;
 
+template <typename T>
+class PredRandFeats;
+
 /**
  * \ingroup Exceptions
  *
@@ -114,6 +117,8 @@ public:
             return new PredDual<T>;
         if(id == "gpregr")
             return new PredGPRegr<T>;
+        if(id == "randfeats")
+            return new PredRandFeats<T>;
 
         throw BadPredictionCreation(id);
     }

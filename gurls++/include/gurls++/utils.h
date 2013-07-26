@@ -63,6 +63,9 @@
 
 #include <set>
 
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random/mersenne_twister.hpp>
+
 namespace gurls {
 
 /**
@@ -924,6 +927,119 @@ gMat2D<T>* rls_primal_driver(T* K, const T* Xty, const unsigned long n, const un
 
     return W;
 
+}
+
+template<typename T>
+gMat2D<T>* rp_apply_real(const T *X, const T *W, const unsigned long n, const unsigned long d, const unsigned long D)
+{
+
+    gMat2D<T> *G = new gMat2D<T>(n, 2*D);
+
+//    V = X*W;
+    T *V = G->getData() + (n*D);
+    dot(X, W, V, n, d, d, D, n, D, CblasNoTrans, CblasNoTrans, CblasColMajor);
+
+
+//    G = [cos(V) sin(V)];
+    for(T *G_it = G->getData(), *const V_end = V+(n*D); V != V_end; ++G_it, ++V)
+    {
+        *G_it = cos(*V);
+        *V = sin(*V);
+    }
+
+    return G;
+}
+
+template<typename T>
+gMat2D<T>* rp_apply_real(const gMat2D<T> &X, const gMat2D<T> &W)
+{
+    const unsigned long n = X.rows();
+    const unsigned long d = X.cols();
+    const unsigned long D = W.cols();
+
+    return rp_apply_real(X.getData(), W.getData(), n, d, D);
+}
+
+template<typename T>
+gMat2D<T>* rp_projections(const unsigned long d, const unsigned long D)
+{
+//    W = sqrt(2)*randn(d,D);
+    boost::random::mt19937 gen;
+    boost::random::normal_distribution<T> g(0.0, (T)sqrt(2.0));
+
+    gMat2D<T> *W = new gMat2D<T>(d, D);
+    for(T* W_it = W->getData(), *const W_end = W_it + (d*D); W_it != W_end; ++W_it)
+        *W_it = g(gen);
+
+    return W;
+}
+
+template<typename T>
+gMat2D<T>* rp_factorize_large_real(const gMat2D<T> &X, const gMat2D<T> &y, const unsigned long D,
+                                   const unsigned long psize, T* XtX, T*Xty)
+{
+
+//    d = size(X,2);
+//    n = size(X,1);
+//    T = size(y,2);
+
+    const unsigned long d = X.cols();
+    const unsigned long n = X.rows();
+    const unsigned long t = y.cols();
+
+//    W = rp_projections(d,D,kernel);
+    gMat2D<T>* W = rp_projections<T>(d, D);
+
+    const unsigned long D2 = 2*D;
+
+//    GG = zeros(D*2,D*2);
+    set(XtX, (T)0.0, D2*D2);
+
+//    Gy = zeros(D*2,T);
+    set(Xty, (T)0.0, D2*t);
+
+
+    T* Xi = new T[psize*d];
+    T* yi = new T[psize*t];
+
+    const T alpha = (T)1.0;
+    const T beta = (T)1.0;
+
+//    for i=1:psize:n
+    for(unsigned long i=0; i< n; i+=psize)
+    {
+//        bend = min(i+psize-1,n);
+        unsigned long bend = std::min(i+psize, n);
+
+//        Gi = rp_apply_real(X(i:bend,:),W);
+//        yi = y(i:bend,:);
+
+        unsigned long rows = bend-i;
+
+        const T *X_it = X.getData() + i, *y_it = y.getData() + i;
+        T *Xi_it = Xi, *yi_it = yi;
+
+        for(unsigned long j=0; j<d; ++j, X_it+=n, Xi_it+=rows)
+            copy(Xi_it, X_it, rows);
+
+        for(unsigned long j=0; j<t; ++j, y_it+=n, yi_it+=rows)
+            copy(yi_it, y_it, rows);
+
+        gMat2D<T> *Gi = rp_apply_real(Xi, W->getData(), rows, d, D);
+
+//        GG = GG + Gi'*Gi;
+        gemm(CblasTrans, CblasNoTrans, D2, D2, rows, alpha, Gi->getData(), rows, Gi->getData(), rows, beta, XtX, D2);
+
+//        Gy = Gy + Gi'*yi;
+        gemm(CblasTrans, CblasNoTrans, D2, t, rows, alpha, Gi->getData(), rows, yi, rows, beta, Xty, D2);
+
+        delete Gi;
+    }
+
+    delete [] Xi;
+    delete [] yi;
+
+    return W;
 }
 
 }

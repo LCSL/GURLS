@@ -86,6 +86,9 @@ class RLSPrimalRecInit;
 template <typename T>
 class RLSPrimalRecUpdate;
 
+template <typename T>
+class RLSRandFeats;
+
 /**
  * \ingroup Exceptions
  *
@@ -144,6 +147,8 @@ public:
         return new RLSPrimalRecInit<T>;
       if(id == "rlsprimalrecupdate")
         return new RLSPrimalRecUpdate<T>;
+      if(id == "rlsrandfeats")
+        return new RLSRandFeats<T>;
 
         throw BadOptimizerCreation(id);
     }

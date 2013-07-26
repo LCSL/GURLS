@@ -134,6 +134,13 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
         // ======================================================= Version info
         (*table)["version"] = new OptString("2.0");
 
+
+        GurlsOptionsList * randfeats = new GurlsOptionsList("randfeats");
+        randfeats->table->insert(pair<std::string,GurlsOption*>("D", new OptNumber(500)));
+        randfeats->table->insert(pair<std::string,GurlsOption*>("samplesize", new OptNumber(100)));
+
+        (*table)["randfeats"] = randfeats;
+
     }
 
 }

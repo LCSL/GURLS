@@ -66,6 +66,7 @@ set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/pred.h
                     include/gurls++/predkernel.h
                     include/gurls++/predkerneltraintest.h
+                    include/gurls++/predrandfeats.h
                     include/gurls++/primal.h
                     include/gurls++/randfeatswrapper.h
                     include/gurls++/randfeatswrapper.hpp
@@ -81,6 +82,7 @@ set(gurls_headers   include/gurls++/basearray.h
                     include/gurls++/rlsprimalrecinit.h
                     include/gurls++/rlsprimalrecupdate.h
                     include/gurls++/rlsprimalr.h
+                    include/gurls++/rlsrandfeats.h
                     include/gurls++/rlswrapper.h
                     include/gurls++/rlswrapper.hpp
                     include/gurls++/rmse.h

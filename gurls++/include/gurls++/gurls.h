@@ -79,6 +79,7 @@
 #include "gurls++/rlsgp.h"
 #include "gurls++/rlsprimalrecinit.h"
 #include "gurls++/rlsprimalrecupdate.h"
+#include "gurls++/rlsrandfeats.h"
 
 #include "gurls++/loocvprimal.h"
 #include "gurls++/loocvdual.h"
@@ -98,6 +99,7 @@
 #include "gurls++/primal.h"
 #include "gurls++/dual.h"
 #include "gurls++/predgp.h"
+#include "gurls++/predrandfeats.h"
 
 #include "gurls++/norml2.h"
 #include "gurls++/normtestzscore.h"
