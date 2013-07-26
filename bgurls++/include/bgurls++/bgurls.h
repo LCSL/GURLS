@@ -290,18 +290,7 @@ void BGURLS::run(const BigArray<T>& X, const BigArray<T>& y, GurlsOptionsList& o
                 }
                 else if (!reg1.compare("norm"))
                 {
-                    if(myid == 0)
-                    {
-                        Norm<T> *taskNorm = Norm<T>::factory(reg2);
-
-                        gMat2D<T>* X1 = taskNorm->execute(X_mat, y_mat, opt);
-
-                        delete X1;
-                        delete taskNorm;
-
-                        throw gException("Unused return value");
-
-                    }
+                    runSerialTask<T, Norm<T> >(X_mat, y_mat, opt, myid, "norm", reg2, dataExchangeFile);
                 }
                 else if (!reg1.compare("split"))
                 {
