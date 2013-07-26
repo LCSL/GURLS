@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -140,7 +140,7 @@ static const <a class="el" href="../../db/d52/classgurls_1_1_opt_process.html#a0
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock">
-<p>Definition at line <a class="el" href="../../d4/d5c/gurls_8h_source.html#l00120">120</a> of file <a class="el" href="../../d4/d5c/gurls_8h_source.html">gurls.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d4/d5c/gurls_8h_source.html#l00122">122</a> of file <a class="el" href="../../d4/d5c/gurls_8h_source.html">gurls.h</a>.</p>
 </div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a383087a974a8ead4e0c1ed6fa189cf3f"></a><!-- doxytag: member="gurls::GURLS::run" ref="a383087a974a8ead4e0c1ed6fa189cf3f" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;y, GurlsOptionsList &amp;opt, std::string processid)" -->
 <div class="memitem">
@@ -190,7 +190,7 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="../../d4/d5c/gurls_8h_source.html#l00155">155</a> of file <a class="el" href="../../d4/d5c/gurls_8h_source.html">gurls.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d4/d5c/gurls_8h_source.html#l00157">157</a> of file <a class="el" href="../../d4/d5c/gurls_8h_source.html">gurls.h</a>.</p>
 <div class="fragment"><pre class="fragment">{
 
     boost::posix_time::ptime begin, end;
@@ -355,9 +355,9 @@ template&lt;typename T &gt; </div>
                 <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!reg1.compare(<span class="stringliteral">&quot;norm&quot;</span>))
                 {
                     taskNorm = Norm&lt;T&gt;::factory(reg2);
-                    gMat2D&lt;T&gt;* X1 = taskNorm-&gt;execute(X, y, opt);
-                    <span class="keyword">delete</span> X1;
-                    <span class="keywordflow">throw</span> gException(<span class="stringliteral">&quot;Unused return value&quot;</span>);
+                    GurlsOption* ret = taskNorm-&gt;execute(X, y, opt);
+                    opt.removeOpt(<span class="stringliteral">&quot;norm&quot;</span>);
+                    opt.addOpt(<span class="stringliteral">&quot;norm&quot;</span>, ret);
 
                     <span class="keyword">delete</span> taskNorm;
                 }
@@ -530,7 +530,7 @@ template&lt;typename T &gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d4/dbe/classgurls_1_1_g_u_r_l_s.html">GURLS</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

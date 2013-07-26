@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -105,13 +105,25 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="title">gurls::BadNormCreation Class Reference<div class="ingroups"><a class="el" href="../../d1/dc9/group___exceptions.html">Exceptions</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="gurls::BadNormCreation" --><!-- doxytag: inherits="std::logic_error" -->
+<!-- doxytag: class="gurls::BadNormCreation" --><!-- doxytag: inherits="gurls::gException" -->
 <p><a class="el" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a> is thrown when factory tries to generate an unknown norm.  
 </p>
 
 <p><code>#include &lt;<a class="el" href="../../da/dff/norm_8h_source.html">norm.h</a>&gt;</code></p>
-
-<p>Inherits std::logic_error.</p>
+<div class="dynheader">
+Inheritance diagram for gurls::BadNormCreation:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d9/dd9/classgurls_1_1_bad_norm_creation__inherit__graph.png" border="0" usemap="#gurls_1_1_bad_norm_creation_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_bad_norm_creation_inherit__map" id="gurls_1_1_bad_norm_creation_inherit__map">
+<area shape="rect" id="node2" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package." alt="" coords="25,83,148,112"/><area shape="rect" id="node4" title="STL class." alt="" coords="35,5,139,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::BadNormCreation:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../da/d40/classgurls_1_1_bad_norm_creation__coll__graph.png" border="0" usemap="#gurls_1_1_bad_norm_creation_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_bad_norm_creation_coll__map" id="gurls_1_1_bad_norm_creation_coll__map">
+<area shape="rect" id="node2" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package." alt="" coords="36,181,159,211"/><area shape="rect" id="node4" title="STL class." alt="" coords="5,85,109,115"/><area shape="rect" id="node6" title="STL class." alt="" coords="133,85,213,115"/><area shape="rect" id="node8" title="STL class." alt="" coords="91,5,256,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d4/daa/classgurls_1_1_bad_norm_creation-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -120,10 +132,16 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac11c3dc382d8538aacd7ee55b95acb4f"></a><!-- doxytag: member="gurls::BadNormCreation::BadNormCreation" ref="ac11c3dc382d8538aacd7ee55b95acb4f" args="(const std::string &amp;type)" -->
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html#ac11c3dc382d8538aacd7ee55b95acb4f">BadNormCreation</a> (const std::string &amp;type)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception constructor. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a445ab976aefc262be7adca10a5ec2796"></a><!-- doxytag: member="gurls::BadNormCreation::getMessage" ref="a445ab976aefc262be7adca10a5ec2796" args="() const " -->
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d29/classgurls_1_1g_exception.html#a445ab976aefc262be7adca10a5ec2796">getMessage</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a description of the exception. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8c7beef784bc8616004cc2f1afd612a"></a><!-- doxytag: member="gurls::BadNormCreation::what" ref="ac8c7beef784bc8616004cc2f1afd612a" args="() const " -->
+const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d29/classgurls_1_1g_exception.html#ac8c7beef784bc8616004cc2f1afd612a">what</a> () const   throw ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a description of the exception. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock">
-<p>Definition at line <a class="el" href="../../da/dff/norm_8h_source.html#l00119">119</a> of file <a class="el" href="../../da/dff/norm_8h_source.html">norm.h</a>.</p>
+<p>Definition at line <a class="el" href="../../da/dff/norm_8h_source.html#l00118">118</a> of file <a class="el" href="../../da/dff/norm_8h_source.html">norm.h</a>.</p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="../../da/dff/norm_8h_source.html">norm.h</a></li>
 </ul>
@@ -148,7 +166,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html">BadNormCreation</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

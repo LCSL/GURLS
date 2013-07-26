@@ -2,6 +2,7 @@ var searchData=
 [
   ['rand',['rand',['../d1/d9e/classgurls_1_1g_mat2_d.html#ace44ee1285b6e4ebb7dd8ec77e41d75d',1,'gurls::gMat2D::rand()'],['../df/d32/classgurls_1_1g_vec.html#aff9870c01e54f83e7df716a094c7b024',1,'gurls::gVec::rand()']]],
   ['random_5fsvd',['random_svd',['../db/d4e/namespacegurls.html#adf6dc7afcc579ec3a85a1b7e29962c4c',1,'gurls']]],
+  ['randomfeatureswrapper',['RandomFeaturesWrapper',['../db/de1/classgurls_1_1_random_features_wrapper.html#af9cd147c4f14bad4ab12ceccea9c78e9',1,'gurls::RandomFeaturesWrapper']]],
   ['randomize',['randomize',['../d9/d8b/classgurls_1_1_base_array.html#a9b8997fcbe0ff6a2b2b9ef74c1e0fa9e',1,'gurls::BaseArray']]],
   ['randperm',['randperm',['../db/d4e/namespacegurls.html#a75f6afe3bf7f7be79d66714593f5c7bc',1,'gurls']]],
   ['rdivide',['rdivide',['../db/d4e/namespacegurls.html#a53b8a878e025a9aecca369bfdd383dcc',1,'gurls']]],

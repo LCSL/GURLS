@@ -1,0 +1,13 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d6/ddf/classgurls_1_1_optimizer.html" title="Optimizer is a class that implements a Regularized Least Square algorithm." alt="" coords="5,245,152,275"/>
+<area shape="rect" id="node3" href="$d5/d00/classgurls_1_1_r_l_s_auto.html" title="RLSAuto is the sub&#45;class of Optimizer that implements automatic selection of primal/dual procedure..." alt="" coords="239,5,380,35"/>
+<area shape="rect" id="node5" href="$d3/d15/classgurls_1_1_r_l_s_dual.html" title="RLSDual is the sub&#45;class of Optimizer that implements RLS with the dual formulation." alt="" coords="239,59,380,88"/>
+<area shape="rect" id="node7" href="$d9/d3f/classgurls_1_1_r_l_s_dualr.html" title="RLSDualr is the sub&#45;class of Optimizer that implements RLS with the dual formulation, using a randomized version of SVD." alt="" coords="236,112,383,141"/>
+<area shape="rect" id="node9" href="$d4/db3/classgurls_1_1_r_l_s_g_p_regr.html" title="RLSGPRegr is the sub&#45;class of Optimizer that implements GP inference." alt="" coords="228,165,391,195"/>
+<area shape="rect" id="node11" href="$df/d7d/classgurls_1_1_r_l_s_pegasos.html" title="RLSPegasos is the sub&#45;class of Optimizer that implements the Pegaosos algorithm." alt="" coords="227,219,392,248"/>
+<area shape="rect" id="node13" href="$d6/dbd/classgurls_1_1_r_l_s_primal.html" title="RLSPrimal is the sub&#45;class of Optimizer that implements RLS with the primal formulation." alt="" coords="233,272,385,301"/>
+<area shape="rect" id="node15" href="$d0/df5/classgurls_1_1_r_l_s_primalr.html" title="RLSPrimalr is the sub&#45;class of Optimizer that implements RLS with the primal formulation, using a randomized version of SVD." alt="" coords="231,325,388,355"/>
+<area shape="rect" id="node17" href="$d2/d8f/classgurls_1_1_r_l_s_primal_rec_init.html" title="RLSPrimalRecInit is the sub&#45;class of Optimizer that implements RLS with the primal formulation..." alt="" coords="212,379,407,408"/>
+<area shape="rect" id="node19" href="$d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html" title="RLSPrimalRecUpdate is the sub&#45;class of Optimizer that implements RLS with the primal formulation..." alt="" coords="200,432,419,461"/>
+<area shape="rect" id="node21" href="$d4/dd6/classgurls_1_1_r_l_s_rand_feats.html" title="RLSRandFeats is the sub&#45;class of Optimizer that computes a classifier for the primal formulation of R..." alt="" coords="220,485,399,515"/>
+</map>

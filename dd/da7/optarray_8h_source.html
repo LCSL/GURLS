@@ -145,7 +145,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor">#ifndef _GURLS_OPTARRAY_H_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define _GURLS_OPTARRAY_H_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
 <a name="l00046"></a>00046 
 <a name="l00047"></a>00047 <span class="preprocessor">#include &lt;vector&gt;</span>
 <a name="l00048"></a>00048 
@@ -191,11 +191,11 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00128"></a>00128 
 <a name="l00132"></a>00132     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size() <span class="keyword">const</span>;
 <a name="l00133"></a>00133 
-<a name="l00137"></a>00137     <a class="code" href="../../d5/dcc/classgurls_1_1_gurls_option.html" title="GurlsOption is an abstraction of a generic `option&#39;, which is widely used within the GURLS++ package ...">GurlsOption</a>* operator[] (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i);
+<a name="l00137"></a>00137     <a class="code" href="../../d5/dcc/classgurls_1_1_gurls_option.html" title="GurlsOption is an abstraction of a generic `option&#39;, which is widely used within the GURLS++ package ...">GurlsOption</a>* operator[] (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i) <span class="keyword">const</span>;
 <a name="l00138"></a>00138 
-<a name="l00142"></a>00142     <span class="keyword">friend</span> GURLS_EXPORT std::ostream&amp; <a class="code" href="../../db/d4e/namespacegurls.html#a6238254b36fc2884748344999a7be1b1" title="Writes matrix information and data to a stream.">operator&lt;&lt;</a>(std::ostream&amp; os, <a class="code" href="../../da/d90/classgurls_1_1_opt_array.html" title="Optarray is an option containing an indexed array of options.">OptArray</a>&amp; opt);
+<a name="l00142"></a>00142     <span class="keyword">friend</span> GURLS_EXPORT std::ostream&amp; <a class="code" href="../../db/d4e/namespacegurls.html#a6238254b36fc2884748344999a7be1b1" title="Writes matrix information and data to a stream.">operator&lt;&lt;</a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="../../da/d90/classgurls_1_1_opt_array.html" title="Optarray is an option containing an indexed array of options.">OptArray</a>&amp; opt);
 <a name="l00143"></a>00143 
-<a name="l00147"></a>00147     <span class="keyword">virtual</span> std::ostream&amp; <a class="code" href="../../db/d4e/namespacegurls.html#a6238254b36fc2884748344999a7be1b1" title="Writes matrix information and data to a stream.">operator&lt;&lt;</a>(std::ostream&amp; os);
+<a name="l00147"></a>00147     <span class="keyword">virtual</span> std::ostream&amp; <a class="code" href="../../db/d4e/namespacegurls.html#a6238254b36fc2884748344999a7be1b1" title="Writes matrix information and data to a stream.">operator&lt;&lt;</a>(std::ostream&amp; os) <span class="keyword">const</span>;
 <a name="l00148"></a>00148 
 <a name="l00152"></a>00152     <span class="keywordtype">void</span> save(<span class="keyword">const</span> std::string&amp; fileName) <span class="keyword">const</span>;
 <a name="l00153"></a>00153 
@@ -226,7 +226,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>optarray.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

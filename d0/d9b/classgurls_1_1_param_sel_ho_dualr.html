@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -115,13 +115,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::ParamSelHoDualr&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../d0/d9b/classgurls_1_1_param_sel_ho_dualr.png" usemap="#gurls::ParamSelHoDualr&lt; T &gt;_map" alt=""/>
-  <map id="gurls::ParamSelHoDualr&lt; T &gt;_map" name="gurls::ParamSelHoDualr&lt; T &gt;_map">
-<area href="../../de/dc2/classgurls_1_1_param_sel_ho_dual.html" title="ParamSelHoDual is the subclass of ParamSelection that implements hold-out cross validation with the d..." alt="gurls::ParamSelHoDual&lt; T &gt;" shape="rect" coords="0,56,178,80"/>
-<area href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="gurls::ParamSelection&lt; T &gt;" shape="rect" coords="0,0,178,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../db/d46/classgurls_1_1_param_sel_ho_dualr__inherit__graph.png" border="0" usemap="#gurls_1_1_param_sel_ho_dualr_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_param_sel_ho_dualr_3_01_t_01_4_inherit__map" id="gurls_1_1_param_sel_ho_dualr_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../de/dc2/classgurls_1_1_param_sel_ho_dual.html" title="ParamSelHoDual is the subclass of ParamSelection that implements hold&#45;out cross validation with the d..." alt="" coords="8,83,197,112"/><area shape="rect" id="node4" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="12,5,193,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::ParamSelHoDualr&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d1/d30/classgurls_1_1_param_sel_ho_dualr__coll__graph.png" border="0" usemap="#gurls_1_1_param_sel_ho_dualr_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_param_sel_ho_dualr_3_01_t_01_4_coll__map" id="gurls_1_1_param_sel_ho_dualr_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../de/dc2/classgurls_1_1_param_sel_ho_dual.html" title="ParamSelHoDual is the subclass of ParamSelection that implements hold&#45;out cross validation with the d..." alt="" coords="8,83,197,112"/><area shape="rect" id="node4" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="12,5,193,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d9/d97/classgurls_1_1_param_sel_ho_dualr-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -309,7 +313,7 @@ template&lt;typename T &gt; </div>
         <span class="comment">//    QtY = Q&#39;*y(tr,:);</span>
         T* Qty = <span class="keyword">new</span> T[last*t];
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Ytr, Qty, last, last, last, t, last, t, CblasTrans, CblasNoTrans, CblasColMajor);
+        <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Q, Ytr, Qty, last, last, last, t, last, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
         <span class="keyword">delete</span> [] Ytr;
 
@@ -358,7 +362,7 @@ template&lt;typename T &gt; </div>
             <span class="keywordflow">if</span>(linearKernel)
             {
 <span class="comment">//                opt.rls.W = X(tr,:)&#39;*opt.rls.C; % dxT = (ntrxd)&#39;*ntrxT   last*d last*last</span>
-                <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(rlsX-&gt;getData(), C-&gt;getData(), W-&gt;getData(), last, d, last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+                <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(rlsX-&gt;getData(), C-&gt;getData(), W-&gt;getData(), last, d, last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
             }
 <span class="comment">//            else</span>
 <span class="comment">//            opt.predkernel.K = opt.kernel.K(va,tr);%nva x ntr</span>
@@ -492,7 +496,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00145">145</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00146">146</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvprimal&quot;</span>)
             <span class="keywordflow">return</span> <span class="keyword">new</span> ParamSelLoocvPrimal&lt;T&gt;;
@@ -554,7 +558,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d0/d9b/classgurls_1_1_param_sel_ho_dualr.html">ParamSelHoDualr</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

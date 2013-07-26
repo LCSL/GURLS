@@ -145,100 +145,99 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor">#ifndef _GURLS_NORM_H_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define _GURLS_NORM_H_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &lt;cstring&gt;</span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &lt;cmath&gt;</span>
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;exceptions.h&quot;</span>
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
-<a name="l00054"></a>00054 
-<a name="l00055"></a>00055 <span class="keyword">namespace </span>gurls
-<a name="l00056"></a>00056 {
-<a name="l00057"></a>00057 
-<a name="l00058"></a><a class="code" href="../../db/d4e/namespacegurls.html#a43e8662fd4f3931c97a53a9547bee45c">00058</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#a43e8662fd4f3931c97a53a9547bee45c" title="String identifying l0-norm.">L0norm</a> = <span class="stringliteral">&quot;l0&quot;</span>;     
-<a name="l00059"></a><a class="code" href="../../db/d4e/namespacegurls.html#af5bf9b9d001587d568e3a297f053f35d">00059</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#af5bf9b9d001587d568e3a297f053f35d" title="String identifying l1-norm.">L1norm</a> = <span class="stringliteral">&quot;l1&quot;</span>;     
-<a name="l00060"></a><a class="code" href="../../db/d4e/namespacegurls.html#a3725a490ac50d56cabf19833d2255341">00060</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#a3725a490ac50d56cabf19833d2255341" title="String identifying l2-norm.">L2norm</a> = <span class="stringliteral">&quot;l2&quot;</span>;     
-<a name="l00061"></a><a class="code" href="../../db/d4e/namespacegurls.html#aa7d778719a779aebd251350924f63daa">00061</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#aa7d778719a779aebd251350924f63daa" title="String identifying infinity-norm.">LInfnorm</a> = <span class="stringliteral">&quot;inf&quot;</span>;  
-<a name="l00062"></a>00062 
-<a name="l00066"></a>00066 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00067"></a><a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961">00067</a> T <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a>&amp; x, std::string type = <span class="stringliteral">&quot;l2&quot;</span>){
-<a name="l00068"></a>00068     T nrm = 0;
-<a name="l00069"></a>00069     <span class="keyword">const</span> T* ptr = x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071     <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#a43e8662fd4f3931c97a53a9547bee45c" title="String identifying l0-norm.">L0norm</a>) == 0){
-<a name="l00072"></a>00072         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i =0;i &lt; x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>(); ++i){
-<a name="l00073"></a>00073             <span class="keywordflow">if</span> (*ptr++ != 0)
-<a name="l00074"></a>00074                 nrm++;
-<a name="l00075"></a>00075         }
-<a name="l00076"></a>00076         <span class="keywordflow">return</span> nrm;
-<a name="l00077"></a>00077     }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#af5bf9b9d001587d568e3a297f053f35d" title="String identifying l1-norm.">L1norm</a>) == 0) {
-<a name="l00078"></a>00078         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i =0; i &lt; x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>(); ++i){
-<a name="l00079"></a>00079             nrm+= <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(std::abs(*ptr++));
-<a name="l00080"></a>00080         }
-<a name="l00081"></a>00081         <span class="keywordflow">return</span> nrm;
-<a name="l00082"></a>00082     }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#a3725a490ac50d56cabf19833d2255341" title="String identifying l2-norm.">L2norm</a>) == 0) {
-<a name="l00083"></a>00083         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i =0; i &lt; x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>(); ++i, ++ptr){
-<a name="l00084"></a>00084             nrm+= std::pow(*ptr, 2);
-<a name="l00085"></a>00085         }
-<a name="l00086"></a>00086         <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(std::sqrt(nrm));
-<a name="l00087"></a>00087     }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#aa7d778719a779aebd251350924f63daa" title="String identifying infinity-norm.">LInfnorm</a>) == 0 ) {
-<a name="l00088"></a>00088         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Sorry. You required the computation of LInfnorm but this functionality has not been implemented yet!&quot;</span>);
-<a name="l00089"></a>00089     }<span class="keywordflow">else</span> {
-<a name="l00090"></a>00090         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Unknown norm type.&quot;</span>);
-<a name="l00091"></a>00091     }
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093     <span class="keywordflow">return</span> nrm;
-<a name="l00094"></a>00094 }
-<a name="l00095"></a>00095 
-<a name="l00099"></a>00099 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00100"></a><a class="code" href="../../db/d4e/namespacegurls.html#aede1544769680472b68e7a4c6dffcd37">00100</a> T <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; A, std::string type = <span class="stringliteral">&quot;l2&quot;</span>){
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102     <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Sorry. You required to compute the norm of a matrix but this functionality has not been implemented yet!&quot;</span>);
-<a name="l00103"></a>00103 }
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00106"></a>00106 <span class="keyword">class </span>NormL2;
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00109"></a>00109 <span class="keyword">class </span>NormZScore;
-<a name="l00110"></a>00110 
-<a name="l00111"></a>00111 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00112"></a>00112 <span class="keyword">class </span>NormTestZScore;
-<a name="l00113"></a>00113 
-<a name="l00119"></a><a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html">00119</a> <span class="keyword">class </span><a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a> : <span class="keyword">public</span> std::logic_error
-<a name="l00120"></a>00120 {
-<a name="l00121"></a>00121 <span class="keyword">public</span>:
-<a name="l00122"></a>00122 
-<a name="l00126"></a><a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html#ac11c3dc382d8538aacd7ee55b95acb4f">00126</a>     <a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html#ac11c3dc382d8538aacd7ee55b95acb4f" title="Exception constructor.">BadNormCreation</a>(<span class="keyword">const</span> std::string&amp; type): logic_error(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
-<a name="l00127"></a>00127 };
-<a name="l00128"></a>00128 
-<a name="l00133"></a>00133 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00134"></a><a class="code" href="../../d9/d56/classgurls_1_1_norm.html">00134</a> <span class="keyword">class </span><a class="code" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data.">Norm</a>
-<a name="l00135"></a>00135 {
-<a name="l00136"></a>00136 <span class="keyword">public</span>:
-<a name="l00137"></a>00137 
-<a name="l00145"></a>00145     <span class="keyword">virtual</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* <a class="code" href="../../d9/d56/classgurls_1_1_norm.html#adb0c2d37b221ec2f5b94e8643d33f7c8" title="Spherifies the data.">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
-<a name="l00146"></a>00146 
-<a name="l00153"></a><a class="code" href="../../d9/d56/classgurls_1_1_norm.html#a6de8719538c5f134ce611489b5578a59">00153</a>     <span class="keyword">static</span> <a class="code" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data.">Norm&lt;T&gt;</a> *<a class="code" href="../../d9/d56/classgurls_1_1_norm.html#a6de8719538c5f134ce611489b5578a59" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a>)
-<a name="l00154"></a>00154     {
-<a name="l00155"></a>00155         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;l2&quot;</span>)
-<a name="l00156"></a>00156             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../db/d42/classgurls_1_1_norm_l2.html" title="NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.">NormL2&lt;T&gt;</a>;
-<a name="l00157"></a>00157         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;zscore&quot;</span>)
-<a name="l00158"></a>00158             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d5/dec/classgurls_1_1_norm_z_score.html" title="NormZScore is the sub-class of Norm that centers and rescales the input data matrix X...">NormZScore&lt;T&gt;</a>;
-<a name="l00159"></a>00159         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;testzscore&quot;</span>)
-<a name="l00160"></a>00160             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html" title="NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmopute...">NormTestZScore&lt;T&gt;</a>;
-<a name="l00161"></a>00161 
-<a name="l00162"></a>00162         <span class="keywordflow">throw</span> <a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a>(<span class="keywordtype">id</span>);
-<a name="l00163"></a>00163     }
-<a name="l00164"></a>00164 };
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166 }
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="preprocessor">#endif // _GURLS_NORM_H_</span>
-<a name="l00169"></a>00169 <span class="preprocessor"></span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &lt;cstring&gt;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &lt;cmath&gt;</span>
+<a name="l00047"></a>00047 
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;gurls++/gvec.h&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;gurls++/exceptions.h&quot;</span>
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054 <span class="keyword">namespace </span>gurls
+<a name="l00055"></a>00055 {
+<a name="l00056"></a>00056 
+<a name="l00057"></a><a class="code" href="../../db/d4e/namespacegurls.html#a43e8662fd4f3931c97a53a9547bee45c">00057</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#a43e8662fd4f3931c97a53a9547bee45c" title="String identifying l0-norm.">L0norm</a> = <span class="stringliteral">&quot;l0&quot;</span>;     
+<a name="l00058"></a><a class="code" href="../../db/d4e/namespacegurls.html#af5bf9b9d001587d568e3a297f053f35d">00058</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#af5bf9b9d001587d568e3a297f053f35d" title="String identifying l1-norm.">L1norm</a> = <span class="stringliteral">&quot;l1&quot;</span>;     
+<a name="l00059"></a><a class="code" href="../../db/d4e/namespacegurls.html#a3725a490ac50d56cabf19833d2255341">00059</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#a3725a490ac50d56cabf19833d2255341" title="String identifying l2-norm.">L2norm</a> = <span class="stringliteral">&quot;l2&quot;</span>;     
+<a name="l00060"></a><a class="code" href="../../db/d4e/namespacegurls.html#aa7d778719a779aebd251350924f63daa">00060</a> <span class="keyword">static</span> <span class="keyword">const</span> std::string <a class="code" href="../../db/d4e/namespacegurls.html#aa7d778719a779aebd251350924f63daa" title="String identifying infinity-norm.">LInfnorm</a> = <span class="stringliteral">&quot;inf&quot;</span>;  
+<a name="l00061"></a>00061 
+<a name="l00065"></a>00065 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00066"></a><a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961">00066</a> T <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a>&amp; x, std::string type = <span class="stringliteral">&quot;l2&quot;</span>){
+<a name="l00067"></a>00067     T nrm = 0;
+<a name="l00068"></a>00068     <span class="keyword">const</span> T* ptr = x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070     <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#a43e8662fd4f3931c97a53a9547bee45c" title="String identifying l0-norm.">L0norm</a>) == 0){
+<a name="l00071"></a>00071         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i =0;i &lt; x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>(); ++i){
+<a name="l00072"></a>00072             <span class="keywordflow">if</span> (*ptr++ != 0)
+<a name="l00073"></a>00073                 nrm++;
+<a name="l00074"></a>00074         }
+<a name="l00075"></a>00075         <span class="keywordflow">return</span> nrm;
+<a name="l00076"></a>00076     }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#af5bf9b9d001587d568e3a297f053f35d" title="String identifying l1-norm.">L1norm</a>) == 0) {
+<a name="l00077"></a>00077         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i =0; i &lt; x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>(); ++i){
+<a name="l00078"></a>00078             nrm+= <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(std::abs(*ptr++));
+<a name="l00079"></a>00079         }
+<a name="l00080"></a>00080         <span class="keywordflow">return</span> nrm;
+<a name="l00081"></a>00081     }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#a3725a490ac50d56cabf19833d2255341" title="String identifying l2-norm.">L2norm</a>) == 0) {
+<a name="l00082"></a>00082         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i =0; i &lt; x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>(); ++i, ++ptr){
+<a name="l00083"></a>00083             nrm+= std::pow(*ptr, 2);
+<a name="l00084"></a>00084         }
+<a name="l00085"></a>00085         <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(std::sqrt(nrm));
+<a name="l00086"></a>00086     }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (type.compare(<a class="code" href="../../db/d4e/namespacegurls.html#aa7d778719a779aebd251350924f63daa" title="String identifying infinity-norm.">LInfnorm</a>) == 0 ) {
+<a name="l00087"></a>00087         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Sorry. You required the computation of LInfnorm but this functionality has not been implemented yet!&quot;</span>);
+<a name="l00088"></a>00088     }<span class="keywordflow">else</span> {
+<a name="l00089"></a>00089         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Unknown norm type.&quot;</span>);
+<a name="l00090"></a>00090     }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092     <span class="keywordflow">return</span> nrm;
+<a name="l00093"></a>00093 }
+<a name="l00094"></a>00094 
+<a name="l00098"></a>00098 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00099"></a><a class="code" href="../../db/d4e/namespacegurls.html#aede1544769680472b68e7a4c6dffcd37">00099</a> T <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; A, std::string type = <span class="stringliteral">&quot;l2&quot;</span>){
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101     <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Sorry. You required to compute the norm of a matrix but this functionality has not been implemented yet!&quot;</span>);
+<a name="l00102"></a>00102 }
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00105"></a>00105 <span class="keyword">class </span>NormL2;
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00108"></a>00108 <span class="keyword">class </span>NormZScore;
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00111"></a>00111 <span class="keyword">class </span>NormTestZScore;
+<a name="l00112"></a>00112 
+<a name="l00118"></a><a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html">00118</a> <span class="keyword">class </span><a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a> : <span class="keyword">public</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>
+<a name="l00119"></a>00119 {
+<a name="l00120"></a>00120 <span class="keyword">public</span>:
+<a name="l00121"></a>00121 
+<a name="l00125"></a><a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html#ac11c3dc382d8538aacd7ee55b95acb4f">00125</a>     <a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html#ac11c3dc382d8538aacd7ee55b95acb4f" title="Exception constructor.">BadNormCreation</a>(<span class="keyword">const</span> std::string&amp; type): <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
+<a name="l00126"></a>00126 };
+<a name="l00127"></a>00127 
+<a name="l00132"></a>00132 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00133"></a><a class="code" href="../../d9/d56/classgurls_1_1_norm.html">00133</a> <span class="keyword">class </span><a class="code" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data.">Norm</a>
+<a name="l00134"></a>00134 {
+<a name="l00135"></a>00135 <span class="keyword">public</span>:
+<a name="l00136"></a>00136 
+<a name="l00144"></a>00144     <span class="keyword">virtual</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d9/d56/classgurls_1_1_norm.html#a86bba932a791c1b9e6095b7cda5439bb" title="Spherifies the data.">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
+<a name="l00145"></a>00145 
+<a name="l00152"></a><a class="code" href="../../d9/d56/classgurls_1_1_norm.html#a6de8719538c5f134ce611489b5578a59">00152</a>     <span class="keyword">static</span> <a class="code" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data.">Norm&lt;T&gt;</a> *<a class="code" href="../../d9/d56/classgurls_1_1_norm.html#a6de8719538c5f134ce611489b5578a59" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a>)
+<a name="l00153"></a>00153     {
+<a name="l00154"></a>00154         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;l2&quot;</span>)
+<a name="l00155"></a>00155             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../db/d42/classgurls_1_1_norm_l2.html" title="NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.">NormL2&lt;T&gt;</a>;
+<a name="l00156"></a>00156         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;zscore&quot;</span>)
+<a name="l00157"></a>00157             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d5/dec/classgurls_1_1_norm_z_score.html" title="NormZScore is the sub-class of Norm that centers and rescales the input data matrix X...">NormZScore&lt;T&gt;</a>;
+<a name="l00158"></a>00158         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;testzscore&quot;</span>)
+<a name="l00159"></a>00159             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html" title="NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmopute...">NormTestZScore&lt;T&gt;</a>;
+<a name="l00160"></a>00160 
+<a name="l00161"></a>00161         <span class="keywordflow">throw</span> <a class="code" href="../../dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm.">BadNormCreation</a>(<span class="keywordtype">id</span>);
+<a name="l00162"></a>00162     }
+<a name="l00163"></a>00163 };
+<a name="l00164"></a>00164 
+<a name="l00165"></a>00165 }
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 <span class="preprocessor">#endif // _GURLS_NORM_H_</span>
+<a name="l00168"></a>00168 <span class="preprocessor"></span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -259,7 +258,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>norm.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

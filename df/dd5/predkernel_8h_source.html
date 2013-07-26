@@ -145,10 +145,10 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor">#ifndef _GURLS_PREDKERNEL_H_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define _GURLS_PREDKERNEL_H_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
-<a name="l00046"></a>00046 
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;gurls++/exceptions.h&quot;</span>
 <a name="l00049"></a>00049 
 <a name="l00050"></a>00050 <span class="keyword">namespace </span>gurls
 <a name="l00051"></a>00051 {
@@ -156,11 +156,11 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00053"></a>00053 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
 <a name="l00054"></a>00054 <span class="keyword">class </span>PredKernelTrainTest;
 <a name="l00055"></a>00055 
-<a name="l00061"></a><a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html">00061</a> <span class="keyword">class </span><a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html" title="BadPredKernelCreation is thrown when factory tries to generate an unknown prediction kernel...">BadPredKernelCreation</a> : <span class="keyword">public</span> std::logic_error
+<a name="l00061"></a><a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html">00061</a> <span class="keyword">class </span><a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html" title="BadPredKernelCreation is thrown when factory tries to generate an unknown prediction kernel...">BadPredKernelCreation</a> : <span class="keyword">public</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>
 <a name="l00062"></a>00062 {
 <a name="l00063"></a>00063 <span class="keyword">public</span>:
 <a name="l00064"></a>00064 
-<a name="l00068"></a><a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html#a4ef65c5765d1563a2a21b066eb0955a1">00068</a>     <a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html#a4ef65c5765d1563a2a21b066eb0955a1" title="Exception constructor.">BadPredKernelCreation</a>(std::string type): logic_error(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
+<a name="l00068"></a><a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html#a4ef65c5765d1563a2a21b066eb0955a1">00068</a>     <a class="code" href="../../d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html#a4ef65c5765d1563a2a21b066eb0955a1" title="Exception constructor.">BadPredKernelCreation</a>(std::string type): <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
 <a name="l00069"></a>00069 };
 <a name="l00070"></a>00070 
 <a name="l00075"></a>00075 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
@@ -203,7 +203,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>predkernel.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

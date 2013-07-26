@@ -142,16 +142,16 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00039"></a>00039 <span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span>
 <a name="l00040"></a>00040 <span class="comment"> */</span>
 <a name="l00041"></a>00041 
-<a name="l00042"></a>00042 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
+<a name="l00042"></a>00042 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
 <a name="l00043"></a>00043 
-<a name="l00044"></a>00044 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;exports.h&quot;</span>
+<a name="l00044"></a>00044 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;gurls++/gvec.h&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;gurls++/exports.h&quot;</span>
 <a name="l00047"></a>00047 
 <a name="l00048"></a>00048 <span class="keyword">namespace </span>gurls {
 <a name="l00049"></a>00049 
 <a name="l00053"></a>00053 <span class="keyword">template</span> &lt;&gt;
-<a name="l00054"></a><a class="code" href="../../db/d4e/namespacegurls.html#a94c9856b6194ac9febd793563c4ac93b">00054</a> GURLS_EXPORT <span class="keywordtype">float</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; x, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; y)
+<a name="l00054"></a><a class="code" href="../../db/d4e/namespacegurls.html#a94c9856b6194ac9febd793563c4ac93b">00054</a> GURLS_EXPORT <span class="keywordtype">float</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; x, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; y)
 <a name="l00055"></a>00055 {
 <a name="l00056"></a>00056     <span class="keywordflow">if</span> ( x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>() != y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>() )
 <a name="l00057"></a>00057         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">gurls::Exception_Inconsistent_Size</a>);
@@ -163,7 +163,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00063"></a>00063 }
 <a name="l00064"></a>00064 
 <a name="l00068"></a>00068 <span class="keyword">template</span> &lt;&gt;
-<a name="l00069"></a><a class="code" href="../../db/d4e/namespacegurls.html#a890d491c04c0840044f8c44fad613407">00069</a> GURLS_EXPORT <span class="keywordtype">double</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; x, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; y)
+<a name="l00069"></a><a class="code" href="../../db/d4e/namespacegurls.html#a890d491c04c0840044f8c44fad613407">00069</a> GURLS_EXPORT <span class="keywordtype">double</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; x, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; y)
 <a name="l00070"></a>00070 {
 <a name="l00071"></a>00071 
 <a name="l00072"></a>00072     <span class="keywordflow">if</span> ( x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>() != y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>() )
@@ -178,10 +178,10 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00081"></a>00081 
 <a name="l00082"></a>00082 <span class="comment">// ============ OUT-OF-PLACE MATRIX MULTIPLICATION ==================</span>
 <a name="l00086"></a>00086 <span class="comment"></span><span class="keyword">template</span> &lt;&gt;
-<a name="l00087"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac92c7138ecf5189e1ea35166c29a3f78">00087</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; B, <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; C)
+<a name="l00087"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac92c7138ecf5189e1ea35166c29a3f78">00087</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; B, <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; C)
 <a name="l00088"></a>00088 {
 <a name="l00089"></a>00089 
-<a name="l00090"></a>00090     <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(A.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), B.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), C.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(),
+<a name="l00090"></a>00090     <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(A.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), B.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), C.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(),
 <a name="l00091"></a>00091         A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>(), A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>(),
 <a name="l00092"></a>00092         B.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>(), B.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>(),
 <a name="l00093"></a>00093         C.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>(), C.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>(),
@@ -189,10 +189,10 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00095"></a>00095 }
 <a name="l00096"></a>00096 
 <a name="l00100"></a>00100 <span class="keyword">template</span> &lt;&gt;
-<a name="l00101"></a><a class="code" href="../../db/d4e/namespacegurls.html#a7b064c5865dc4c72cb1d151fc4974a2a">00101</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; B, <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; C)
+<a name="l00101"></a><a class="code" href="../../db/d4e/namespacegurls.html#a7b064c5865dc4c72cb1d151fc4974a2a">00101</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; B, <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; C)
 <a name="l00102"></a>00102 {
 <a name="l00103"></a>00103 
-<a name="l00104"></a>00104     <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(A.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), B.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), C.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(),
+<a name="l00104"></a>00104     <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(A.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), B.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), C.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(),
 <a name="l00105"></a>00105         A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>(), A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>(),
 <a name="l00106"></a>00106         B.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>(), B.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>(),
 <a name="l00107"></a>00107         C.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>(), C.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>(),
@@ -203,7 +203,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00112"></a>00112 <span class="comment">// ============ OUT-OF-PLACE MATRIX-VECTOR MULTIPLICATION ==================</span>
 <a name="l00113"></a>00113 
 <a name="l00117"></a>00117 <span class="keyword">template</span> &lt;&gt;
-<a name="l00118"></a><a class="code" href="../../db/d4e/namespacegurls.html#a78bf0600ef72818ca76d61eee41847f0">00118</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; x, <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; y)
+<a name="l00118"></a><a class="code" href="../../db/d4e/namespacegurls.html#a78bf0600ef72818ca76d61eee41847f0">00118</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;float&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; x, <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;float&gt;</a>&amp; y)
 <a name="l00119"></a>00119 {
 <a name="l00120"></a>00120     <span class="keywordflow">if</span> ( (A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>() != x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>()) ||  (A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>() != y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>()))
 <a name="l00121"></a>00121         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
@@ -225,7 +225,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00137"></a>00137 }
 <a name="l00138"></a>00138 
 <a name="l00142"></a>00142 <span class="keyword">template</span> &lt;&gt;
-<a name="l00143"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac9c28d599e620aced3ae3b290858714f">00143</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; x, <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; y){
+<a name="l00143"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac9c28d599e620aced3ae3b290858714f">00143</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;double&gt;</a>&amp; A, <span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; x, <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;double&gt;</a>&amp; y){
 <a name="l00144"></a>00144 
 <a name="l00145"></a>00145     <span class="keywordflow">if</span> ( (A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>() != x.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>()) ||  (A.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>() != y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>()))
 <a name="l00146"></a>00146         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
@@ -563,261 +563,42 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00536"></a>00536 <span class="comment">//}</span>
 <a name="l00537"></a>00537 
 <a name="l00541"></a>00541 <span class="keyword">template</span>&lt;&gt;
-<a name="l00542"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4ae2e8587a69c8f2d7d15e68b272b4b1">00542</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a1269a74e7f7e3d1ca200b6d8d3d0709f" title="Template function to call BLAS *GEMM routines.">gemm</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransB,
-<a name="l00543"></a>00543           <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">int</span> K, <span class="keyword">const</span> <span class="keywordtype">float</span> alpha, <span class="keyword">const</span> <span class="keywordtype">float</span> *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda,
-<a name="l00544"></a>00544           <span class="keyword">const</span> <span class="keywordtype">float</span> *B, <span class="keyword">const</span> <span class="keywordtype">int</span> ldb, <span class="keyword">const</span> <span class="keywordtype">float</span> beta, <span class="keywordtype">float</span> *C, <span class="keyword">const</span> <span class="keywordtype">int</span> ldc)
-<a name="l00545"></a>00545 {
-<a name="l00546"></a>00546     <span class="keywordtype">char</span> transA = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransA);
-<a name="l00547"></a>00547     <span class="keywordtype">char</span> transB = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransB);
-<a name="l00548"></a>00548 
-<a name="l00549"></a>00549     <a class="code" href="../../dd/df1/blas__lapack_8h.html#af6dbe980fcef3e98da9e587a3a56773b" title="Prototype for Blas SGEMM.">sgemm_</a>(&amp;transA, &amp;transB,
-<a name="l00550"></a>00550           const_cast&lt;int*&gt;(&amp;M), const_cast&lt;int*&gt;(&amp;N), const_cast&lt;int*&gt;(&amp;K),
-<a name="l00551"></a>00551           const_cast&lt;float*&gt;(&amp;alpha), const_cast&lt;float*&gt;(A), const_cast&lt;int*&gt;(&amp;lda),
-<a name="l00552"></a>00552           const_cast&lt;float*&gt;(B), const_cast&lt;int*&gt;(&amp;ldb), const_cast&lt;float*&gt;(&amp;beta),
-<a name="l00553"></a>00553           const_cast&lt;float*&gt;(C), const_cast&lt;int*&gt;(&amp;ldc));
-<a name="l00554"></a>00554 
-<a name="l00555"></a>00555 }
-<a name="l00556"></a>00556 
-<a name="l00560"></a>00560 <span class="keyword">template</span>&lt;&gt;
-<a name="l00561"></a><a class="code" href="../../db/d4e/namespacegurls.html#ae2a654adc22d3ce050bc0920185877d6">00561</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a1269a74e7f7e3d1ca200b6d8d3d0709f" title="Template function to call BLAS *GEMM routines.">gemm</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransB,
-<a name="l00562"></a>00562           <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">int</span> K, <span class="keyword">const</span> <span class="keywordtype">double</span> alpha, <span class="keyword">const</span> <span class="keywordtype">double</span> *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda,
-<a name="l00563"></a>00563           <span class="keyword">const</span> <span class="keywordtype">double</span> *B, <span class="keyword">const</span> <span class="keywordtype">int</span> ldb, <span class="keyword">const</span> <span class="keywordtype">double</span> beta, <span class="keywordtype">double</span> *C, <span class="keyword">const</span> <span class="keywordtype">int</span> ldc)
-<a name="l00564"></a>00564 {
-<a name="l00565"></a>00565     <span class="keywordtype">char</span> transA = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransA);
-<a name="l00566"></a>00566     <span class="keywordtype">char</span> transB = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransB);
-<a name="l00567"></a>00567 
-<a name="l00568"></a>00568     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a893258e0b2ea9411e7e6a55d0f422db6" title="Prototype for Blas DGEMM.">dgemm_</a>(&amp;transA, &amp;transB,
-<a name="l00569"></a>00569           const_cast&lt;int*&gt;(&amp;M), const_cast&lt;int*&gt;(&amp;N), const_cast&lt;int*&gt;(&amp;K),
-<a name="l00570"></a>00570           const_cast&lt;double*&gt;(&amp;alpha), const_cast&lt;double*&gt;(A), const_cast&lt;int*&gt;(&amp;lda),
-<a name="l00571"></a>00571           const_cast&lt;double*&gt;(B), const_cast&lt;int*&gt;(&amp;ldb), const_cast&lt;double*&gt;(&amp;beta),
-<a name="l00572"></a>00572           const_cast&lt;double*&gt;(C), const_cast&lt;int*&gt;(&amp;ldc));
-<a name="l00573"></a>00573 }
-<a name="l00574"></a>00574 
-<a name="l00578"></a>00578 <span class="keyword">template</span>&lt;&gt;
-<a name="l00579"></a><a class="code" href="../../db/d4e/namespacegurls.html#a39dee0a0ece0c39fa94fc01725eccb9a">00579</a> GURLS_EXPORT <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a8da7753eb788f84ac8474d39996f541f" title="Template function to call LAPACK *POTRF routines.">potrf_</a>(<span class="keywordtype">char</span> *UPLO, <span class="keywordtype">int</span> *n, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> *lda , <span class="keywordtype">int</span> *info)
-<a name="l00580"></a>00580 {
-<a name="l00581"></a>00581     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a71a840a262640444343d7344d71f6f9c" title="Prototype for Lapack SPOTRF.">spotrf_</a>(UPLO, n, a, lda, info);
-<a name="l00582"></a>00582 }
-<a name="l00583"></a>00583 
-<a name="l00587"></a>00587 <span class="keyword">template</span>&lt;&gt;
-<a name="l00588"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2dd619a2e30c7d5039bd1312395bf361">00588</a> GURLS_EXPORT <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a8da7753eb788f84ac8474d39996f541f" title="Template function to call LAPACK *POTRF routines.">potrf_</a>(<span class="keywordtype">char</span> *UPLO, <span class="keywordtype">int</span> *n, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> *lda , <span class="keywordtype">int</span> *info)
-<a name="l00589"></a>00589 {
-<a name="l00590"></a>00590     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a185783af38726169420bb873bb3b706f" title="Prototype for Lapack DPOTRF.">dpotrf_</a>(UPLO, n, a, lda, info);
-<a name="l00591"></a>00591 }
-<a name="l00592"></a>00592 
-<a name="l00596"></a>00596 <span class="keyword">template</span>&lt;&gt;
-<a name="l00597"></a><a class="code" href="../../db/d4e/namespacegurls.html#a93392e818a249bdc64e3e1b391847948">00597</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">float</span> alpha, <span class="keyword">const</span> <span class="keywordtype">float</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX, <span class="keywordtype">float</span> *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY)
-<a name="l00598"></a>00598 {
-<a name="l00599"></a>00599     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a50d328977f8375da0ba94a4280fe0b41" title="Prototype for Blas SAXPY.">saxpy_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;float*&gt;(&amp;alpha), const_cast&lt;float*&gt;(X), const_cast&lt;int*&gt;(&amp;incX), Y, const_cast&lt;int*&gt;(&amp;incY));
-<a name="l00600"></a>00600 }
-<a name="l00601"></a>00601 
-<a name="l00605"></a>00605 <span class="keyword">template</span>&lt;&gt;
-<a name="l00606"></a><a class="code" href="../../db/d4e/namespacegurls.html#ab2de64ae5dbab4cc0415429c1d4a8456">00606</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">double</span> alpha, <span class="keyword">const</span> <span class="keywordtype">double</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX, <span class="keywordtype">double</span> *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY)
-<a name="l00607"></a>00607 {
-<a name="l00608"></a>00608     <a class="code" href="../../dd/df1/blas__lapack_8h.html#aebed34a8a0affdf35639abf072c7e50e" title="Prototype for Blas DAXPY.">daxpy_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;double*&gt;(&amp;alpha), const_cast&lt;double*&gt;(X), const_cast&lt;int*&gt;(&amp;incX), Y, const_cast&lt;int*&gt;(&amp;incY));
-<a name="l00609"></a>00609 }
-<a name="l00610"></a>00610 
-<a name="l00614"></a>00614 <span class="keyword">template</span> &lt;&gt;
-<a name="l00615"></a><a class="code" href="../../db/d4e/namespacegurls.html#af6b99751c681473639f52321e7305d4c">00615</a> GURLS_EXPORT <span class="keywordtype">float</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">float</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX, <span class="keyword">const</span> <span class="keywordtype">float</span> *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY)
-<a name="l00616"></a>00616 {
-<a name="l00617"></a>00617     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a1238f2965b8eed7c37096cc0160213f2" title="Prototype for Blas SDOT.">sdot_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;float*&gt;(X), const_cast&lt;int*&gt;(&amp;incX), const_cast&lt;float*&gt;(Y), const_cast&lt;int*&gt;(&amp;incY));
-<a name="l00618"></a>00618 }
-<a name="l00619"></a>00619 
-<a name="l00623"></a>00623 <span class="keyword">template</span> &lt;&gt;
-<a name="l00624"></a><a class="code" href="../../db/d4e/namespacegurls.html#a94bb39764574aa441d6732dcb5e1a1a2">00624</a> GURLS_EXPORT <span class="keywordtype">double</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">double</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX, <span class="keyword">const</span> <span class="keywordtype">double</span> *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY)
-<a name="l00625"></a>00625 {
-<a name="l00626"></a>00626     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a2247ca92b3cf0e88e9448ad05240921f" title="Prototype for Blas DDOT.">ddot_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;double*&gt;(X), const_cast&lt;int*&gt;(&amp;incX), const_cast&lt;double*&gt;(Y), const_cast&lt;int*&gt;(&amp;incY));
-<a name="l00627"></a>00627 }
-<a name="l00628"></a>00628 
-<a name="l00632"></a>00632 <span class="keyword">template</span>&lt;&gt;
-<a name="l00633"></a><a class="code" href="../../db/d4e/namespacegurls.html#afd1e987bffaa4b1abad16342258bf76a">00633</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">double</span> val1, <span class="keywordtype">double</span> val2)
-<a name="l00634"></a>00634 {
-<a name="l00635"></a>00635     <span class="keywordflow">return</span> (val1 &gt;= val2-DBL_EPSILON &amp;&amp; val1 &lt;= val2+DBL_EPSILON );
-<a name="l00636"></a>00636 }
-<a name="l00637"></a>00637 
-<a name="l00641"></a>00641 <span class="keyword">template</span>&lt;&gt;
-<a name="l00642"></a><a class="code" href="../../db/d4e/namespacegurls.html#a9ad5586bb3bc80449b34f14f64c580c1">00642</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">float</span> val1, <span class="keywordtype">float</span> val2)
-<a name="l00643"></a>00643 {
-<a name="l00644"></a>00644     <span class="keywordflow">return</span> ( val1 &gt;= val2-FLT_EPSILON &amp;&amp; val1 &lt;= val2+FLT_EPSILON );
-<a name="l00645"></a>00645 }
-<a name="l00646"></a>00646 
-<a name="l00650"></a>00650 <span class="keyword">template</span>&lt;&gt;
-<a name="l00651"></a><a class="code" href="../../db/d4e/namespacegurls.html#a502d376f316213cc2017c2c15e2924b4">00651</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b)
-<a name="l00652"></a>00652 {
-<a name="l00653"></a>00653     <span class="keywordflow">return</span> ((a - b) &gt; ( std::min(fabs(a), fabs(b))* std::numeric_limits&lt;double&gt;::epsilon()));
-<a name="l00654"></a>00654 }
-<a name="l00655"></a>00655 
-<a name="l00659"></a>00659 <span class="keyword">template</span>&lt;&gt;
-<a name="l00660"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac628e7f04e8532e2e5846dd14f35a916">00660</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b)
-<a name="l00661"></a>00661 {
-<a name="l00662"></a>00662     <span class="keywordflow">return</span> ((a - b) &gt; ( std::min(fabs(a), fabs(b))* std::numeric_limits&lt;float&gt;::epsilon()));
-<a name="l00663"></a>00663 }
-<a name="l00664"></a>00664 
-<a name="l00668"></a>00668 <span class="keyword">template</span>&lt;&gt;
-<a name="l00669"></a><a class="code" href="../../db/d4e/namespacegurls.html#a710b4faef3dc85d1e07dd6bdfbe78b30">00669</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b)
-<a name="l00670"></a>00670 {
-<a name="l00671"></a>00671     <span class="keywordflow">return</span> ((b - a) &gt; ( std::max(fabs(a), fabs(b))* std::numeric_limits&lt;double&gt;::epsilon()));
-<a name="l00672"></a>00672 }
-<a name="l00673"></a>00673 
-<a name="l00677"></a>00677 <span class="keyword">template</span>&lt;&gt;
-<a name="l00678"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2881d6d5ce35586ea88b6b485f6afa3a">00678</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b)
-<a name="l00679"></a>00679 {
-<a name="l00680"></a>00680     <span class="keywordflow">return</span> ((b - a) &gt; ( std::max(fabs(a), fabs(b))* std::numeric_limits&lt;float&gt;::epsilon()));
-<a name="l00681"></a>00681 }
-<a name="l00682"></a>00682 
-<a name="l00686"></a>00686 <span class="keyword">template</span>&lt;&gt;
-<a name="l00687"></a><a class="code" href="../../db/d4e/namespacegurls.html#ab8235c30a1bb018e0e5fcd70b9184018">00687</a> GURLS_EXPORT <span class="keywordtype">float</span> <a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">float</span>* X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX)
-<a name="l00688"></a>00688 {
-<a name="l00689"></a>00689     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#ae27b1bf6b4843459be6b53bd5e9b2e3a" title="Prototype for Blas SNRM2.">snrm2_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;float*&gt;(X), const_cast&lt;int*&gt;(&amp;incX));
-<a name="l00690"></a>00690 }
-<a name="l00691"></a>00691 
-<a name="l00695"></a>00695 <span class="keyword">template</span>&lt;&gt;
-<a name="l00696"></a><a class="code" href="../../db/d4e/namespacegurls.html#a97ab036038ecb33220118ce805cc7f10">00696</a> GURLS_EXPORT <span class="keywordtype">double</span> <a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">double</span>* X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX)
-<a name="l00697"></a>00697 {
-<a name="l00698"></a>00698     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#afd1db798b9d4fe86f231a38a7e9ead58" title="Prototype for Blas DNRM2.">dnrm2_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;double*&gt;(X), const_cast&lt;int*&gt;(&amp;incX));
-<a name="l00699"></a>00699 }
-<a name="l00700"></a>00700 
-<a name="l00704"></a>00704 <span class="keyword">template</span>&lt;&gt;
-<a name="l00705"></a><a class="code" href="../../db/d4e/namespacegurls.html#aecb1485e0b101a624372a1c8fbf096b7">00705</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">float</span> alpha, <span class="keywordtype">float</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX)
-<a name="l00706"></a>00706 {
-<a name="l00707"></a>00707     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a8eea0062fb47c65901804399dd339640" title="Prototype for Blas SSCAL.">sscal_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;float*&gt;(&amp;alpha), X, const_cast&lt;int*&gt;(&amp;incX));
-<a name="l00708"></a>00708 }
-<a name="l00709"></a>00709 
-<a name="l00713"></a>00713 <span class="keyword">template</span>&lt;&gt;
-<a name="l00714"></a><a class="code" href="../../db/d4e/namespacegurls.html#a78b04e535c29a22044af98d1781d4bbb">00714</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">double</span> alpha, <span class="keywordtype">double</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX)
-<a name="l00715"></a>00715 {
-<a name="l00716"></a>00716     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a9f3a532154194ac4fc097770a4b28a63" title="Prototype for Blas DSCAL.">dscal_</a>(const_cast&lt;int*&gt;(&amp;N), const_cast&lt;double*&gt;(&amp;alpha), X, const_cast&lt;int*&gt;(&amp;incX));
-<a name="l00717"></a>00717 }
-<a name="l00718"></a>00718 
-<a name="l00722"></a>00722 <span class="keyword">template</span>&lt;&gt;
-<a name="l00723"></a><a class="code" href="../../db/d4e/namespacegurls.html#affab79a3dc91af85e1cad66ade344659">00723</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA,
-<a name="l00724"></a>00724           <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">float</span> alpha, <span class="keyword">const</span> <span class="keywordtype">float</span> *A,
-<a name="l00725"></a>00725           <span class="keyword">const</span> <span class="keywordtype">int</span> lda, <span class="keyword">const</span> <span class="keywordtype">float</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX,
-<a name="l00726"></a>00726           <span class="keyword">const</span> <span class="keywordtype">float</span> beta, <span class="keywordtype">float</span> *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY)
-<a name="l00727"></a>00727 {
-<a name="l00728"></a>00728     <span class="keywordtype">char</span> transA = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransA);
-<a name="l00729"></a>00729 
-<a name="l00730"></a>00730     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a23a974884df223866538932a7d17c76d" title="Prototype for Blas SGEMV.">sgemv_</a>(&amp;transA, const_cast&lt;int*&gt;(&amp;M), const_cast&lt;int*&gt;(&amp;N),
-<a name="l00731"></a>00731           const_cast&lt;float*&gt;(&amp;alpha), const_cast&lt;float*&gt;(A), const_cast&lt;int*&gt;(&amp;lda),
-<a name="l00732"></a>00732           const_cast&lt;float*&gt;(X), const_cast&lt;int*&gt;(&amp;incX), const_cast&lt;float*&gt;(&amp;beta),
-<a name="l00733"></a>00733           const_cast&lt;float*&gt;(Y), const_cast&lt;int*&gt;(&amp;incY));
-<a name="l00734"></a>00734 
-<a name="l00735"></a>00735 }
-<a name="l00736"></a>00736 
-<a name="l00740"></a>00740 <span class="keyword">template</span>&lt;&gt;
-<a name="l00741"></a><a class="code" href="../../db/d4e/namespacegurls.html#a09c29df40236f54ffac755200519392d">00741</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA,
-<a name="l00742"></a>00742           <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">double</span> alpha, <span class="keyword">const</span> <span class="keywordtype">double</span> *A,
-<a name="l00743"></a>00743           <span class="keyword">const</span> <span class="keywordtype">int</span> lda, <span class="keyword">const</span> <span class="keywordtype">double</span> *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX,
-<a name="l00744"></a>00744           <span class="keyword">const</span> <span class="keywordtype">double</span> beta, <span class="keywordtype">double</span> *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY)
-<a name="l00745"></a>00745 {
-<a name="l00746"></a>00746     <span class="keywordtype">char</span> transA = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransA);
-<a name="l00747"></a>00747 
-<a name="l00748"></a>00748     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a53c7c2159f19abafbec2bc09f2c0cdcc" title="Prototype for Blas DGEMV.">dgemv_</a>(&amp;transA, const_cast&lt;int*&gt;(&amp;M), const_cast&lt;int*&gt;(&amp;N),
-<a name="l00749"></a>00749           const_cast&lt;double*&gt;(&amp;alpha), const_cast&lt;double*&gt;(A), const_cast&lt;int*&gt;(&amp;lda),
-<a name="l00750"></a>00750           const_cast&lt;double*&gt;(X), const_cast&lt;int*&gt;(&amp;incX), const_cast&lt;double*&gt;(&amp;beta),
-<a name="l00751"></a>00751           const_cast&lt;double*&gt;(Y), const_cast&lt;int*&gt;(&amp;incY));
-<a name="l00752"></a>00752 }
-<a name="l00753"></a>00753 
-<a name="l00757"></a>00757 <span class="keyword">template</span>&lt;&gt;
-<a name="l00758"></a><a class="code" href="../../db/d4e/namespacegurls.html#a8dcf5e05286bb38993ac273535f45f03">00758</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da" title="Template function to call LAPACK *SYEV routines.">syev</a>( <span class="keywordtype">char</span>* jobz, <span class="keywordtype">char</span>* uplo, <span class="keywordtype">int</span>* n, <span class="keywordtype">float</span>* a, <span class="keywordtype">int</span>* lda, <span class="keywordtype">float</span>* w, <span class="keywordtype">float</span>* work, <span class="keywordtype">int</span>* lwork, <span class="keywordtype">int</span>* info)
-<a name="l00759"></a>00759 {
-<a name="l00760"></a>00760     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a3542c7fe010f0561a7c0e42c0f671491" title="Prototype for Lapack SSYEV.">ssyev_</a>(jobz, uplo, n, a, lda, w, work, lwork, info);
-<a name="l00761"></a>00761 }
-<a name="l00762"></a>00762 
-<a name="l00766"></a>00766 <span class="keyword">template</span>&lt;&gt;
-<a name="l00767"></a><a class="code" href="../../db/d4e/namespacegurls.html#a9dfdf96fc4be20c9bbeed0b5a0e21248">00767</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da" title="Template function to call LAPACK *SYEV routines.">syev</a>( <span class="keywordtype">char</span>* jobz, <span class="keywordtype">char</span>* uplo, <span class="keywordtype">int</span>* n, <span class="keywordtype">double</span>* a, <span class="keywordtype">int</span>* lda, <span class="keywordtype">double</span>* w, <span class="keywordtype">double</span>* work, <span class="keywordtype">int</span>* lwork, <span class="keywordtype">int</span>* info)
-<a name="l00768"></a>00768 {
-<a name="l00769"></a>00769     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a6c377356f7bcc6c052e05cebca08d5d5" title="Prototype for Lapack DSYEV.">dsyev_</a>(jobz, uplo, n, a, lda, w, work, lwork, info);
-<a name="l00770"></a>00770 }
-<a name="l00771"></a>00771 
-<a name="l00775"></a>00775 <span class="keyword">template</span> &lt;&gt;
-<a name="l00776"></a><a class="code" href="../../db/d4e/namespacegurls.html#a5aaba5d222dfc54fbeed11af7b1175b8">00776</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a736d5bda0bca8dff4586fc1de89eedc9" title="Template function to call BLAS *TRSM routines.">trsm</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a65d460224ff1a74c16799b7a2febd70a" title="Side options (left, right)">CBLAS_SIDE</a> Side, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3e3b1abfe9f414a711d30d7c2955d013" title="Upper/lower options (upper, lower)">CBLAS_UPLO</a> Uplo, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3e7a144c59b79cc681105e939e6c5771" title="Diagonal options (unit, non unit)">CBLAS_DIAG</a> Diag,
-<a name="l00777"></a>00777                  <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">float</span> alpha, <span class="keyword">const</span> <span class="keywordtype">float</span> *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda, <span class="keywordtype">float</span> *B, <span class="keyword">const</span> <span class="keywordtype">int</span> ldb)
-<a name="l00778"></a>00778 {
-<a name="l00779"></a>00779     <span class="keywordtype">char</span> side = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(Side);
-<a name="l00780"></a>00780     <span class="keywordtype">char</span> uplo = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(Uplo);
-<a name="l00781"></a>00781     <span class="keywordtype">char</span> transA = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransA);
-<a name="l00782"></a>00782     <span class="keywordtype">char</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3286e76a0f264d9cbed8e534fce536c8" title="Returns a squared matrix initialized in the diagonal with values from a vector.">diag</a> = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(Diag);
-<a name="l00783"></a>00783 
-<a name="l00784"></a>00784     <a class="code" href="../../dd/df1/blas__lapack_8h.html#adf3bfde0a411931f406821eb7c217031" title="Prototype for Blas STRSM.">strsm_</a>(&amp;side, &amp;uplo, &amp;transA, &amp;diag, const_cast&lt;int*&gt;(&amp;M), const_cast&lt;int*&gt;(&amp;N), const_cast&lt;float*&gt;(&amp;alpha), const_cast&lt;float*&gt;(A),
-<a name="l00785"></a>00785           const_cast&lt;int*&gt;(&amp;lda), const_cast&lt;float*&gt;(B), const_cast&lt;int*&gt;(&amp;ldb));
-<a name="l00786"></a>00786 
-<a name="l00787"></a>00787 }
-<a name="l00788"></a>00788 
-<a name="l00792"></a>00792 <span class="keyword">template</span> &lt;&gt;
-<a name="l00793"></a><a class="code" href="../../db/d4e/namespacegurls.html#a130348dfd1df52f06b44742b9ee6bd25">00793</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a736d5bda0bca8dff4586fc1de89eedc9" title="Template function to call BLAS *TRSM routines.">trsm</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a65d460224ff1a74c16799b7a2febd70a" title="Side options (left, right)">CBLAS_SIDE</a> Side, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3e3b1abfe9f414a711d30d7c2955d013" title="Upper/lower options (upper, lower)">CBLAS_UPLO</a> Uplo, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3e7a144c59b79cc681105e939e6c5771" title="Diagonal options (unit, non unit)">CBLAS_DIAG</a> Diag,
-<a name="l00794"></a>00794                  <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">double</span> alpha, <span class="keyword">const</span> <span class="keywordtype">double</span> *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda, <span class="keywordtype">double</span> *B, <span class="keyword">const</span> <span class="keywordtype">int</span> ldb)
-<a name="l00795"></a>00795 {
-<a name="l00796"></a>00796     <span class="keywordtype">char</span> side = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(Side);
-<a name="l00797"></a>00797     <span class="keywordtype">char</span> uplo = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(Uplo);
-<a name="l00798"></a>00798     <span class="keywordtype">char</span> transA = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(TransA);
-<a name="l00799"></a>00799     <span class="keywordtype">char</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3286e76a0f264d9cbed8e534fce536c8" title="Returns a squared matrix initialized in the diagonal with values from a vector.">diag</a> = <a class="code" href="../../da/dfd/classgurls_1_1_blas_utils.html#adcce88cc3173320a16b58a1cd3215b8d" title="Converts a Blas enumeration into the corresponding character used as parameter in Blas fortran routin...">BlasUtils::charValue</a>(Diag);
-<a name="l00800"></a>00800 
-<a name="l00801"></a>00801     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a7bac3b37dac2afcfa2ed35b9298152f9" title="Prototype for Blas DTRSM.">dtrsm_</a>(&amp;side, &amp;uplo, &amp;transA, &amp;diag, const_cast&lt;int*&gt;(&amp;M), const_cast&lt;int*&gt;(&amp;N), const_cast&lt;double*&gt;(&amp;alpha), const_cast&lt;double*&gt;(A),
-<a name="l00802"></a>00802           const_cast&lt;int*&gt;(&amp;lda), const_cast&lt;double*&gt;(B), const_cast&lt;int*&gt;(&amp;ldb));
-<a name="l00803"></a>00803 }
-<a name="l00804"></a>00804 
-<a name="l00808"></a>00808 <span class="keyword">template</span> &lt;&gt;
-<a name="l00809"></a><a class="code" href="../../db/d4e/namespacegurls.html#aefc54cff58ae59ff3463455be85cc1b8">00809</a> GURLS_EXPORT <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#aab6cd9a9688f9d62ee51cf92fb4dac5d" title="Template function to call BLAS *GESVD routines.">gesvd_</a>(<span class="keywordtype">char</span> *jobu, <span class="keywordtype">char</span> *jobvt, <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">float</span> *s, <span class="keywordtype">float</span> *u, <span class="keywordtype">int</span> *ldu, <span class="keywordtype">float</span> *vt, <span class="keywordtype">int</span> *ldvt, <span class="keywordtype">float</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00810"></a>00810 {
-<a name="l00811"></a>00811     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a07794569485a1465f6742a107da10e77" title="Prototype for Lapack SGESVD.">sgesvd_</a>(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, info);
-<a name="l00812"></a>00812 }
-<a name="l00813"></a>00813 
-<a name="l00817"></a>00817 <span class="keyword">template</span> &lt;&gt;
-<a name="l00818"></a><a class="code" href="../../db/d4e/namespacegurls.html#a51445435d73fd84d801854a834a9fc58">00818</a> GURLS_EXPORT <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#aab6cd9a9688f9d62ee51cf92fb4dac5d" title="Template function to call BLAS *GESVD routines.">gesvd_</a>(<span class="keywordtype">char</span> *jobu, <span class="keywordtype">char</span> *jobvt, <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">double</span> *s, <span class="keywordtype">double</span> *u, <span class="keywordtype">int</span> *ldu, <span class="keywordtype">double</span> *vt, <span class="keywordtype">int</span> *ldvt, <span class="keywordtype">double</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00819"></a>00819 {
-<a name="l00820"></a>00820     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a4b81f841fcdcdf26dd377798657b0dec" title="Prototype for Lapack DGESVD.">dgesvd_</a>(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, info);
-<a name="l00821"></a>00821 }
-<a name="l00822"></a>00822 
-<a name="l00826"></a>00826 <span class="keyword">template</span>&lt;&gt;
-<a name="l00827"></a><a class="code" href="../../db/d4e/namespacegurls.html#a67acd60419463068a14dd8ba70c77690">00827</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">float</span> *A, <span class="keywordtype">int</span> *lda, <span class="keywordtype">int</span> *jpvt, <span class="keywordtype">float</span> *tau, <span class="keywordtype">float</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00828"></a>00828 {
-<a name="l00829"></a>00829     <a class="code" href="../../dd/df1/blas__lapack_8h.html#ae56b296ec6cb26cecc3ea750cb3a2df6" title="Prototype for Lapack SGEQP3.">sgeqp3_</a>(m, n, A, lda, jpvt, tau, work, lwork, info);
-<a name="l00830"></a>00830 }
-<a name="l00831"></a>00831 
-<a name="l00835"></a>00835 <span class="keyword">template</span>&lt;&gt;
-<a name="l00836"></a><a class="code" href="../../db/d4e/namespacegurls.html#a0dc35ba7fdee7bd3db3c8eeebc63ab17">00836</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">double</span> *A, <span class="keywordtype">int</span> *lda, <span class="keywordtype">int</span> *jpvt, <span class="keywordtype">double</span> *tau, <span class="keywordtype">double</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00837"></a>00837 {
-<a name="l00838"></a>00838     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a9e2923548ff34365f5339db0e4e9afff" title="Prototype for Lapack DGEQP3.">dgeqp3_</a>(m, n, A, lda, jpvt, tau, work, lwork, info);
-<a name="l00839"></a>00839 }
-<a name="l00840"></a>00840 
-<a name="l00844"></a>00844 <span class="keyword">template</span>&lt;&gt;
-<a name="l00845"></a><a class="code" href="../../db/d4e/namespacegurls.html#a5de7ff2128c74dae7d9a09a50a393bab">00845</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(<span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *k, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">float</span> *tau, <span class="keywordtype">float</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00846"></a>00846 {
-<a name="l00847"></a>00847     <a class="code" href="../../dd/df1/blas__lapack_8h.html#abf85cbc2eb134b1d6bfdc80d423b2e06" title="Prototype for Lapack SORGQR.">sorgqr_</a>(m, n, k, a, lda, tau, work, lwork, info);
-<a name="l00848"></a>00848 }
-<a name="l00849"></a>00849 
-<a name="l00853"></a>00853 <span class="keyword">template</span>&lt;&gt;
-<a name="l00854"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4e6f1468218b452093535ab8390d518a">00854</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(<span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *k, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">double</span> *tau, <span class="keywordtype">double</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00855"></a>00855 {
-<a name="l00856"></a>00856     <a class="code" href="../../dd/df1/blas__lapack_8h.html#ab3579a02e437f3c8e3f7be42edfc3283" title="Prototype for Lapack DORGQR.">dorgqr_</a>(m, n, k, a, lda, tau, work, lwork, info);
-<a name="l00857"></a>00857 }
-<a name="l00858"></a>00858 
-<a name="l00862"></a>00862 <span class="keyword">template</span>&lt;&gt;
-<a name="l00863"></a><a class="code" href="../../db/d4e/namespacegurls.html#a72a4296c98ec9d4999e46296d5988833">00863</a> GURLS_EXPORT <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a9c4fd96e77654eb7a8fa8e8d26d1a720" title="Template function to call LAPACK *GELSS routines.">gelss</a>( <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span>* nrhs, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">float</span>* b, <span class="keywordtype">int</span> *ldb, <span class="keywordtype">float</span> *s, <span class="keywordtype">float</span> *rcond, <span class="keywordtype">int</span> *rank, <span class="keywordtype">float</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00864"></a>00864 {
-<a name="l00865"></a>00865     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a7ef3e910d77d3f9e72da06fc48c5a346" title="Prototype for Lapack SGELSS.">sgelss_</a>( m, n, nrhs, a, lda, b, ldb, s, rcond, rank, work, lwork, info);
-<a name="l00866"></a>00866 }
-<a name="l00867"></a>00867 
-<a name="l00871"></a>00871 <span class="keyword">template</span>&lt;&gt;
-<a name="l00872"></a><a class="code" href="../../db/d4e/namespacegurls.html#a48e3bb5783bfd83c47f8206fb4639e17">00872</a> GURLS_EXPORT <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a9c4fd96e77654eb7a8fa8e8d26d1a720" title="Template function to call LAPACK *GELSS routines.">gelss</a>( <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span>* nrhs, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">double</span>* b, <span class="keywordtype">int</span> *ldb, <span class="keywordtype">double</span> *s, <span class="keywordtype">double</span> *rcond, <span class="keywordtype">int</span> *rank, <span class="keywordtype">double</span> *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info)
-<a name="l00873"></a>00873 {
-<a name="l00874"></a>00874     <span class="keywordflow">return</span> <a class="code" href="../../dd/df1/blas__lapack_8h.html#a58f2e24d9280b3bece4af72bc9c433da" title="Prototype for Lapack DGELSS.">dgelss_</a>( m, n, nrhs, a, lda, b, ldb, s, rcond, rank, work, lwork, info);
-<a name="l00875"></a>00875 }
-<a name="l00876"></a>00876 
-<a name="l00880"></a>00880 <span class="keyword">template</span>&lt;&gt;
-<a name="l00881"></a><a class="code" href="../../db/d4e/namespacegurls.html#a006445be54f71fa4cb0d5b10b9d2f626">00881</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">swap</a>( <span class="keywordtype">int</span> n, <span class="keywordtype">float</span> *x, <span class="keywordtype">int</span> incx, <span class="keywordtype">float</span> *y, <span class="keywordtype">int</span> incy)
-<a name="l00882"></a>00882 {
-<a name="l00883"></a>00883     <a class="code" href="../../dd/df1/blas__lapack_8h.html#af62c82da55644958407e62d9410eb302" title="Prototype for Blas SSWAP.">sswap_</a>(&amp;n, x, &amp;incx, y, &amp;incy);
-<a name="l00884"></a>00884 }
-<a name="l00885"></a>00885 
-<a name="l00889"></a>00889 <span class="keyword">template</span>&lt;&gt;
-<a name="l00890"></a><a class="code" href="../../db/d4e/namespacegurls.html#a10f8f9bd5319436f8f9c5d954dc030ae">00890</a> GURLS_EXPORT <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">swap</a>( <span class="keywordtype">int</span> n, <span class="keywordtype">double</span> *x, <span class="keywordtype">int</span> incx, <span class="keywordtype">double</span> *y, <span class="keywordtype">int</span> incy)
-<a name="l00891"></a>00891 {
-<a name="l00892"></a>00892     <a class="code" href="../../dd/df1/blas__lapack_8h.html#a9a48a93cd6cc23964843ae3874459210" title="Prototype for Blas DSWAP.">dswap_</a>(&amp;n, x, &amp;incx, y, &amp;incy);
-<a name="l00893"></a>00893 }
-<a name="l00894"></a>00894 
-<a name="l00895"></a>00895 }
+<a name="l00542"></a><a class="code" href="../../db/d4e/namespacegurls.html#afd1e987bffaa4b1abad16342258bf76a">00542</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">double</span> val1, <span class="keywordtype">double</span> val2)
+<a name="l00543"></a>00543 {
+<a name="l00544"></a>00544     <span class="keywordflow">return</span> (val1 &gt;= val2-DBL_EPSILON &amp;&amp; val1 &lt;= val2+DBL_EPSILON );
+<a name="l00545"></a>00545 }
+<a name="l00546"></a>00546 
+<a name="l00550"></a>00550 <span class="keyword">template</span>&lt;&gt;
+<a name="l00551"></a><a class="code" href="../../db/d4e/namespacegurls.html#a9ad5586bb3bc80449b34f14f64c580c1">00551</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">float</span> val1, <span class="keywordtype">float</span> val2)
+<a name="l00552"></a>00552 {
+<a name="l00553"></a>00553     <span class="keywordflow">return</span> ( val1 &gt;= val2-FLT_EPSILON &amp;&amp; val1 &lt;= val2+FLT_EPSILON );
+<a name="l00554"></a>00554 }
+<a name="l00555"></a>00555 
+<a name="l00559"></a>00559 <span class="keyword">template</span>&lt;&gt;
+<a name="l00560"></a><a class="code" href="../../db/d4e/namespacegurls.html#a502d376f316213cc2017c2c15e2924b4">00560</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b)
+<a name="l00561"></a>00561 {
+<a name="l00562"></a>00562     <span class="keywordflow">return</span> ((a - b) &gt; ( std::min(fabs(a), fabs(b))* std::numeric_limits&lt;double&gt;::epsilon()));
+<a name="l00563"></a>00563 }
+<a name="l00564"></a>00564 
+<a name="l00568"></a>00568 <span class="keyword">template</span>&lt;&gt;
+<a name="l00569"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac628e7f04e8532e2e5846dd14f35a916">00569</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b)
+<a name="l00570"></a>00570 {
+<a name="l00571"></a>00571     <span class="keywordflow">return</span> ((a - b) &gt; ( std::min(fabs(a), fabs(b))* std::numeric_limits&lt;float&gt;::epsilon()));
+<a name="l00572"></a>00572 }
+<a name="l00573"></a>00573 
+<a name="l00577"></a>00577 <span class="keyword">template</span>&lt;&gt;
+<a name="l00578"></a><a class="code" href="../../db/d4e/namespacegurls.html#a710b4faef3dc85d1e07dd6bdfbe78b30">00578</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b)
+<a name="l00579"></a>00579 {
+<a name="l00580"></a>00580     <span class="keywordflow">return</span> ((b - a) &gt; ( std::max(fabs(a), fabs(b))* std::numeric_limits&lt;double&gt;::epsilon()));
+<a name="l00581"></a>00581 }
+<a name="l00582"></a>00582 
+<a name="l00586"></a>00586 <span class="keyword">template</span>&lt;&gt;
+<a name="l00587"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2881d6d5ce35586ea88b6b485f6afa3a">00587</a> GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b)
+<a name="l00588"></a>00588 {
+<a name="l00589"></a>00589     <span class="keywordflow">return</span> ((b - a) &gt; ( std::max(fabs(a), fabs(b))* std::numeric_limits&lt;float&gt;::epsilon()));
+<a name="l00590"></a>00590 }
+<a name="l00591"></a>00591 
+<a name="l00592"></a>00592 }
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -838,7 +619,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>gmath.cpp</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:44 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

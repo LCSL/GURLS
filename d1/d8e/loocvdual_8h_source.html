@@ -153,15 +153,15 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00050"></a>00050 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00051"></a>00051 <span class="preprocessor">#include &lt;set&gt;</span>
 <a name="l00052"></a>00052 
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
-<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;<a class="code" href="../../d5/d60/utils_8h.html" title="Utility functions.">utils.h</a>&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;gurls++/gvec.h&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;<a class="code" href="../../d5/d60/utils_8h.html" title="Utility functions.">gurls++/utils.h</a>&quot;</span>
 <a name="l00059"></a>00059 
-<a name="l00060"></a>00060 <span class="preprocessor">#include &quot;paramsel.h&quot;</span>
-<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;perf.h&quot;</span>
+<a name="l00060"></a>00060 <span class="preprocessor">#include &quot;gurls++/paramsel.h&quot;</span>
+<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;gurls++/perf.h&quot;</span>
 <a name="l00062"></a>00062 
 <a name="l00063"></a>00063 <span class="keyword">namespace </span>gurls {
 <a name="l00064"></a>00064 
@@ -216,7 +216,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00134"></a>00134 <span class="comment">//    Qty = Q&#39;*y;</span>
 <a name="l00135"></a>00135 <span class="comment">//    T* Qty = new T[qrows*qcols];</span>
 <a name="l00136"></a>00136     T* Qty = <span class="keyword">new</span> T[qcols*t];
-<a name="l00137"></a>00137     <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), Qty, qrows, qcols, n, t, qcols, t, CblasTrans, CblasNoTrans, CblasColMajor);
+<a name="l00137"></a>00137     <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Q, Y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), Qty, qrows, qcols, n, t, qcols, t, CblasTrans, CblasNoTrans, CblasColMajor);
 <a name="l00138"></a>00138 
 <a name="l00139"></a>00139     T* guesses = <a class="code" href="../../db/d4e/namespacegurls.html#a68355fb1c541564d3179538285d4673a" title="Builds array of possible values for the regularization parameter, generating a geometric series from ...">lambdaguesses</a>(L, n, r, n, tot, (T)(opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a45c4d02344b2c83c3641f4b41034e320" title="Returns a numeric option mapped with a key.">getOptAsNumber</a>(<span class="stringliteral">&quot;smallnumber&quot;</span>)));
 <a name="l00140"></a>00140 
@@ -345,7 +345,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>loocvdual.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

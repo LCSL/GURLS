@@ -1,14 +1,5 @@
 var hierarchy =
 [
-    [ "gurls::BadConfidenceCreation", "d3/d2a/classgurls_1_1_bad_confidence_creation.html", null ],
-    [ "gurls::BadKernelCreation", "da/d16/classgurls_1_1_bad_kernel_creation.html", null ],
-    [ "gurls::BadNormCreation", "dc/d93/classgurls_1_1_bad_norm_creation.html", null ],
-    [ "gurls::BadOptimizerCreation", "d1/d0d/classgurls_1_1_bad_optimizer_creation.html", null ],
-    [ "gurls::BadParamSelectionCreation", "d9/dc4/classgurls_1_1_bad_param_selection_creation.html", null ],
-    [ "gurls::BadPerformanceCreation", "dd/ddf/classgurls_1_1_bad_performance_creation.html", null ],
-    [ "gurls::BadPredictionCreation", "d4/dd1/classgurls_1_1_bad_prediction_creation.html", null ],
-    [ "gurls::BadPredKernelCreation", "d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html", null ],
-    [ "gurls::BadSplitCreation", "d7/d5c/classgurls_1_1_bad_split_creation.html", null ],
     [ "gurls::BaseArray< T >", "d9/d8b/classgurls_1_1_base_array.html", [
       [ "gurls::gMat2D< T >", "d1/d9e/classgurls_1_1g_mat2_d.html", null ],
       [ "gurls::gVec< T >", "df/d32/classgurls_1_1g_vec.html", null ]
@@ -26,7 +17,17 @@ var hierarchy =
       [ "gurls::Median", "d2/dc0/classgurls_1_1_median.html", null ],
       [ "gurls::Min", "d4/d6c/classgurls_1_1_min.html", null ]
     ] ],
-    [ "gurls::gException", "d1/d29/classgurls_1_1g_exception.html", null ],
+    [ "gurls::gException", "d1/d29/classgurls_1_1g_exception.html", [
+      [ "gurls::BadConfidenceCreation", "d3/d2a/classgurls_1_1_bad_confidence_creation.html", null ],
+      [ "gurls::BadKernelCreation", "da/d16/classgurls_1_1_bad_kernel_creation.html", null ],
+      [ "gurls::BadNormCreation", "dc/d93/classgurls_1_1_bad_norm_creation.html", null ],
+      [ "gurls::BadOptimizerCreation", "d1/d0d/classgurls_1_1_bad_optimizer_creation.html", null ],
+      [ "gurls::BadParamSelectionCreation", "d9/dc4/classgurls_1_1_bad_param_selection_creation.html", null ],
+      [ "gurls::BadPerformanceCreation", "dd/ddf/classgurls_1_1_bad_performance_creation.html", null ],
+      [ "gurls::BadPredictionCreation", "d4/dd1/classgurls_1_1_bad_prediction_creation.html", null ],
+      [ "gurls::BadPredKernelCreation", "d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html", null ],
+      [ "gurls::BadSplitCreation", "d7/d5c/classgurls_1_1_bad_split_creation.html", null ]
+    ] ],
     [ "gurls::GURLS", "d4/dbe/classgurls_1_1_g_u_r_l_s.html", null ],
     [ "gurls::GurlsOption", "d5/dcc/classgurls_1_1_gurls_option.html", [
       [ "gurls::GurlsOptionsList", "dc/d34/classgurls_1_1_gurls_options_list.html", null ],
@@ -46,11 +47,14 @@ var hierarchy =
     [ "gurls::GurlsWrapper< T >", "d5/d55/classgurls_1_1_gurls_wrapper.html", [
       [ "gurls::ICholWrapper< T >", "df/d35/classgurls_1_1_i_chol_wrapper.html", null ],
       [ "gurls::KernelWrapper< T >", "d1/db4/classgurls_1_1_kernel_wrapper.html", [
+        [ "gurls::GPRWrapper< T >", "d1/d6d/classgurls_1_1_g_p_r_wrapper.html", null ],
         [ "gurls::KernelRLSWrapper< T >", "da/d5c/classgurls_1_1_kernel_r_l_s_wrapper.html", null ],
         [ "gurls::NystromWrapper< T >", "d2/d25/classgurls_1_1_nystrom_wrapper.html", null ]
       ] ],
       [ "gurls::RecursiveRLSWrapper< T >", "d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html", null ],
-      [ "gurls::RLSWrapper< T >", "d0/d09/classgurls_1_1_r_l_s_wrapper.html", null ]
+      [ "gurls::RLSWrapper< T >", "d0/d09/classgurls_1_1_r_l_s_wrapper.html", [
+        [ "gurls::RandomFeaturesWrapper< T >", "db/de1/classgurls_1_1_random_features_wrapper.html", null ]
+      ] ]
     ] ],
     [ "gurls::Kernel< T >", "dc/d0c/classgurls_1_1_kernel.html", [
       [ "gurls::KernelChisquared< T >", "dc/d82/classgurls_1_1_kernel_chisquared.html", null ],
@@ -72,7 +76,8 @@ var hierarchy =
       [ "gurls::RLSPrimal< T >", "d6/dbd/classgurls_1_1_r_l_s_primal.html", null ],
       [ "gurls::RLSPrimalr< T >", "d0/df5/classgurls_1_1_r_l_s_primalr.html", null ],
       [ "gurls::RLSPrimalRecInit< T >", "d2/d8f/classgurls_1_1_r_l_s_primal_rec_init.html", null ],
-      [ "gurls::RLSPrimalRecUpdate< T >", "d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html", null ]
+      [ "gurls::RLSPrimalRecUpdate< T >", "d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html", null ],
+      [ "gurls::RLSRandFeats< T >", "d4/dd6/classgurls_1_1_r_l_s_rand_feats.html", null ]
     ] ],
     [ "gurls::ParamSelection< T >", "d8/d85/classgurls_1_1_param_selection.html", [
       [ "gurls::ParamSelCalibrateSGD< T >", "d6/dae/classgurls_1_1_param_sel_calibrate_s_g_d.html", null ],
@@ -101,7 +106,8 @@ var hierarchy =
     [ "gurls::Prediction< T >", "d7/d57/classgurls_1_1_prediction.html", [
       [ "gurls::PredDual< T >", "d7/dcd/classgurls_1_1_pred_dual.html", null ],
       [ "gurls::PredGPRegr< T >", "da/d9e/classgurls_1_1_pred_g_p_regr.html", null ],
-      [ "gurls::PredPrimal< T >", "d8/d06/classgurls_1_1_pred_primal.html", null ]
+      [ "gurls::PredPrimal< T >", "d8/d06/classgurls_1_1_pred_primal.html", null ],
+      [ "gurls::PredRandFeats< T >", "d7/da4/classgurls_1_1_pred_rand_feats.html", null ]
     ] ],
     [ "gurls::PredKernel< T >", "d1/d99/classgurls_1_1_pred_kernel.html", [
       [ "gurls::PredKernelTrainTest< T >", "d3/dd7/classgurls_1_1_pred_kernel_train_test.html", null ]

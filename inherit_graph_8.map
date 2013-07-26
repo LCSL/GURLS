@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$dc/d0c/classgurls_1_1_kernel.html" title="Kernel is the class that computes the kernel matrix." alt="" coords="7,59,132,88"/>
+<area shape="rect" id="node3" href="$dc/d82/classgurls_1_1_kernel_chisquared.html" title="KernelChisquared is the sub&#45;class of Kernel that builds the kernel matrix for a chi&#45;squared model..." alt="" coords="183,5,375,35"/>
+<area shape="rect" id="node5" href="$d8/d84/classgurls_1_1_kernel_linear.html" title="KernelLinear is the sub&#45;class of Kernel that builds the kernel matrix for a linear model..." alt="" coords="197,59,360,88"/>
+<area shape="rect" id="node7" href="$d0/d97/classgurls_1_1_kernel_r_b_f.html" title="KernelRBF is the sub&#45;class of Kernel that builds the Gaussian kernel matrix." alt="" coords="201,112,356,141"/>
+</map>

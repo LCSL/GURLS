@@ -151,115 +151,116 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00048"></a>00048 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <a name="l00049"></a>00049 <span class="preprocessor">#include &lt;cmath&gt;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#include &lt;algorithm&gt;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
+<a name="l00051"></a>00051 
 <a name="l00052"></a>00052 
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="keyword">namespace </span>gurls
-<a name="l00060"></a>00060 {
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00063"></a>00063 <span class="keyword">class </span>ParamSelLoocvPrimal;
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00066"></a>00066 <span class="keyword">class </span>ParamSelLoocvDual;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00069"></a>00069 <span class="keyword">class </span>ParamSelFixLambda;
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00072"></a>00072 <span class="keyword">class </span>ParamSelFixSigLam;
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00075"></a>00075 <span class="keyword">class </span>ParamSelCalibrateSGD;
-<a name="l00076"></a>00076 
-<a name="l00077"></a>00077 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00078"></a>00078 <span class="keyword">class </span>ParamSelSiglam;
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00081"></a>00081 <span class="keyword">class </span>ParamSelSiglamHo;
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00084"></a>00084 <span class="keyword">class </span>ParamSelHoPrimal;
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00087"></a>00087 <span class="keyword">class </span>ParamSelHoPrimalr;
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00090"></a>00090 <span class="keyword">class </span>ParamSelHoDual;
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00093"></a>00093 <span class="keyword">class </span>ParamSelHoDualr;
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00096"></a>00096 <span class="keyword">class </span>ParamSelLooGPRegr;
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00099"></a>00099 <span class="keyword">class </span>ParamSelHoGPRegr;
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00102"></a>00102 <span class="keyword">class </span>ParamSelSiglamLooGPRegr;
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00105"></a>00105 <span class="keyword">class </span>ParamSelSiglamHoGPRegr;
-<a name="l00106"></a>00106 
-<a name="l00112"></a><a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html">00112</a> <span class="keyword">class </span><a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met...">BadParamSelectionCreation</a> : <span class="keyword">public</span> std::logic_error
-<a name="l00113"></a>00113 {
-<a name="l00114"></a>00114 <span class="keyword">public</span>:
-<a name="l00118"></a><a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html#a073cdc11472fbc4cf99da1a8731ad15f">00118</a>     <a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html#a073cdc11472fbc4cf99da1a8731ad15f" title="Exception constructor.">BadParamSelectionCreation</a>(std::string type): logic_error(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
-<a name="l00119"></a>00119 };
-<a name="l00120"></a>00120 
-<a name="l00125"></a>00125 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00126"></a><a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html">00126</a> <span class="keyword">class </span><a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection.">ParamSelection</a>
-<a name="l00127"></a>00127 {
-<a name="l00128"></a>00128 <span class="keyword">public</span>:
-<a name="l00129"></a>00129 
-<a name="l00137"></a>00137     <span class="keyword">virtual</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html#a7e30ec359410bbc97d603ceb29699eb7" title="Implements the selection of the regularization parameter(s)">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
-<a name="l00138"></a>00138 
-<a name="l00145"></a><a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html#a627e4fd41fa3c581c8eac309c32fc29e">00145</a>     <span class="keyword">static</span> <a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection.">ParamSelection&lt;T&gt;</a>* <a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html#a627e4fd41fa3c581c8eac309c32fc29e" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met...">BadParamSelectionCreation</a>)
-<a name="l00146"></a>00146     {
-<a name="l00147"></a>00147         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvprimal&quot;</span>)
-<a name="l00148"></a>00148             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d3/d1d/classgurls_1_1_param_sel_loocv_primal.html" title="ParamSelLoocvPrimal is the sub-class of ParamSelection that implements LOO cross-validation with the ...">ParamSelLoocvPrimal&lt;T&gt;</a>;
-<a name="l00149"></a>00149         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvdual&quot;</span>)
-<a name="l00150"></a>00150             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dd/de0/classgurls_1_1_param_sel_loocv_dual.html" title="ParamSelLoocvDual is the sub-class of ParamSelection that implements LOO cross-validation with the du...">ParamSelLoocvDual&lt;T&gt;</a>;
-<a name="l00151"></a>00151         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;fixlambda&quot;</span>)
-<a name="l00152"></a>00152             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dd/de6/classgurls_1_1_param_sel_fix_lambda.html" title="ParamSelFixLambda is the sub-class of ParamSelection that sets the regularization parameter to a cons...">ParamSelFixLambda&lt;T&gt;</a>;
-<a name="l00153"></a>00153         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;calibratesgd&quot;</span>)
-<a name="l00154"></a>00154             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/dae/classgurls_1_1_param_sel_calibrate_s_g_d.html" title="ParamselCalibrateSGD is the sub-class of ParamSelection that implements parameter selection for pegas...">ParamSelCalibrateSGD&lt;T&gt;</a>;
-<a name="l00155"></a>00155         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglam&quot;</span>)
-<a name="l00156"></a>00156             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/d3a/classgurls_1_1_param_sel_siglam.html" title="ParamSelSiglam is the sub-class of ParamSelection that implements LOO cross-validation with the dual ...">ParamSelSiglam&lt;T&gt;</a>;
-<a name="l00157"></a>00157         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglamho&quot;</span>)
-<a name="l00158"></a>00158             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dc/de3/classgurls_1_1_param_sel_siglam_ho.html" title="ParamSelSiglam is the sub-class of ParamSelection that implements hold-out cross validation with the ...">ParamSelSiglamHo&lt;T&gt;</a>;
-<a name="l00159"></a>00159         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hodual&quot;</span>)
-<a name="l00160"></a>00160             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../de/dc2/classgurls_1_1_param_sel_ho_dual.html" title="ParamSelHoDual is the subclass of ParamSelection that implements hold-out cross validation with the d...">ParamSelHoDual&lt;T&gt;</a>;
-<a name="l00161"></a>00161         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hodualr&quot;</span>)
-<a name="l00162"></a>00162             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d0/d9b/classgurls_1_1_param_sel_ho_dualr.html" title="ParamSelHoDualr is the randomized version of ParamSelHoDual.">ParamSelHoDualr&lt;T&gt;</a>;
-<a name="l00163"></a>00163         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hoprimal&quot;</span>)
-<a name="l00164"></a>00164             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html" title="ParamSelHoPrimal is the subclass of ParamSelection that implements hold-out cross validation with the...">ParamSelHoPrimal&lt;T&gt;</a>;
-<a name="l00165"></a>00165         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hoprimalr&quot;</span>)
-<a name="l00166"></a>00166             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../db/dc8/classgurls_1_1_param_sel_ho_primalr.html" title="ParamSelHoPrimalr is the randomized version of ParamSelHoPrimal.">ParamSelHoPrimalr&lt;T&gt;</a>;
-<a name="l00167"></a>00167         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;fixsiglam&quot;</span>)
-<a name="l00168"></a>00168             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dd/d8a/classgurls_1_1_param_sel_fix_sig_lam.html" title="ParamSelFixSigLam is the sub-class of ParamSelection that sets the regularization parameters to const...">ParamSelFixSigLam&lt;T&gt;</a>;
-<a name="l00169"></a>00169         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loogpregr&quot;</span>)
-<a name="l00170"></a>00170             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../da/d9c/classgurls_1_1_param_sel_loo_g_p_regr.html" title="ParamSelLooGPRegr is the sub-class of ParamSelection that implements.">ParamSelLooGPRegr&lt;T&gt;</a>;
-<a name="l00171"></a>00171         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hogpregr&quot;</span>)
-<a name="l00172"></a>00172             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/d89/classgurls_1_1_param_sel_ho_g_p_regr.html" title="ParamSelHoGPRegr is the sub-class of ParamSelection that implements.">ParamSelHoGPRegr&lt;T&gt;</a>;
-<a name="l00173"></a>00173         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglamloogpregr&quot;</span>)
-<a name="l00174"></a>00174             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d0/d75/classgurls_1_1_param_sel_siglam_loo_g_p_regr.html" title="ParamSelSiglamLooGPRegr is the sub-class of ParamSelection that implements leave-one-ot parameter sel...">ParamSelSiglamLooGPRegr&lt;T&gt;</a>;
-<a name="l00175"></a>00175         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglamhogpregr&quot;</span>)
-<a name="l00176"></a>00176             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d1/de1/classgurls_1_1_param_sel_siglam_ho_g_p_regr.html" title="ParamSelSiglamHoGPRegr is the sub-class of ParamSelection that implements.">ParamSelSiglamHoGPRegr&lt;T&gt;</a>;
-<a name="l00177"></a>00177 
-<a name="l00178"></a>00178         <span class="keywordflow">throw</span> <a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met...">BadParamSelectionCreation</a>(<span class="keywordtype">id</span>);
-<a name="l00179"></a>00179     }
-<a name="l00180"></a>00180 };
-<a name="l00181"></a>00181 
-<a name="l00182"></a>00182 }
-<a name="l00183"></a>00183 
-<a name="l00184"></a>00184 <span class="preprocessor">#endif // _GURLS_PARAMSEL_H_</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;gurls++/gvec.h&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;gurls++/exceptions.h&quot;</span>
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060 <span class="keyword">namespace </span>gurls
+<a name="l00061"></a>00061 {
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00064"></a>00064 <span class="keyword">class </span>ParamSelLoocvPrimal;
+<a name="l00065"></a>00065 
+<a name="l00066"></a>00066 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00067"></a>00067 <span class="keyword">class </span>ParamSelLoocvDual;
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00070"></a>00070 <span class="keyword">class </span>ParamSelFixLambda;
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00073"></a>00073 <span class="keyword">class </span>ParamSelFixSigLam;
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00076"></a>00076 <span class="keyword">class </span>ParamSelCalibrateSGD;
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00079"></a>00079 <span class="keyword">class </span>ParamSelSiglam;
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00082"></a>00082 <span class="keyword">class </span>ParamSelSiglamHo;
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00085"></a>00085 <span class="keyword">class </span>ParamSelHoPrimal;
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00088"></a>00088 <span class="keyword">class </span>ParamSelHoPrimalr;
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00091"></a>00091 <span class="keyword">class </span>ParamSelHoDual;
+<a name="l00092"></a>00092 
+<a name="l00093"></a>00093 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00094"></a>00094 <span class="keyword">class </span>ParamSelHoDualr;
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00097"></a>00097 <span class="keyword">class </span>ParamSelLooGPRegr;
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00100"></a>00100 <span class="keyword">class </span>ParamSelHoGPRegr;
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00103"></a>00103 <span class="keyword">class </span>ParamSelSiglamLooGPRegr;
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00106"></a>00106 <span class="keyword">class </span>ParamSelSiglamHoGPRegr;
+<a name="l00107"></a>00107 
+<a name="l00113"></a><a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html">00113</a> <span class="keyword">class </span><a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met...">BadParamSelectionCreation</a> : <span class="keyword">public</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>
+<a name="l00114"></a>00114 {
+<a name="l00115"></a>00115 <span class="keyword">public</span>:
+<a name="l00119"></a><a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html#a073cdc11472fbc4cf99da1a8731ad15f">00119</a>     <a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html#a073cdc11472fbc4cf99da1a8731ad15f" title="Exception constructor.">BadParamSelectionCreation</a>(std::string type): <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
+<a name="l00120"></a>00120 };
+<a name="l00121"></a>00121 
+<a name="l00126"></a>00126 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00127"></a><a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html">00127</a> <span class="keyword">class </span><a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection.">ParamSelection</a>
+<a name="l00128"></a>00128 {
+<a name="l00129"></a>00129 <span class="keyword">public</span>:
+<a name="l00130"></a>00130 
+<a name="l00138"></a>00138     <span class="keyword">virtual</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html#a7e30ec359410bbc97d603ceb29699eb7" title="Implements the selection of the regularization parameter(s)">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
+<a name="l00139"></a>00139 
+<a name="l00146"></a><a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html#a627e4fd41fa3c581c8eac309c32fc29e">00146</a>     <span class="keyword">static</span> <a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection.">ParamSelection&lt;T&gt;</a>* <a class="code" href="../../d8/d85/classgurls_1_1_param_selection.html#a627e4fd41fa3c581c8eac309c32fc29e" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met...">BadParamSelectionCreation</a>)
+<a name="l00147"></a>00147     {
+<a name="l00148"></a>00148         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvprimal&quot;</span>)
+<a name="l00149"></a>00149             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d3/d1d/classgurls_1_1_param_sel_loocv_primal.html" title="ParamSelLoocvPrimal is the sub-class of ParamSelection that implements LOO cross-validation with the ...">ParamSelLoocvPrimal&lt;T&gt;</a>;
+<a name="l00150"></a>00150         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvdual&quot;</span>)
+<a name="l00151"></a>00151             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dd/de0/classgurls_1_1_param_sel_loocv_dual.html" title="ParamSelLoocvDual is the sub-class of ParamSelection that implements LOO cross-validation with the du...">ParamSelLoocvDual&lt;T&gt;</a>;
+<a name="l00152"></a>00152         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;fixlambda&quot;</span>)
+<a name="l00153"></a>00153             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dd/de6/classgurls_1_1_param_sel_fix_lambda.html" title="ParamSelFixLambda is the sub-class of ParamSelection that sets the regularization parameter to a cons...">ParamSelFixLambda&lt;T&gt;</a>;
+<a name="l00154"></a>00154         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;calibratesgd&quot;</span>)
+<a name="l00155"></a>00155             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/dae/classgurls_1_1_param_sel_calibrate_s_g_d.html" title="ParamselCalibrateSGD is the sub-class of ParamSelection that implements parameter selection for pegas...">ParamSelCalibrateSGD&lt;T&gt;</a>;
+<a name="l00156"></a>00156         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglam&quot;</span>)
+<a name="l00157"></a>00157             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/d3a/classgurls_1_1_param_sel_siglam.html" title="ParamSelSiglam is the sub-class of ParamSelection that implements LOO cross-validation with the dual ...">ParamSelSiglam&lt;T&gt;</a>;
+<a name="l00158"></a>00158         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglamho&quot;</span>)
+<a name="l00159"></a>00159             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dc/de3/classgurls_1_1_param_sel_siglam_ho.html" title="ParamSelSiglam is the sub-class of ParamSelection that implements hold-out cross validation with the ...">ParamSelSiglamHo&lt;T&gt;</a>;
+<a name="l00160"></a>00160         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hodual&quot;</span>)
+<a name="l00161"></a>00161             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../de/dc2/classgurls_1_1_param_sel_ho_dual.html" title="ParamSelHoDual is the subclass of ParamSelection that implements hold-out cross validation with the d...">ParamSelHoDual&lt;T&gt;</a>;
+<a name="l00162"></a>00162         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hodualr&quot;</span>)
+<a name="l00163"></a>00163             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d0/d9b/classgurls_1_1_param_sel_ho_dualr.html" title="ParamSelHoDualr is the randomized version of ParamSelHoDual.">ParamSelHoDualr&lt;T&gt;</a>;
+<a name="l00164"></a>00164         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hoprimal&quot;</span>)
+<a name="l00165"></a>00165             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html" title="ParamSelHoPrimal is the subclass of ParamSelection that implements hold-out cross validation with the...">ParamSelHoPrimal&lt;T&gt;</a>;
+<a name="l00166"></a>00166         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hoprimalr&quot;</span>)
+<a name="l00167"></a>00167             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../db/dc8/classgurls_1_1_param_sel_ho_primalr.html" title="ParamSelHoPrimalr is the randomized version of ParamSelHoPrimal.">ParamSelHoPrimalr&lt;T&gt;</a>;
+<a name="l00168"></a>00168         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;fixsiglam&quot;</span>)
+<a name="l00169"></a>00169             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../dd/d8a/classgurls_1_1_param_sel_fix_sig_lam.html" title="ParamSelFixSigLam is the sub-class of ParamSelection that sets the regularization parameters to const...">ParamSelFixSigLam&lt;T&gt;</a>;
+<a name="l00170"></a>00170         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loogpregr&quot;</span>)
+<a name="l00171"></a>00171             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../da/d9c/classgurls_1_1_param_sel_loo_g_p_regr.html" title="ParamSelLooGPRegr is the sub-class of ParamSelection that implements.">ParamSelLooGPRegr&lt;T&gt;</a>;
+<a name="l00172"></a>00172         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;hogpregr&quot;</span>)
+<a name="l00173"></a>00173             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/d89/classgurls_1_1_param_sel_ho_g_p_regr.html" title="ParamSelHoGPRegr is the sub-class of ParamSelection that implements.">ParamSelHoGPRegr&lt;T&gt;</a>;
+<a name="l00174"></a>00174         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglamloogpregr&quot;</span>)
+<a name="l00175"></a>00175             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d0/d75/classgurls_1_1_param_sel_siglam_loo_g_p_regr.html" title="ParamSelSiglamLooGPRegr is the sub-class of ParamSelection that implements leave-one-ot parameter sel...">ParamSelSiglamLooGPRegr&lt;T&gt;</a>;
+<a name="l00176"></a>00176         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;siglamhogpregr&quot;</span>)
+<a name="l00177"></a>00177             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d1/de1/classgurls_1_1_param_sel_siglam_ho_g_p_regr.html" title="ParamSelSiglamHoGPRegr is the sub-class of ParamSelection that implements.">ParamSelSiglamHoGPRegr&lt;T&gt;</a>;
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179         <span class="keywordflow">throw</span> <a class="code" href="../../d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met...">BadParamSelectionCreation</a>(<span class="keywordtype">id</span>);
+<a name="l00180"></a>00180     }
+<a name="l00181"></a>00181 };
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183 }
+<a name="l00184"></a>00184 
+<a name="l00185"></a>00185 <span class="preprocessor">#endif // _GURLS_PARAMSEL_H_</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -280,7 +281,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>paramsel.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

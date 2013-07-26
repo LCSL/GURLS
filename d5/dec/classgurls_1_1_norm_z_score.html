@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -101,7 +101,8 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">gurls::NormZScore&lt; T &gt; Class Template Reference<div class="ingroups"><a class="el" href="../../d3/d7d/group___norms.html">Norms</a></div></div>  </div>
 </div><!--header-->
@@ -114,39 +115,48 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::NormZScore&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../d5/dec/classgurls_1_1_norm_z_score.png" usemap="#gurls::NormZScore&lt; T &gt;_map" alt=""/>
-  <map id="gurls::NormZScore&lt; T &gt;_map" name="gurls::NormZScore&lt; T &gt;_map">
-<area href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data." alt="gurls::Norm&lt; T &gt;" shape="rect" coords="0,0,150,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../da/de7/classgurls_1_1_norm_z_score__inherit__graph.png" border="0" usemap="#gurls_1_1_norm_z_score_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_norm_z_score_3_01_t_01_4_inherit__map" id="gurls_1_1_norm_z_score_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data." alt="" coords="25,5,148,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::NormZScore&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d9/d12/classgurls_1_1_norm_z_score__coll__graph.png" border="0" usemap="#gurls_1_1_norm_z_score_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_norm_z_score_3_01_t_01_4_coll__map" id="gurls_1_1_norm_z_score_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data." alt="" coords="25,5,148,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d2/d2e/classgurls_1_1_norm_z_score-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html#aedfaaf81f55c402a7924b85424b1499b">execute</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;Y, <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;opt)  throw (gException)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalizes the input data matrix X, centering them and rescaling it so that each dimension has std.  <a href="#aedfaaf81f55c402a7924b85424b1499b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html#a4d87e3462adb6fb3e2e257a27485638b">execute</a> (const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;X, const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;Y, const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;opt)  throw (gException)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Normalizes the input data matrix X, centering them and rescaling it so that each dimension has std.  <a href="#a4d87e3462adb6fb3e2e257a27485638b"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d9/d56/classgurls_1_1_norm.html">Norm</a>&lt; T &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d56/classgurls_1_1_norm.html#a6de8719538c5f134ce611489b5578a59">factory</a> (const std::string &amp;id)  throw (BadNormCreation)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory function returning a pointer to the newly created object.  <a href="#a6de8719538c5f134ce611489b5578a59"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acb09576c0773f7b6ee30f4055fa16e58"></a><!-- doxytag: member="gurls::NormZScore::centerRescale" ref="acb09576c0773f7b6ee30f4055fa16e58" args="(gMat2D&lt; T &gt; &amp;M, T *stdDevs, const T *means)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>centerRescale</b> (<a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;M, T *stdDevs, const T *means)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename T&gt;<br/>
 class gurls::NormZScore&lt; T &gt;</h3>
 
 
-<p>Definition at line <a class="el" href="../../d9/de7/normzscore_8h_source.html#l00060">60</a> of file <a class="el" href="../../d9/de7/normzscore_8h_source.html">normzscore.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d9/de7/normzscore_8h_source.html#l00061">61</a> of file <a class="el" href="../../d9/de7/normzscore_8h_source.html">normzscore.h</a>.</p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aedfaaf81f55c402a7924b85424b1499b"></a><!-- doxytag: member="gurls::NormZScore::execute" ref="aedfaaf81f55c402a7924b85424b1499b" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;Y, GurlsOptionsList &amp;opt)" -->
+<a class="anchor" id="a4d87e3462adb6fb3e2e257a27485638b"></a><!-- doxytag: member="gurls::NormZScore::execute" ref="a4d87e3462adb6fb3e2e257a27485638b" args="(const gMat2D&lt; T &gt; &amp;X, const gMat2D&lt; T &gt; &amp;Y, const GurlsOptionsList &amp;opt)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; * <a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html">gurls::NormZScore</a>&lt; T &gt;::<a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html#aedfaaf81f55c402a7924b85424b1499b">execute</a> </td>
+          <td class="memname"><a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> * <a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html">gurls::NormZScore</a>&lt; T &gt;::<a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html#a4d87e3462adb6fb3e2e257a27485638b">execute</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../d1/d9e/classgurls_1_1g_mat2_d.html">gMat2D</a>&lt; T &gt; &amp;&#160;</td>
           <td class="paramname"><em>X</em>, </td>
@@ -160,7 +170,7 @@ template&lt;typename T &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../dc/d34/classgurls_1_1_gurls_options_list.html">GurlsOptionsList</a> &amp;&#160;</td>
           <td class="paramname"><em>opt</em>&#160;</td>
         </tr>
         <tr>
@@ -175,69 +185,56 @@ template&lt;typename T &gt; </div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">X</td><td>input data matrix </td></tr>
-    <tr><td class="paramname">Y</td><td>not used </td></tr>
+    <tr><td class="paramname">Y</td><td>input data matrix </td></tr>
     <tr><td class="paramname">opt</td><td>not used</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>spheriphied input data matrix </dd>
-<dd>
-adds the field name to opt </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>spheriphied input data matrix with mean and standard deviation </dd></dl>
 
-<p>Implements <a class="el" href="../../d9/d56/classgurls_1_1_norm.html#adb0c2d37b221ec2f5b94e8643d33f7c8">gurls::Norm&lt; T &gt;</a>.</p>
+<p>Implements <a class="el" href="../../d9/d56/classgurls_1_1_norm.html#a86bba932a791c1b9e6095b7cda5439bb">gurls::Norm&lt; T &gt;</a>.</p>
 
-<p>Definition at line <a class="el" href="../../d9/de7/normzscore_8h_source.html#l00076">76</a> of file <a class="el" href="../../d9/de7/normzscore_8h_source.html">normzscore.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d9/de7/normzscore_8h_source.html#l00079">79</a> of file <a class="el" href="../../d9/de7/normzscore_8h_source.html">normzscore.h</a>.</p>
 <div class="fragment"><pre class="fragment">{
-<span class="comment">//    savevars = {&#39;meanX&#39;,&#39;stdX&#39;};</span>
-
 <span class="comment">//    [n,d] = size(X);</span>
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.rows();
     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.cols();
+    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = Y.cols();
 
 <span class="comment">//    meanX = mean(X);</span>
 
-    gMat2D&lt;T&gt; v_meanX (1, d);
-    T* meanX = v_meanX.getData();
-    <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(X.getData(), meanX, n, d, d);
+    gMat2D&lt;T&gt; *v_meanX = <span class="keyword">new</span> gMat2D&lt;T&gt;(1, d);
+    <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(X.getData(), v_meanX-&gt;getData(), n, d, d);
+
+    gMat2D&lt;T&gt; *v_meanY = <span class="keyword">new</span> gMat2D&lt;T&gt;(1, t);
+    <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(Y.getData(), v_meanY-&gt;getData(), n, t, t);
 
 <span class="comment">//    stdX = std(X) + eps;</span>
 <span class="comment">//    X = X - repmat(meanX, n, 1);</span>
 <span class="comment">//    X = X./repmat(stdX, n, 1);</span>
 
-    gMat2D&lt;T&gt; v_stdX (1, d);
-    T* stdX = v_stdX.getData();
+    gMat2D&lt;T&gt; *v_stdX = <span class="keyword">new</span> gMat2D&lt;T&gt;(1, d);
+    gMat2D&lt;T&gt; *v_stdY = <span class="keyword">new</span> gMat2D&lt;T&gt;(1, t);
 
-    gMat2D&lt;T&gt;* retX = <span class="keyword">new</span> gMat2D&lt;T&gt;(n, d);
+    gMat2D&lt;T&gt; *retX = <span class="keyword">new</span> gMat2D&lt;T&gt;(n, d);
     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(retX-&gt;getData(), X.getData(), retX-&gt;getSize());
 
-    <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;d; ++i)
-    {
-        T* column = retX-&gt;getData()+(n*i);
+    gMat2D&lt;T&gt; *retY = <span class="keyword">new</span> gMat2D&lt;T&gt;(n, t);
+    <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(retY-&gt;getData(), Y.getData(), retY-&gt;getSize());
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(n, (T)-1.0, meanX+i, 0, column, 1);
+    centerRescale(*retX, v_stdX-&gt;getData(), v_meanX-&gt;getData());
+    centerRescale(*retY, v_stdY-&gt;getData(), v_meanY-&gt;getData());
 
-        stdX[i] = sqrt( pow(<a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(n, column, 1), 2) / (n-1)) + std::numeric_limits&lt;T&gt;::epsilon();
+    GurlsOptionsList* <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a> = <span class="keyword">new</span> GurlsOptionsList(<span class="stringliteral">&quot;norm&quot;</span>);
+    norm-&gt;addOpt(<span class="stringliteral">&quot;X&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*retX));
+    norm-&gt;addOpt(<span class="stringliteral">&quot;meanX&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*v_meanX));
+    norm-&gt;addOpt(<span class="stringliteral">&quot;stdX&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*v_stdX));
 
-        <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(n, (T)1.0/stdX[i], column, 1);
-    }
+    norm-&gt;addOpt(<span class="stringliteral">&quot;Y&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*retY));
+    norm-&gt;addOpt(<span class="stringliteral">&quot;meanY&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*v_meanY));
+    norm-&gt;addOpt(<span class="stringliteral">&quot;stdY&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*v_stdY));
 
-<span class="comment">//    if numel(savevars) &gt; 0</span>
-<span class="comment">//        [ST,I] = dbstack();</span>
-<span class="comment">//        save([opt.name &#39;_&#39; ST(1).name],savevars{:}, &#39;-v7&#39;);</span>
-<span class="comment">//    end</span>
-
-    std::string name = opt.getOptAsString(<span class="stringliteral">&quot;name&quot;</span>);
-
-
-    std::string fileName;
-
-    fileName = name + <span class="stringliteral">&quot;_norm_zscore_meanX.txt&quot;</span>;
-    v_meanX.save(fileName);
-
-    fileName = name + <span class="stringliteral">&quot;_norm_zscore_stdX.txt&quot;</span>;
-    v_stdX.save(fileName);
-
-    <span class="keywordflow">return</span> retX;
+    <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a>;
 }
 </pre></div>
 </div>
@@ -260,7 +257,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../da/dff/norm_8h_source.html#l00153">153</a> of file <a class="el" href="../../da/dff/norm_8h_source.html">norm.h</a>.</p>
+<p>Definition at line <a class="el" href="../../da/dff/norm_8h_source.html#l00152">152</a> of file <a class="el" href="../../da/dff/norm_8h_source.html">norm.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;l2&quot;</span>)
             <span class="keywordflow">return</span> <span class="keyword">new</span> NormL2&lt;T&gt;;
@@ -298,7 +295,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d5/dec/classgurls_1_1_norm_z_score.html">NormZScore</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

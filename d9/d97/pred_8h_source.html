@@ -151,55 +151,59 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00048"></a>00048 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <a name="l00049"></a>00049 <span class="preprocessor">#include &lt;cmath&gt;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#include &lt;algorithm&gt;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &lt;exception&gt;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gurls++/exceptions.h&quot;</span>
+<a name="l00056"></a>00056 
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="keyword">namespace </span>gurls
-<a name="l00060"></a>00060 {
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00063"></a>00063 <span class="keyword">class </span>PredPrimal;
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00066"></a>00066 <span class="keyword">class </span>PredDual;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00069"></a>00069 <span class="keyword">class </span>PredGPRegr;
-<a name="l00070"></a>00070 
-<a name="l00076"></a><a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html">00076</a> <span class="keyword">class </span><a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method...">BadPredictionCreation</a> : <span class="keyword">public</span> std::logic_error
-<a name="l00077"></a>00077 {
-<a name="l00078"></a>00078 <span class="keyword">public</span>:
-<a name="l00082"></a><a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html#a7fa99201c818a90eea2492a82fed53c3">00082</a>     <a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html#a7fa99201c818a90eea2492a82fed53c3" title="Exception constructor.">BadPredictionCreation</a>(std::string type): logic_error(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
-<a name="l00083"></a>00083 };
-<a name="l00084"></a>00084 
-<a name="l00089"></a>00089 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00090"></a><a class="code" href="../../d7/d57/classgurls_1_1_prediction.html">00090</a> <span class="keyword">class </span><a class="code" href="../../d7/d57/classgurls_1_1_prediction.html" title="Prediction is the class that computes predictions.">Prediction</a>
-<a name="l00091"></a>00091 {
-<a name="l00092"></a>00092 <span class="keyword">public</span>:
-<a name="l00093"></a>00093 
-<a name="l00102"></a>00102     <span class="keyword">virtual</span> <a class="code" href="../../d5/dcc/classgurls_1_1_gurls_option.html" title="GurlsOption is an abstraction of a generic `option&#39;, which is widely used within the GURLS++ package ...">GurlsOption</a>* <a class="code" href="../../d7/d57/classgurls_1_1_prediction.html#a62f1d84e083b4d619ee7c342f9d6b855" title="Computes predictions of the classifier stored in the field optimizer of opt on the samples passed in ...">execute</a>( <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
-<a name="l00103"></a>00103 
-<a name="l00110"></a><a class="code" href="../../d7/d57/classgurls_1_1_prediction.html#a1ddacf8a2757aab38d1e4b564526571a">00110</a>     <span class="keyword">static</span> <a class="code" href="../../d7/d57/classgurls_1_1_prediction.html" title="Prediction is the class that computes predictions.">Prediction&lt;T&gt;</a>* <a class="code" href="../../d7/d57/classgurls_1_1_prediction.html#a1ddacf8a2757aab38d1e4b564526571a" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method...">BadPredictionCreation</a>)
-<a name="l00111"></a>00111     {
-<a name="l00112"></a>00112         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;primal&quot;</span>)
-<a name="l00113"></a>00113             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d8/d06/classgurls_1_1_pred_primal.html" title="PredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the...">PredPrimal&lt;T&gt;</a>;
-<a name="l00114"></a>00114         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;dual&quot;</span>)
-<a name="l00115"></a>00115             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d7/dcd/classgurls_1_1_pred_dual.html" title="PredDual is the sub-class of Prediction that computes the predictions of a linear classifier in the d...">PredDual&lt;T&gt;</a>;
-<a name="l00116"></a>00116         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;gpregr&quot;</span>)
-<a name="l00117"></a>00117             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../da/d9e/classgurls_1_1_pred_g_p_regr.html" title="PredGPRegr is the sub-class of Prediction that computes the predictions of GP.">PredGPRegr&lt;T&gt;</a>;
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119         <span class="keywordflow">throw</span> <a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method...">BadPredictionCreation</a>(<span class="keywordtype">id</span>);
-<a name="l00120"></a>00120     }
-<a name="l00121"></a>00121 
-<a name="l00122"></a>00122 };
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124 }
-<a name="l00125"></a>00125 <span class="preprocessor">#endif // _GURLS_PRED_H_</span>
+<a name="l00058"></a>00058 <span class="keyword">namespace </span>gurls
+<a name="l00059"></a>00059 {
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00062"></a>00062 <span class="keyword">class </span>PredPrimal;
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00065"></a>00065 <span class="keyword">class </span>PredDual;
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00068"></a>00068 <span class="keyword">class </span>PredGPRegr;
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00071"></a>00071 <span class="keyword">class </span>PredRandFeats;
+<a name="l00072"></a>00072 
+<a name="l00078"></a><a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html">00078</a> <span class="keyword">class </span><a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method...">BadPredictionCreation</a> : <span class="keyword">public</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080 <span class="keyword">public</span>:
+<a name="l00084"></a><a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html#a7fa99201c818a90eea2492a82fed53c3">00084</a>     <a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html#a7fa99201c818a90eea2492a82fed53c3" title="Exception constructor.">BadPredictionCreation</a>(std::string type): <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
+<a name="l00085"></a>00085 };
+<a name="l00086"></a>00086 
+<a name="l00091"></a>00091 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00092"></a><a class="code" href="../../d7/d57/classgurls_1_1_prediction.html">00092</a> <span class="keyword">class </span><a class="code" href="../../d7/d57/classgurls_1_1_prediction.html" title="Prediction is the class that computes predictions.">Prediction</a>
+<a name="l00093"></a>00093 {
+<a name="l00094"></a>00094 <span class="keyword">public</span>:
+<a name="l00095"></a>00095 
+<a name="l00104"></a>00104     <span class="keyword">virtual</span> <a class="code" href="../../d5/dcc/classgurls_1_1_gurls_option.html" title="GurlsOption is an abstraction of a generic `option&#39;, which is widely used within the GURLS++ package ...">GurlsOption</a>* <a class="code" href="../../d7/d57/classgurls_1_1_prediction.html#a62f1d84e083b4d619ee7c342f9d6b855" title="Computes predictions of the classifier stored in the field optimizer of opt on the samples passed in ...">execute</a>( <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
+<a name="l00105"></a>00105 
+<a name="l00112"></a><a class="code" href="../../d7/d57/classgurls_1_1_prediction.html#a1ddacf8a2757aab38d1e4b564526571a">00112</a>     <span class="keyword">static</span> <a class="code" href="../../d7/d57/classgurls_1_1_prediction.html" title="Prediction is the class that computes predictions.">Prediction&lt;T&gt;</a>* <a class="code" href="../../d7/d57/classgurls_1_1_prediction.html#a1ddacf8a2757aab38d1e4b564526571a" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method...">BadPredictionCreation</a>)
+<a name="l00113"></a>00113     {
+<a name="l00114"></a>00114         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;primal&quot;</span>)
+<a name="l00115"></a>00115             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d8/d06/classgurls_1_1_pred_primal.html" title="PredPrimal is the sub-class of Prediction that computes the predictions of a linear classifier in the...">PredPrimal&lt;T&gt;</a>;
+<a name="l00116"></a>00116         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;dual&quot;</span>)
+<a name="l00117"></a>00117             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d7/dcd/classgurls_1_1_pred_dual.html" title="PredDual is the sub-class of Prediction that computes the predictions of a linear classifier in the d...">PredDual&lt;T&gt;</a>;
+<a name="l00118"></a>00118         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;gpregr&quot;</span>)
+<a name="l00119"></a>00119             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../da/d9e/classgurls_1_1_pred_g_p_regr.html" title="PredGPRegr is the sub-class of Prediction that computes the predictions of GP.">PredGPRegr&lt;T&gt;</a>;
+<a name="l00120"></a>00120         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;randfeats&quot;</span>)
+<a name="l00121"></a>00121             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d7/da4/classgurls_1_1_pred_rand_feats.html" title="PredRandFeats is the sub-class of Prediction that computes the predictions of the linear classifier s...">PredRandFeats&lt;T&gt;</a>;
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123         <span class="keywordflow">throw</span> <a class="code" href="../../d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method...">BadPredictionCreation</a>(<span class="keywordtype">id</span>);
+<a name="l00124"></a>00124     }
+<a name="l00125"></a>00125 
+<a name="l00126"></a>00126 };
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 }
+<a name="l00129"></a>00129 <span class="preprocessor">#endif // _GURLS_PRED_H_</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -220,7 +224,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>pred.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -25,5 +25,6 @@ var searchData=
   ['prediction',['Prediction',['../d7/d57/classgurls_1_1_prediction.html',1,'gurls']]],
   ['predkernel',['PredKernel',['../d1/d99/classgurls_1_1_pred_kernel.html',1,'gurls']]],
   ['predkerneltraintest',['PredKernelTrainTest',['../d3/dd7/classgurls_1_1_pred_kernel_train_test.html',1,'gurls']]],
-  ['predprimal',['PredPrimal',['../d8/d06/classgurls_1_1_pred_primal.html',1,'gurls']]]
+  ['predprimal',['PredPrimal',['../d8/d06/classgurls_1_1_pred_primal.html',1,'gurls']]],
+  ['predrandfeats',['PredRandFeats',['../d7/da4/classgurls_1_1_pred_rand_feats.html',1,'gurls']]]
 ];

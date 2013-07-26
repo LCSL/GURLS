@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d5/d55/classgurls_1_1_gurls_wrapper.html" title="GurlsWrapper is the base class for all gurls++ wrappers." alt="" coords="5,85,176,115"/>
+<area shape="rect" id="node3" href="$df/d35/classgurls_1_1_i_chol_wrapper.html" title="gurls::ICholWrapper\&lt; T \&gt;" alt="" coords="251,5,421,35"/>
+<area shape="rect" id="node5" href="$d1/db4/classgurls_1_1_kernel_wrapper.html" title="KernelWrapper is the base class for all gurls++ wrappers." alt="" coords="248,59,424,88"/>
+<area shape="rect" id="node13" href="$d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html" title="RecursiveRLSWrapper is the sub&#45;class of GurlsWrapper that implements recursive update of the RLS esti..." alt="" coords="224,112,448,141"/>
+<area shape="rect" id="node15" href="$d0/d09/classgurls_1_1_r_l_s_wrapper.html" title="RLSWrapper is the sub&#45;class of GurlsWrapper that implements Regularized Least Squares with a linear m..." alt="" coords="253,165,419,195"/>
+<area shape="rect" id="node7" href="$d1/d6d/classgurls_1_1_g_p_r_wrapper.html" title="GPRWrapper is the sub&#45;class of GurlsWrapper that implements ..." alt="" coords="532,5,700,35"/>
+<area shape="rect" id="node9" href="$da/d5c/classgurls_1_1_kernel_r_l_s_wrapper.html" title="KernelRLSWrapper is the sub&#45;class of GurlsWrapper that implements Regularized Least Squares with a po..." alt="" coords="515,59,717,88"/>
+<area shape="rect" id="node11" href="$d2/d25/classgurls_1_1_nystrom_wrapper.html" title="NystromWrapper is the sub&#45;class of GurlsWrapper that allows to train a possibly non linear model for ..." alt="" coords="521,112,711,141"/>
+<area shape="rect" id="node17" href="$db/de1/classgurls_1_1_random_features_wrapper.html" title="RLSWrapper is the sub&#45;class of GurlsWrapper that implements Regularized Least Squares with a linear m..." alt="" coords="497,165,735,195"/>
+</map>

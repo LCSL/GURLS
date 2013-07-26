@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$dd/d88/classgurls_1_1_conf_boltzman.html" title="ConfBoltzman is the sub&#45;class of Confidence that computes the probability of belonging to the highest..." alt="" coords="223,5,396,35"/>
+<area shape="rect" id="node5" href="$d0/d77/classgurls_1_1_conf_boltzman_gap.html" title="ConfBoltzmanGap is the sub&#45;class of Confidence that computes a confidence estimation for the predicte..." alt="" coords="211,59,408,88"/>
+<area shape="rect" id="node7" href="$d8/dbc/classgurls_1_1_conf_gap.html" title="ConfGap is the sub&#45;class of Confidence that computes a confidence estimation for the predicted class..." alt="" coords="239,112,380,141"/>
+<area shape="rect" id="node9" href="$de/ded/classgurls_1_1_conf_max_score.html" title="ConfMaxScore is the sub&#45;class of Confidence that computes a confidence estimation for the predicted c..." alt="" coords="221,165,397,195"/>
+</map>

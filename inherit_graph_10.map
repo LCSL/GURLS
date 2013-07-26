@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data." alt="" coords="5,59,128,88"/>
+<area shape="rect" id="node3" href="$db/d42/classgurls_1_1_norm_l2.html" title="NormL2 is the sub&#45;class of Norm that spheriphies the data according to the l2 norm." alt="" coords="204,5,340,35"/>
+<area shape="rect" id="node5" href="$db/d98/classgurls_1_1_norm_test_z_score.html" title="NormTestZScore is the sub&#45;class of Norm that spheriphies the data according to the statistics cmopute..." alt="" coords="177,59,367,88"/>
+<area shape="rect" id="node7" href="$d5/dec/classgurls_1_1_norm_z_score.html" title="NormZScore is the sub&#45;class of Norm that centers and rescales the input data matrix X..." alt="" coords="191,112,353,141"/>
+</map>

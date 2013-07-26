@@ -1,0 +1,51 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$dd/df1/blas__lapack_8h.html" title="Contains prototypes for BLAS level 1, 2, 3 and Lapack routines." alt="" coords="2969,83,3071,112"/>
+<area shape="rect" id="node5" href="$dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities." alt="" coords="2928,160,2997,189"/>
+<area shape="rect" id="node255" href="$df/da1/blas__lapack_8cpp_source.html" title="blas_lapack.cpp" alt="" coords="3021,160,3136,189"/>
+<area shape="rect" id="node7" href="$d9/daa/boltzman_8h_source.html" title="boltzman.h" alt="" coords="4869,315,4955,344"/>
+<area shape="rect" id="node11" href="$d2/ddc/calibratesgd_8h_source.html" title="calibratesgd.h" alt="" coords="4613,933,4715,963"/>
+<area shape="rect" id="node18" href="$d5/dab/boltzmangap_8h_source.html" title="boltzmangap.h" alt="" coords="5,315,112,344"/>
+<area shape="rect" id="node22" href="$d8/de6/chisquaredkernel_8h_source.html" title="chisquaredkernel.h" alt="" coords="136,315,267,344"/>
+<area shape="rect" id="node25" href="$d1/d29/dual_8h_source.html" title="dual.h" alt="" coords="1400,624,1456,653"/>
+<area shape="rect" id="node29" href="$d6/d38/hodual_8h_source.html" title="hodual.h" alt="" coords="1843,701,1912,731"/>
+<area shape="rect" id="node32" href="$d3/d1c/siglamho_8h_source.html" title="siglamho.h" alt="" coords="2181,779,2267,808"/>
+<area shape="rect" id="node35" href="$d5/d8b/hoprimal_8h_source.html" title="hoprimal.h" alt="" coords="1547,701,1629,731"/>
+<area shape="rect" id="node39" href="$d5/dde/gap_8h_source.html" title="gap.h" alt="" coords="4580,392,4633,421"/>
+<area shape="rect" id="node42" href="$dc/d12/gmat2d_8h_source.html" title="gmat2d.h" alt="" coords="2444,315,2519,344"/>
+<area shape="rect" id="node53" href="$dd/d7b/hogpregr_8h_source.html" title="hogpregr.h" alt="" coords="3323,624,3405,653"/>
+<area shape="rect" id="node56" href="$d2/d69/siglamhogpregr_8h_source.html" title="siglamhogpregr.h" alt="" coords="3492,779,3612,808"/>
+<area shape="rect" id="node60" href="$d1/d8e/loocvdual_8h_source.html" title="loocvdual.h" alt="" coords="2412,701,2500,731"/>
+<area shape="rect" id="node63" href="$d7/d44/siglam_8h_source.html" title="siglam.h" alt="" coords="2953,779,3023,808"/>
+<area shape="rect" id="node66" href="$d5/d56/loocvprimal_8h_source.html" title="loocvprimal.h" alt="" coords="4032,624,4131,653"/>
+<area shape="rect" id="node69" href="$dc/d3f/loogpregr_8h_source.html" title="loogpregr.h" alt="" coords="2808,624,2893,653"/>
+<area shape="rect" id="node72" href="$dd/d23/siglamloogpregr_8h_source.html" title="siglamloogpregr.h" alt="" coords="3341,779,3464,808"/>
+<area shape="rect" id="node77" href="$dc/d80/norml2_8h_source.html" title="norml2.h" alt="" coords="4469,469,4541,499"/>
+<area shape="rect" id="node80" href="$dc/dd3/normtestzscore_8h_source.html" title="normtestzscore.h" alt="" coords="669,469,792,499"/>
+<area shape="rect" id="node84" href="$d9/de7/normzscore_8h_source.html" title="normzscore.h" alt="" coords="443,469,544,499"/>
+<area shape="rect" id="node88" href="$dd/d83/optimization_8h_source.html" title="optimization.h" alt="" coords="867,469,968,499"/>
+<area shape="rect" id="node90" href="$d7/d38/rlsdualr_8h_source.html" title="rlsdualr.h" alt="" coords="479,701,553,731"/>
+<area shape="rect" id="node93" href="$d4/d48/rlsgp_8h_source.html" title="rlsgp.h" alt="" coords="2932,547,2993,576"/>
+<area shape="rect" id="node98" href="$dc/d05/rlsprimalr_8h_source.html" title="rlsprimalr.h" alt="" coords="672,701,757,731"/>
+<area shape="rect" id="node101" href="$dc/d4f/rlsrandfeats_8h_source.html" title="rlsrandfeats.h" alt="" coords="791,701,892,731"/>
+<area shape="rect" id="node118" href="$d8/ded/paramsel_8h_source.html" title="paramsel.h" alt="" coords="3144,547,3229,576"/>
+<area shape="rect" id="node133" href="$d1/d3b/perf_8h_source.html" title="perf.h" alt="" coords="2341,547,2395,576"/>
+<area shape="rect" id="node143" href="$d9/d97/pred_8h_source.html" title="pred.h" alt="" coords="1296,469,1355,499"/>
+<area shape="rect" id="node147" href="$d6/df2/predgp_8h_source.html" title="predgp.h" alt="" coords="2681,547,2753,576"/>
+<area shape="rect" id="node152" href="$da/dea/predrandfeats_8h_source.html" title="predrandfeats.h" alt="" coords="1005,701,1117,731"/>
+<area shape="rect" id="node155" href="$d3/d8e/primal_8h_source.html" title="primal.h" alt="" coords="1187,547,1253,576"/>
+<area shape="rect" id="node160" href="$d5/d60/utils_8h.html" title="Utility functions." alt="" coords="1005,624,1061,653"/>
+<area shape="rect" id="node165" href="$dc/da3/rbfkernel_8h_source.html" title="rbfkernel.h" alt="" coords="3228,701,3311,731"/>
+<area shape="rect" id="node194" href="$d7/d27/gmath_8cpp_source.html" title="gmath.cpp" alt="" coords="3709,392,3792,421"/>
+<area shape="rect" id="node196" href="$d0/d8d/gvec_8h_source.html" title="gvec.h" alt="" coords="2932,237,2993,267"/>
+<area shape="rect" id="node217" href="$db/dcc/linearkernel_8h_source.html" title="linearkernel.h" alt="" coords="4571,237,4669,267"/>
+<area shape="rect" id="node223" href="$dc/d90/maxscore_8h_source.html" title="maxscore.h" alt="" coords="4693,237,4784,267"/>
+<area shape="rect" id="node234" href="$d7/d4b/predkerneltraintest_8h_source.html" title="predkerneltraintest.h" alt="" coords="4437,779,4576,808"/>
+<area shape="rect" id="node246" href="$d7/deb/splitho_8h_source.html" title="splitho.h" alt="" coords="4808,237,4877,267"/>
+<area shape="rect" id="node9" href="$d4/d5c/gurls_8h_source.html" title="gurls.h" alt="" coords="2704,856,2765,885"/>
+<area shape="rect" id="node14" href="$d5/d57/gprwrapper_8hpp_source.html" title="gprwrapper.hpp" alt="" coords="841,933,951,963"/>
+<area shape="rect" id="node16" href="$d6/d64/kernelrlswrapper_8hpp_source.html" title="kernelrlswrapper.hpp" alt="" coords="1896,933,2037,963"/>
+<area shape="rect" id="node45" href="$d7/d9e/fixlambda_8h_source.html" title="fixlambda.h" alt="" coords="2645,624,2733,653"/>
+<area shape="rect" id="node48" href="$d2/d7c/fixsiglam_8h_source.html" title="fixsiglam.h" alt="" coords="3581,624,3667,653"/>
+<area shape="rect" id="node75" href="$da/dff/norm_8h_source.html" title="norm.h" alt="" coords="1445,392,1507,421"/>
+<area shape="rect" id="node104" href="$d7/d5b/options_8h.html" title="options.h" alt="" coords="2647,392,2721,421"/>
+</map>

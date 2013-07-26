@@ -63,7 +63,6 @@ var classgurls_1_1g_mat2_d =
     [ "rand", "d1/d9e/classgurls_1_1g_mat2_d.html#ace44ee1285b6e4ebb7dd8ec77e41d75d", null ],
     [ "randomize", "d9/d8b/classgurls_1_1_base_array.html#a9b8997fcbe0ff6a2b2b9ef74c1e0fa9e", null ],
     [ "readCSV", "d1/d9e/classgurls_1_1g_mat2_d.html#ae7faf840f9ea19f7b9187213b297342a", null ],
-    [ "readCSV_v2", "d1/d9e/classgurls_1_1g_mat2_d.html#ac64a699947a46fc54ef365139eb4bc8a", null ],
     [ "reciprocal", "d1/d9e/classgurls_1_1g_mat2_d.html#a3d1e4c122e15c623fa0dffed580b519e", null ],
     [ "reshape", "d1/d9e/classgurls_1_1g_mat2_d.html#ad92b426d742dd5c3909b8e73a4647f48", null ],
     [ "resize", "d9/d8b/classgurls_1_1_base_array.html#ab3b1975adff1021e20ecd919f9d64301", null ],

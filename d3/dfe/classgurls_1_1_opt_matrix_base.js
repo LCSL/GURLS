@@ -6,8 +6,8 @@ var classgurls_1_1_opt_matrix_base =
     [ "getMatrixType", "d3/dfe/classgurls_1_1_opt_matrix_base.html#a03a5d5a0cece057f6ea8c6f32e039dd0", null ],
     [ "getType", "d5/dcc/classgurls_1_1_gurls_option.html#a0d920a9a0956c273d2f5898de912f1a6", null ],
     [ "isA", "d5/dcc/classgurls_1_1_gurls_option.html#a2ba865a44888821e726f88e087bc60f6", null ],
-    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#aaa798e1552e96f68e358ec5a89ee7500", null ],
-    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#ab8ca962235eb774ea2c322df52f50afd", null ],
+    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#aa7fa465e0d9a8561790be52f16e89f96", null ],
+    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#a7895a960021bad7c92d4f21e80f9aced", null ],
     [ "matType", "d3/dfe/classgurls_1_1_opt_matrix_base.html#a0c70f9146433e3a823cb3d36f8f8b3f1", null ],
     [ "type", "d5/dcc/classgurls_1_1_gurls_option.html#aea0687b6adb753e8693061721142905d", null ]
 ];

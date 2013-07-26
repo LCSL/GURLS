@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -114,12 +114,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::ParamSelLooGPRegr&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../da/d9c/classgurls_1_1_param_sel_loo_g_p_regr.png" usemap="#gurls::ParamSelLooGPRegr&lt; T &gt;_map" alt=""/>
-  <map id="gurls::ParamSelLooGPRegr&lt; T &gt;_map" name="gurls::ParamSelLooGPRegr&lt; T &gt;_map">
-<area href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="gurls::ParamSelection&lt; T &gt;" shape="rect" coords="0,0,196,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../d0/d64/classgurls_1_1_param_sel_loo_g_p_regr__inherit__graph.png" border="0" usemap="#gurls_1_1_param_sel_loo_g_p_regr_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_param_sel_loo_g_p_regr_3_01_t_01_4_inherit__map" id="gurls_1_1_param_sel_loo_g_p_regr_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="21,5,203,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::ParamSelLooGPRegr&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d7/d8c/classgurls_1_1_param_sel_loo_g_p_regr__coll__graph.png" border="0" usemap="#gurls_1_1_param_sel_loo_g_p_regr_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_param_sel_loo_g_p_regr_3_01_t_01_4_coll__map" id="gurls_1_1_param_sel_loo_g_p_regr_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="21,5,203,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../df/dc6/classgurls_1_1_param_sel_loo_g_p_regr-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -212,18 +217,30 @@ template&lt;typename T &gt; </div>
 
 <span class="comment">//    lmax = mean(std(y));</span>
 
-    T* work = <span class="keyword">new</span> T[t+n];
-    T* stdY = <span class="keyword">new</span> T[t];
+<span class="comment">//    T* work = new T[t+n];</span>
+<span class="comment">//    T* stdY = new T[t];</span>
 
-    <a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb" title="Generates a row vector containing the standard deviation of the elements of each column of an input m...">stdDev</a>(Y.getData(), n, t, stdY, work);
+<span class="comment">//    stdDev(Y.getData(), n, t, stdY, work);</span>
 
-    <span class="keyword">const</span> T lmax = <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(stdY, t)/((T)t);
+<span class="comment">//    const T lmax = sumv(stdY, t)/((T)t);</span>
 
-    <span class="keyword">delete</span>[] work;
-    <span class="keyword">delete</span>[] stdY;
+<span class="comment">//    delete[] work;</span>
+<span class="comment">//    delete[] stdY;</span>
 
-<span class="comment">//    lmin = mean(std(y))*10^-5;</span>
-    <span class="keyword">const</span> T lmin = lmax * (T)1.0e-5;
+<span class="comment">//    const T lmin = lmax * (T)1.0e-5;</span>
+
+    T lmin;
+    T lmax;
+
+    <span class="keywordflow">if</span>(opt.hasOpt(<span class="stringliteral">&quot;lambdamin&quot;</span>))
+        lmin = opt.getOptAsNumber(<span class="stringliteral">&quot;lambdamin&quot;</span>);
+    <span class="keywordflow">else</span>
+        lmin = 0.001;
+
+    <span class="keywordflow">if</span>(opt.hasOpt(<span class="stringliteral">&quot;lambdamax&quot;</span>))
+        lmax = opt.getOptAsNumber(<span class="stringliteral">&quot;lambdamax&quot;</span>);
+    <span class="keywordflow">else</span>
+        lmax = 10;
 
 <span class="comment">//    guesses = lmin.*(lmax/lmin).^linspace(0,1,tot);</span>
     gMat2D&lt;T&gt; *guesses_mat = <span class="keyword">new</span> gMat2D&lt;T&gt;(tot, 1);
@@ -338,7 +355,9 @@ template&lt;typename T &gt; </div>
 <span class="comment">//            for t = 1:T</span>
             <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> j = 0; j&lt;t; ++j)
 <span class="comment">//                perf(i,t) = opt.perf.forho(t)+perf(i,t)./n;</span>
+<span class="comment">//                perf(i,t) = opt.perf.forho(t)./n+perf(i,t);</span>
                 perf[i+(tot*j)] += forho.getData()[j]/n;
+                <span class="comment">//perf[i+(tot*j)] = forho.getData()[j]/n+perf[i+(tot*j)];</span>
 
 
             <span class="keyword">delete</span> perf_list;
@@ -374,7 +393,7 @@ template&lt;typename T &gt; </div>
 
 <span class="comment">//    [dummy,idx] = max(perf,[],1);</span>
     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* idx = <span class="keyword">new</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>[t];
-    work = NULL;
+    T* work = NULL;
     <a class="code" href="../../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea" title="Returns the indices of the largest elements along different dimensions of a matrix.">indicesOfMax</a>(perf, tot, t, idx, work, 1);
 
 
@@ -415,7 +434,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00145">145</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00146">146</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvprimal&quot;</span>)
             <span class="keywordflow">return</span> <span class="keyword">new</span> ParamSelLoocvPrimal&lt;T&gt;;
@@ -477,7 +496,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../da/d9c/classgurls_1_1_param_sel_loo_g_p_regr.html">ParamSelLooGPRegr</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

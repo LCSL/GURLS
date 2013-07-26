@@ -154,14 +154,14 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00058"></a>00058 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00059"></a>00059 <span class="preprocessor">#include &lt;limits&gt;</span>
 <a name="l00060"></a>00060 
-<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;exports.h&quot;</span>
-<a name="l00062"></a>00062 <span class="preprocessor">#include &quot;exceptions.h&quot;</span>
+<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;gurls++/exports.h&quot;</span>
+<a name="l00062"></a>00062 <span class="preprocessor">#include &quot;gurls++/exceptions.h&quot;</span>
 <a name="l00063"></a>00063 
 <a name="l00064"></a>00064 <span class="preprocessor">#ifdef _WIN32</span>
 <a name="l00065"></a>00065 <span class="preprocessor"></span><span class="preprocessor">#pragma warning(disable : 4290)</span>
 <a name="l00066"></a>00066 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 <a name="l00067"></a>00067 <span class="preprocessor"></span>
-<a name="l00068"></a>00068 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/df1/blas__lapack_8h.html" title="Contains protptypes for BLAS level 1, 2, 3 and Lapack routines.">blas_lapack.h</a>&quot;</span>
+<a name="l00068"></a>00068 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/df1/blas__lapack_8h.html" title="Contains prototypes for BLAS level 1, 2, 3 and Lapack routines.">gurls++/blas_lapack.h</a>&quot;</span>
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070 <span class="keyword">namespace </span>gurls {
 <a name="l00071"></a>00071 
@@ -172,13 +172,13 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00076"></a>00076 <span class="keyword">class </span>gVec;
 <a name="l00077"></a>00077 
 <a name="l00087"></a>00087 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00088"></a>00088 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> gMat2D&lt;T&gt;&amp; A, <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; B, gMat2D&lt;T&gt;&amp; C);
+<a name="l00088"></a>00088 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> gMat2D&lt;T&gt;&amp; A, <span class="keyword">const</span> gMat2D&lt;T&gt;&amp; B, gMat2D&lt;T&gt;&amp; C);
 <a name="l00089"></a>00089 
 <a name="l00099"></a>00099 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00100"></a>00100 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> gMat2D&lt;T&gt;&amp; A, <span class="keyword">const</span> gVec&lt;T&gt;&amp; x, gVec&lt;T&gt;&amp; y);
+<a name="l00100"></a>00100 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> gMat2D&lt;T&gt;&amp; A, <span class="keyword">const</span> gVec&lt;T&gt;&amp; x, gVec&lt;T&gt;&amp; y);
 <a name="l00101"></a>00101 
 <a name="l00107"></a>00107 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00108"></a>00108 T <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> gVec&lt;T&gt;&amp; x, <span class="keyword">const</span> gVec&lt;T&gt;&amp; y);
+<a name="l00108"></a>00108 T <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> gVec&lt;T&gt;&amp; x, <span class="keyword">const</span> gVec&lt;T&gt;&amp; y);
 <a name="l00109"></a>00109 
 <a name="l00114"></a>00114 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
 <a name="l00115"></a><a class="code" href="../../db/d4e/namespacegurls.html#ad699cc67d7f80b2219808f0a5fc90b5d">00115</a> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> <a class="code" href="../../db/d4e/namespacegurls.html#ad699cc67d7f80b2219808f0a5fc90b5d" title="Replicates a vector n times along the columns (or along the rows if transpose==true) If x is a vector...">repmat</a>(<span class="keyword">const</span> <a class="code" href="../../df/d32/classgurls_1_1g_vec.html" title="gVec implements a vector of generic length">gVec&lt;T&gt;</a>&amp; x, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n, <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a> = <span class="keyword">false</span>)
@@ -412,7 +412,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00496"></a>00496 }
 <a name="l00497"></a>00497 
 <a name="l00515"></a>00515 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00516"></a><a class="code" href="../../db/d4e/namespacegurls.html#a6ecd2e114188dc4199f38da6eebb99dc">00516</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* C,
+<a name="l00516"></a><a class="code" href="../../db/d4e/namespacegurls.html#a6ecd2e114188dc4199f38da6eebb99dc">00516</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* C,
 <a name="l00517"></a>00517          <span class="keywordtype">int</span> A_rows, <span class="keywordtype">int</span> A_cols,
 <a name="l00518"></a>00518          <span class="keywordtype">int</span> B_rows, <span class="keywordtype">int</span> B_cols,
 <a name="l00519"></a>00519          <span class="keywordtype">int</span> C_rows, <span class="keywordtype">int</span> C_cols,
@@ -493,886 +493,835 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00604"></a>00604     <a class="code" href="../../db/d4e/namespacegurls.html#acdb75103dd22dfa78d15facde1ab4264" title="Zeroes on the lower triangle of a matrix.">clearLowerTriangular</a>(result, rows, cols);
 <a name="l00605"></a>00605 }
 <a name="l00606"></a>00606 
-<a name="l00610"></a>00610 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00611"></a>00611 <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a8da7753eb788f84ac8474d39996f541f" title="Template function to call LAPACK *POTRF routines.">potrf_</a>(<span class="keywordtype">char</span> *UPLO, <span class="keywordtype">int</span> *n, T *a, <span class="keywordtype">int</span> *lda , <span class="keywordtype">int</span> *info);
-<a name="l00612"></a>00612 
-<a name="l00619"></a>00619 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00620"></a><a class="code" href="../../db/d4e/namespacegurls.html#a153b5476d7a4deb157db95079469c2cb">00620</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a153b5476d7a4deb157db95079469c2cb" title="Computes the element-by-element multiplicative inverse of an input matrix.">setReciprocal</a>(T* matrix, <span class="keyword">const</span> <span class="keywordtype">int</span> len)
-<a name="l00621"></a>00621 {
-<a name="l00622"></a>00622     <span class="keyword">const</span> T one = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
-<a name="l00623"></a>00623 
-<a name="l00624"></a>00624     <span class="keywordflow">for</span>(T *it = matrix, *end = matrix+len; it != end; ++it)
-<a name="l00625"></a>00625         *it = one / *it;
-<a name="l00626"></a>00626 }
-<a name="l00627"></a>00627 
-<a name="l00635"></a>00635 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00636"></a><a class="code" href="../../db/d4e/namespacegurls.html#a3286e76a0f264d9cbed8e534fce536c8">00636</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3286e76a0f264d9cbed8e534fce536c8" title="Returns a squared matrix initialized in the diagonal with values from a vector.">diag</a>(T* vector, <span class="keyword">const</span> <span class="keywordtype">int</span> len, T* result)
-<a name="l00637"></a>00637 {
-<a name="l00638"></a>00638     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
-<a name="l00639"></a>00639 
-<a name="l00640"></a>00640     <span class="keyword">set</span>(result, zero, len*len);
-<a name="l00641"></a>00641     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(result, vector, len, len+1, 1);
-<a name="l00642"></a>00642 }
-<a name="l00643"></a>00643 
-<a name="l00647"></a>00647 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00648"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac6b4396e2c97744191760e762697ae46">00648</a> T <a class="code" href="../../db/d4e/namespacegurls.html#ac6b4396e2c97744191760e762697ae46" title="Multiplication of two scalars.">mul</a>(T a, T b)
-<a name="l00649"></a>00649 {
-<a name="l00650"></a>00650     <span class="keywordflow">return</span> a*b;
-<a name="l00651"></a>00651 }
-<a name="l00652"></a>00652 
-<a name="l00656"></a>00656 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00657"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac21e7810d76da1d8374506562d4bc1fe">00657</a> T <a class="code" href="../../db/d4e/namespacegurls.html#ac21e7810d76da1d8374506562d4bc1fe" title="Division of two scalars.">div</a>(T a, T b)
-<a name="l00658"></a>00658 {
-<a name="l00659"></a>00659     <span class="keywordflow">return</span> a/b;
-<a name="l00660"></a>00660 }
-<a name="l00661"></a>00661 
-<a name="l00665"></a>00665 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00666"></a><a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa">00666</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(T val1, T val2)
-<a name="l00667"></a>00667 {
-<a name="l00668"></a>00668     <span class="keywordflow">return</span> val1 == val2;
-<a name="l00669"></a>00669 }
+<a name="l00613"></a>00613 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00614"></a><a class="code" href="../../db/d4e/namespacegurls.html#a153b5476d7a4deb157db95079469c2cb">00614</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a153b5476d7a4deb157db95079469c2cb" title="Computes the element-by-element multiplicative inverse of an input matrix.">setReciprocal</a>(T* matrix, <span class="keyword">const</span> <span class="keywordtype">int</span> len)
+<a name="l00615"></a>00615 {
+<a name="l00616"></a>00616     <span class="keyword">const</span> T one = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
+<a name="l00617"></a>00617 
+<a name="l00618"></a>00618     <span class="keywordflow">for</span>(T *it = matrix, *end = matrix+len; it != end; ++it)
+<a name="l00619"></a>00619         *it = one / *it;
+<a name="l00620"></a>00620 }
+<a name="l00621"></a>00621 
+<a name="l00629"></a>00629 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00630"></a><a class="code" href="../../db/d4e/namespacegurls.html#a3286e76a0f264d9cbed8e534fce536c8">00630</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3286e76a0f264d9cbed8e534fce536c8" title="Returns a squared matrix initialized in the diagonal with values from a vector.">diag</a>(T* vector, <span class="keyword">const</span> <span class="keywordtype">int</span> len, T* result)
+<a name="l00631"></a>00631 {
+<a name="l00632"></a>00632     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
+<a name="l00633"></a>00633 
+<a name="l00634"></a>00634     <span class="keyword">set</span>(result, zero, len*len);
+<a name="l00635"></a>00635     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(result, vector, len, len+1, 1);
+<a name="l00636"></a>00636 }
+<a name="l00637"></a>00637 
+<a name="l00641"></a>00641 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00642"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac6b4396e2c97744191760e762697ae46">00642</a> T <a class="code" href="../../db/d4e/namespacegurls.html#ac6b4396e2c97744191760e762697ae46" title="Multiplication of two scalars.">mul</a>(T a, T b)
+<a name="l00643"></a>00643 {
+<a name="l00644"></a>00644     <span class="keywordflow">return</span> a*b;
+<a name="l00645"></a>00645 }
+<a name="l00646"></a>00646 
+<a name="l00650"></a>00650 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00651"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac21e7810d76da1d8374506562d4bc1fe">00651</a> T <a class="code" href="../../db/d4e/namespacegurls.html#ac21e7810d76da1d8374506562d4bc1fe" title="Division of two scalars.">div</a>(T a, T b)
+<a name="l00652"></a>00652 {
+<a name="l00653"></a>00653     <span class="keywordflow">return</span> a/b;
+<a name="l00654"></a>00654 }
+<a name="l00655"></a>00655 
+<a name="l00659"></a>00659 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00660"></a><a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa">00660</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(T val1, T val2)
+<a name="l00661"></a>00661 {
+<a name="l00662"></a>00662     <span class="keywordflow">return</span> val1 == val2;
+<a name="l00663"></a>00663 }
+<a name="l00664"></a>00664 
+<a name="l00668"></a>00668 <span class="keyword">template</span>&lt;&gt;
+<a name="l00669"></a>00669 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">float</span> val1, <span class="keywordtype">float</span> val2);
 <a name="l00670"></a>00670 
 <a name="l00674"></a>00674 <span class="keyword">template</span>&lt;&gt;
-<a name="l00675"></a>00675 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">float</span> val1, <span class="keywordtype">float</span> val2);
+<a name="l00675"></a>00675 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">double</span> val1, <span class="keywordtype">double</span> val2);
 <a name="l00676"></a>00676 
-<a name="l00680"></a>00680 <span class="keyword">template</span>&lt;&gt;
-<a name="l00681"></a>00681 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(<span class="keywordtype">double</span> val1, <span class="keywordtype">double</span> val2);
-<a name="l00682"></a>00682 
-<a name="l00686"></a>00686 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00687"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f">00687</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(T a, T b)
-<a name="l00688"></a>00688 {
-<a name="l00689"></a>00689     <span class="keywordflow">return</span> a &gt; b;
-<a name="l00690"></a>00690 }
+<a name="l00680"></a>00680 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00681"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f">00681</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(T a, T b)
+<a name="l00682"></a>00682 {
+<a name="l00683"></a>00683     <span class="keywordflow">return</span> a &gt; b;
+<a name="l00684"></a>00684 }
+<a name="l00685"></a>00685 
+<a name="l00689"></a>00689 <span class="keyword">template</span>&lt;&gt;
+<a name="l00690"></a>00690 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b);
 <a name="l00691"></a>00691 
 <a name="l00695"></a>00695 <span class="keyword">template</span>&lt;&gt;
-<a name="l00696"></a>00696 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b);
+<a name="l00696"></a>00696 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b);
 <a name="l00697"></a>00697 
-<a name="l00701"></a>00701 <span class="keyword">template</span>&lt;&gt;
-<a name="l00702"></a>00702 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b);
-<a name="l00703"></a>00703 
-<a name="l00707"></a>00707 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00708"></a><a class="code" href="../../db/d4e/namespacegurls.html#afe47c23bed46af6a16e44d6a74bd7e85">00708</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#afe47c23bed46af6a16e44d6a74bd7e85" title="&quot;Greater than or equals&quot; operator between two scalars">gte</a>(T a, T b)
-<a name="l00709"></a>00709 {
-<a name="l00710"></a>00710     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(a,b) || <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(a,b);
-<a name="l00711"></a>00711 }
-<a name="l00712"></a>00712 
-<a name="l00716"></a>00716 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00717"></a><a class="code" href="../../db/d4e/namespacegurls.html#a141eeb37a2b25f93bfcde3453641dc8c">00717</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a141eeb37a2b25f93bfcde3453641dc8c" title="&quot;Less or equal than&quot; operator between two scalars">le</a>(T a, T b)
-<a name="l00718"></a>00718 {
-<a name="l00719"></a>00719     <span class="keywordflow">return</span> !<a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(a,b);
-<a name="l00720"></a>00720 }
-<a name="l00721"></a>00721 
-<a name="l00725"></a>00725 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00726"></a><a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510">00726</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(T a, T b)
-<a name="l00727"></a>00727 {
-<a name="l00728"></a>00728     <span class="keywordflow">return</span> a &lt; b;
-<a name="l00729"></a>00729 }
+<a name="l00701"></a>00701 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00702"></a><a class="code" href="../../db/d4e/namespacegurls.html#afe47c23bed46af6a16e44d6a74bd7e85">00702</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#afe47c23bed46af6a16e44d6a74bd7e85" title="&quot;Greater than or equals&quot; operator between two scalars">gte</a>(T a, T b)
+<a name="l00703"></a>00703 {
+<a name="l00704"></a>00704     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(a,b) || <a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(a,b);
+<a name="l00705"></a>00705 }
+<a name="l00706"></a>00706 
+<a name="l00710"></a>00710 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00711"></a><a class="code" href="../../db/d4e/namespacegurls.html#a141eeb37a2b25f93bfcde3453641dc8c">00711</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a141eeb37a2b25f93bfcde3453641dc8c" title="&quot;Less or equal than&quot; operator between two scalars">le</a>(T a, T b)
+<a name="l00712"></a>00712 {
+<a name="l00713"></a>00713     <span class="keywordflow">return</span> !<a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(a,b);
+<a name="l00714"></a>00714 }
+<a name="l00715"></a>00715 
+<a name="l00719"></a>00719 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00720"></a><a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510">00720</a> <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(T a, T b)
+<a name="l00721"></a>00721 {
+<a name="l00722"></a>00722     <span class="keywordflow">return</span> a &lt; b;
+<a name="l00723"></a>00723 }
+<a name="l00724"></a>00724 
+<a name="l00728"></a>00728 <span class="keyword">template</span>&lt;&gt;
+<a name="l00729"></a>00729 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b);
 <a name="l00730"></a>00730 
 <a name="l00734"></a>00734 <span class="keyword">template</span>&lt;&gt;
-<a name="l00735"></a>00735 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">float</span> a, <span class="keywordtype">float</span> b);
+<a name="l00735"></a>00735 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b);
 <a name="l00736"></a>00736 
-<a name="l00740"></a>00740 <span class="keyword">template</span>&lt;&gt;
-<a name="l00741"></a>00741 GURLS_EXPORT <span class="keywordtype">bool</span> <a class="code" href="../../db/d4e/namespacegurls.html#a57330e9148465f7dad58b80361e4b510" title="&quot;Less than&quot; operator between two scalars">lt</a>(<span class="keywordtype">double</span> a, <span class="keywordtype">double</span> b);
-<a name="l00742"></a>00742 
-<a name="l00752"></a>00752 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00753"></a><a class="code" href="../../db/d4e/namespacegurls.html#a900d1f0777bb90f8817d31eb67af4460">00753</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a900d1f0777bb90f8817d31eb67af4460" title="Applies an element by element binary operation  over two vectors ( )">binOperation</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> len, T(*op)(T,T))
-<a name="l00754"></a>00754 {
-<a name="l00755"></a>00755     <span class="keyword">const</span> T *a_it = A, *a_end = A+len;
-<a name="l00756"></a>00756     <span class="keyword">const</span> T *b_it = B;
-<a name="l00757"></a>00757     T *r_it = result;
-<a name="l00758"></a>00758 
-<a name="l00759"></a>00759     <span class="keywordflow">while</span>(a_it != a_end)
-<a name="l00760"></a>00760     {
-<a name="l00761"></a>00761         *r_it = (*op)((*a_it),(*b_it));
+<a name="l00746"></a>00746 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00747"></a><a class="code" href="../../db/d4e/namespacegurls.html#a900d1f0777bb90f8817d31eb67af4460">00747</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a900d1f0777bb90f8817d31eb67af4460" title="Applies an element by element binary operation  over two vectors ( )">binOperation</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> len, T(*op)(T,T))
+<a name="l00748"></a>00748 {
+<a name="l00749"></a>00749     <span class="keyword">const</span> T *a_it = A, *a_end = A+len;
+<a name="l00750"></a>00750     <span class="keyword">const</span> T *b_it = B;
+<a name="l00751"></a>00751     T *r_it = result;
+<a name="l00752"></a>00752 
+<a name="l00753"></a>00753     <span class="keywordflow">while</span>(a_it != a_end)
+<a name="l00754"></a>00754     {
+<a name="l00755"></a>00755         *r_it = (*op)((*a_it),(*b_it));
+<a name="l00756"></a>00756 
+<a name="l00757"></a>00757         ++a_it;
+<a name="l00758"></a>00758         ++b_it;
+<a name="l00759"></a>00759         ++r_it;
+<a name="l00760"></a>00760     }
+<a name="l00761"></a>00761 }
 <a name="l00762"></a>00762 
-<a name="l00763"></a>00763         ++a_it;
-<a name="l00764"></a>00764         ++b_it;
-<a name="l00765"></a>00765         ++r_it;
-<a name="l00766"></a>00766     }
-<a name="l00767"></a>00767 }
-<a name="l00768"></a>00768 
-<a name="l00777"></a>00777 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00778"></a><a class="code" href="../../db/d4e/namespacegurls.html#a43a5eeef1874c15e091086b62cfcaebd">00778</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a43a5eeef1874c15e091086b62cfcaebd" title="Element by element multiplication of two vectors.">mult</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> len)
-<a name="l00779"></a>00779 {
-<a name="l00780"></a>00780     binOperation&lt;T&gt;(A, B, result, len, &amp;<a class="code" href="../../db/d4e/namespacegurls.html#ac6b4396e2c97744191760e762697ae46" title="Multiplication of two scalars.">mul</a>);
-<a name="l00781"></a>00781 }
-<a name="l00782"></a>00782 
-<a name="l00791"></a>00791 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00792"></a><a class="code" href="../../db/d4e/namespacegurls.html#a53b8a878e025a9aecca369bfdd383dcc">00792</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a53b8a878e025a9aecca369bfdd383dcc" title="Element by element division of two vectors.">rdivide</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> len)
-<a name="l00793"></a>00793 {
-<a name="l00794"></a>00794     binOperation&lt;T&gt;(A, B, result, len, &amp;<a class="code" href="../../db/d4e/namespacegurls.html#ac21e7810d76da1d8374506562d4bc1fe" title="Division of two scalars.">div</a>);
-<a name="l00795"></a>00795 }
-<a name="l00796"></a>00796 
-<a name="l00806"></a>00806 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00807"></a><a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f">00807</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f" title="Sums all elements along the rows of a matrix.">sum</a>(<span class="keyword">const</span> T* A, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keyword">const</span> <span class="keywordtype">int</span> res_length) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l00808"></a>00808 {
-<a name="l00809"></a>00809     <span class="keywordflow">if</span>(A_cols != res_length)
-<a name="l00810"></a>00810         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
-<a name="l00811"></a>00811 
-<a name="l00812"></a>00812     <span class="keyword">const</span> T *a_it = A, *a_end;
-<a name="l00813"></a>00813 
-<a name="l00814"></a>00814     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
-<a name="l00815"></a>00815 
-<a name="l00816"></a>00816     <span class="keywordflow">for</span>(T *r_it = result, *r_end = result+A_cols; r_it != r_end; ++r_it)
-<a name="l00817"></a>00817     {
-<a name="l00818"></a>00818         *r_it = zero;
-<a name="l00819"></a>00819         a_end = a_it+A_rows;
-<a name="l00820"></a>00820 
-<a name="l00821"></a>00821         <span class="keywordflow">while</span>(a_it != a_end)
-<a name="l00822"></a>00822         {
-<a name="l00823"></a>00823             *r_it += *a_it;
-<a name="l00824"></a>00824 
-<a name="l00825"></a>00825             ++a_it;
-<a name="l00826"></a>00826         }
-<a name="l00827"></a>00827     }
-<a name="l00828"></a>00828 }
-<a name="l00829"></a>00829 
-<a name="l00838"></a>00838 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00839"></a><a class="code" href="../../db/d4e/namespacegurls.html#a6ad5abc1e6f16da6c801ad8a93dfb731">00839</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a6ad5abc1e6f16da6c801ad8a93dfb731" title="Sums all elements along the columns of a matrix.">sum_col</a>(<span class="keyword">const</span> T* A, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l00840"></a>00840 {
-<a name="l00841"></a>00841     <span class="keyword">const</span> T *a_it = A, *a_end;
+<a name="l00771"></a>00771 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00772"></a><a class="code" href="../../db/d4e/namespacegurls.html#a43a5eeef1874c15e091086b62cfcaebd">00772</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a43a5eeef1874c15e091086b62cfcaebd" title="Element by element multiplication of two vectors.">mult</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> len)
+<a name="l00773"></a>00773 {
+<a name="l00774"></a>00774     binOperation&lt;T&gt;(A, B, result, len, &amp;<a class="code" href="../../db/d4e/namespacegurls.html#ac6b4396e2c97744191760e762697ae46" title="Multiplication of two scalars.">mul</a>);
+<a name="l00775"></a>00775 }
+<a name="l00776"></a>00776 
+<a name="l00785"></a>00785 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00786"></a><a class="code" href="../../db/d4e/namespacegurls.html#a53b8a878e025a9aecca369bfdd383dcc">00786</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a53b8a878e025a9aecca369bfdd383dcc" title="Element by element division of two vectors.">rdivide</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> len)
+<a name="l00787"></a>00787 {
+<a name="l00788"></a>00788     binOperation&lt;T&gt;(A, B, result, len, &amp;<a class="code" href="../../db/d4e/namespacegurls.html#ac21e7810d76da1d8374506562d4bc1fe" title="Division of two scalars.">div</a>);
+<a name="l00789"></a>00789 }
+<a name="l00790"></a>00790 
+<a name="l00800"></a>00800 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00801"></a><a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f">00801</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f" title="Sums all elements along the rows of a matrix.">sum</a>(<span class="keyword">const</span> T* A, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keyword">const</span> <span class="keywordtype">int</span> res_length) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l00802"></a>00802 {
+<a name="l00803"></a>00803     <span class="keywordflow">if</span>(A_cols != res_length)
+<a name="l00804"></a>00804         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
+<a name="l00805"></a>00805 
+<a name="l00806"></a>00806     <span class="keyword">const</span> T *a_it = A, *a_end;
+<a name="l00807"></a>00807 
+<a name="l00808"></a>00808     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
+<a name="l00809"></a>00809 
+<a name="l00810"></a>00810     <span class="keywordflow">for</span>(T *r_it = result, *r_end = result+A_cols; r_it != r_end; ++r_it)
+<a name="l00811"></a>00811     {
+<a name="l00812"></a>00812         *r_it = zero;
+<a name="l00813"></a>00813         a_end = a_it+A_rows;
+<a name="l00814"></a>00814 
+<a name="l00815"></a>00815         <span class="keywordflow">while</span>(a_it != a_end)
+<a name="l00816"></a>00816         {
+<a name="l00817"></a>00817             *r_it += *a_it;
+<a name="l00818"></a>00818 
+<a name="l00819"></a>00819             ++a_it;
+<a name="l00820"></a>00820         }
+<a name="l00821"></a>00821     }
+<a name="l00822"></a>00822 }
+<a name="l00823"></a>00823 
+<a name="l00832"></a>00832 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00833"></a><a class="code" href="../../db/d4e/namespacegurls.html#a6ad5abc1e6f16da6c801ad8a93dfb731">00833</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a6ad5abc1e6f16da6c801ad8a93dfb731" title="Sums all elements along the columns of a matrix.">sum_col</a>(<span class="keyword">const</span> T* A, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l00834"></a>00834 {
+<a name="l00835"></a>00835     <span class="keyword">const</span> T *a_it = A, *a_end;
+<a name="l00836"></a>00836 
+<a name="l00837"></a>00837     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
+<a name="l00838"></a>00838 
+<a name="l00839"></a>00839     <span class="keywordflow">for</span>(T *r_it = result, *r_end = result+A_rows; r_it != r_end; ++r_it)
+<a name="l00840"></a>00840     {
+<a name="l00841"></a>00841         *r_it = zero;
 <a name="l00842"></a>00842 
-<a name="l00843"></a>00843     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
-<a name="l00844"></a>00844 
-<a name="l00845"></a>00845     <span class="keywordflow">for</span>(T *r_it = result, *r_end = result+A_rows; r_it != r_end; ++r_it)
-<a name="l00846"></a>00846     {
-<a name="l00847"></a>00847         *r_it = zero;
-<a name="l00848"></a>00848 
-<a name="l00849"></a>00849         <span class="keywordflow">for</span>(a_it = A+(r_it-result), a_end = a_it+(A_cols*A_rows); a_it != a_end; a_it += A_rows)
-<a name="l00850"></a>00850             *r_it += *a_it;
-<a name="l00851"></a>00851     }
-<a name="l00852"></a>00852 }
-<a name="l00853"></a>00853 
-<a name="l00863"></a>00863 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00864"></a><a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088">00864</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(<span class="keyword">const</span> T* A, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keyword">const</span> <span class="keywordtype">int</span> res_length) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l00865"></a>00865 {
-<a name="l00866"></a>00866     <a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f" title="Sums all elements along the rows of a matrix.">sum</a>(A, result, A_rows, A_cols, res_length);
-<a name="l00867"></a>00867     <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(res_length, (T)(1.0/A_rows), result, 1);
-<a name="l00868"></a>00868 }
-<a name="l00869"></a>00869 
-<a name="l00879"></a>00879 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00880"></a><a class="code" href="../../db/d4e/namespacegurls.html#ae7290ab4b6cd018d525178cf2f740fba">00880</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ae7290ab4b6cd018d525178cf2f740fba" title="Coputes the smallest elements along the rows of a matrix.">argmin</a>(<span class="keyword">const</span> T* A, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keyword">const</span> <span class="keywordtype">int</span> res_length) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l00881"></a>00881 {
-<a name="l00882"></a>00882     <span class="keywordflow">if</span>(A_cols != res_length)
-<a name="l00883"></a>00883         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
+<a name="l00843"></a>00843         <span class="keywordflow">for</span>(a_it = A+(r_it-result), a_end = a_it+(A_cols*A_rows); a_it != a_end; a_it += A_rows)
+<a name="l00844"></a>00844             *r_it += *a_it;
+<a name="l00845"></a>00845     }
+<a name="l00846"></a>00846 }
+<a name="l00847"></a>00847 
+<a name="l00857"></a>00857 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00858"></a><a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088">00858</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(<span class="keyword">const</span> T* A, T* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keyword">const</span> <span class="keywordtype">int</span> res_length) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l00859"></a>00859 {
+<a name="l00860"></a>00860     <a class="code" href="../../db/d4e/namespacegurls.html#a77ab8b750db64540cedadd69b6ba433f" title="Sums all elements along the rows of a matrix.">sum</a>(A, result, A_rows, A_cols, res_length);
+<a name="l00861"></a>00861     <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(res_length, (T)(1.0/A_rows), result, 1);
+<a name="l00862"></a>00862 }
+<a name="l00863"></a>00863 
+<a name="l00873"></a>00873 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00874"></a><a class="code" href="../../db/d4e/namespacegurls.html#ae7290ab4b6cd018d525178cf2f740fba">00874</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ae7290ab4b6cd018d525178cf2f740fba" title="Coputes the smallest elements along the rows of a matrix.">argmin</a>(<span class="keyword">const</span> T* A, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* result, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keyword">const</span> <span class="keywordtype">int</span> res_length) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l00875"></a>00875 {
+<a name="l00876"></a>00876     <span class="keywordflow">if</span>(A_cols != res_length)
+<a name="l00877"></a>00877         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#ga958853e7664e12a917823fc14b27cbe2" title="Message displayed when two arrays have inconsistent dimensions.">Exception_Inconsistent_Size</a>);
+<a name="l00878"></a>00878 
+<a name="l00879"></a>00879     <span class="keyword">const</span> T *a_it = A;
+<a name="l00880"></a>00880 
+<a name="l00881"></a>00881     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *r_it = result, *r_end = result+A_cols; r_it != r_end; ++r_it, a_it += A_rows)
+<a name="l00882"></a>00882         *r_it = (std::min_element(a_it, a_it+A_rows) - a_it);
+<a name="l00883"></a>00883 }
 <a name="l00884"></a>00884 
-<a name="l00885"></a>00885     <span class="keyword">const</span> T *a_it = A;
-<a name="l00886"></a>00886 
-<a name="l00887"></a>00887     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *r_it = result, *r_end = result+A_cols; r_it != r_end; ++r_it, a_it += A_rows)
-<a name="l00888"></a>00888         *r_it = (std::min_element(a_it, a_it+A_rows) - a_it);
-<a name="l00889"></a>00889 }
-<a name="l00890"></a>00890 
-<a name="l00900"></a>00900 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00901"></a><a class="code" href="../../db/d4e/namespacegurls.html#ad606e8b3fbcbadf7bbe942cb16df301a">00901</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ad606e8b3fbcbadf7bbe942cb16df301a" title="Returns a subvector of an input vector, containing elements of the input vector whose index is contai...">copyLocations</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* locs, <span class="keyword">const</span> T* src, <span class="keyword">const</span> <span class="keywordtype">int</span> locs_len, <span class="keyword">const</span> <span class="keywordtype">int</span> src_len, T* result)
-<a name="l00902"></a>00902 {
-<a name="l00903"></a>00903     T* ptr_v = result;
-<a name="l00904"></a>00904 
-<a name="l00905"></a>00905     <span class="keywordtype">int</span> val;
-<a name="l00906"></a>00906     <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* l_it = locs, *l_end=locs+locs_len; l_it != l_end; ++l_it, ++ptr_v)
-<a name="l00907"></a>00907     {
-<a name="l00908"></a>00908         val = *l_it;
-<a name="l00909"></a>00909         <span class="keywordflow">if</span>((val &lt; 0) || (val &gt; src_len))
-<a name="l00910"></a>00910             <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gaa753dbdd0384a9d49abd116b9852c651" title="Message displayed when trying to access an a vector or matrix with a too large index.">gurls::Exception_Index_Out_of_Bound</a>);
-<a name="l00911"></a>00911 
-<a name="l00912"></a>00912         *ptr_v = src[val];
-<a name="l00913"></a>00913     }
-<a name="l00914"></a>00914 }
-<a name="l00915"></a>00915 
-<a name="l00919"></a>00919 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00920"></a>00920 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> T alpha, <span class="keyword">const</span> T *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX, T *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY);
-<a name="l00921"></a>00921 
-<a name="l00925"></a>00925 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00926"></a>00926 T <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> T *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX, <span class="keyword">const</span> T *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY);
-<a name="l00927"></a>00927 
-<a name="l00935"></a>00935 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00936"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250">00936</a> T <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(<span class="keyword">const</span> T* V, <span class="keyword">const</span> <span class="keywordtype">int</span> len) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l00937"></a>00937 {
-<a name="l00938"></a>00938     T y = 1;
-<a name="l00939"></a>00939     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(len, V, 1, &amp;y, 0);
-<a name="l00940"></a>00940 }
-<a name="l00941"></a>00941 
-<a name="l00957"></a>00957 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00958"></a><a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff">00958</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(<span class="keyword">const</span> T* Q, <span class="keyword">const</span> T* L, <span class="keyword">const</span> T* Qty, T* C, <span class="keyword">const</span> T lambda, <span class="keyword">const</span> <span class="keywordtype">int</span> n,
-<a name="l00959"></a>00959              <span class="keyword">const</span> <span class="keywordtype">int</span> Q_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Q_cols,
-<a name="l00960"></a>00960              <span class="keyword">const</span> <span class="keywordtype">int</span> L_length,
-<a name="l00961"></a>00961              <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_cols)<span class="comment">//  throw (gException)</span>
-<a name="l00962"></a>00962 {
-<a name="l00963"></a>00963     T* work = <span class="keyword">new</span> T [(Q_rows+1)*L_length];
-<a name="l00964"></a>00964 
-<a name="l00965"></a>00965     <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(Q, L, Qty, C, lambda, n, Q_rows, Q_cols, L_length, Qty_rows, Qty_cols, work);
-<a name="l00966"></a>00966 
-<a name="l00967"></a>00967     <span class="keyword">delete</span> [] work;
-<a name="l00968"></a>00968 }
-<a name="l00969"></a>00969 
-<a name="l00986"></a>00986 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00987"></a><a class="code" href="../../db/d4e/namespacegurls.html#ab2fc16e3ae966dc22dc6e4ad8ab4ed0d">00987</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(<span class="keyword">const</span> T* Q, <span class="keyword">const</span> T* L, <span class="keyword">const</span> T* Qty, T* C, <span class="keyword">const</span> T lambda, <span class="keyword">const</span> <span class="keywordtype">int</span> n,
-<a name="l00988"></a>00988              <span class="keyword">const</span> <span class="keywordtype">int</span> Q_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Q_cols,
-<a name="l00989"></a>00989              <span class="keyword">const</span> <span class="keywordtype">int</span> L_length,
-<a name="l00990"></a>00990              <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_cols, T* work)<span class="comment">//  throw (gException)</span>
-<a name="l00991"></a>00991 {
-<a name="l00992"></a>00992     <span class="comment">//function C = rls_eigen(Q,L,QtY,lambda,n)</span>
-<a name="l00993"></a>00993 
-<a name="l00994"></a>00994     <span class="comment">//sQ = size(Q,1); -&gt; Q_rows</span>
-<a name="l00995"></a>00995 
-<a name="l00996"></a>00996     <span class="comment">//L = L + n*lambda;</span>
-<a name="l00997"></a>00997     T* L1 = work; <span class="comment">// size L_length</span>
+<a name="l00894"></a>00894 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00895"></a><a class="code" href="../../db/d4e/namespacegurls.html#ad606e8b3fbcbadf7bbe942cb16df301a">00895</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ad606e8b3fbcbadf7bbe942cb16df301a" title="Returns a subvector of an input vector, containing elements of the input vector whose index is contai...">copyLocations</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* locs, <span class="keyword">const</span> T* src, <span class="keyword">const</span> <span class="keywordtype">int</span> locs_len, <span class="keyword">const</span> <span class="keywordtype">int</span> src_len, T* result)
+<a name="l00896"></a>00896 {
+<a name="l00897"></a>00897     T* ptr_v = result;
+<a name="l00898"></a>00898 
+<a name="l00899"></a>00899     <span class="keywordtype">int</span> val;
+<a name="l00900"></a>00900     <span class="keywordflow">for</span>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* l_it = locs, *l_end=locs+locs_len; l_it != l_end; ++l_it, ++ptr_v)
+<a name="l00901"></a>00901     {
+<a name="l00902"></a>00902         val = *l_it;
+<a name="l00903"></a>00903         <span class="keywordflow">if</span>((val &lt; 0) || (val &gt; src_len))
+<a name="l00904"></a>00904             <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gaa753dbdd0384a9d49abd116b9852c651" title="Message displayed when trying to access an a vector or matrix with a too large index.">gurls::Exception_Index_Out_of_Bound</a>);
+<a name="l00905"></a>00905 
+<a name="l00906"></a>00906         *ptr_v = src[val];
+<a name="l00907"></a>00907     }
+<a name="l00908"></a>00908 }
+<a name="l00909"></a>00909 
+<a name="l00917"></a>00917 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00918"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250">00918</a> T <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(<span class="keyword">const</span> T* V, <span class="keyword">const</span> <span class="keywordtype">int</span> len) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l00919"></a>00919 {
+<a name="l00920"></a>00920     T y = 1;
+<a name="l00921"></a>00921     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(len, V, 1, &amp;y, 0);
+<a name="l00922"></a>00922 }
+<a name="l00923"></a>00923 
+<a name="l00939"></a>00939 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00940"></a><a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff">00940</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(<span class="keyword">const</span> T* Q, <span class="keyword">const</span> T* L, <span class="keyword">const</span> T* Qty, T* C, <span class="keyword">const</span> T lambda, <span class="keyword">const</span> <span class="keywordtype">int</span> n,
+<a name="l00941"></a>00941              <span class="keyword">const</span> <span class="keywordtype">int</span> Q_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Q_cols,
+<a name="l00942"></a>00942              <span class="keyword">const</span> <span class="keywordtype">int</span> L_length,
+<a name="l00943"></a>00943              <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_cols)<span class="comment">//  throw (gException)</span>
+<a name="l00944"></a>00944 {
+<a name="l00945"></a>00945     T* work = <span class="keyword">new</span> T [(Q_rows+1)*L_length];
+<a name="l00946"></a>00946 
+<a name="l00947"></a>00947     <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(Q, L, Qty, C, lambda, n, Q_rows, Q_cols, L_length, Qty_rows, Qty_cols, work);
+<a name="l00948"></a>00948 
+<a name="l00949"></a>00949     <span class="keyword">delete</span> [] work;
+<a name="l00950"></a>00950 }
+<a name="l00951"></a>00951 
+<a name="l00968"></a>00968 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00969"></a><a class="code" href="../../db/d4e/namespacegurls.html#ab2fc16e3ae966dc22dc6e4ad8ab4ed0d">00969</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(<span class="keyword">const</span> T* Q, <span class="keyword">const</span> T* L, <span class="keyword">const</span> T* Qty, T* C, <span class="keyword">const</span> T lambda, <span class="keyword">const</span> <span class="keywordtype">int</span> n,
+<a name="l00970"></a>00970              <span class="keyword">const</span> <span class="keywordtype">int</span> Q_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Q_cols,
+<a name="l00971"></a>00971              <span class="keyword">const</span> <span class="keywordtype">int</span> L_length,
+<a name="l00972"></a>00972              <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> Qty_cols, T* work)<span class="comment">//  throw (gException)</span>
+<a name="l00973"></a>00973 {
+<a name="l00974"></a>00974     <span class="comment">//function C = rls_eigen(Q,L,QtY,lambda,n)</span>
+<a name="l00975"></a>00975 
+<a name="l00976"></a>00976     <span class="comment">//sQ = size(Q,1); -&gt; Q_rows</span>
+<a name="l00977"></a>00977 
+<a name="l00978"></a>00978     <span class="comment">//L = L + n*lambda;</span>
+<a name="l00979"></a>00979     T* L1 = work; <span class="comment">// size L_length</span>
+<a name="l00980"></a>00980 
+<a name="l00981"></a>00981     <span class="keyword">set</span>(L1, n*lambda , L_length);
+<a name="l00982"></a>00982 
+<a name="l00983"></a>00983     <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(L_length, (T)1.0, L, 1, L1, 1);
+<a name="l00984"></a>00984 
+<a name="l00985"></a>00985     <span class="comment">//L = L.^(-1);</span>
+<a name="l00986"></a>00986     <a class="code" href="../../db/d4e/namespacegurls.html#a153b5476d7a4deb157db95079469c2cb" title="Computes the element-by-element multiplicative inverse of an input matrix.">setReciprocal</a>(L1, L_length);
+<a name="l00987"></a>00987 
+<a name="l00988"></a>00988     <span class="comment">// L = diag(L)</span>
+<a name="l00989"></a>00989     T* QL = work+L_length; <span class="comment">// size Q_rows*L_length</span>
+<a name="l00990"></a>00990 
+<a name="l00991"></a>00991     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(QL, Q, Q_rows*Q_cols);
+<a name="l00992"></a>00992     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt; Q_cols; ++i)
+<a name="l00993"></a>00993         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(Q_rows, L1[i], QL+(Q_rows*i), 1);
+<a name="l00994"></a>00994 
+<a name="l00995"></a>00995     <span class="comment">//C = (Q*L)*QtY;</span>
+<a name="l00996"></a>00996     <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(QL, Qty, C, Q_rows, L_length, Qty_rows, Qty_cols, Q_rows, Qty_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
+<a name="l00997"></a>00997 }
 <a name="l00998"></a>00998 
-<a name="l00999"></a>00999     <span class="keyword">set</span>(L1, n*lambda , L_length);
-<a name="l01000"></a>01000 
-<a name="l01001"></a>01001     <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(L_length, (T)1.0, L, 1, L1, 1);
-<a name="l01002"></a>01002 
-<a name="l01003"></a>01003     <span class="comment">//L = L.^(-1);</span>
-<a name="l01004"></a>01004     <a class="code" href="../../db/d4e/namespacegurls.html#a153b5476d7a4deb157db95079469c2cb" title="Computes the element-by-element multiplicative inverse of an input matrix.">setReciprocal</a>(L1, L_length);
-<a name="l01005"></a>01005 
-<a name="l01006"></a>01006     <span class="comment">// L = diag(L)</span>
-<a name="l01007"></a>01007     T* QL = work+L_length; <span class="comment">// size Q_rows*L_length</span>
-<a name="l01008"></a>01008 
-<a name="l01009"></a>01009     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(QL, Q, Q_rows*Q_cols);
-<a name="l01010"></a>01010     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt; Q_cols; ++i)
-<a name="l01011"></a>01011         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(Q_rows, L1[i], QL+(Q_rows*i), 1);
-<a name="l01012"></a>01012 
-<a name="l01013"></a>01013     <span class="comment">//C = (Q*L)*QtY;</span>
-<a name="l01014"></a>01014     <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(QL, Qty, C, Q_rows, L_length, Qty_rows, Qty_cols, Q_rows, Qty_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);
-<a name="l01015"></a>01015 }
-<a name="l01016"></a>01016 
-<a name="l01027"></a>01027 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01028"></a><a class="code" href="../../db/d4e/namespacegurls.html#a1722b64bc35b5a0a8ed920bd41a182f4">01028</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a1722b64bc35b5a0a8ed920bd41a182f4" title="Computes a &quot;signum vector&quot; of the same size as an input vector, where each element is:...">sign</a>(<span class="keyword">const</span> T* vector, <span class="keyword">const</span> <span class="keywordtype">int</span> size)
-<a name="l01029"></a>01029 {
-<a name="l01030"></a>01030     <span class="keyword">const</span> T* v_it = vector;
-<a name="l01031"></a>01031     <span class="keyword">const</span> T* v_end = vector+size;
-<a name="l01032"></a>01032 
-<a name="l01033"></a>01033     T* ret = <span class="keyword">new</span> T[size];
-<a name="l01034"></a>01034     T* r_it = ret;
-<a name="l01035"></a>01035 
-<a name="l01036"></a>01036     <span class="keyword">const</span> T zero = (T)0.0;
-<a name="l01037"></a>01037 
-<a name="l01038"></a>01038     <span class="keywordflow">while</span>(v_it != v_end)
-<a name="l01039"></a>01039     {
-<a name="l01040"></a>01040         *r_it = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>((<a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(*v_it, zero)? 0.0 : ((*v_it &gt; 0.0)? 1.0 : -1.0)));
-<a name="l01041"></a>01041 
-<a name="l01042"></a>01042         ++v_it;
-<a name="l01043"></a>01043         ++r_it;
-<a name="l01044"></a>01044     }
-<a name="l01045"></a>01045 
-<a name="l01046"></a>01046     <span class="keywordflow">return</span> ret;
-<a name="l01047"></a>01047 }
-<a name="l01048"></a>01048 
-<a name="l01061"></a>01061 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01062"></a><a class="code" href="../../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388">01062</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388" title="Compares element by element two vectors using a binary predicate, and returns a vector where each ele...">compare</a>(<span class="keyword">const</span> T* vector1, <span class="keyword">const</span> T* vector2, <span class="keyword">const</span> <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span>(*pred)(T,T))
-<a name="l01063"></a>01063 {
-<a name="l01064"></a>01064     <span class="keyword">const</span> T* v1_end = vector1+size;
-<a name="l01065"></a>01065 
-<a name="l01066"></a>01066     T* ret = <span class="keyword">new</span> T[size];
-<a name="l01067"></a>01067     T* r_it = ret;
-<a name="l01068"></a>01068 
-<a name="l01069"></a>01069     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
-<a name="l01070"></a>01070     <span class="keyword">const</span> T one = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
-<a name="l01071"></a>01071 
-<a name="l01072"></a>01072     <span class="keywordflow">for</span>(<span class="keyword">const</span> T *v1_it = vector1, *v2_it = vector2; v1_it != v1_end; ++v1_it, ++v2_it, ++r_it)
-<a name="l01073"></a>01073         *r_it = (*pred)(*v1_it, *v2_it)? one: zero;
-<a name="l01074"></a>01074 
-<a name="l01075"></a>01075     <span class="keywordflow">return</span> ret;
-<a name="l01076"></a>01076 }
+<a name="l01009"></a>01009 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01010"></a><a class="code" href="../../db/d4e/namespacegurls.html#a1722b64bc35b5a0a8ed920bd41a182f4">01010</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a1722b64bc35b5a0a8ed920bd41a182f4" title="Computes a &quot;signum vector&quot; of the same size as an input vector, where each element is:...">sign</a>(<span class="keyword">const</span> T* vector, <span class="keyword">const</span> <span class="keywordtype">int</span> size)
+<a name="l01011"></a>01011 {
+<a name="l01012"></a>01012     <span class="keyword">const</span> T* v_it = vector;
+<a name="l01013"></a>01013     <span class="keyword">const</span> T* v_end = vector+size;
+<a name="l01014"></a>01014 
+<a name="l01015"></a>01015     T* ret = <span class="keyword">new</span> T[size];
+<a name="l01016"></a>01016     T* r_it = ret;
+<a name="l01017"></a>01017 
+<a name="l01018"></a>01018     <span class="keyword">const</span> T zero = (T)0.0;
+<a name="l01019"></a>01019 
+<a name="l01020"></a>01020     <span class="keywordflow">while</span>(v_it != v_end)
+<a name="l01021"></a>01021     {
+<a name="l01022"></a>01022         *r_it = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>((<a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(*v_it, zero)? 0.0 : ((*v_it &gt; 0.0)? 1.0 : -1.0)));
+<a name="l01023"></a>01023 
+<a name="l01024"></a>01024         ++v_it;
+<a name="l01025"></a>01025         ++r_it;
+<a name="l01026"></a>01026     }
+<a name="l01027"></a>01027 
+<a name="l01028"></a>01028     <span class="keywordflow">return</span> ret;
+<a name="l01029"></a>01029 }
+<a name="l01030"></a>01030 
+<a name="l01043"></a>01043 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01044"></a><a class="code" href="../../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388">01044</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388" title="Compares element by element two vectors using a binary predicate, and returns a vector where each ele...">compare</a>(<span class="keyword">const</span> T* vector1, <span class="keyword">const</span> T* vector2, <span class="keyword">const</span> <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span>(*pred)(T,T))
+<a name="l01045"></a>01045 {
+<a name="l01046"></a>01046     <span class="keyword">const</span> T* v1_end = vector1+size;
+<a name="l01047"></a>01047 
+<a name="l01048"></a>01048     T* ret = <span class="keyword">new</span> T[size];
+<a name="l01049"></a>01049     T* r_it = ret;
+<a name="l01050"></a>01050 
+<a name="l01051"></a>01051     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
+<a name="l01052"></a>01052     <span class="keyword">const</span> T one = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
+<a name="l01053"></a>01053 
+<a name="l01054"></a>01054     <span class="keywordflow">for</span>(<span class="keyword">const</span> T *v1_it = vector1, *v2_it = vector2; v1_it != v1_end; ++v1_it, ++v2_it, ++r_it)
+<a name="l01055"></a>01055         *r_it = (*pred)(*v1_it, *v2_it)? one: zero;
+<a name="l01056"></a>01056 
+<a name="l01057"></a>01057     <span class="keywordflow">return</span> ret;
+<a name="l01058"></a>01058 }
+<a name="l01059"></a>01059 
+<a name="l01060"></a>01060 
+<a name="l01073"></a>01073 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01074"></a><a class="code" href="../../db/d4e/namespacegurls.html#af451b4a61520b4d079bf1362cd62617e">01074</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388" title="Compares element by element two vectors using a binary predicate, and returns a vector where each ele...">compare</a>(<span class="keyword">const</span> T* vector, <span class="keyword">const</span> T thr, <span class="keyword">const</span> <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span>(*pred)(T,T))
+<a name="l01075"></a>01075 {
+<a name="l01076"></a>01076     <span class="keyword">const</span> T* v1_end = vector+size;
 <a name="l01077"></a>01077 
-<a name="l01078"></a>01078 
-<a name="l01091"></a>01091 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01092"></a><a class="code" href="../../db/d4e/namespacegurls.html#af451b4a61520b4d079bf1362cd62617e">01092</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a95ababd787822755f1471be0f292f388" title="Compares element by element two vectors using a binary predicate, and returns a vector where each ele...">compare</a>(<span class="keyword">const</span> T* vector, <span class="keyword">const</span> T thr, <span class="keyword">const</span> <span class="keywordtype">int</span> size, <span class="keywordtype">bool</span>(*pred)(T,T))
-<a name="l01093"></a>01093 {
-<a name="l01094"></a>01094     <span class="keyword">const</span> T* v1_end = vector+size;
-<a name="l01095"></a>01095 
-<a name="l01096"></a>01096     T* ret = <span class="keyword">new</span> T[size];
-<a name="l01097"></a>01097     T* r_it = ret;
-<a name="l01098"></a>01098 
-<a name="l01099"></a>01099     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
-<a name="l01100"></a>01100     <span class="keyword">const</span> T one = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
-<a name="l01101"></a>01101 
-<a name="l01102"></a>01102     <span class="keywordflow">for</span>(<span class="keyword">const</span> T *v1_it = vector; v1_it != v1_end; ++v1_it, ++r_it)
-<a name="l01103"></a>01103         *r_it = (*pred)(*v1_it, thr)? one: zero;
-<a name="l01104"></a>01104 
-<a name="l01105"></a>01105     <span class="keywordflow">return</span> ret;
-<a name="l01106"></a>01106 }
-<a name="l01107"></a>01107 
-<a name="l01108"></a>01108 
-<a name="l01119"></a>01119 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01120"></a><a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336">01120</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">sort</a>(<span class="keyword">const</span> T* M, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> rows, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cols, <span class="keywordtype">bool</span>(*pred)(T,T), T* values, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* indices)
-<a name="l01121"></a>01121 {
-<a name="l01122"></a>01122     <span class="keyword">typedef</span> std::multimap&lt;T, unsigned long, bool(*)(T,T) &gt; MapType;
-<a name="l01123"></a>01123 
-<a name="l01124"></a>01124     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt; rows; ++i)
-<a name="l01125"></a>01125     {
-<a name="l01126"></a>01126         MapType data(pred);
-<a name="l01127"></a>01127 
-<a name="l01128"></a>01128         <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> j = 0; j &lt; cols; ++j)
-<a name="l01129"></a>01129         {
-<a name="l01130"></a>01130             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index = i+(rows*j);
-<a name="l01131"></a>01131             data.insert( std::pair&lt;T,unsigned long&gt;(M[index], j));
-<a name="l01132"></a>01132         }
-<a name="l01133"></a>01133 
-<a name="l01134"></a>01134         <span class="keyword">typename</span> MapType::iterator it = data.begin();
-<a name="l01135"></a>01135 
-<a name="l01136"></a>01136         <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> j = 0; j &lt; cols; ++j, ++it)
-<a name="l01137"></a>01137         {
-<a name="l01138"></a>01138             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index = i+(rows*j);
-<a name="l01139"></a>01139 
-<a name="l01140"></a>01140             <span class="keywordflow">if</span>(values != NULL)
-<a name="l01141"></a>01141                 values[index] = it-&gt;first;
-<a name="l01142"></a>01142 
-<a name="l01143"></a>01143             <span class="keywordflow">if</span>(indices != NULL)
-<a name="l01144"></a>01144                 indices[index] = it-&gt;second;
-<a name="l01145"></a>01145         }
-<a name="l01146"></a>01146     }
-<a name="l01147"></a>01147 }
+<a name="l01078"></a>01078     T* ret = <span class="keyword">new</span> T[size];
+<a name="l01079"></a>01079     T* r_it = ret;
+<a name="l01080"></a>01080 
+<a name="l01081"></a>01081     <span class="keyword">const</span> T zero = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.0);
+<a name="l01082"></a>01082     <span class="keyword">const</span> T one = <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
+<a name="l01083"></a>01083 
+<a name="l01084"></a>01084     <span class="keywordflow">for</span>(<span class="keyword">const</span> T *v1_it = vector; v1_it != v1_end; ++v1_it, ++r_it)
+<a name="l01085"></a>01085         *r_it = (*pred)(*v1_it, thr)? one: zero;
+<a name="l01086"></a>01086 
+<a name="l01087"></a>01087     <span class="keywordflow">return</span> ret;
+<a name="l01088"></a>01088 }
+<a name="l01089"></a>01089 
+<a name="l01090"></a>01090 
+<a name="l01101"></a>01101 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01102"></a><a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336">01102</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">sort</a>(<span class="keyword">const</span> T* M, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> rows, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cols, <span class="keywordtype">bool</span>(*pred)(T,T), T* values, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* indices)
+<a name="l01103"></a>01103 {
+<a name="l01104"></a>01104     <span class="keyword">typedef</span> std::multimap&lt;T, unsigned long, bool(*)(T,T) &gt; MapType;
+<a name="l01105"></a>01105 
+<a name="l01106"></a>01106     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt; rows; ++i)
+<a name="l01107"></a>01107     {
+<a name="l01108"></a>01108         MapType data(pred);
+<a name="l01109"></a>01109 
+<a name="l01110"></a>01110         <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> j = 0; j &lt; cols; ++j)
+<a name="l01111"></a>01111         {
+<a name="l01112"></a>01112             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index = i+(rows*j);
+<a name="l01113"></a>01113             data.insert( std::pair&lt;T,unsigned long&gt;(M[index], j));
+<a name="l01114"></a>01114         }
+<a name="l01115"></a>01115 
+<a name="l01116"></a>01116         <span class="keyword">typename</span> MapType::iterator it = data.begin();
+<a name="l01117"></a>01117 
+<a name="l01118"></a>01118         <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> j = 0; j &lt; cols; ++j, ++it)
+<a name="l01119"></a>01119         {
+<a name="l01120"></a>01120             <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> index = i+(rows*j);
+<a name="l01121"></a>01121 
+<a name="l01122"></a>01122             <span class="keywordflow">if</span>(values != NULL)
+<a name="l01123"></a>01123                 values[index] = it-&gt;first;
+<a name="l01124"></a>01124 
+<a name="l01125"></a>01125             <span class="keywordflow">if</span>(indices != NULL)
+<a name="l01126"></a>01126                 indices[index] = it-&gt;second;
+<a name="l01127"></a>01127         }
+<a name="l01128"></a>01128     }
+<a name="l01129"></a>01129 }
+<a name="l01130"></a>01130 
+<a name="l01142"></a>01142 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01143"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea">01143</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea" title="Returns the indices of the largest elements along different dimensions of a matrix.">indicesOfMax</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* ind, T* work, <span class="keyword">const</span> <span class="keywordtype">int</span> dimension) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l01144"></a>01144 {
+<a name="l01145"></a>01145     <span class="keyword">const</span> T *m_it;
+<a name="l01146"></a>01146     <span class="keywordtype">int</span> m_rows;
+<a name="l01147"></a>01147     <span class="keywordtype">int</span> m_cols;
 <a name="l01148"></a>01148 
-<a name="l01160"></a>01160 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01161"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea">01161</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea" title="Returns the indices of the largest elements along different dimensions of a matrix.">indicesOfMax</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* ind, T* work, <span class="keyword">const</span> <span class="keywordtype">int</span> dimension) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l01162"></a>01162 {
-<a name="l01163"></a>01163     <span class="keyword">const</span> T *m_it;
-<a name="l01164"></a>01164     <span class="keywordtype">int</span> m_rows;
-<a name="l01165"></a>01165     <span class="keywordtype">int</span> m_cols;
-<a name="l01166"></a>01166 
-<a name="l01167"></a>01167     <span class="keywordflow">switch</span>(dimension)
-<a name="l01168"></a>01168     {
-<a name="l01169"></a>01169     <span class="keywordflow">case</span> 1:
-<a name="l01170"></a>01170         m_it = A;
-<a name="l01171"></a>01171         m_rows = A_rows;
-<a name="l01172"></a>01172         m_cols = A_cols;
-<a name="l01173"></a>01173         <span class="keywordflow">break</span>;
-<a name="l01174"></a>01174     <span class="keywordflow">case</span> 2:
-<a name="l01175"></a>01175         <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a>(A, A_rows, A_cols, work);
-<a name="l01176"></a>01176         m_it = work;
-<a name="l01177"></a>01177         m_rows = A_cols;
-<a name="l01178"></a>01178         m_cols = A_rows;
-<a name="l01179"></a>01179         <span class="keywordflow">break</span>;
-<a name="l01180"></a>01180     <span class="keywordflow">default</span>:
-<a name="l01181"></a>01181         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gad52b41b606b19b5230b17dcaf36b3581" title="Message displayed when an input parameter has an invalid value.">gurls::Exception_Illegal_Argument_Value</a>);
-<a name="l01182"></a>01182     }
-<a name="l01183"></a>01183 
-<a name="l01184"></a>01184     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *r_it = ind, *r_end = ind+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
-<a name="l01185"></a>01185         *r_it = (std::max_element(m_it, m_it+m_rows) - m_it);
-<a name="l01186"></a>01186 
-<a name="l01187"></a>01187 }
+<a name="l01149"></a>01149     <span class="keywordflow">switch</span>(dimension)
+<a name="l01150"></a>01150     {
+<a name="l01151"></a>01151     <span class="keywordflow">case</span> 1:
+<a name="l01152"></a>01152         m_it = A;
+<a name="l01153"></a>01153         m_rows = A_rows;
+<a name="l01154"></a>01154         m_cols = A_cols;
+<a name="l01155"></a>01155         <span class="keywordflow">break</span>;
+<a name="l01156"></a>01156     <span class="keywordflow">case</span> 2:
+<a name="l01157"></a>01157         <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a>(A, A_rows, A_cols, work);
+<a name="l01158"></a>01158         m_it = work;
+<a name="l01159"></a>01159         m_rows = A_cols;
+<a name="l01160"></a>01160         m_cols = A_rows;
+<a name="l01161"></a>01161         <span class="keywordflow">break</span>;
+<a name="l01162"></a>01162     <span class="keywordflow">default</span>:
+<a name="l01163"></a>01163         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gad52b41b606b19b5230b17dcaf36b3581" title="Message displayed when an input parameter has an invalid value.">gurls::Exception_Illegal_Argument_Value</a>);
+<a name="l01164"></a>01164     }
+<a name="l01165"></a>01165 
+<a name="l01166"></a>01166     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *r_it = ind, *r_end = ind+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
+<a name="l01167"></a>01167         *r_it = (std::max_element(m_it, m_it+m_rows) - m_it);
+<a name="l01168"></a>01168 
+<a name="l01169"></a>01169 }
+<a name="l01170"></a>01170 
+<a name="l01182"></a>01182 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01183"></a><a class="code" href="../../db/d4e/namespacegurls.html#a32e6ab8c84d4bee2f94efedc5e8ea53a">01183</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a32e6ab8c84d4bee2f94efedc5e8ea53a" title="Returns the largest elements along different dimensions of a matrix.">maxValues</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, T* maxv, T* work, <span class="keyword">const</span> <span class="keywordtype">int</span> dimension) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l01184"></a>01184 {
+<a name="l01185"></a>01185     <span class="keyword">const</span> T *m_it;
+<a name="l01186"></a>01186     <span class="keywordtype">int</span> m_rows;
+<a name="l01187"></a>01187     <span class="keywordtype">int</span> m_cols;
 <a name="l01188"></a>01188 
-<a name="l01200"></a>01200 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01201"></a><a class="code" href="../../db/d4e/namespacegurls.html#a32e6ab8c84d4bee2f94efedc5e8ea53a">01201</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a32e6ab8c84d4bee2f94efedc5e8ea53a" title="Returns the largest elements along different dimensions of a matrix.">maxValues</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols, T* maxv, T* work, <span class="keyword">const</span> <span class="keywordtype">int</span> dimension) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l01202"></a>01202 {
-<a name="l01203"></a>01203     <span class="keyword">const</span> T *m_it;
-<a name="l01204"></a>01204     <span class="keywordtype">int</span> m_rows;
-<a name="l01205"></a>01205     <span class="keywordtype">int</span> m_cols;
-<a name="l01206"></a>01206 
-<a name="l01207"></a>01207     <span class="keywordflow">switch</span>(dimension)
-<a name="l01208"></a>01208     {
-<a name="l01209"></a>01209     <span class="keywordflow">case</span> 1:
-<a name="l01210"></a>01210         m_it = A;
-<a name="l01211"></a>01211         m_rows = A_rows;
-<a name="l01212"></a>01212         m_cols = A_cols;
-<a name="l01213"></a>01213         <span class="keywordflow">break</span>;
-<a name="l01214"></a>01214     <span class="keywordflow">case</span> 2:
-<a name="l01215"></a>01215         <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a>(A, A_rows, A_cols, work);
-<a name="l01216"></a>01216         m_it = work;
-<a name="l01217"></a>01217         m_rows = A_cols;
-<a name="l01218"></a>01218         m_cols = A_rows;
-<a name="l01219"></a>01219         <span class="keywordflow">break</span>;
-<a name="l01220"></a>01220     <span class="keywordflow">default</span>:
-<a name="l01221"></a>01221         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gad52b41b606b19b5230b17dcaf36b3581" title="Message displayed when an input parameter has an invalid value.">gurls::Exception_Illegal_Argument_Value</a>);
-<a name="l01222"></a>01222     }
-<a name="l01223"></a>01223 
-<a name="l01224"></a>01224     <span class="keywordflow">for</span>(T *r_it = maxv, *r_end = maxv+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
-<a name="l01225"></a>01225         *r_it = *std::max_element(m_it, m_it+m_rows);
-<a name="l01226"></a>01226 
-<a name="l01227"></a>01227 }
-<a name="l01228"></a>01228 
-<a name="l01243"></a>01243 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01244"></a><a class="code" href="../../db/d4e/namespacegurls.html#a68355fb1c541564d3179538285d4673a">01244</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a68355fb1c541564d3179538285d4673a" title="Builds array of possible values for the regularization parameter, generating a geometric series from ...">lambdaguesses</a>(<span class="keyword">const</span> T* eigvals, <span class="keyword">const</span> <span class="keywordtype">int</span> len, <span class="keyword">const</span> <span class="keywordtype">int</span> r, <span class="keyword">const</span> <span class="keywordtype">int</span> n, <span class="keyword">const</span> <span class="keywordtype">int</span> nlambda, <span class="keyword">const</span> T minl)
-<a name="l01245"></a>01245 {
-<a name="l01246"></a>01246     T* guesses = <span class="keyword">new</span> T[nlambda];
-<a name="l01247"></a>01247 
-<a name="l01248"></a>01248     T* tmp = <span class="keyword">new</span> T[len];
-<a name="l01249"></a>01249     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(tmp, eigvals, len);
-<a name="l01250"></a>01250 
-<a name="l01251"></a>01251     <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">std::sort</a>(tmp, tmp+len);
-<a name="l01252"></a>01252 
-<a name="l01253"></a>01253     <span class="comment">/*const*/</span> T lmin = tmp[len-r];
-<a name="l01254"></a>01254     <span class="keyword">const</span> T lmax = tmp[len-1];
-<a name="l01255"></a>01255 
-<a name="l01256"></a>01256     <span class="keyword">delete</span>[] tmp;
-<a name="l01257"></a>01257 
-<a name="l01258"></a>01258     T thr1 = std::min(lmin, minl*lmax);
-<a name="l01259"></a>01259     T thr2 = 200*<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(sqrt(std::numeric_limits&lt;T&gt;::epsilon()));
-<a name="l01260"></a>01260 
-<a name="l01261"></a>01261     lmin = std::max(thr1, thr2);
+<a name="l01189"></a>01189     <span class="keywordflow">switch</span>(dimension)
+<a name="l01190"></a>01190     {
+<a name="l01191"></a>01191     <span class="keywordflow">case</span> 1:
+<a name="l01192"></a>01192         m_it = A;
+<a name="l01193"></a>01193         m_rows = A_rows;
+<a name="l01194"></a>01194         m_cols = A_cols;
+<a name="l01195"></a>01195         <span class="keywordflow">break</span>;
+<a name="l01196"></a>01196     <span class="keywordflow">case</span> 2:
+<a name="l01197"></a>01197         <a class="code" href="../../db/d4e/namespacegurls.html#a6d60c6fa2a1a6336ebf51e9adfbf3d7e" title="Transpose a matrix.">transpose</a>(A, A_rows, A_cols, work);
+<a name="l01198"></a>01198         m_it = work;
+<a name="l01199"></a>01199         m_rows = A_cols;
+<a name="l01200"></a>01200         m_cols = A_rows;
+<a name="l01201"></a>01201         <span class="keywordflow">break</span>;
+<a name="l01202"></a>01202     <span class="keywordflow">default</span>:
+<a name="l01203"></a>01203         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gad52b41b606b19b5230b17dcaf36b3581" title="Message displayed when an input parameter has an invalid value.">gurls::Exception_Illegal_Argument_Value</a>);
+<a name="l01204"></a>01204     }
+<a name="l01205"></a>01205 
+<a name="l01206"></a>01206     <span class="keywordflow">for</span>(T *r_it = maxv, *r_end = maxv+m_cols; r_it != r_end; ++r_it, m_it += m_rows)
+<a name="l01207"></a>01207         *r_it = *std::max_element(m_it, m_it+m_rows);
+<a name="l01208"></a>01208 
+<a name="l01209"></a>01209 }
+<a name="l01210"></a>01210 
+<a name="l01225"></a>01225 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01226"></a><a class="code" href="../../db/d4e/namespacegurls.html#a68355fb1c541564d3179538285d4673a">01226</a> T* <a class="code" href="../../db/d4e/namespacegurls.html#a68355fb1c541564d3179538285d4673a" title="Builds array of possible values for the regularization parameter, generating a geometric series from ...">lambdaguesses</a>(<span class="keyword">const</span> T* eigvals, <span class="keyword">const</span> <span class="keywordtype">int</span> len, <span class="keyword">const</span> <span class="keywordtype">int</span> r, <span class="keyword">const</span> <span class="keywordtype">int</span> n, <span class="keyword">const</span> <span class="keywordtype">int</span> nlambda, <span class="keyword">const</span> T minl)
+<a name="l01227"></a>01227 {
+<a name="l01228"></a>01228     T* guesses = <span class="keyword">new</span> T[nlambda];
+<a name="l01229"></a>01229 
+<a name="l01230"></a>01230     T* tmp = <span class="keyword">new</span> T[len];
+<a name="l01231"></a>01231     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(tmp, eigvals, len);
+<a name="l01232"></a>01232 
+<a name="l01233"></a>01233     <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">std::sort</a>(tmp, tmp+len);
+<a name="l01234"></a>01234 
+<a name="l01235"></a>01235     <span class="comment">/*const*/</span> T lmin = tmp[len-r];
+<a name="l01236"></a>01236     <span class="keyword">const</span> T lmax = tmp[len-1];
+<a name="l01237"></a>01237 
+<a name="l01238"></a>01238     <span class="keyword">delete</span>[] tmp;
+<a name="l01239"></a>01239 
+<a name="l01240"></a>01240     T thr1 = std::min(lmin, minl*lmax);
+<a name="l01241"></a>01241     T thr2 = 200*<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(sqrt(std::numeric_limits&lt;T&gt;::epsilon()));
+<a name="l01242"></a>01242 
+<a name="l01243"></a>01243     lmin = std::max(thr1, thr2);
+<a name="l01244"></a>01244 
+<a name="l01245"></a>01245     <span class="keyword">const</span> T base = (lmax/lmin);
+<a name="l01246"></a>01246     <span class="keyword">const</span> T den = nlambda-<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
+<a name="l01247"></a>01247     <span class="keyword">const</span> T nT = (T)n;
+<a name="l01248"></a>01248 
+<a name="l01249"></a>01249     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt; nlambda; ++i)
+<a name="l01250"></a>01250         guesses[i] = (lmin * pow( base, ((T)i)/den ) )/nT;
+<a name="l01251"></a>01251 
+<a name="l01252"></a>01252     <span class="keywordflow">return</span> guesses;
+<a name="l01253"></a>01253 }
+<a name="l01254"></a>01254 
+<a name="l01255"></a>01255 <span class="comment">//template&lt;typename T&gt;</span>
+<a name="l01256"></a>01256 <span class="comment">//T* mldivide(const T* A, const T* B,</span>
+<a name="l01257"></a>01257 <span class="comment">//            const int a_rows, const int a_cols,</span>
+<a name="l01258"></a>01258 <span class="comment">//            const int b_rows, const int b_cols,</span>
+<a name="l01259"></a>01259 <span class="comment">//            int&amp; res_rows, int&amp; res_cols)</span>
+<a name="l01260"></a>01260 <span class="comment">//{</span>
+<a name="l01261"></a>01261 <span class="comment">//    // A\B = pinv(A)*B</span>
 <a name="l01262"></a>01262 
-<a name="l01263"></a>01263     <span class="keyword">const</span> T base = (lmax/lmin);
-<a name="l01264"></a>01264     <span class="keyword">const</span> T den = nlambda-<span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(1.0);
-<a name="l01265"></a>01265     <span class="keyword">const</span> T nT = (T)n;
-<a name="l01266"></a>01266 
-<a name="l01267"></a>01267     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt; nlambda; ++i)
-<a name="l01268"></a>01268         guesses[i] = (lmin * pow( base, ((T)i)/den ) )/nT;
-<a name="l01269"></a>01269 
-<a name="l01270"></a>01270     <span class="keywordflow">return</span> guesses;
-<a name="l01271"></a>01271 }
-<a name="l01272"></a>01272 
-<a name="l01273"></a>01273 <span class="comment">//template&lt;typename T&gt;</span>
-<a name="l01274"></a>01274 <span class="comment">//T* mldivide(const T* A, const T* B,</span>
-<a name="l01275"></a>01275 <span class="comment">//            const int a_rows, const int a_cols,</span>
-<a name="l01276"></a>01276 <span class="comment">//            const int b_rows, const int b_cols,</span>
-<a name="l01277"></a>01277 <span class="comment">//            int&amp; res_rows, int&amp; res_cols)</span>
-<a name="l01278"></a>01278 <span class="comment">//{</span>
-<a name="l01279"></a>01279 <span class="comment">//    // A\B = pinv(A)*B</span>
-<a name="l01280"></a>01280 
-<a name="l01281"></a>01281 <span class="comment">//    int aInv_rows, aInv_cols;</span>
-<a name="l01282"></a>01282 <span class="comment">//    T* A_inv = pinv(A, a_rows, a_cols, aInv_rows, aInv_cols);</span>
-<a name="l01283"></a>01283 
-<a name="l01284"></a>01284 <span class="comment">//    T* ret = new T[aInv_rows*b_cols];</span>
-<a name="l01285"></a>01285 <span class="comment">//    dot(A_inv, B, ret, aInv_rows, aInv_cols, b_rows, b_cols, aInv_rows, b_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);</span>
-<a name="l01286"></a>01286 
-<a name="l01287"></a>01287 <span class="comment">//    delete[] A_inv;</span>
-<a name="l01288"></a>01288 
-<a name="l01289"></a>01289 <span class="comment">//    res_rows = aInv_rows;</span>
-<a name="l01290"></a>01290 <span class="comment">//    res_cols = b_cols;</span>
-<a name="l01291"></a>01291 
-<a name="l01292"></a>01292 <span class="comment">//    return ret;</span>
-<a name="l01293"></a>01293 
-<a name="l01294"></a>01294 <span class="comment">//}</span>
-<a name="l01295"></a>01295 
-<a name="l01307"></a>01307 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01308"></a><a class="code" href="../../db/d4e/namespacegurls.html#aa4cf57d556e713079f9f556a0951486e">01308</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aa4cf57d556e713079f9f556a0951486e" title="Performs left division of squared matrices.">mldivide_squared</a>(<span class="keyword">const</span> T* A, T* B,
-<a name="l01309"></a>01309             <span class="keyword">const</span> <span class="keywordtype">int</span> a_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> a_cols,
-<a name="l01310"></a>01310             <span class="keyword">const</span> <span class="keywordtype">int</span> b_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> b_cols,
-<a name="l01311"></a>01311             <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> transA)
-<a name="l01312"></a>01312 {
-<a name="l01313"></a>01313     <span class="keywordflow">if</span> (a_cols != a_rows)
-<a name="l01314"></a>01314         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;The input matrix A must be squared&quot;</span>);
-<a name="l01315"></a>01315 
-<a name="l01316"></a>01316     <span class="keyword">const</span> <span class="keywordtype">int</span> lda = a_rows;
-<a name="l01317"></a>01317     <span class="keyword">const</span> <span class="keywordtype">int</span> ldb = b_rows;
-<a name="l01318"></a>01318 
-<a name="l01319"></a>01319     <a class="code" href="../../db/d4e/namespacegurls.html#a736d5bda0bca8dff4586fc1de89eedc9" title="Template function to call BLAS *TRSM routines.">trsm</a>(CblasLeft, CblasUpper, transA, CblasNonUnit, b_rows, b_cols, (T)1.0, A, lda, B, ldb);
-<a name="l01320"></a>01320 }
-<a name="l01321"></a>01321 
-<a name="l01322"></a>01322 
-<a name="l01326"></a>01326 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l01327"></a>01327 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a736d5bda0bca8dff4586fc1de89eedc9" title="Template function to call BLAS *TRSM routines.">trsm</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a65d460224ff1a74c16799b7a2febd70a" title="Side options (left, right)">CBLAS_SIDE</a> Side, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3e3b1abfe9f414a711d30d7c2955d013" title="Upper/lower options (upper, lower)">CBLAS_UPLO</a> Uplo, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3e7a144c59b79cc681105e939e6c5771" title="Diagonal options (unit, non unit)">CBLAS_DIAG</a> Diag,
-<a name="l01328"></a>01328                  <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> T alpha, <span class="keyword">const</span> T *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda, T *B, <span class="keyword">const</span> <span class="keywordtype">int</span> ldb);
-<a name="l01329"></a>01329 
-<a name="l01348"></a>01348 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l01349"></a><a class="code" href="../../db/d4e/namespacegurls.html#a89bed76dd7920ad067ca0f5548feafdd">01349</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac363704394a8b83cc1929f35864064ef" title="Implements the SVD decomposition of a general rectangular matrix: A = U*W*Vt.">svd</a>(<span class="keyword">const</span> T* A, T*&amp; U, T*&amp; S, T*&amp; Vt,
-<a name="l01350"></a>01350          <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols,
-<a name="l01351"></a>01351          <span class="keywordtype">int</span>&amp; U_rows, <span class="keywordtype">int</span>&amp; U_cols,
-<a name="l01352"></a>01352          <span class="keywordtype">int</span>&amp; S_len,
-<a name="l01353"></a>01353          <span class="keywordtype">int</span>&amp; Vt_rows, <span class="keywordtype">int</span>&amp; Vt_cols, <span class="keywordtype">bool</span> econ = <span class="keyword">false</span>) throw(<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l01354"></a>01354 {
-<a name="l01355"></a>01355     <span class="comment">// A = U*S*Vt</span>
-<a name="l01356"></a>01356 
-<a name="l01357"></a>01357     <span class="keywordtype">char</span> jobu, jobvt;
-<a name="l01358"></a>01358 
-<a name="l01359"></a>01359     <span class="keywordtype">int</span> m = A_rows;
-<a name="l01360"></a>01360     <span class="keywordtype">int</span> n = A_cols;
-<a name="l01361"></a>01361     <span class="keywordtype">int</span> k = std::min&lt;int&gt;(m, n);
-<a name="l01362"></a>01362     <span class="keywordtype">int</span> ldvt;
+<a name="l01263"></a>01263 <span class="comment">//    int aInv_rows, aInv_cols;</span>
+<a name="l01264"></a>01264 <span class="comment">//    T* A_inv = pinv(A, a_rows, a_cols, aInv_rows, aInv_cols);</span>
+<a name="l01265"></a>01265 
+<a name="l01266"></a>01266 <span class="comment">//    T* ret = new T[aInv_rows*b_cols];</span>
+<a name="l01267"></a>01267 <span class="comment">//    dot(A_inv, B, ret, aInv_rows, aInv_cols, b_rows, b_cols, aInv_rows, b_cols, CblasNoTrans, CblasNoTrans, CblasColMajor);</span>
+<a name="l01268"></a>01268 
+<a name="l01269"></a>01269 <span class="comment">//    delete[] A_inv;</span>
+<a name="l01270"></a>01270 
+<a name="l01271"></a>01271 <span class="comment">//    res_rows = aInv_rows;</span>
+<a name="l01272"></a>01272 <span class="comment">//    res_cols = b_cols;</span>
+<a name="l01273"></a>01273 
+<a name="l01274"></a>01274 <span class="comment">//    return ret;</span>
+<a name="l01275"></a>01275 
+<a name="l01276"></a>01276 <span class="comment">//}</span>
+<a name="l01277"></a>01277 
+<a name="l01289"></a>01289 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01290"></a><a class="code" href="../../db/d4e/namespacegurls.html#aa4cf57d556e713079f9f556a0951486e">01290</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aa4cf57d556e713079f9f556a0951486e" title="Performs left division of squared matrices.">mldivide_squared</a>(<span class="keyword">const</span> T* A, T* B,
+<a name="l01291"></a>01291             <span class="keyword">const</span> <span class="keywordtype">int</span> a_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> a_cols,
+<a name="l01292"></a>01292             <span class="keyword">const</span> <span class="keywordtype">int</span> b_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> b_cols,
+<a name="l01293"></a>01293             <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> transA)
+<a name="l01294"></a>01294 {
+<a name="l01295"></a>01295     <span class="keywordflow">if</span> (a_cols != a_rows)
+<a name="l01296"></a>01296         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;The input matrix A must be squared&quot;</span>);
+<a name="l01297"></a>01297 
+<a name="l01298"></a>01298     <span class="keyword">const</span> <span class="keywordtype">int</span> lda = a_rows;
+<a name="l01299"></a>01299     <span class="keyword">const</span> <span class="keywordtype">int</span> ldb = b_rows;
+<a name="l01300"></a>01300 
+<a name="l01301"></a>01301     <a class="code" href="../../db/d4e/namespacegurls.html#a736d5bda0bca8dff4586fc1de89eedc9" title="Template function to call BLAS *TRSM routines.">trsm</a>(CblasLeft, CblasUpper, transA, CblasNonUnit, b_rows, b_cols, (T)1.0, A, lda, B, ldb);
+<a name="l01302"></a>01302 }
+<a name="l01303"></a>01303 
+<a name="l01304"></a>01304 
+<a name="l01323"></a>01323 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l01324"></a><a class="code" href="../../db/d4e/namespacegurls.html#a89bed76dd7920ad067ca0f5548feafdd">01324</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac363704394a8b83cc1929f35864064ef" title="Implements the SVD decomposition of a general rectangular matrix: A = U*W*Vt.">svd</a>(<span class="keyword">const</span> T* A, T*&amp; U, T*&amp; S, T*&amp; Vt,
+<a name="l01325"></a>01325          <span class="keyword">const</span> <span class="keywordtype">int</span> A_rows, <span class="keyword">const</span> <span class="keywordtype">int</span> A_cols,
+<a name="l01326"></a>01326          <span class="keywordtype">int</span>&amp; U_rows, <span class="keywordtype">int</span>&amp; U_cols,
+<a name="l01327"></a>01327          <span class="keywordtype">int</span>&amp; S_len,
+<a name="l01328"></a>01328          <span class="keywordtype">int</span>&amp; Vt_rows, <span class="keywordtype">int</span>&amp; Vt_cols, <span class="keywordtype">bool</span> econ = <span class="keyword">false</span>) throw(<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l01329"></a>01329 {
+<a name="l01330"></a>01330     <span class="comment">// A = U*S*Vt</span>
+<a name="l01331"></a>01331 
+<a name="l01332"></a>01332     <span class="keywordtype">char</span> jobu, jobvt;
+<a name="l01333"></a>01333 
+<a name="l01334"></a>01334     <span class="keywordtype">int</span> m = A_rows;
+<a name="l01335"></a>01335     <span class="keywordtype">int</span> n = A_cols;
+<a name="l01336"></a>01336     <span class="keywordtype">int</span> k = std::min&lt;int&gt;(m, n);
+<a name="l01337"></a>01337     <span class="keywordtype">int</span> ldvt;
+<a name="l01338"></a>01338 
+<a name="l01339"></a>01339     S = <span class="keyword">new</span> T[k];
+<a name="l01340"></a>01340     S_len = k;
+<a name="l01341"></a>01341 
+<a name="l01342"></a>01342     U_rows = m;
+<a name="l01343"></a>01343     Vt_cols = n;
+<a name="l01344"></a>01344 
+<a name="l01345"></a>01345     <span class="keywordflow">if</span>(econ)
+<a name="l01346"></a>01346     {
+<a name="l01347"></a>01347 <span class="comment">//        jobu = jobvt = &#39;S&#39;;</span>
+<a name="l01348"></a>01348         <span class="keywordflow">if</span>(m&gt;n)
+<a name="l01349"></a>01349         {
+<a name="l01350"></a>01350             jobu = <span class="charliteral">&#39;S&#39;</span>;
+<a name="l01351"></a>01351             jobvt = <span class="charliteral">&#39;A&#39;</span>;
+<a name="l01352"></a>01352         }
+<a name="l01353"></a>01353         <span class="keywordflow">else</span> <span class="keywordflow">if</span>(m&lt;n)
+<a name="l01354"></a>01354         {
+<a name="l01355"></a>01355             jobu = <span class="charliteral">&#39;A&#39;</span>;
+<a name="l01356"></a>01356             jobvt = <span class="charliteral">&#39;S&#39;</span>;
+<a name="l01357"></a>01357         }
+<a name="l01358"></a>01358         <span class="keywordflow">else</span>
+<a name="l01359"></a>01359             jobu = jobvt = <span class="charliteral">&#39;S&#39;</span>;
+<a name="l01360"></a>01360 
+<a name="l01361"></a>01361         U = <span class="keyword">new</span> T[m*k];
+<a name="l01362"></a>01362         Vt = <span class="keyword">new</span> T[k*n];
 <a name="l01363"></a>01363 
-<a name="l01364"></a>01364     S = <span class="keyword">new</span> T[k];
-<a name="l01365"></a>01365     S_len = k;
+<a name="l01364"></a>01364         U_cols = k;
+<a name="l01365"></a>01365         Vt_rows = k;
 <a name="l01366"></a>01366 
-<a name="l01367"></a>01367     U_rows = m;
-<a name="l01368"></a>01368     Vt_cols = n;
-<a name="l01369"></a>01369 
-<a name="l01370"></a>01370     <span class="keywordflow">if</span>(econ)
-<a name="l01371"></a>01371     {
-<a name="l01372"></a>01372 <span class="comment">//        jobu = jobvt = &#39;S&#39;;</span>
-<a name="l01373"></a>01373         <span class="keywordflow">if</span>(m&gt;n)
-<a name="l01374"></a>01374         {
-<a name="l01375"></a>01375             jobu = <span class="charliteral">&#39;S&#39;</span>;
-<a name="l01376"></a>01376             jobvt = <span class="charliteral">&#39;A&#39;</span>;
-<a name="l01377"></a>01377         }
-<a name="l01378"></a>01378         <span class="keywordflow">else</span> <span class="keywordflow">if</span>(m&lt;n)
-<a name="l01379"></a>01379         {
-<a name="l01380"></a>01380             jobu = <span class="charliteral">&#39;A&#39;</span>;
-<a name="l01381"></a>01381             jobvt = <span class="charliteral">&#39;S&#39;</span>;
-<a name="l01382"></a>01382         }
-<a name="l01383"></a>01383         <span class="keywordflow">else</span>
-<a name="l01384"></a>01384             jobu = jobvt = <span class="charliteral">&#39;S&#39;</span>;
-<a name="l01385"></a>01385 
-<a name="l01386"></a>01386         U = <span class="keyword">new</span> T[m*k];
-<a name="l01387"></a>01387         Vt = <span class="keyword">new</span> T[k*n];
-<a name="l01388"></a>01388 
-<a name="l01389"></a>01389         U_cols = k;
-<a name="l01390"></a>01390         Vt_rows = k;
-<a name="l01391"></a>01391 
-<a name="l01392"></a>01392         ldvt = k;
-<a name="l01393"></a>01393     }
-<a name="l01394"></a>01394     <span class="keywordflow">else</span>
-<a name="l01395"></a>01395     {
-<a name="l01396"></a>01396         jobu = jobvt = <span class="charliteral">&#39;A&#39;</span>;
-<a name="l01397"></a>01397 
-<a name="l01398"></a>01398         U = <span class="keyword">new</span> T[m*m];
-<a name="l01399"></a>01399         Vt = <span class="keyword">new</span> T[n*n];
-<a name="l01400"></a>01400 
-<a name="l01401"></a>01401         U_cols = m;
-<a name="l01402"></a>01402         Vt_rows = n;
+<a name="l01367"></a>01367         ldvt = k;
+<a name="l01368"></a>01368     }
+<a name="l01369"></a>01369     <span class="keywordflow">else</span>
+<a name="l01370"></a>01370     {
+<a name="l01371"></a>01371         jobu = jobvt = <span class="charliteral">&#39;A&#39;</span>;
+<a name="l01372"></a>01372 
+<a name="l01373"></a>01373         U = <span class="keyword">new</span> T[m*m];
+<a name="l01374"></a>01374         Vt = <span class="keyword">new</span> T[n*n];
+<a name="l01375"></a>01375 
+<a name="l01376"></a>01376         U_cols = m;
+<a name="l01377"></a>01377         Vt_rows = n;
+<a name="l01378"></a>01378 
+<a name="l01379"></a>01379         ldvt = n;
+<a name="l01380"></a>01380     }
+<a name="l01381"></a>01381 
+<a name="l01382"></a>01382     <span class="comment">//MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))</span>
+<a name="l01383"></a>01383 
+<a name="l01384"></a>01384     <span class="keywordtype">int</span> lda = A_rows;
+<a name="l01385"></a>01385     <span class="keywordtype">int</span> ldu = m;
+<a name="l01386"></a>01386     <span class="keywordtype">int</span> info, lwork = std::max&lt;int&gt;(3*k+std::max&lt;int&gt;(m,n), 5*k);
+<a name="l01387"></a>01387     T* work = <span class="keyword">new</span> T[lwork];
+<a name="l01388"></a>01388     T* cpy = <span class="keyword">new</span> T[m*n];
+<a name="l01389"></a>01389     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(cpy, A, A_rows*A_cols);
+<a name="l01390"></a>01390 
+<a name="l01391"></a>01391     <a class="code" href="../../db/d4e/namespacegurls.html#aab6cd9a9688f9d62ee51cf92fb4dac5d" title="Template function to call BLAS *GESVD routines.">gesvd_</a>(&amp;jobu, &amp;jobvt, &amp;m, &amp;n, cpy, &amp;lda, S, U, &amp;ldu, Vt, &amp;ldvt, work, &amp;lwork, &amp;info);
+<a name="l01392"></a>01392 
+<a name="l01393"></a>01393     <span class="keyword">delete</span>[] work;
+<a name="l01394"></a>01394     <span class="keyword">delete</span>[] cpy;
+<a name="l01395"></a>01395 
+<a name="l01396"></a>01396     <span class="keywordflow">if</span>(info != 0)
+<a name="l01397"></a>01397     {
+<a name="l01398"></a>01398         std::stringstream str;
+<a name="l01399"></a>01399         str &lt;&lt; <span class="stringliteral">&quot;SVD failed, error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;
+<a name="l01400"></a>01400         <span class="keywordflow">throw</span> gException(str.str());
+<a name="l01401"></a>01401     }
+<a name="l01402"></a>01402 }
 <a name="l01403"></a>01403 
-<a name="l01404"></a>01404         ldvt = n;
-<a name="l01405"></a>01405     }
-<a name="l01406"></a>01406 
-<a name="l01407"></a>01407     <span class="comment">//MAX(1,3*MIN(M,N)+MAX(M,N),5*MIN(M,N))</span>
-<a name="l01408"></a>01408 
-<a name="l01409"></a>01409     <span class="keywordtype">int</span> lda = A_rows;
-<a name="l01410"></a>01410     <span class="keywordtype">int</span> ldu = m;
-<a name="l01411"></a>01411     <span class="keywordtype">int</span> info, lwork = std::max&lt;int&gt;(3*k+std::max&lt;int&gt;(m,n), 5*k);
-<a name="l01412"></a>01412     T* work = <span class="keyword">new</span> T[lwork];
-<a name="l01413"></a>01413     T* cpy = <span class="keyword">new</span> T[m*n];
-<a name="l01414"></a>01414     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(cpy, A, A_rows*A_cols);
-<a name="l01415"></a>01415 
-<a name="l01416"></a>01416     <a class="code" href="../../db/d4e/namespacegurls.html#aab6cd9a9688f9d62ee51cf92fb4dac5d" title="Template function to call BLAS *GESVD routines.">gesvd_</a>(&amp;jobu, &amp;jobvt, &amp;m, &amp;n, cpy, &amp;lda, S, U, &amp;ldu, Vt, &amp;ldvt, work, &amp;lwork, &amp;info);
-<a name="l01417"></a>01417 
-<a name="l01418"></a>01418     <span class="keyword">delete</span>[] work;
-<a name="l01419"></a>01419     <span class="keyword">delete</span>[] cpy;
+<a name="l01407"></a>01407 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01408"></a><a class="code" href="../../db/d4e/namespacegurls.html#a75f6afe3bf7f7be79d66714593f5c7bc">01408</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a75f6afe3bf7f7be79d66714593f5c7bc" title="Generates a vector containing a random permutation of the values from start to start+n inclusive...">randperm</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n, T* seq, <span class="keywordtype">bool</span> generate = <span class="keyword">true</span>, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> start = 1)
+<a name="l01409"></a>01409 {
+<a name="l01410"></a>01410     <span class="keywordflow">if</span>(generate)
+<a name="l01411"></a>01411     {
+<a name="l01412"></a>01412         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> val = start;
+<a name="l01413"></a>01413         <span class="keywordflow">for</span>(T *it = seq, *end= seq+n; it != end; ++it)
+<a name="l01414"></a>01414             *it = val++;
+<a name="l01415"></a>01415     }
+<a name="l01416"></a>01416 
+<a name="l01417"></a>01417     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;n; ++i)
+<a name="l01418"></a>01418         <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">std::swap</a>(seq[rand()%n], seq[rand()%n]);
+<a name="l01419"></a>01419 }
 <a name="l01420"></a>01420 
-<a name="l01421"></a>01421     <span class="keywordflow">if</span>(info != 0)
-<a name="l01422"></a>01422     {
-<a name="l01423"></a>01423         std::stringstream str;
-<a name="l01424"></a>01424         str &lt;&lt; <span class="stringliteral">&quot;SVD failed, error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;
-<a name="l01425"></a>01425         <span class="keywordflow">throw</span> gException(str.str());
-<a name="l01426"></a>01426     }
-<a name="l01427"></a>01427 }
-<a name="l01428"></a>01428 
-<a name="l01432"></a>01432 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01433"></a>01433 <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#aab6cd9a9688f9d62ee51cf92fb4dac5d" title="Template function to call BLAS *GESVD routines.">gesvd_</a>(<span class="keywordtype">char</span> *jobu, <span class="keywordtype">char</span> *jobvt, <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, T *a, <span class="keywordtype">int</span> *lda, T *s, T *u, <span class="keywordtype">int</span> *ldu, T *vt, <span class="keywordtype">int</span> *ldvt, T *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info);
-<a name="l01434"></a>01434 
-<a name="l01438"></a>01438 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01439"></a><a class="code" href="../../db/d4e/namespacegurls.html#a75f6afe3bf7f7be79d66714593f5c7bc">01439</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a75f6afe3bf7f7be79d66714593f5c7bc" title="Generates a vector containing a random permutation of the values from start to start+n inclusive...">randperm</a>(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n, T* seq, <span class="keywordtype">bool</span> generate = <span class="keyword">true</span>, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> start = 1)
-<a name="l01440"></a>01440 {
-<a name="l01441"></a>01441     <span class="keywordflow">if</span>(generate)
-<a name="l01442"></a>01442     {
-<a name="l01443"></a>01443         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> val = start;
-<a name="l01444"></a>01444         <span class="keywordflow">for</span>(T *it = seq, *end= seq+n; it != end; ++it)
-<a name="l01445"></a>01445             *it = val++;
-<a name="l01446"></a>01446     }
-<a name="l01447"></a>01447 
-<a name="l01448"></a>01448     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;n; ++i)
-<a name="l01449"></a>01449         <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">std::swap</a>(seq[rand()%n], seq[rand()%n]);
-<a name="l01450"></a>01450 }
+<a name="l01430"></a>01430 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01431"></a><a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547">01431</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(<span class="keyword">const</span> T* M, <span class="keyword">const</span> <span class="keywordtype">int</span> rows, <span class="keyword">const</span> <span class="keywordtype">int</span> cols, <span class="keyword">const</span> <span class="keywordtype">int</span> row_index , T* row)
+<a name="l01432"></a>01432 {
+<a name="l01433"></a>01433     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(row, M+row_index, cols, 1, rows);
+<a name="l01434"></a>01434 }
+<a name="l01435"></a>01435 
+<a name="l01443"></a>01443 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01444"></a><a class="code" href="../../db/d4e/namespacegurls.html#aea6911142d7b74fcb892d620e3d4e836">01444</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aea6911142d7b74fcb892d620e3d4e836" title="Computes the eigenvalues/eigenvectors of a squared and symmetric input matrix.">eig_sm</a>(T* A, T* L, <span class="keywordtype">int</span> A_rows_cols) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l01445"></a>01445 {
+<a name="l01446"></a>01446     <span class="keywordtype">char</span> jobz = <span class="charliteral">&#39;V&#39;</span>;
+<a name="l01447"></a>01447     <span class="keywordtype">char</span> uplo = <span class="charliteral">&#39;L&#39;</span>;
+<a name="l01448"></a>01448     <span class="keywordtype">int</span> n = A_rows_cols, lda = n;
+<a name="l01449"></a>01449     <span class="keywordtype">int</span> info, lwork = 4*n;
+<a name="l01450"></a>01450     T* work = <span class="keyword">new</span> T[lwork];
 <a name="l01451"></a>01451 
-<a name="l01461"></a>01461 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01462"></a><a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547">01462</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(<span class="keyword">const</span> T* M, <span class="keyword">const</span> <span class="keywordtype">int</span> rows, <span class="keyword">const</span> <span class="keywordtype">int</span> cols, <span class="keyword">const</span> <span class="keywordtype">int</span> row_index , T* row)
-<a name="l01463"></a>01463 {
-<a name="l01464"></a>01464     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(row, M+row_index, cols, 1, rows);
-<a name="l01465"></a>01465 }
-<a name="l01466"></a>01466 
+<a name="l01452"></a>01452     <a class="code" href="../../db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da" title="Template function to call LAPACK *SYEV routines.">syev</a>(&amp;jobz, &amp;uplo, &amp;n, A, &amp;lda, L, work, &amp;lwork, &amp;info );
+<a name="l01453"></a>01453 
+<a name="l01454"></a>01454     <span class="keyword">delete</span>[] work;
+<a name="l01455"></a>01455 
+<a name="l01456"></a>01456     <span class="keywordflow">if</span>(info != 0)
+<a name="l01457"></a>01457     {
+<a name="l01458"></a>01458         std::stringstream str;
+<a name="l01459"></a>01459         str &lt;&lt; <span class="stringliteral">&quot;Eigenvalues/eigenVectors computation failed, error code &quot;</span> &lt;&lt; info &lt;&lt; <span class="stringliteral">&quot;;&quot;</span> &lt;&lt; std::endl;
+<a name="l01460"></a>01460         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(str.str());
+<a name="l01461"></a>01461     }
+<a name="l01462"></a>01462 }
+<a name="l01463"></a>01463 
 <a name="l01470"></a>01470 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01471"></a>01471 T <a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> T* X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX);
-<a name="l01472"></a>01472 
-<a name="l01476"></a>01476 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01477"></a>01477 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> T alpha, T *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX);
-<a name="l01478"></a>01478 
-<a name="l01479"></a>01479 
-<a name="l01483"></a>01483 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01484"></a>01484 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a140be15552f45a4f51b167b60cd636b4" title="Template function to call BLAS *GEMV routines.">gemv</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA,
-<a name="l01485"></a>01485           <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> T alpha, <span class="keyword">const</span> T *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda,
-<a name="l01486"></a>01486           <span class="keyword">const</span> T *X, <span class="keyword">const</span> <span class="keywordtype">int</span> incX,
-<a name="l01487"></a>01487           <span class="keyword">const</span> T beta, T *Y, <span class="keyword">const</span> <span class="keywordtype">int</span> incY);
-<a name="l01488"></a>01488 
-<a name="l01492"></a>01492 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01493"></a>01493 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da" title="Template function to call LAPACK *SYEV routines.">syev</a>( <span class="keywordtype">char</span>* jobz, <span class="keywordtype">char</span>* uplo, <span class="keywordtype">int</span>* n, T* a, <span class="keywordtype">int</span>* lda, T* w, T* work, <span class="keywordtype">int</span>* lwork, <span class="keywordtype">int</span>* info);
-<a name="l01494"></a>01494 
-<a name="l01495"></a>01495 
-<a name="l01499"></a>01499 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01500"></a>01500 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a1269a74e7f7e3d1ca200b6d8d3d0709f" title="Template function to call BLAS *GEMM routines.">gemm</a>(<span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransA, <span class="keyword">const</span> <a class="code" href="../../db/d4e/namespacegurls.html#aac2b1ccde06a9871a52d7eb19d7e3154" title="Transposition options (no transpose, transpose, conjugate transpose)">CBLAS_TRANSPOSE</a> TransB,
-<a name="l01501"></a>01501           <span class="keyword">const</span> <span class="keywordtype">int</span> M, <span class="keyword">const</span> <span class="keywordtype">int</span> N, <span class="keyword">const</span> <span class="keywordtype">int</span> K, <span class="keyword">const</span> T alpha, <span class="keyword">const</span> T *A, <span class="keyword">const</span> <span class="keywordtype">int</span> lda,
-<a name="l01502"></a>01502           <span class="keyword">const</span> T *B, <span class="keyword">const</span> <span class="keywordtype">int</span> ldb,
-<a name="l01503"></a>01503           <span class="keyword">const</span> T beta, T *C, <span class="keyword">const</span> <span class="keywordtype">int</span> ldc);
-<a name="l01504"></a>01504 
-<a name="l01512"></a>01512 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01513"></a><a class="code" href="../../db/d4e/namespacegurls.html#aea6911142d7b74fcb892d620e3d4e836">01513</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aea6911142d7b74fcb892d620e3d4e836" title="Computes the eigenvalues/eigenvectors of a squared and symmetric input matrix.">eig_sm</a>(T* A, T* L, <span class="keywordtype">int</span> A_rows_cols) <span class="keywordflow">throw</span> (<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l01514"></a>01514 {
-<a name="l01515"></a>01515     <span class="keywordtype">char</span> jobz = <span class="charliteral">&#39;V&#39;</span>;
-<a name="l01516"></a>01516     <span class="keywordtype">char</span> uplo = <span class="charliteral">&#39;L&#39;</span>;
-<a name="l01517"></a>01517     <span class="keywordtype">int</span> n = A_rows_cols, lda = n;
-<a name="l01518"></a>01518     <span class="keywordtype">int</span> info, lwork = 4*n;
-<a name="l01519"></a>01519     T* work = <span class="keyword">new</span> T[lwork];
-<a name="l01520"></a>01520 
-<a name="l01521"></a>01521     <a class="code" href="../../db/d4e/namespacegurls.html#a6ec8c883faab27e2907625bf8e7677da" title="Template function to call LAPACK *SYEV routines.">syev</a>(&amp;jobz, &amp;uplo, &amp;n, A, &amp;lda, L, work, &amp;lwork, &amp;info );
-<a name="l01522"></a>01522 
-<a name="l01523"></a>01523     <span class="keyword">delete</span>[] work;
-<a name="l01524"></a>01524 
-<a name="l01525"></a>01525     <span class="keywordflow">if</span>(info != 0)
-<a name="l01526"></a>01526     {
-<a name="l01527"></a>01527         std::stringstream str;
-<a name="l01528"></a>01528         str &lt;&lt; <span class="stringliteral">&quot;Eigenvalues/eigenVectors computation failed, error code &quot;</span> &lt;&lt; info &lt;&lt; <span class="stringliteral">&quot;;&quot;</span> &lt;&lt; std::endl;
-<a name="l01529"></a>01529         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(str.str());
-<a name="l01530"></a>01530     }
-<a name="l01531"></a>01531 }
-<a name="l01532"></a>01532 
-<a name="l01539"></a>01539 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01540"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b">01540</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b" title="In place computation of the exponential for each element of a vector.">exp</a>(T* v, <span class="keyword">const</span> <span class="keywordtype">int</span> length)
-<a name="l01541"></a>01541 {
-<a name="l01542"></a>01542     <span class="keywordflow">for</span>(T *it = v, *end = v+length; it != end; ++it)
-<a name="l01543"></a>01543         *it = (T) <a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b" title="In place computation of the exponential for each element of a vector.">std::exp</a>(*it);
-<a name="l01544"></a>01544 }
+<a name="l01471"></a><a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b">01471</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b" title="In place computation of the exponential for each element of a vector.">exp</a>(T* v, <span class="keyword">const</span> <span class="keywordtype">int</span> length)
+<a name="l01472"></a>01472 {
+<a name="l01473"></a>01473     <span class="keywordflow">for</span>(T *it = v, *end = v+length; it != end; ++it)
+<a name="l01474"></a>01474         *it = (T) <a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b" title="In place computation of the exponential for each element of a vector.">std::exp</a>(*it);
+<a name="l01475"></a>01475 }
+<a name="l01476"></a>01476 
+<a name="l01486"></a>01486 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01487"></a><a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507">01487</a> T <a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507" title="Computes Euclidean distance between two vectors.">eucl_dist</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, <span class="keyword">const</span> <span class="keywordtype">int</span> len, T* work)
+<a name="l01488"></a>01488 {
+<a name="l01489"></a>01489     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(work, A, len);
+<a name="l01490"></a>01490     <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(len, (T)-1.0, B, 1, work, 1);
+<a name="l01491"></a>01491     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(len, work, 1);
+<a name="l01492"></a>01492 }
+<a name="l01493"></a>01493 
+<a name="l01501"></a>01501 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01502"></a><a class="code" href="../../db/d4e/namespacegurls.html#aae1b80d6308d315bae49f7e8e5c00fd4">01502</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aae1b80d6308d315bae49f7e8e5c00fd4" title="Computes a vector D containing the Euclidean distances between each pair of observations in the N-by-...">pdist</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> N<span class="comment">/*A_rows*/</span>, <span class="keyword">const</span> <span class="keywordtype">int</span> P<span class="comment">/*A_cols*/</span>, T* D)
+<a name="l01503"></a>01503 {
+<a name="l01504"></a>01504     T* work = <span class="keyword">new</span> T[P];
+<a name="l01505"></a>01505     T* rowN = <span class="keyword">new</span> T[P];
+<a name="l01506"></a>01506     T* rowNPlusOne = <span class="keyword">new</span> T[P];
+<a name="l01507"></a>01507     T* D_it = D;
+<a name="l01508"></a>01508 
+<a name="l01509"></a>01509     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;N-1; ++i)
+<a name="l01510"></a>01510     {
+<a name="l01511"></a>01511         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, i, rowN);
+<a name="l01512"></a>01512 
+<a name="l01513"></a>01513         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j=i+1; j&lt;N; ++j)
+<a name="l01514"></a>01514         {
+<a name="l01515"></a>01515             <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, j, rowNPlusOne);
+<a name="l01516"></a>01516 
+<a name="l01517"></a>01517             *D_it = <a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507" title="Computes Euclidean distance between two vectors.">eucl_dist</a>(rowN,rowNPlusOne,P, work);
+<a name="l01518"></a>01518             ++D_it;
+<a name="l01519"></a>01519         }
+<a name="l01520"></a>01520     }
+<a name="l01521"></a>01521 
+<a name="l01522"></a>01522     <span class="keyword">delete</span> [] work;
+<a name="l01523"></a>01523     <span class="keyword">delete</span> [] rowN;
+<a name="l01524"></a>01524     <span class="keyword">delete</span> [] rowNPlusOne;
+<a name="l01525"></a>01525 }
+<a name="l01526"></a>01526 
+<a name="l01527"></a>01527 
+<a name="l01537"></a>01537 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01538"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2edac8fc521c5bb7e91c90f1bbe80172">01538</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a2edac8fc521c5bb7e91c90f1bbe80172" title="Reformats a distance matrix between upper triangular and square form.">squareform</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> N<span class="comment">/*A_rows*/</span>, <span class="keyword">const</span> <span class="keywordtype">int</span> P<span class="comment">/*A_cols*/</span>, T* D, <span class="keyword">const</span> <span class="keywordtype">int</span> d_cols)
+<a name="l01539"></a>01539 {
+<a name="l01540"></a>01540     <span class="keywordflow">if</span>(d_cols!=1)
+<a name="l01541"></a>01541     {
+<a name="l01542"></a>01542         T* work = <span class="keyword">new</span> T[P];
+<a name="l01543"></a>01543         T* rowN = <span class="keyword">new</span> T[P];
+<a name="l01544"></a>01544         T* rowNPlusOne = <span class="keyword">new</span> T[P];
 <a name="l01545"></a>01545 
-<a name="l01555"></a>01555 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01556"></a><a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507">01556</a> T <a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507" title="Computes Euclidean distance between two vectors.">eucl_dist</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> T* B, <span class="keyword">const</span> <span class="keywordtype">int</span> len, T* work)
-<a name="l01557"></a>01557 {
-<a name="l01558"></a>01558     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(work, A, len);
-<a name="l01559"></a>01559     <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(len, (T)-1.0, B, 1, work, 1);
-<a name="l01560"></a>01560     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(len, work, 1);
-<a name="l01561"></a>01561 }
-<a name="l01562"></a>01562 
-<a name="l01570"></a>01570 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01571"></a><a class="code" href="../../db/d4e/namespacegurls.html#aae1b80d6308d315bae49f7e8e5c00fd4">01571</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aae1b80d6308d315bae49f7e8e5c00fd4" title="Computes a vector D containing the Euclidean distances between each pair of observations in the N-by-...">pdist</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> N<span class="comment">/*A_rows*/</span>, <span class="keyword">const</span> <span class="keywordtype">int</span> P<span class="comment">/*A_cols*/</span>, T* D)
-<a name="l01572"></a>01572 {
-<a name="l01573"></a>01573     T* work = <span class="keyword">new</span> T[P];
-<a name="l01574"></a>01574     T* rowN = <span class="keyword">new</span> T[P];
-<a name="l01575"></a>01575     T* rowNPlusOne = <span class="keyword">new</span> T[P];
-<a name="l01576"></a>01576     T* D_it = D;
-<a name="l01577"></a>01577 
-<a name="l01578"></a>01578     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;N-1; ++i)
-<a name="l01579"></a>01579     {
-<a name="l01580"></a>01580         <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, i, rowN);
-<a name="l01581"></a>01581 
-<a name="l01582"></a>01582         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j=i+1; j&lt;N; ++j)
-<a name="l01583"></a>01583         {
-<a name="l01584"></a>01584             <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, j, rowNPlusOne);
-<a name="l01585"></a>01585 
-<a name="l01586"></a>01586             *D_it = <a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507" title="Computes Euclidean distance between two vectors.">eucl_dist</a>(rowN,rowNPlusOne,P, work);
-<a name="l01587"></a>01587             ++D_it;
-<a name="l01588"></a>01588         }
-<a name="l01589"></a>01589     }
-<a name="l01590"></a>01590 
-<a name="l01591"></a>01591     <span class="keyword">delete</span> [] work;
-<a name="l01592"></a>01592     <span class="keyword">delete</span> [] rowN;
-<a name="l01593"></a>01593     <span class="keyword">delete</span> [] rowNPlusOne;
-<a name="l01594"></a>01594 }
-<a name="l01595"></a>01595 
+<a name="l01546"></a>01546         <span class="keyword">set</span>(D, (T)0.0, N, N+1); <span class="comment">// zeroes the diagonal</span>
+<a name="l01547"></a>01547 
+<a name="l01548"></a>01548         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;N; ++i)
+<a name="l01549"></a>01549         {
+<a name="l01550"></a>01550             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(D+(i*N), D+i, i, 1, N); <span class="comment">// copy from the other side</span>
+<a name="l01551"></a>01551 
+<a name="l01552"></a>01552             <span class="keywordflow">if</span>(i+1 &lt; N)
+<a name="l01553"></a>01553             {
+<a name="l01554"></a>01554                 <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, i, rowN);
+<a name="l01555"></a>01555 
+<a name="l01556"></a>01556                 <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j=i+1; j&lt;N; ++j)
+<a name="l01557"></a>01557                 {
+<a name="l01558"></a>01558                     <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, j, rowNPlusOne);
+<a name="l01559"></a>01559                     D[j + i*N] = <a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507" title="Computes Euclidean distance between two vectors.">eucl_dist</a>(rowN, rowNPlusOne, P, work);
+<a name="l01560"></a>01560                 }
+<a name="l01561"></a>01561             }
+<a name="l01562"></a>01562         }
+<a name="l01563"></a>01563 
+<a name="l01564"></a>01564         <span class="keyword">delete</span> [] work;
+<a name="l01565"></a>01565         <span class="keyword">delete</span> [] rowN;
+<a name="l01566"></a>01566         <span class="keyword">delete</span> [] rowNPlusOne;
+<a name="l01567"></a>01567 
+<a name="l01568"></a>01568     }
+<a name="l01569"></a>01569     <span class="keywordflow">else</span>
+<a name="l01570"></a>01570     {
+<a name="l01571"></a>01571         <a class="code" href="../../db/d4e/namespacegurls.html#aae1b80d6308d315bae49f7e8e5c00fd4" title="Computes a vector D containing the Euclidean distances between each pair of observations in the N-by-...">pdist</a>(A, N, P, D);
+<a name="l01572"></a>01572     }
+<a name="l01573"></a>01573 }
+<a name="l01574"></a>01574 
+<a name="l01584"></a>01584 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01585"></a><a class="code" href="../../db/d4e/namespacegurls.html#a8ac8d49555f8c0a752a51f302a2611e0">01585</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a8ac8d49555f8c0a752a51f302a2611e0" title="Computes a vector containing the indices of all elements of an input vector that are equals to a give...">indicesOfEqualsTo</a>(<span class="keyword">const</span> T* V, <span class="keyword">const</span> <span class="keywordtype">int</span> len, <span class="keyword">const</span> T value, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* ind, <span class="keywordtype">int</span>&amp; ind_length)
+<a name="l01586"></a>01586 {
+<a name="l01587"></a>01587     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* r_it = ind;
+<a name="l01588"></a>01588     <span class="keywordflow">for</span>(<span class="keyword">const</span> T *it = V, *end = V+len; it != end; ++it)
+<a name="l01589"></a>01589     {
+<a name="l01590"></a>01590         <span class="keywordflow">if</span>(<a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(*it, value))
+<a name="l01591"></a>01591         {
+<a name="l01592"></a>01592             *r_it = it-V;
+<a name="l01593"></a>01593             ++r_it;
+<a name="l01594"></a>01594         }
+<a name="l01595"></a>01595     }
 <a name="l01596"></a>01596 
-<a name="l01606"></a>01606 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01607"></a><a class="code" href="../../db/d4e/namespacegurls.html#a2edac8fc521c5bb7e91c90f1bbe80172">01607</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a2edac8fc521c5bb7e91c90f1bbe80172" title="Reformats a distance matrix between upper triangular and square form.">squareform</a>(<span class="keyword">const</span> T* A, <span class="keyword">const</span> <span class="keywordtype">int</span> N<span class="comment">/*A_rows*/</span>, <span class="keyword">const</span> <span class="keywordtype">int</span> P<span class="comment">/*A_cols*/</span>, T* D, <span class="keyword">const</span> <span class="keywordtype">int</span> d_cols)
-<a name="l01608"></a>01608 {
-<a name="l01609"></a>01609     <span class="keywordflow">if</span>(d_cols!=1)
-<a name="l01610"></a>01610     {
-<a name="l01611"></a>01611         T* work = <span class="keyword">new</span> T[P];
-<a name="l01612"></a>01612         T* rowN = <span class="keyword">new</span> T[P];
-<a name="l01613"></a>01613         T* rowNPlusOne = <span class="keyword">new</span> T[P];
-<a name="l01614"></a>01614 
-<a name="l01615"></a>01615         <span class="keyword">set</span>(D, (T)0.0, N, N+1); <span class="comment">// zeroes the diagonal</span>
-<a name="l01616"></a>01616 
-<a name="l01617"></a>01617         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;N; ++i)
-<a name="l01618"></a>01618         {
-<a name="l01619"></a>01619             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(D+(i*N), D+i, i, 1, N); <span class="comment">// copy from the other side</span>
-<a name="l01620"></a>01620 
-<a name="l01621"></a>01621             <span class="keywordflow">if</span>(i+1 &lt; N)
-<a name="l01622"></a>01622             {
-<a name="l01623"></a>01623                 <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, i, rowN);
-<a name="l01624"></a>01624 
-<a name="l01625"></a>01625                 <span class="keywordflow">for</span>(<span class="keywordtype">int</span> j=i+1; j&lt;N; ++j)
-<a name="l01626"></a>01626                 {
-<a name="l01627"></a>01627                     <a class="code" href="../../db/d4e/namespacegurls.html#ad7448a55e9fec1102f1716192fe11547" title="Generates a vector containing a copy of a row of an input matrix.">getRow</a>(A, N, P, j, rowNPlusOne);
-<a name="l01628"></a>01628                     D[j + i*N] = <a class="code" href="../../db/d4e/namespacegurls.html#aeeb634750e29bb441a65403a58753507" title="Computes Euclidean distance between two vectors.">eucl_dist</a>(rowN, rowNPlusOne, P, work);
-<a name="l01629"></a>01629                 }
-<a name="l01630"></a>01630             }
-<a name="l01631"></a>01631         }
+<a name="l01597"></a>01597     ind_length = r_it - ind;
+<a name="l01598"></a>01598 }
+<a name="l01599"></a>01599 
+<a name="l01603"></a>01603 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01604"></a><a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e">01604</a> <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e" title="Rounds an input value to the nearest integer.">round</a>(<span class="keyword">const</span> T value)
+<a name="l01605"></a>01605 {
+<a name="l01606"></a>01606     <span class="keywordflow">if</span>(<a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(value, (T)0.0))
+<a name="l01607"></a>01607         <span class="keywordflow">return</span> 0;
+<a name="l01608"></a>01608 
+<a name="l01609"></a>01609     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(value,(T)0.0)? ((int)(value+0.5)): ((<span class="keywordtype">int</span>)(value-0.5));
+<a name="l01610"></a>01610 }
+<a name="l01611"></a>01611 
+<a name="l01623"></a>01623 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01624"></a><a class="code" href="../../db/d4e/namespacegurls.html#a9a5138062bf688f49c7a6d67ed71b25f">01624</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a9a5138062bf688f49c7a6d67ed71b25f" title="Computes an economy-size QR decomposition of an input matrix A so that A(:,E) = Q*R.">qr_econ</a>(<span class="keyword">const</span> T* A, <span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n, T* Q, T* R, <span class="keywordtype">int</span>* E)
+<a name="l01625"></a>01625 {
+<a name="l01626"></a>01626     <span class="comment">// Q: mxmin(m,n)</span>
+<a name="l01627"></a>01627     <span class="comment">// R: min(m,n)xn</span>
+<a name="l01628"></a>01628     <span class="comment">// E: n</span>
+<a name="l01629"></a>01629 
+<a name="l01630"></a>01630     T* Q_tmp = <span class="keyword">new</span> T[m*n];
+<a name="l01631"></a>01631     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Q_tmp, A, m*n);
 <a name="l01632"></a>01632 
-<a name="l01633"></a>01633         <span class="keyword">delete</span> [] work;
-<a name="l01634"></a>01634         <span class="keyword">delete</span> [] rowN;
-<a name="l01635"></a>01635         <span class="keyword">delete</span> [] rowNPlusOne;
-<a name="l01636"></a>01636 
-<a name="l01637"></a>01637     }
-<a name="l01638"></a>01638     <span class="keywordflow">else</span>
-<a name="l01639"></a>01639     {
-<a name="l01640"></a>01640         <a class="code" href="../../db/d4e/namespacegurls.html#aae1b80d6308d315bae49f7e8e5c00fd4" title="Computes a vector D containing the Euclidean distances between each pair of observations in the N-by-...">pdist</a>(A, N, P, D);
-<a name="l01641"></a>01641     }
-<a name="l01642"></a>01642 }
-<a name="l01643"></a>01643 
-<a name="l01653"></a>01653 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01654"></a><a class="code" href="../../db/d4e/namespacegurls.html#a8ac8d49555f8c0a752a51f302a2611e0">01654</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a8ac8d49555f8c0a752a51f302a2611e0" title="Computes a vector containing the indices of all elements of an input vector that are equals to a give...">indicesOfEqualsTo</a>(<span class="keyword">const</span> T* V, <span class="keyword">const</span> <span class="keywordtype">int</span> len, <span class="keyword">const</span> T value, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* ind, <span class="keywordtype">int</span>&amp; ind_length)
-<a name="l01655"></a>01655 {
-<a name="l01656"></a>01656     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* r_it = ind;
-<a name="l01657"></a>01657     <span class="keywordflow">for</span>(<span class="keyword">const</span> T *it = V, *end = V+len; it != end; ++it)
-<a name="l01658"></a>01658     {
-<a name="l01659"></a>01659         <span class="keywordflow">if</span>(<a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(*it, value))
-<a name="l01660"></a>01660         {
-<a name="l01661"></a>01661             *r_it = it-V;
-<a name="l01662"></a>01662             ++r_it;
-<a name="l01663"></a>01663         }
-<a name="l01664"></a>01664     }
-<a name="l01665"></a>01665 
-<a name="l01666"></a>01666     ind_length = r_it - ind;
-<a name="l01667"></a>01667 }
-<a name="l01668"></a>01668 
-<a name="l01672"></a>01672 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01673"></a><a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e">01673</a> <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e" title="Rounds an input value to the nearest integer.">round</a>(<span class="keyword">const</span> T value)
-<a name="l01674"></a>01674 {
-<a name="l01675"></a>01675     <span class="keywordflow">if</span>(<a class="code" href="../../db/d4e/namespacegurls.html#a043f387ab664c3ac5b96aed7b7f748aa" title="&quot;Equals&quot; operator between two scalars">eq</a>(value, (T)0.0))
-<a name="l01676"></a>01676         <span class="keywordflow">return</span> 0;
-<a name="l01677"></a>01677 
-<a name="l01678"></a>01678     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#a4c4b44477c465507bbe9ec446b40a71f" title="&quot;Greater than&quot; operator between two scalars">gt</a>(value,(T)0.0)? ((int)(value+0.5)): ((<span class="keywordtype">int</span>)(value-0.5));
-<a name="l01679"></a>01679 }
-<a name="l01680"></a>01680 
-<a name="l01684"></a>01684 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01685"></a>01685 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, T *A, <span class="keywordtype">int</span> *lda, <span class="keywordtype">int</span> *jpvt, T *tau, T *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info);
-<a name="l01686"></a>01686 
-<a name="l01690"></a>01690 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01691"></a>01691 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(<span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *k, T *a, <span class="keywordtype">int</span> *lda, T *tau, T *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info);
-<a name="l01692"></a>01692 
-<a name="l01704"></a>01704 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01705"></a><a class="code" href="../../db/d4e/namespacegurls.html#a9a5138062bf688f49c7a6d67ed71b25f">01705</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a9a5138062bf688f49c7a6d67ed71b25f" title="Computes an economy-size QR decomposition of an input matrix A so that A(:,E) = Q*R.">qr_econ</a>(<span class="keyword">const</span> T* A, <span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n, T* Q, T* R, <span class="keywordtype">int</span>* E)
-<a name="l01706"></a>01706 {
-<a name="l01707"></a>01707     <span class="comment">// Q: mxmin(m,n)</span>
-<a name="l01708"></a>01708     <span class="comment">// R: min(m,n)xn</span>
-<a name="l01709"></a>01709     <span class="comment">// E: n</span>
-<a name="l01710"></a>01710 
-<a name="l01711"></a>01711     T* Q_tmp = <span class="keyword">new</span> T[m*n];
-<a name="l01712"></a>01712     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Q_tmp, A, m*n);
-<a name="l01713"></a>01713 
-<a name="l01714"></a>01714     <span class="keywordtype">int</span> k = std::min(m, n);
-<a name="l01715"></a>01715 
-<a name="l01716"></a>01716     <span class="keywordtype">int</span> lda = std::max(1,m);
-<a name="l01717"></a>01717     <span class="keywordtype">int</span>* jpvt = E;
-<a name="l01718"></a>01718     <span class="keyword">set</span>(jpvt, 0, n);
-<a name="l01719"></a>01719 
-<a name="l01720"></a>01720     T* tau = <span class="keyword">new</span> T[k];
+<a name="l01633"></a>01633     <span class="keywordtype">int</span> k = std::min(m, n);
+<a name="l01634"></a>01634 
+<a name="l01635"></a>01635     <span class="keywordtype">int</span> lda = std::max(1,m);
+<a name="l01636"></a>01636     <span class="keywordtype">int</span>* jpvt = E;
+<a name="l01637"></a>01637     <span class="keyword">set</span>(jpvt, 0, n);
+<a name="l01638"></a>01638 
+<a name="l01639"></a>01639     T* tau = <span class="keyword">new</span> T[k];
+<a name="l01640"></a>01640 
+<a name="l01641"></a>01641     T* work;
+<a name="l01642"></a>01642     <span class="keywordtype">int</span> lwork = -1;
+<a name="l01643"></a>01643     <span class="keywordtype">int</span> info;
+<a name="l01644"></a>01644 
+<a name="l01645"></a>01645     <span class="comment">// query</span>
+<a name="l01646"></a>01646     T qwork;
+<a name="l01647"></a>01647     <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( &amp;m, &amp;n, Q_tmp, &amp;lda, jpvt, tau, &amp;qwork, &amp;lwork, &amp;info);
+<a name="l01648"></a>01648 
+<a name="l01649"></a>01649     <span class="comment">// exec</span>
+<a name="l01650"></a>01650     lwork = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(qwork);
+<a name="l01651"></a>01651     work = <span class="keyword">new</span> T[lwork];
+<a name="l01652"></a>01652     <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( &amp;m, &amp;n, Q_tmp, &amp;lda, jpvt, tau, work, &amp;lwork, &amp;info);
+<a name="l01653"></a>01653 
+<a name="l01654"></a>01654     <span class="keywordflow">if</span>(info != 0)
+<a name="l01655"></a>01655     {
+<a name="l01656"></a>01656         <span class="keyword">delete</span>[] tau;
+<a name="l01657"></a>01657         <span class="keyword">delete</span>[] work;
+<a name="l01658"></a>01658         <span class="keyword">delete</span>[] Q_tmp;
+<a name="l01659"></a>01659 
+<a name="l01660"></a>01660         std::stringstream str;
+<a name="l01661"></a>01661         str &lt;&lt; <span class="stringliteral">&quot;QR factorization failed, error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;
+<a name="l01662"></a>01662         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(str.str());
+<a name="l01663"></a>01663     }
+<a name="l01664"></a>01664 
+<a name="l01665"></a>01665     <span class="keywordflow">if</span>(R != NULL)
+<a name="l01666"></a>01666     {
+<a name="l01667"></a>01667         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;n; ++i)
+<a name="l01668"></a>01668         {
+<a name="l01669"></a>01669             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(R + k*i, Q_tmp + m*i, i+1);
+<a name="l01670"></a>01670 
+<a name="l01671"></a>01671             <span class="keyword">set</span>(R + (k*i) + i+1, (T)0.0, k - (i+1));
+<a name="l01672"></a>01672         }
+<a name="l01673"></a>01673     }
+<a name="l01674"></a>01674 
+<a name="l01675"></a>01675     <span class="comment">// query</span>
+<a name="l01676"></a>01676     lwork = -1;
+<a name="l01677"></a>01677     <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(&amp;m, &amp;k, &amp;k, Q_tmp, &amp;lda, tau, &amp;qwork, &amp;lwork, &amp;info);
+<a name="l01678"></a>01678 
+<a name="l01679"></a>01679     <span class="keywordflow">if</span>(info != 0)
+<a name="l01680"></a>01680     {
+<a name="l01681"></a>01681         <span class="keyword">delete</span>[] tau;
+<a name="l01682"></a>01682         <span class="keyword">delete</span>[] work;
+<a name="l01683"></a>01683         <span class="keyword">delete</span>[] Q_tmp;
+<a name="l01684"></a>01684 
+<a name="l01685"></a>01685         std::stringstream str;
+<a name="l01686"></a>01686         str &lt;&lt; <span class="stringliteral">&quot;QR factorization failed, error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;
+<a name="l01687"></a>01687         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(str.str());
+<a name="l01688"></a>01688     }
+<a name="l01689"></a>01689 
+<a name="l01690"></a>01690     <span class="comment">//exec</span>
+<a name="l01691"></a>01691     lwork = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(qwork);
+<a name="l01692"></a>01692     <span class="keyword">delete</span>[] work;
+<a name="l01693"></a>01693     work = <span class="keyword">new</span> T[lwork];
+<a name="l01694"></a>01694     <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(&amp;m, &amp;k, &amp;k, Q_tmp, &amp;lda, tau, work, &amp;lwork, &amp;info);
+<a name="l01695"></a>01695 
+<a name="l01696"></a>01696     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Q, Q_tmp, m*k);
+<a name="l01697"></a>01697 
+<a name="l01698"></a>01698     <span class="keyword">delete</span>[] tau;
+<a name="l01699"></a>01699     <span class="keyword">delete</span>[] work;
+<a name="l01700"></a>01700     <span class="keyword">delete</span>[] Q_tmp;
+<a name="l01701"></a>01701 
+<a name="l01702"></a>01702 }
+<a name="l01703"></a>01703 
+<a name="l01707"></a>01707 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01708"></a><a class="code" href="../../db/d4e/namespacegurls.html#a3d21517d1d6205fe9b6da238bb7348af">01708</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3d21517d1d6205fe9b6da238bb7348af" title="Generates a row vector of n points linearly spaced between and including a and b.">linspace</a>(T a, T b, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n, T* res)
+<a name="l01709"></a>01709 {
+<a name="l01710"></a>01710     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i = 0;
+<a name="l01711"></a>01711 
+<a name="l01712"></a>01712     <span class="keywordflow">if</span>(n &gt; 0)
+<a name="l01713"></a>01713     {
+<a name="l01714"></a>01714         <span class="keyword">const</span> T coeff = (b - a)/(static_cast&lt;T&gt;(n)-1);
+<a name="l01715"></a>01715         <span class="keywordflow">for</span>(i = 0; i &lt; n-1; ++i)
+<a name="l01716"></a>01716             res[i] = a + (i*coeff);
+<a name="l01717"></a>01717     }
+<a name="l01718"></a>01718 
+<a name="l01719"></a>01719     res[i] = b;
+<a name="l01720"></a>01720 }
 <a name="l01721"></a>01721 
-<a name="l01722"></a>01722     T* work;
-<a name="l01723"></a>01723     <span class="keywordtype">int</span> lwork = -1;
-<a name="l01724"></a>01724     <span class="keywordtype">int</span> info;
-<a name="l01725"></a>01725 
-<a name="l01726"></a>01726     <span class="comment">// query</span>
-<a name="l01727"></a>01727     T qwork;
-<a name="l01728"></a>01728     <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( &amp;m, &amp;n, Q_tmp, &amp;lda, jpvt, tau, &amp;qwork, &amp;lwork, &amp;info);
-<a name="l01729"></a>01729 
-<a name="l01730"></a>01730     <span class="comment">// exec</span>
-<a name="l01731"></a>01731     lwork = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(qwork);
-<a name="l01732"></a>01732     work = <span class="keyword">new</span> T[lwork];
-<a name="l01733"></a>01733     <a class="code" href="../../db/d4e/namespacegurls.html#aa0aa5f2111625115a7f28b7c408b531b" title="Template function to call LAPACK *GEQP3 routines.">geqp3</a>( &amp;m, &amp;n, Q_tmp, &amp;lda, jpvt, tau, work, &amp;lwork, &amp;info);
-<a name="l01734"></a>01734 
-<a name="l01735"></a>01735     <span class="keywordflow">if</span>(info != 0)
-<a name="l01736"></a>01736     {
-<a name="l01737"></a>01737         <span class="keyword">delete</span>[] tau;
-<a name="l01738"></a>01738         <span class="keyword">delete</span>[] work;
-<a name="l01739"></a>01739         <span class="keyword">delete</span>[] Q_tmp;
+<a name="l01722"></a>01722 
+<a name="l01732"></a>01732 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01733"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb">01733</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb" title="Generates a row vector containing the standard deviation of the elements of each column of an input m...">stdDev</a>(<span class="keyword">const</span> T* X, <span class="keyword">const</span> <span class="keywordtype">int</span> rows, <span class="keyword">const</span> <span class="keywordtype">int</span> cols, T* res, T* work)
+<a name="l01734"></a>01734 {
+<a name="l01735"></a>01735     T* meanX = work;
+<a name="l01736"></a>01736     <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(X, meanX, rows, cols, cols);
+<a name="l01737"></a>01737 
+<a name="l01738"></a>01738     T* stdX = res;
+<a name="l01739"></a>01739     T* column = work+cols;
 <a name="l01740"></a>01740 
-<a name="l01741"></a>01741         std::stringstream str;
-<a name="l01742"></a>01742         str &lt;&lt; <span class="stringliteral">&quot;QR factorization failed, error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;
-<a name="l01743"></a>01743         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(str.str());
-<a name="l01744"></a>01744     }
-<a name="l01745"></a>01745 
-<a name="l01746"></a>01746     <span class="keywordflow">if</span>(R != NULL)
-<a name="l01747"></a>01747     {
-<a name="l01748"></a>01748         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;n; ++i)
-<a name="l01749"></a>01749         {
-<a name="l01750"></a>01750             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(R + k*i, Q_tmp + m*i, i+1);
-<a name="l01751"></a>01751 
-<a name="l01752"></a>01752             <span class="keyword">set</span>(R + (k*i) + i+1, (T)0.0, k - (i+1));
-<a name="l01753"></a>01753         }
-<a name="l01754"></a>01754     }
-<a name="l01755"></a>01755 
-<a name="l01756"></a>01756     <span class="comment">// query</span>
-<a name="l01757"></a>01757     lwork = -1;
-<a name="l01758"></a>01758     <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(&amp;m, &amp;k, &amp;k, Q_tmp, &amp;lda, tau, &amp;qwork, &amp;lwork, &amp;info);
-<a name="l01759"></a>01759 
-<a name="l01760"></a>01760     <span class="keywordflow">if</span>(info != 0)
-<a name="l01761"></a>01761     {
-<a name="l01762"></a>01762         <span class="keyword">delete</span>[] tau;
-<a name="l01763"></a>01763         <span class="keyword">delete</span>[] work;
-<a name="l01764"></a>01764         <span class="keyword">delete</span>[] Q_tmp;
-<a name="l01765"></a>01765 
-<a name="l01766"></a>01766         std::stringstream str;
-<a name="l01767"></a>01767         str &lt;&lt; <span class="stringliteral">&quot;QR factorization failed, error code &quot;</span> &lt;&lt; info &lt;&lt; std::endl;
-<a name="l01768"></a>01768         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(str.str());
-<a name="l01769"></a>01769     }
-<a name="l01770"></a>01770 
-<a name="l01771"></a>01771     <span class="comment">//exec</span>
-<a name="l01772"></a>01772     lwork = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(qwork);
-<a name="l01773"></a>01773     <span class="keyword">delete</span>[] work;
-<a name="l01774"></a>01774     work = <span class="keyword">new</span> T[lwork];
-<a name="l01775"></a>01775     <a class="code" href="../../db/d4e/namespacegurls.html#ac37f8063b27b971d09494aaa5a41d1da" title="Template function to call LAPACK *ORGQR routines.">orgqr</a>(&amp;m, &amp;k, &amp;k, Q_tmp, &amp;lda, tau, work, &amp;lwork, &amp;info);
-<a name="l01776"></a>01776 
-<a name="l01777"></a>01777     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Q, Q_tmp, m*k);
-<a name="l01778"></a>01778 
-<a name="l01779"></a>01779     <span class="keyword">delete</span>[] tau;
-<a name="l01780"></a>01780     <span class="keyword">delete</span>[] work;
-<a name="l01781"></a>01781     <span class="keyword">delete</span>[] Q_tmp;
-<a name="l01782"></a>01782 
-<a name="l01783"></a>01783 }
-<a name="l01784"></a>01784 
-<a name="l01788"></a>01788 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01789"></a><a class="code" href="../../db/d4e/namespacegurls.html#a3d21517d1d6205fe9b6da238bb7348af">01789</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a3d21517d1d6205fe9b6da238bb7348af" title="Generates a row vector of n points linearly spaced between and including a and b.">linspace</a>(T a, T b, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n, T* res)
-<a name="l01790"></a>01790 {
-<a name="l01791"></a>01791     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i = 0;
-<a name="l01792"></a>01792 
-<a name="l01793"></a>01793     <span class="keywordflow">if</span>(n &gt; 0)
-<a name="l01794"></a>01794     {
-<a name="l01795"></a>01795         <span class="keyword">const</span> T coeff = (b - a)/(static_cast&lt;T&gt;(n)-1);
-<a name="l01796"></a>01796         <span class="keywordflow">for</span>(i = 0; i &lt; n-1; ++i)
-<a name="l01797"></a>01797             res[i] = a + (i*coeff);
+<a name="l01741"></a>01741     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt; cols; ++i)
+<a name="l01742"></a>01742     {
+<a name="l01743"></a>01743         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(column, X+(rows*i), rows);
+<a name="l01744"></a>01744 
+<a name="l01745"></a>01745         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(rows, (T)-1.0, meanX+i, 0, column, 1);
+<a name="l01746"></a>01746 
+<a name="l01747"></a>01747         stdX[i] = sqrt( pow(<a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(rows, column, 1), 2) / (rows-1));
+<a name="l01748"></a>01748     }
+<a name="l01749"></a>01749 }
+<a name="l01750"></a>01750 
+<a name="l01757"></a>01757 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01758"></a><a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352">01758</a> T <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(T* v, <span class="keyword">const</span> <span class="keywordtype">int</span> length)
+<a name="l01759"></a>01759 {
+<a name="l01760"></a>01760     <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">std::sort</a>(v, v+length);
+<a name="l01761"></a>01761 
+<a name="l01762"></a>01762     <span class="keywordflow">if</span>(length%2)
+<a name="l01763"></a>01763         <span class="keywordflow">return</span> v[length/2];
+<a name="l01764"></a>01764     <span class="keywordflow">else</span>
+<a name="l01765"></a>01765         <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>( (v[length/2] + v[(length/2)-1]) /2.0 );
+<a name="l01766"></a>01766 }
+<a name="l01767"></a>01767 
+<a name="l01777"></a>01777 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l01778"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac6c7c43939ffdc334083440d0d4b84ea">01778</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(<span class="keyword">const</span> T* M, <span class="keyword">const</span> <span class="keywordtype">int</span> rows, <span class="keyword">const</span> <span class="keywordtype">int</span> cols, <span class="keyword">const</span> <span class="keywordtype">int</span> dimension, T* res, T* work)
+<a name="l01779"></a>01779 {
+<a name="l01780"></a>01780     <span class="keywordflow">switch</span>(dimension)
+<a name="l01781"></a>01781     {
+<a name="l01782"></a>01782     <span class="keywordflow">case</span> 1:
+<a name="l01783"></a>01783         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;cols; ++i)
+<a name="l01784"></a>01784         {
+<a name="l01785"></a>01785             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(work, M+(i*rows), rows);
+<a name="l01786"></a>01786             res[i] = <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(work, rows);
+<a name="l01787"></a>01787         }
+<a name="l01788"></a>01788         <span class="keywordflow">break</span>;
+<a name="l01789"></a>01789     <span class="keywordflow">case</span> 2:
+<a name="l01790"></a>01790         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;rows; ++i)
+<a name="l01791"></a>01791         {
+<a name="l01792"></a>01792             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(work, M+i, cols, 1, rows);
+<a name="l01793"></a>01793             res[i] = <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(work, cols);
+<a name="l01794"></a>01794         }
+<a name="l01795"></a>01795         <span class="keywordflow">break</span>;
+<a name="l01796"></a>01796     <span class="keywordflow">default</span>:
+<a name="l01797"></a>01797         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gad52b41b606b19b5230b17dcaf36b3581" title="Message displayed when an input parameter has an invalid value.">Exception_Illegal_Argument_Value</a>);
 <a name="l01798"></a>01798     }
-<a name="l01799"></a>01799 
-<a name="l01800"></a>01800     res[i] = b;
+<a name="l01799"></a>01799 }
+<a name="l01800"></a>01800 
 <a name="l01801"></a>01801 }
 <a name="l01802"></a>01802 
-<a name="l01803"></a>01803 
-<a name="l01813"></a>01813 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01814"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb">01814</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb" title="Generates a row vector containing the standard deviation of the elements of each column of an input m...">stdDev</a>(<span class="keyword">const</span> T* X, <span class="keyword">const</span> <span class="keywordtype">int</span> rows, <span class="keyword">const</span> <span class="keywordtype">int</span> cols, T* res, T* work)
-<a name="l01815"></a>01815 {
-<a name="l01816"></a>01816     T* meanX = work;
-<a name="l01817"></a>01817     <a class="code" href="../../db/d4e/namespacegurls.html#a85151ab18d29196f25627917c9526088" title="Computes the mean values along the rows of a matrix.">mean</a>(X, meanX, rows, cols, cols);
-<a name="l01818"></a>01818 
-<a name="l01819"></a>01819     T* stdX = res;
-<a name="l01820"></a>01820     T* column = work+cols;
-<a name="l01821"></a>01821 
-<a name="l01822"></a>01822     <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt; cols; ++i)
-<a name="l01823"></a>01823     {
-<a name="l01824"></a>01824         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(column, X+(rows*i), rows);
-<a name="l01825"></a>01825 
-<a name="l01826"></a>01826         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(rows, (T)-1.0, meanX+i, 0, column, 1);
-<a name="l01827"></a>01827 
-<a name="l01828"></a>01828         stdX[i] = sqrt( pow(<a class="code" href="../../db/d4e/namespacegurls.html#afc7fa72c121304f29f5a4f6ea6874994" title="Template function to call BLAS *NRM2 routines.">nrm2</a>(rows, column, 1), 2) / (rows-1));
-<a name="l01829"></a>01829     }
-<a name="l01830"></a>01830 }
-<a name="l01831"></a>01831 
-<a name="l01838"></a>01838 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01839"></a><a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352">01839</a> T <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(T* v, <span class="keyword">const</span> <span class="keywordtype">int</span> length)
-<a name="l01840"></a>01840 {
-<a name="l01841"></a>01841     <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">std::sort</a>(v, v+length);
-<a name="l01842"></a>01842 
-<a name="l01843"></a>01843     <span class="keywordflow">if</span>(length%2)
-<a name="l01844"></a>01844         <span class="keywordflow">return</span> v[length/2];
-<a name="l01845"></a>01845     <span class="keywordflow">else</span>
-<a name="l01846"></a>01846         <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>( (v[length/2] + v[(length/2)-1]) /2.0 );
-<a name="l01847"></a>01847 }
-<a name="l01848"></a>01848 
-<a name="l01858"></a>01858 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01859"></a><a class="code" href="../../db/d4e/namespacegurls.html#ac6c7c43939ffdc334083440d0d4b84ea">01859</a> <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(<span class="keyword">const</span> T* M, <span class="keyword">const</span> <span class="keywordtype">int</span> rows, <span class="keyword">const</span> <span class="keywordtype">int</span> cols, <span class="keyword">const</span> <span class="keywordtype">int</span> dimension, T* res, T* work)
-<a name="l01860"></a>01860 {
-<a name="l01861"></a>01861     <span class="keywordflow">switch</span>(dimension)
-<a name="l01862"></a>01862     {
-<a name="l01863"></a>01863     <span class="keywordflow">case</span> 1:
-<a name="l01864"></a>01864         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;cols; ++i)
-<a name="l01865"></a>01865         {
-<a name="l01866"></a>01866             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(work, M+(i*rows), rows);
-<a name="l01867"></a>01867             res[i] = <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(work, rows);
-<a name="l01868"></a>01868         }
-<a name="l01869"></a>01869         <span class="keywordflow">break</span>;
-<a name="l01870"></a>01870     <span class="keywordflow">case</span> 2:
-<a name="l01871"></a>01871         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=0; i&lt;rows; ++i)
-<a name="l01872"></a>01872         {
-<a name="l01873"></a>01873             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(work, M+i, cols, 1, rows);
-<a name="l01874"></a>01874             res[i] = <a class="code" href="../../db/d4e/namespacegurls.html#aaf1db63a5209152b935c2fbc7b7f8352" title="Returns the median value of a vector.">median</a>(work, cols);
-<a name="l01875"></a>01875         }
-<a name="l01876"></a>01876         <span class="keywordflow">break</span>;
-<a name="l01877"></a>01877     <span class="keywordflow">default</span>:
-<a name="l01878"></a>01878         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gad52b41b606b19b5230b17dcaf36b3581" title="Message displayed when an input parameter has an invalid value.">Exception_Illegal_Argument_Value</a>);
-<a name="l01879"></a>01879     }
-<a name="l01880"></a>01880 }
-<a name="l01881"></a>01881 
-<a name="l01885"></a>01885 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01886"></a>01886 <span class="keywordtype">int</span> <a class="code" href="../../db/d4e/namespacegurls.html#a9c4fd96e77654eb7a8fa8e8d26d1a720" title="Template function to call LAPACK *GELSS routines.">gelss</a>( <span class="keywordtype">int</span> *m, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span>* nrhs, T *a, <span class="keywordtype">int</span> *lda, T* b, <span class="keywordtype">int</span> *ldb, T *s, T *rcond, <span class="keywordtype">int</span> *rank, T *work, <span class="keywordtype">int</span> *lwork, <span class="keywordtype">int</span> *info);
-<a name="l01887"></a>01887 
-<a name="l01891"></a>01891 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l01892"></a>01892 <span class="keywordtype">void</span> <a class="code" href="../../db/d4e/namespacegurls.html#a07ed08cb9d78507e8d2c849d1cce648e" title="Template function to call BLAS *SWAP routines.">swap</a>( <span class="keywordtype">int</span> n, T *x, <span class="keywordtype">int</span> incx, T *y, <span class="keywordtype">int</span> incy);
-<a name="l01893"></a>01893 
-<a name="l01894"></a>01894 }
-<a name="l01895"></a>01895 
-<a name="l01896"></a>01896 <span class="preprocessor">#endif // _GURLS_GMATH_H_</span>
+<a name="l01803"></a>01803 <span class="preprocessor">#endif // _GURLS_GMATH_H_</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -1393,7 +1342,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><a class="el" href="../../dd/d75/gmath_8h.html">gmath.h</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:44 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

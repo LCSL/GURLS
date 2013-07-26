@@ -1,0 +1,17 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$d6/dae/classgurls_1_1_param_sel_calibrate_s_g_d.html" title="ParamselCalibrateSGD is the sub&#45;class of ParamSelection that implements parameter selection for pegas..." alt="" coords="252,5,479,35"/>
+<area shape="rect" id="node5" href="$dd/de6/classgurls_1_1_param_sel_fix_lambda.html" title="ParamSelFixLambda is the sub&#45;class of ParamSelection that sets the regularization parameter to a cons..." alt="" coords="260,59,471,88"/>
+<area shape="rect" id="node7" href="$dd/d8a/classgurls_1_1_param_sel_fix_sig_lam.html" title="ParamSelFixSigLam is the sub&#45;class of ParamSelection that sets the regularization parameters to const..." alt="" coords="261,112,469,141"/>
+<area shape="rect" id="node9" href="$de/dc2/classgurls_1_1_param_sel_ho_dual.html" title="ParamSelHoDual is the subclass of ParamSelection that implements hold&#45;out cross validation with the d..." alt="" coords="271,165,460,195"/>
+<area shape="rect" id="node13" href="$d6/d89/classgurls_1_1_param_sel_ho_g_p_regr.html" title="ParamSelHoGPRegr is the sub&#45;class of ParamSelection that implements." alt="" coords="260,219,471,248"/>
+<area shape="rect" id="node15" href="$da/d0c/classgurls_1_1_param_sel_ho_primal.html" title="ParamSelHoPrimal is the subclass of ParamSelection that implements hold&#45;out cross validation with the..." alt="" coords="265,272,465,301"/>
+<area shape="rect" id="node19" href="$dd/de0/classgurls_1_1_param_sel_loocv_dual.html" title="ParamSelLoocvDual is the sub&#45;class of ParamSelection that implements LOO cross&#45;validation with the du..." alt="" coords="261,325,469,355"/>
+<area shape="rect" id="node21" href="$d3/d1d/classgurls_1_1_param_sel_loocv_primal.html" title="ParamSelLoocvPrimal is the sub&#45;class of ParamSelection that implements LOO cross&#45;validation with the ..." alt="" coords="256,379,475,408"/>
+<area shape="rect" id="node23" href="$da/d9c/classgurls_1_1_param_sel_loo_g_p_regr.html" title="ParamSelLooGPRegr is the sub&#45;class of ParamSelection that implements." alt="" coords="259,432,472,461"/>
+<area shape="rect" id="node25" href="$d6/d3a/classgurls_1_1_param_sel_siglam.html" title="ParamSelSiglam is the sub&#45;class of ParamSelection that implements LOO cross&#45;validation with the dual ..." alt="" coords="272,485,459,515"/>
+<area shape="rect" id="node27" href="$dc/de3/classgurls_1_1_param_sel_siglam_ho.html" title="ParamSelSiglam is the sub&#45;class of ParamSelection that implements hold&#45;out cross validation with the ..." alt="" coords="264,539,467,568"/>
+<area shape="rect" id="node29" href="$d1/de1/classgurls_1_1_param_sel_siglam_ho_g_p_regr.html" title="ParamSelSiglamHoGPRegr is the sub&#45;class of ParamSelection that implements." alt="" coords="240,592,491,621"/>
+<area shape="rect" id="node31" href="$d0/d75/classgurls_1_1_param_sel_siglam_loo_g_p_regr.html" title="ParamSelSiglamLooGPRegr is the sub&#45;class of ParamSelection that implements leave&#45;one&#45;ot parameter sel..." alt="" coords="239,645,492,675"/>
+<area shape="rect" id="node11" href="$d0/d9b/classgurls_1_1_param_sel_ho_dualr.html" title="ParamSelHoDualr is the randomized version of ParamSelHoDual." alt="" coords="547,165,741,195"/>
+<area shape="rect" id="node17" href="$db/dc8/classgurls_1_1_param_sel_ho_primalr.html" title="ParamSelHoPrimalr is the randomized version of ParamSelHoPrimal." alt="" coords="541,272,747,301"/>
+</map>

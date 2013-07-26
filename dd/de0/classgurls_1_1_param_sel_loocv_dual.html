@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -114,12 +114,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::ParamSelLoocvDual&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../dd/de0/classgurls_1_1_param_sel_loocv_dual.png" usemap="#gurls::ParamSelLoocvDual&lt; T &gt;_map" alt=""/>
-  <map id="gurls::ParamSelLoocvDual&lt; T &gt;_map" name="gurls::ParamSelLoocvDual&lt; T &gt;_map">
-<area href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="gurls::ParamSelection&lt; T &gt;" shape="rect" coords="0,0,192,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../df/dfe/classgurls_1_1_param_sel_loocv_dual__inherit__graph.png" border="0" usemap="#gurls_1_1_param_sel_loocv_dual_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_param_sel_loocv_dual_3_01_t_01_4_inherit__map" id="gurls_1_1_param_sel_loocv_dual_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="19,5,200,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::ParamSelLoocvDual&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d6/d53/classgurls_1_1_param_sel_loocv_dual__coll__graph.png" border="0" usemap="#gurls_1_1_param_sel_loocv_dual_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_param_sel_loocv_dual_3_01_t_01_4_coll__map" id="gurls_1_1_param_sel_loocv_dual_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="19,5,200,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d9/dc8/classgurls_1_1_param_sel_loocv_dual-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -238,7 +243,7 @@ template&lt;typename T &gt; </div>
 <span class="comment">//    Qty = Q&#39;*y;</span>
 <span class="comment">//    T* Qty = new T[qrows*qcols];</span>
     T* Qty = <span class="keyword">new</span> T[qcols*t];
-    <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Y.getData(), Qty, qrows, qcols, n, t, qcols, t, CblasTrans, CblasNoTrans, CblasColMajor);
+    <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Q, Y.getData(), Qty, qrows, qcols, n, t, qcols, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
     T* guesses = <a class="code" href="../../db/d4e/namespacegurls.html#a68355fb1c541564d3179538285d4673a" title="Builds array of possible values for the regularization parameter, generating a geometric series from ...">lambdaguesses</a>(L, n, r, n, tot, (T)(opt.getOptAsNumber(<span class="stringliteral">&quot;smallnumber&quot;</span>)));
 
@@ -363,7 +368,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00145">145</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00146">146</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvprimal&quot;</span>)
             <span class="keywordflow">return</span> <span class="keyword">new</span> ParamSelLoocvPrimal&lt;T&gt;;
@@ -425,7 +430,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../dd/de0/classgurls_1_1_param_sel_loocv_dual.html">ParamSelLoocvDual</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d1/d99/classgurls_1_1_pred_kernel.html" title="PredKernel is the class that computes the kernel matrix for prediction." alt="" coords="5,5,160,35"/>
+<area shape="rect" id="node3" href="$d3/dd7/classgurls_1_1_pred_kernel_train_test.html" title="PredKernelTrainTest is the sub&#45;class of PredKernel that computes the kernel matrix between training a..." alt="" coords="209,5,417,35"/>
+</map>

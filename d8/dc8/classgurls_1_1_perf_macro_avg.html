@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -115,12 +115,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::PerfMacroAvg&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../d8/dc8/classgurls_1_1_perf_macro_avg.png" usemap="#gurls::PerfMacroAvg&lt; T &gt;_map" alt=""/>
-  <map id="gurls::PerfMacroAvg&lt; T &gt;_map" name="gurls::PerfMacroAvg&lt; T &gt;_map">
-<area href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance." alt="gurls::Performance&lt; T &gt;" shape="rect" coords="0,0,161,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../df/dc2/classgurls_1_1_perf_macro_avg__inherit__graph.png" border="0" usemap="#gurls_1_1_perf_macro_avg_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_perf_macro_avg_3_01_t_01_4_inherit__map" id="gurls_1_1_perf_macro_avg_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance." alt="" coords="11,5,173,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::PerfMacroAvg&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d4/dc1/classgurls_1_1_perf_macro_avg__coll__graph.png" border="0" usemap="#gurls_1_1_perf_macro_avg_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_perf_macro_avg_3_01_t_01_4_coll__map" id="gurls_1_1_perf_macro_avg_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance." alt="" coords="11,5,173,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d1/d5f/classgurls_1_1_perf_macro_avg-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -292,15 +297,15 @@ template&lt;typename T &gt; </div>
 <span class="comment">//            p.forplot(t) = p.acc(t);</span>
 <span class="comment">//        end</span>
 <span class="comment">//        for t = (length(PerClass)+1):T</span>
-<span class="comment">//            p.acc(t) = 1;</span>
-<span class="comment">//            p.forho(t) = 1;</span>
-<span class="comment">//            p.forplot(t) = 1;</span>
+<span class="comment">//            p.acc(t) = 0;</span>
+<span class="comment">//            p.forho(t) = 0;</span>
+<span class="comment">//            p.forplot(t) = 0;</span>
 <span class="comment">//        end</span>
 
         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(acc, perClass, perClass_length);
 
         <span class="keywordflow">if</span>(perClass_length &lt; cols)
-            <span class="keyword">set</span>(acc+perClass_length, (T)1.0, cols-perClass_length);
+            <span class="keyword">set</span>(acc+perClass_length, (T)0.0, cols-perClass_length);
 
         <span class="keyword">delete</span>[] perClass;
 
@@ -339,7 +344,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d1/d3b/perf_8h_source.html#l00112">112</a> of file <a class="el" href="../../d1/d3b/perf_8h_source.html">perf.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d1/d3b/perf_8h_source.html#l00111">111</a> of file <a class="el" href="../../d1/d3b/perf_8h_source.html">perf.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;precrec&quot;</span>)
             <span class="keywordflow">return</span> <span class="keyword">new</span> PerfPrecRec&lt;T&gt;;
@@ -377,7 +382,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d8/dc8/classgurls_1_1_perf_macro_avg.html">PerfMacroAvg</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

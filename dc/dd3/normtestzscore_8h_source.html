@@ -147,60 +147,81 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define _GURLS_NORMTESTZSCORE_H_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
 <a name="l00046"></a>00046 
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;norm.h&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050 <span class="keyword">namespace </span>gurls {
-<a name="l00051"></a>00051 
-<a name="l00057"></a>00057 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00058"></a><a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html">00058</a> <span class="keyword">class </span><a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html" title="NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmopute...">NormTestZScore</a>: <span class="keyword">public</span> <a class="code" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data.">Norm</a>&lt;T&gt;
-<a name="l00059"></a>00059 {
-<a name="l00060"></a>00060 <span class="keyword">public</span>:
-<a name="l00070"></a>00070     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html#af47944eb30e4f790bf0a50437f671dbc" title="Spheriphies test data using the same mean and std deviation computed for the training set...">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt)  <span class="keywordflow">throw</span>(<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>);
-<a name="l00071"></a>00071 };
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00074"></a><a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html#af47944eb30e4f790bf0a50437f671dbc">00074</a> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html#af47944eb30e4f790bf0a50437f671dbc" title="Spheriphies test data using the same mean and std deviation computed for the training set...">NormTestZScore&lt;T&gt;::execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; <span class="comment">/*Y*/</span>, <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) <span class="keywordflow">throw</span>(<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
-<a name="l00075"></a>00075 {
-<a name="l00076"></a>00076 <span class="comment">//    [n,d] = size(X);</span>
-<a name="l00077"></a>00077     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.rows();
-<a name="l00078"></a>00078     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.cols();
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080     std::string name = opt.getOptAsString(<span class="stringliteral">&quot;name&quot;</span>);
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> v_meanX;
-<a name="l00083"></a>00083     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> v_stdX;
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085     std::string fileName;
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087     fileName = name + <span class="stringliteral">&quot;_norm_zscore_meanX.txt&quot;</span>;
-<a name="l00088"></a>00088     v_meanX.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a1becc28277bdd21185fafb44e263f24c" title="Deserializes the vector from a generic archive.">load</a>(fileName);
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;gurls++/norm.h&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;gurls++/optmatrix.h&quot;</span>
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051 <span class="keyword">namespace </span>gurls {
+<a name="l00052"></a>00052 
+<a name="l00058"></a>00058 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00059"></a><a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html">00059</a> <span class="keyword">class </span><a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html" title="NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmopute...">NormTestZScore</a>: <span class="keyword">public</span> <a class="code" href="../../d9/d56/classgurls_1_1_norm.html" title="Norm is a class that spherifies the data.">Norm</a>&lt;T&gt;
+<a name="l00060"></a>00060 {
+<a name="l00061"></a>00061 <span class="keyword">public</span>:
+<a name="l00075"></a>00075     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html#a6e48c871511746c156febf1d3e26c133" title="Spheriphies test data using the same mean and std deviation computed for the training set...">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt)  <span class="keywordflow">throw</span>(<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>);
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077 <span class="keyword">protected</span>:
+<a name="l00078"></a>00078     <span class="keywordtype">void</span> centerRescale(<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;M, <span class="keyword">const</span> T *stdDevs, <span class="keyword">const</span> T *means);
+<a name="l00079"></a>00079 };
+<a name="l00080"></a>00080 
+<a name="l00081"></a>00081 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00082"></a><a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html#a6e48c871511746c156febf1d3e26c133">00082</a> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html#a6e48c871511746c156febf1d3e26c133" title="Spheriphies test data using the same mean and std deviation computed for the training set...">NormTestZScore&lt;T&gt;::execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) <span class="keywordflow">throw</span>(<a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>)
+<a name="l00083"></a>00083 {
+<a name="l00084"></a>00084 <span class="comment">//    [n,d] = size(X);</span>
+<a name="l00085"></a>00085     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = X.rows();
+<a name="l00086"></a>00086     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = X.cols();
+<a name="l00087"></a>00087     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> m = Y.rows();
+<a name="l00088"></a>00088     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> t = Y.cols();
 <a name="l00089"></a>00089 
-<a name="l00090"></a>00090     fileName = name + <span class="stringliteral">&quot;_norm_zscore_stdX.txt&quot;</span>;
-<a name="l00091"></a>00091     v_stdX.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a1becc28277bdd21185fafb44e263f24c" title="Deserializes the vector from a generic archive.">load</a>(fileName);
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093     T* meanX = v_meanX.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
-<a name="l00094"></a>00094     T* stdX = v_stdX.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* retX = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(n, d);
-<a name="l00097"></a>00097     <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(retX-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), X.getData(), retX-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a341174355a586bde91f682ff0574a071" title="Returns vector length.">getSize</a>());
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099 <span class="comment">//    X = X - repmat(meanX, n, 1);</span>
-<a name="l00100"></a>00100 <span class="comment">//    X = X./repmat(stdX, n, 1);</span>
-<a name="l00101"></a>00101     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;d; ++i)
-<a name="l00102"></a>00102     {
-<a name="l00103"></a>00103         T* column = retX-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>()+(n*i);
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(n, (T)-1.0, meanX+i, 0, column, 1);
-<a name="l00106"></a>00106         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(n, (T)1.0/stdX[i], column, 1);
-<a name="l00107"></a>00107     }
+<a name="l00090"></a>00090     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a> = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;norm&quot;</span>);
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092     <span class="keywordflow">if</span>(n &gt; 0ul &amp;&amp; d &gt; 0ul)
+<a name="l00093"></a>00093     {
+<a name="l00094"></a>00094         <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;v_meanX = opt.getOptValue&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;meanX&quot;</span>);
+<a name="l00095"></a>00095         <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;v_stdX = opt.getOptValue&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;stdX&quot;</span>);
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097         <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* retX = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(n, d);
+<a name="l00098"></a>00098         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(retX-&gt;getData(), X.getData(), retX-&gt;getSize());
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100         centerRescale(*retX, v_stdX.getData(), v_meanX.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>());
+<a name="l00101"></a>00101         norm-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;X&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*retX));
+<a name="l00102"></a>00102     }
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104     <span class="keywordflow">if</span>(m &gt; 0ul &amp;&amp; t &gt; 0ul)
+<a name="l00105"></a>00105     {
+<a name="l00106"></a>00106         <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;v_meanY = opt.getOptValue&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;meanY&quot;</span>);
+<a name="l00107"></a>00107         <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;v_stdY = opt.getOptValue&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;stdY&quot;</span>);
 <a name="l00108"></a>00108 
-<a name="l00109"></a>00109     <span class="keywordflow">return</span> retX;
-<a name="l00110"></a>00110 }
+<a name="l00109"></a>00109         <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>* retY = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(m, t);
+<a name="l00110"></a>00110         <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(retY-&gt;getData(), Y.getData(), retY-&gt;getSize());
 <a name="l00111"></a>00111 
-<a name="l00112"></a>00112 }
-<a name="l00113"></a>00113 
-<a name="l00114"></a>00114 <span class="preprocessor">#endif //_GURLS_NORMTESTZSCORE_H_</span>
+<a name="l00112"></a>00112         centerRescale(*retY, v_stdY.getData(), v_meanY.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>());
+<a name="l00113"></a>00113         norm-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;Y&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*retY));
+<a name="l00114"></a>00114     }
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116     <span class="keywordflow">return</span> <a class="code" href="../../db/d4e/namespacegurls.html#af37cded61440c0f4c5e6b121e32f1961" title="Computes a vector norm specified by type parameter.">norm</a>;
+<a name="l00117"></a>00117 }
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119 <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00120"></a>00120 <span class="keywordtype">void</span> <a class="code" href="../../db/d98/classgurls_1_1_norm_test_z_score.html" title="NormTestZScore is the sub-class of Norm that spheriphies the data according to the statistics cmopute...">NormTestZScore&lt;T&gt;::centerRescale</a>(<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &amp;M, <span class="keyword">const</span> T *stdDevs, <span class="keyword">const</span> T *means)
+<a name="l00121"></a>00121 {
+<a name="l00122"></a>00122     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n = M.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#a5ef176755f75f33e282fc1ac976958da" title="Returns the number of rows.">rows</a>();
+<a name="l00123"></a>00123     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> d = M.<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html#afa235cd07be1afe30497d55c90c42844" title="Returns the number of columns.">cols</a>();
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125     <span class="comment">//    X = X - repmat(meanX, n, 1);</span>
+<a name="l00126"></a>00126     <span class="comment">//    X = X./repmat(stdX, n, 1);</span>
+<a name="l00127"></a>00127     T* column = M.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>();
+<a name="l00128"></a>00128     <span class="keyword">const</span> T* std_it = stdDevs;
+<a name="l00129"></a>00129     <span class="keyword">const</span> T* mean_it = means;
+<a name="l00130"></a>00130     <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=0; i&lt;d; ++i, column+=n, ++std_it, ++mean_it)
+<a name="l00131"></a>00131     {
+<a name="l00132"></a>00132         <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(n, (T)-1.0, mean_it, 0, column, 1);
+<a name="l00133"></a>00133         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(n, (T)1.0/(*std_it), column, 1);
+<a name="l00134"></a>00134     }
+<a name="l00135"></a>00135 }
+<a name="l00136"></a>00136 
+<a name="l00137"></a>00137 }
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139 <span class="preprocessor">#endif //_GURLS_NORMTESTZSCORE_H_</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -221,7 +242,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>normtestzscore.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

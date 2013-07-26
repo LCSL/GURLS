@@ -151,57 +151,56 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00048"></a>00048 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <a name="l00049"></a>00049 <span class="preprocessor">#include &lt;cmath&gt;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#include &lt;algorithm&gt;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &lt;exception&gt;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &lt;stdexcept&gt;</span>
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gurls++/exceptions.h&quot;</span>
+<a name="l00056"></a>00056 
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="keyword">namespace </span>gurls
-<a name="l00060"></a>00060 {
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00063"></a>00063 <span class="keyword">class </span>PerfMacroAvg;
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00066"></a>00066 <span class="keyword">class </span>PerfPrecRec;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00069"></a>00069 <span class="keyword">class </span>PerfRmse;
-<a name="l00070"></a>00070 
-<a name="l00076"></a><a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html">00076</a> <span class="keyword">class </span><a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator...">BadPerformanceCreation</a> : <span class="keyword">public</span> std::logic_error
-<a name="l00077"></a>00077 {
-<a name="l00078"></a>00078 <span class="keyword">public</span>:
-<a name="l00079"></a>00079 
-<a name="l00083"></a><a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html#a33fc4cf4d3d35a2e409020b939eb4dd5">00083</a>     <a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html#a33fc4cf4d3d35a2e409020b939eb4dd5" title="Exception constructor.">BadPerformanceCreation</a>(std::string type): logic_error(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
-<a name="l00084"></a>00084 };
-<a name="l00085"></a>00085 
-<a name="l00090"></a>00090 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00091"></a><a class="code" href="../../d5/dac/classgurls_1_1_performance.html">00091</a> <span class="keyword">class </span><a class="code" href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance.">Performance</a>
-<a name="l00092"></a>00092 {
-<a name="l00093"></a>00093 <span class="keyword">public</span>:
-<a name="l00094"></a>00094 
-<a name="l00104"></a>00104     <span class="keyword">virtual</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> *<a class="code" href="../../d5/dac/classgurls_1_1_performance.html#aced03c5a143ea22d0e7260737376eb82" title="Evaluates prediction performance.">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
-<a name="l00105"></a>00105 
-<a name="l00112"></a><a class="code" href="../../d5/dac/classgurls_1_1_performance.html#af45e9e3b96f97d345c8c8b8ff9e92552">00112</a>     <span class="keyword">static</span> <a class="code" href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance.">Performance&lt;T&gt;</a>* <a class="code" href="../../d5/dac/classgurls_1_1_performance.html#af45e9e3b96f97d345c8c8b8ff9e92552" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator...">BadPerformanceCreation</a>)
-<a name="l00113"></a>00113     {
-<a name="l00114"></a>00114         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;precrec&quot;</span>)
-<a name="l00115"></a>00115             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/dbc/classgurls_1_1_perf_prec_rec.html" title="PerfPrecRec is the sub-class of Performance that evaluates prediction precision.">PerfPrecRec&lt;T&gt;</a>;
-<a name="l00116"></a>00116         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;macroavg&quot;</span>)
-<a name="l00117"></a>00117             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d8/dc8/classgurls_1_1_perf_macro_avg.html" title="PerfMacroAvg is the sub-class of Performance that evaluates prediction accuracy.">PerfMacroAvg&lt;T&gt;</a>;
-<a name="l00118"></a>00118         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;rmse&quot;</span>)
-<a name="l00119"></a>00119             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d8/dc3/classgurls_1_1_perf_rmse.html" title="PerfRmse is the sub-class of Performance that evaluates prediction error.">PerfRmse&lt;T&gt;</a>;
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121         <span class="keywordflow">throw</span> <a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator...">BadPerformanceCreation</a>(<span class="keywordtype">id</span>);
-<a name="l00122"></a>00122     }
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124 };
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126 }
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128 <span class="preprocessor">#endif // _GURLS_PERF_H</span>
+<a name="l00058"></a>00058 <span class="keyword">namespace </span>gurls
+<a name="l00059"></a>00059 {
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00062"></a>00062 <span class="keyword">class </span>PerfMacroAvg;
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00065"></a>00065 <span class="keyword">class </span>PerfPrecRec;
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00068"></a>00068 <span class="keyword">class </span>PerfRmse;
+<a name="l00069"></a>00069 
+<a name="l00075"></a><a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html">00075</a> <span class="keyword">class </span><a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator...">BadPerformanceCreation</a> : <span class="keyword">public</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>
+<a name="l00076"></a>00076 {
+<a name="l00077"></a>00077 <span class="keyword">public</span>:
+<a name="l00078"></a>00078 
+<a name="l00082"></a><a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html#a33fc4cf4d3d35a2e409020b939eb4dd5">00082</a>     <a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html#a33fc4cf4d3d35a2e409020b939eb4dd5" title="Exception constructor.">BadPerformanceCreation</a>(std::string type): <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<span class="stringliteral">&quot;Cannot create type &quot;</span> + type) {}
+<a name="l00083"></a>00083 };
+<a name="l00084"></a>00084 
+<a name="l00089"></a>00089 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+<a name="l00090"></a><a class="code" href="../../d5/dac/classgurls_1_1_performance.html">00090</a> <span class="keyword">class </span><a class="code" href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance.">Performance</a>
+<a name="l00091"></a>00091 {
+<a name="l00092"></a>00092 <span class="keyword">public</span>:
+<a name="l00093"></a>00093 
+<a name="l00103"></a>00103     <span class="keyword">virtual</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> *<a class="code" href="../../d5/dac/classgurls_1_1_performance.html#aced03c5a143ea22d0e7260737376eb82" title="Evaluates prediction performance.">execute</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; X, <span class="keyword">const</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; Y, <span class="keyword">const</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&amp; opt) = 0;
+<a name="l00104"></a>00104 
+<a name="l00111"></a><a class="code" href="../../d5/dac/classgurls_1_1_performance.html#af45e9e3b96f97d345c8c8b8ff9e92552">00111</a>     <span class="keyword">static</span> <a class="code" href="../../d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance.">Performance&lt;T&gt;</a>* <a class="code" href="../../d5/dac/classgurls_1_1_performance.html#af45e9e3b96f97d345c8c8b8ff9e92552" title="Factory function returning a pointer to the newly created object.">factory</a>(<span class="keyword">const</span> std::string&amp; <span class="keywordtype">id</span>) <span class="keywordflow">throw</span>(<a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator...">BadPerformanceCreation</a>)
+<a name="l00112"></a>00112     {
+<a name="l00113"></a>00113         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;precrec&quot;</span>)
+<a name="l00114"></a>00114             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d6/dbc/classgurls_1_1_perf_prec_rec.html" title="PerfPrecRec is the sub-class of Performance that evaluates prediction precision.">PerfPrecRec&lt;T&gt;</a>;
+<a name="l00115"></a>00115         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;macroavg&quot;</span>)
+<a name="l00116"></a>00116             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d8/dc8/classgurls_1_1_perf_macro_avg.html" title="PerfMacroAvg is the sub-class of Performance that evaluates prediction accuracy.">PerfMacroAvg&lt;T&gt;</a>;
+<a name="l00117"></a>00117         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;rmse&quot;</span>)
+<a name="l00118"></a>00118             <span class="keywordflow">return</span> <span class="keyword">new</span> <a class="code" href="../../d8/dc3/classgurls_1_1_perf_rmse.html" title="PerfRmse is the sub-class of Performance that evaluates prediction error.">PerfRmse&lt;T&gt;</a>;
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120         <span class="keywordflow">throw</span> <a class="code" href="../../dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator...">BadPerformanceCreation</a>(<span class="keywordtype">id</span>);
+<a name="l00121"></a>00121     }
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 };
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125 }
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127 <span class="preprocessor">#endif // _GURLS_PERF_H</span>
 </pre></div></div><!-- contents -->
 </div>
 <!-- window showing the filter options -->
@@ -222,7 +221,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>perf.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

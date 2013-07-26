@@ -146,10 +146,10 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor">#ifndef _GURLS_OPTMATRIX_H_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define _GURLS_OPTMATRIX_H_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &lt;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&gt;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &lt;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&gt;</span>
 <a name="l00047"></a>00047 
 <a name="l00048"></a>00048 <span class="preprocessor">#ifdef _BGURLS</span>
-<a name="l00049"></a>00049 <span class="preprocessor"></span><span class="preprocessor">#include &lt;bigarray.h&gt;</span>
+<a name="l00049"></a>00049 <span class="preprocessor"></span><span class="preprocessor">#include &lt;bgurls++/bigarray.h&gt;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#endif</span>
 <a name="l00051"></a>00051 <span class="preprocessor"></span>
 <a name="l00052"></a>00052 <span class="keyword">namespace </span>gurls
@@ -303,27 +303,27 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00259"></a>00259         <span class="keywordflow">throw</span> <a class="code" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package.">gException</a>(<a class="code" href="../../d1/dc9/group___exceptions.html#gacf3e993e23eca9e06729d5a7f688a6d1" title="Message displayed when failing a cast.">gurls::Exception_Illegal_Dynamic_Cast</a>);
 <a name="l00260"></a>00260     }
 <a name="l00261"></a>00261 
-<a name="l00265"></a>00265     <span class="keyword">virtual</span> std::ostream&amp; <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a79a420291332c55a5e34e3d0613498eb" title="Writes the option to a stream.">operator&lt;&lt;</a>(std::ostream&amp; os);
+<a name="l00265"></a>00265     <span class="keyword">virtual</span> std::ostream&amp; <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a9097f1d764bbd06b5298ddef042ea054" title="Writes the option to a stream.">operator&lt;&lt;</a>(std::ostream&amp; os) <span class="keyword">const</span>;
 <a name="l00266"></a>00266 
 <a name="l00267"></a>00267 };
 <a name="l00268"></a>00268 
 <a name="l00269"></a>00269 <span class="preprocessor">#ifdef _BGURLS</span>
 <a name="l00270"></a>00270 <span class="preprocessor"></span>
 <a name="l00271"></a>00271 <span class="keyword">template</span> &lt;&gt;
-<a name="l00272"></a>00272 <span class="keywordtype">bool</span> OptMatrix&lt;BigArray&lt;float&gt; &gt;::hasBigArray() <span class="keyword">const</span>;
+<a name="l00272"></a>00272 <span class="keywordtype">bool</span> OptMatrix&lt;BigArray&lt;float&gt; &gt;::hasBigArray()<span class="keyword"> const</span>{<span class="keywordflow">return</span> <span class="keyword">true</span>;};
 <a name="l00273"></a>00273 
 <a name="l00274"></a>00274 <span class="keyword">template</span> &lt;&gt;
-<a name="l00275"></a>00275 <span class="keywordtype">bool</span> OptMatrix &lt;BigArray&lt;double&gt; &gt;::hasBigArray() <span class="keyword">const</span>;
+<a name="l00275"></a>00275 <span class="keywordtype">bool</span> OptMatrix &lt;BigArray&lt;double&gt; &gt;::hasBigArray()<span class="keyword"> const</span>{<span class="keywordflow">return</span> <span class="keyword">true</span>;};
 <a name="l00276"></a>00276 
 <a name="l00277"></a>00277 <span class="keyword">template</span> &lt;&gt;
-<a name="l00278"></a>00278 <span class="keywordtype">bool</span> OptMatrix &lt;BigArray&lt;unsigned long&gt; &gt;::hasBigArray() <span class="keyword">const</span>;
+<a name="l00278"></a>00278 <span class="keywordtype">bool</span> OptMatrix &lt;BigArray&lt;unsigned long&gt; &gt;::hasBigArray()<span class="keyword"> const</span>{<span class="keywordflow">return</span> <span class="keyword">true</span>;};
 <a name="l00279"></a>00279 
 <a name="l00280"></a>00280 <span class="preprocessor">#endif</span>
 <a name="l00281"></a>00281 <span class="preprocessor"></span>
 <a name="l00282"></a>00282 
 <a name="l00286"></a>00286 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
-<a name="l00287"></a><a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a79a420291332c55a5e34e3d0613498eb">00287</a> std::ostream&amp; <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a79a420291332c55a5e34e3d0613498eb" title="Writes the option to a stream.">OptMatrix&lt;T&gt;::operator &lt;&lt; </a>(std::ostream&amp; os)
-<a name="l00288"></a>00288 {
+<a name="l00287"></a><a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a9097f1d764bbd06b5298ddef042ea054">00287</a> std::ostream&amp; <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html#a9097f1d764bbd06b5298ddef042ea054" title="Writes the option to a stream.">OptMatrix&lt;T&gt;::operator &lt;&lt; </a>(std::ostream&amp; os)<span class="keyword"> const</span>
+<a name="l00288"></a>00288 <span class="keyword"></span>{
 <a name="l00289"></a>00289     <span class="keywordflow">return</span> os &lt;&lt; std::endl &lt;&lt; this-&gt;getValue();
 <a name="l00290"></a>00290 }
 <a name="l00291"></a>00291 
@@ -350,7 +350,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>optmatrix.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -1,0 +1,22 @@
+<map id="G" name="G">
+<area shape="rect" id="node7" href="$dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities." alt="" coords="3099,624,3216,653"/>
+<area shape="rect" id="node40" href="$dc/d12/gmat2d_8h_source.html" title="gurls++/gmat2d.h" alt="" coords="2560,469,2683,499"/>
+<area shape="rect" id="node105" href="$d8/d85/optlist_8h_source.html" title="gurls++/optlist.h" alt="" coords="3228,237,3343,267"/>
+<area shape="rect" id="node133" href="$db/dc6/optfunction_8h_source.html" title="gurls++/optfunction.h" alt="" coords="1755,315,1899,344"/>
+<area shape="rect" id="node139" href="$de/d25/optmatrix_8h_source.html" title="gurls++/optmatrix.h" alt="" coords="3213,160,3347,189"/>
+<area shape="rect" id="node142" href="$d3/d8e/primal_8h_source.html" title="gurls++/primal.h" alt="" coords="3815,83,3929,112"/>
+<area shape="rect" id="node164" href="$d1/d68/macroavg_8h_source.html" title="gurls++/macroavg.h" alt="" coords="3397,83,3536,112"/>
+<area shape="rect" id="node22" href="$d9/db6/exports_8h_source.html" title="gurls++/exports.h" alt="" coords="3181,779,3304,808"/>
+<area shape="rect" id="node24" href="$d4/d03/exceptions_8h_source.html" title="gurls++/exceptions.h" alt="" coords="2115,701,2259,731"/>
+<area shape="rect" id="node36" href="$dd/df1/blas__lapack_8h.html" title="Contains prototypes for BLAS level 1, 2, 3 and Lapack routines." alt="" coords="3029,701,3179,731"/>
+<area shape="rect" id="node38" href="$d7/d3d/blas__lapack_8hpp.html" title="Contains template functions for BLAS level 1, 2, 3 and Lapack routines." alt="" coords="2995,779,3157,808"/>
+<area shape="rect" id="node56" href="$db/d7e/basearray_8h_source.html" title="gurls++/basearray.h" alt="" coords="2504,624,2643,653"/>
+<area shape="rect" id="node72" href="$d0/d8d/gvec_8h_source.html" title="gurls++/gvec.h" alt="" coords="2808,547,2917,576"/>
+<area shape="rect" id="node87" href="$d5/d47/gmat2d_8hpp_source.html" title="gmat2d.hpp" alt="" coords="1265,624,1356,653"/>
+<area shape="rect" id="node69" href="$d8/dad/basearray_8hpp_source.html" title="basearray.hpp" alt="" coords="2669,701,2773,731"/>
+<area shape="rect" id="node84" href="$d6/dd8/gvec_8hpp_source.html" title="gvec.hpp" alt="" coords="2949,624,3024,653"/>
+<area shape="rect" id="node116" href="$d7/d5b/options_8h.html" title="gurls++/options.h" alt="" coords="3152,392,3275,421"/>
+<area shape="rect" id="node128" href="$dd/da7/optarray_8h_source.html" title="gurls++/optarray.h" alt="" coords="2997,315,3125,344"/>
+<area shape="rect" id="node153" href="$d9/d97/pred_8h_source.html" title="gurls++/pred.h" alt="" coords="3909,160,4016,189"/>
+<area shape="rect" id="node166" href="$d1/d3b/perf_8h_source.html" title="gurls++/perf.h" alt="" coords="3663,160,3764,189"/>
+</map>

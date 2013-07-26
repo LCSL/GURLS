@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package." alt="" coords="5,219,128,248"/>
+<area shape="rect" id="node3" href="$d3/d2a/classgurls_1_1_bad_confidence_creation.html" title="BadConfidenceCreation is thrown when factory tries to generate an unknown confidence method..." alt="" coords="191,5,385,35"/>
+<area shape="rect" id="node5" href="$da/d16/classgurls_1_1_bad_kernel_creation.html" title="BadKernelCreation is thrown when factory tries to generate an unknown kernel." alt="" coords="205,59,371,88"/>
+<area shape="rect" id="node7" href="$dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm." alt="" coords="207,112,369,141"/>
+<area shape="rect" id="node9" href="$d1/d0d/classgurls_1_1_bad_optimizer_creation.html" title="BadOptimizerCreation is thrown when factory tries to generate an unknown optimizer." alt="" coords="195,165,381,195"/>
+<area shape="rect" id="node11" href="$d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met..." alt="" coords="177,219,399,248"/>
+<area shape="rect" id="node13" href="$dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator..." alt="" coords="187,272,389,301"/>
+<area shape="rect" id="node15" href="$d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method..." alt="" coords="195,325,381,355"/>
+<area shape="rect" id="node17" href="$d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html" title="BadPredKernelCreation is thrown when factory tries to generate an unknown prediction kernel..." alt="" coords="191,379,385,408"/>
+<area shape="rect" id="node19" href="$d7/d5c/classgurls_1_1_bad_split_creation.html" title="BadSplitCreation is thrown when factory tries to generate an unknown split method." alt="" coords="211,432,365,461"/>
+</map>

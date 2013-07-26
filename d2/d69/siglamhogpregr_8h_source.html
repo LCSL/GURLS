@@ -149,15 +149,15 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00046"></a>00046 <span class="preprocessor">#include &lt;cmath&gt;</span>
 <a name="l00047"></a>00047 
 <a name="l00048"></a>00048 
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;gurls++/gvec.h&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
 <a name="l00054"></a>00054 
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;paramsel.h&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;hogpregr.h&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;rbfkernel.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gurls++/paramsel.h&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;gurls++/hogpregr.h&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;gurls++/rbfkernel.h&quot;</span>
 <a name="l00058"></a>00058 
 <a name="l00059"></a>00059 <span class="keyword">namespace </span>gurls {
 <a name="l00060"></a>00060 
@@ -183,52 +183,52 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00088"></a>00088     nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;nholdouts&quot;</span>, opt);
 <a name="l00089"></a>00089     nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;hoperf&quot;</span>, opt);
 <a name="l00090"></a>00090     nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;split&quot;</span>, opt);
-<a name="l00091"></a>00091 
+<a name="l00091"></a>00091     nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;singlelambda&quot;</span>, opt);
 <a name="l00092"></a>00092 
-<a name="l00093"></a>00093 <span class="comment">//    if ~isfield(opt,&#39;kernel&#39;)</span>
-<a name="l00094"></a>00094     <span class="keywordflow">if</span>(!opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;kernel&quot;</span>))
-<a name="l00095"></a>00095     {
-<a name="l00096"></a>00096 <span class="comment">//        opt.kernel.type = &#39;rbf&#39;;</span>
-<a name="l00097"></a>00097         <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* kernel = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;kernel&quot;</span>);
-<a name="l00098"></a>00098         kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;type&quot;</span>, <span class="stringliteral">&quot;rbf&quot;</span>);
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100         nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;kernel&quot;</span>, kernel);
-<a name="l00101"></a>00101     }
-<a name="l00102"></a>00102     <span class="keywordflow">else</span>
-<a name="l00103"></a>00103         nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;kernel&quot;</span>, opt);
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* kernel = nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a1e3d2445536a446436eef89aef68a321" title="Returns a pointer to a T option mapped with a key.">getOptAs</a>&lt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&gt;(<span class="stringliteral">&quot;kernel&quot;</span>);
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> *<a class="code" href="../../db/d4e/namespacegurls.html#a40bfc3247c329bd81a818af3383c42c5" title="Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean dis...">distance</a>;
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109 <span class="comment">//    if ~isfield(opt.kernel,&#39;distance&#39;)</span>
-<a name="l00110"></a>00110     <span class="keywordflow">if</span>(!kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;distance&quot;</span>))
-<a name="l00111"></a>00111     {
-<a name="l00112"></a>00112 <span class="comment">//        opt.kernel.distance = squareform(pdist(X)).^2;</span>
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094 <span class="comment">//    if ~isfield(opt,&#39;kernel&#39;)</span>
+<a name="l00095"></a>00095     <span class="keywordflow">if</span>(!opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;kernel&quot;</span>))
+<a name="l00096"></a>00096     {
+<a name="l00097"></a>00097 <span class="comment">//        opt.kernel.type = &#39;rbf&#39;;</span>
+<a name="l00098"></a>00098         <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* kernel = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;kernel&quot;</span>);
+<a name="l00099"></a>00099         kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;type&quot;</span>, <span class="stringliteral">&quot;rbf&quot;</span>);
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101         nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;kernel&quot;</span>, kernel);
+<a name="l00102"></a>00102     }
+<a name="l00103"></a>00103     <span class="keywordflow">else</span>
+<a name="l00104"></a>00104         nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;kernel&quot;</span>, opt);
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* kernel = nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a1e3d2445536a446436eef89aef68a321" title="Returns a pointer to a T option mapped with a key.">getOptAs</a>&lt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>&gt;(<span class="stringliteral">&quot;kernel&quot;</span>);
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108     <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> *<a class="code" href="../../db/d4e/namespacegurls.html#a40bfc3247c329bd81a818af3383c42c5" title="Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean dis...">distance</a>;
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 <span class="comment">//    if ~isfield(opt.kernel,&#39;distance&#39;)</span>
+<a name="l00111"></a>00111     <span class="keywordflow">if</span>(!kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;distance&quot;</span>))
+<a name="l00112"></a>00112     {
 <a name="l00113"></a>00113         distance = <span class="keyword">new</span> <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>(n, n);
 <a name="l00114"></a>00114 
-<a name="l00115"></a>00115         <a class="code" href="../../db/d4e/namespacegurls.html#a2edac8fc521c5bb7e91c90f1bbe80172" title="Reformats a distance matrix between upper triangular and square form.">squareform</a>(X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n, d, distance-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n);
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117         <a class="code" href="../../db/d4e/namespacegurls.html#a43a5eeef1874c15e091086b62cfcaebd" title="Element by element multiplication of two vectors.">mult</a>(distance-&gt;getData(), distance-&gt;getData(), distance-&gt;getData(), n*n);
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119         kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;distance&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*distance));
-<a name="l00120"></a>00120     }
-<a name="l00121"></a>00121     <span class="keywordflow">else</span>
-<a name="l00122"></a>00122         distance = &amp;(kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;distance&quot;</span>));
+<a name="l00115"></a>00115 <span class="comment">//        opt.kernel.distance = square_distance(X&#39;,X&#39;);</span>
+<a name="l00116"></a>00116         <a class="code" href="../../db/d4e/namespacegurls.html#a506923827bb6ab78e9944facc9afcf13" title="Utility function used to build the kernel matrix; it computes the matrix of the squared euclidean dis...">distance_transposed</a>(X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), X.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), d, n, n, distance-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>());
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118         kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;distance&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix</a>&lt;<a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a> &gt;(*distance));
+<a name="l00119"></a>00119     }
+<a name="l00120"></a>00120     <span class="keywordflow">else</span>
+<a name="l00121"></a>00121         distance = &amp;(kernel-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;distance&quot;</span>));
+<a name="l00122"></a>00122 
 <a name="l00123"></a>00123 
 <a name="l00124"></a>00124 <span class="comment">//    if ~isfield(opt,&#39;sigmamin&#39;)</span>
 <a name="l00125"></a>00125     <span class="keywordflow">if</span>(!opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;sigmamin&quot;</span>))
 <a name="l00126"></a>00126     {
-<a name="l00127"></a>00127 <span class="comment">//        D = sort(squareform(opt.kernel.distance.^(1/2)));</span>
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129         <span class="keywordtype">int</span> d_len = n*(n-1)/2;
-<a name="l00130"></a>00130         T* distLinearized = <span class="keyword">new</span> T[d_len];
+<a name="l00127"></a>00127         <span class="keywordtype">int</span> d_len = n*(n-1)/2;
+<a name="l00128"></a>00128         T* distLinearized = <span class="keyword">new</span> T[d_len];
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130 <span class="comment">//        D = sort(opt.kernel.distance(tril(true(n),-1)));</span>
 <a name="l00131"></a>00131 
-<a name="l00132"></a>00132         <span class="keyword">const</span> <span class="keywordtype">int</span> size = distance-&gt;cols();
+<a name="l00132"></a>00132         <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size = distance-&gt;cols();
 <a name="l00133"></a>00133         T* it = distLinearized;
 <a name="l00134"></a>00134         T* d_it = distance-&gt;getData();
 <a name="l00135"></a>00135 
-<a name="l00136"></a>00136         <span class="keywordflow">for</span>(<span class="keywordtype">int</span> i=1; i&lt; size; ++i)
+<a name="l00136"></a>00136         <span class="keywordflow">for</span>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i=1; i&lt; size; ++i)
 <a name="l00137"></a>00137         {
 <a name="l00138"></a>00138             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">gurls::copy</a>(it , d_it+i, size - i);
 <a name="l00139"></a>00139 
@@ -239,7 +239,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00144"></a>00144         <a class="code" href="../../db/d4e/namespacegurls.html#abb76e3d861e7dce6464e4f29c1620336" title="Sorts the elements of a matrix along the columns.">std::sort</a>(distLinearized, distLinearized + d_len);
 <a name="l00145"></a>00145 
 <a name="l00146"></a>00146         <span class="comment">//        firstPercentile = round(0.01*numel(D)+0.5);</span>
-<a name="l00147"></a>00147         <span class="keywordtype">int</span> firstPercentile = <a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e" title="Rounds an input value to the nearest integer.">gurls::round</a>((T)0.01 * d_len + (T)0.5);
+<a name="l00147"></a>00147         <span class="keywordtype">int</span> firstPercentile = <a class="code" href="../../db/d4e/namespacegurls.html#a049b19eedddd32d4bd23a8279c83dc6e" title="Rounds an input value to the nearest integer.">gurls::round</a>((T)0.01 * d_len + (T)0.5)-1;
 <a name="l00148"></a>00148 
 <a name="l00149"></a>00149         <span class="comment">//  opt.sigmamin = D(firstPercentile);</span>
 <a name="l00150"></a>00150         nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;sigmamin&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../d9/d58/classgurls_1_1_opt_number.html" title="OptNumber is an option containing a double precision floating point number.">OptNumber</a>(sqrt( distLinearized[firstPercentile]) ));
@@ -253,9 +253,9 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00158"></a>00158 <span class="comment">//    if ~isfield(opt,&#39;sigmamax&#39;)</span>
 <a name="l00159"></a>00159     <span class="keywordflow">if</span>(!opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;sigmamax&quot;</span>))
 <a name="l00160"></a>00160     {
-<a name="l00161"></a>00161 <span class="comment">//        opt.sigmamax = max(max(opt.kernel.distance.^(1/2)));</span>
+<a name="l00161"></a>00161 <span class="comment">//        opt.sigmamax = sqrt(max(max(opt.kernel.distance)));</span>
 <a name="l00162"></a>00162         <span class="keywordtype">double</span> sigmaMax = sqrt(*std::max_element(distance-&gt;getData(), distance-&gt;getData()+distance-&gt;getSize()));
-<a name="l00163"></a>00163         nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;sigmamax&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../d9/d58/classgurls_1_1_opt_number.html" title="OptNumber is an option containing a double precision floating point number.">OptNumber</a>(sqrt(sigmaMax)));
+<a name="l00163"></a>00163         nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;sigmamax&quot;</span>, <span class="keyword">new</span> <a class="code" href="../../d9/d58/classgurls_1_1_opt_number.html" title="OptNumber is an option containing a double precision floating point number.">OptNumber</a>(sigmaMax));
 <a name="l00164"></a>00164     }
 <a name="l00165"></a>00165     <span class="keywordflow">else</span>
 <a name="l00166"></a>00166         nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;sigmamax&quot;</span>, opt);
@@ -409,7 +409,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>siglamhogpregr.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

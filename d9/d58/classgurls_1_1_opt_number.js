@@ -10,11 +10,11 @@ var classgurls_1_1_opt_number =
     [ "getValue", "d9/d58/classgurls_1_1_opt_number.html#af9acb11a2010ce8a3254f3fd3605de68", null ],
     [ "getValue", "d9/d58/classgurls_1_1_opt_number.html#ace89586b7e74c2adce350c85ed6a1bb0", null ],
     [ "isA", "d9/d58/classgurls_1_1_opt_number.html#a5b88220b572be37ea37f577fcbc748c9", null ],
-    [ "operator<<", "d9/d58/classgurls_1_1_opt_number.html#a5202a2552d42def0d6bffb977fc481c8", null ],
+    [ "operator<<", "d9/d58/classgurls_1_1_opt_number.html#a0a5c720ea41d6009ac0334821a8ddb0d", null ],
     [ "operator=", "d9/d58/classgurls_1_1_opt_number.html#aa18384303e4c31f57fc676d5e225e532", null ],
     [ "operator=", "d9/d58/classgurls_1_1_opt_number.html#a379a7f06096f34be7646a841f248dc1e", null ],
     [ "setValue", "d9/d58/classgurls_1_1_opt_number.html#a0786251f00e4af7e8d5b3c70ed0ee18e", null ],
-    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#ab8ca962235eb774ea2c322df52f50afd", null ],
+    [ "operator<<", "d5/dcc/classgurls_1_1_gurls_option.html#a7895a960021bad7c92d4f21e80f9aced", null ],
     [ "type", "d5/dcc/classgurls_1_1_gurls_option.html#aea0687b6adb753e8693061721142905d", null ],
     [ "value", "d9/d58/classgurls_1_1_opt_number.html#ab6c4ff18ad21ee4fd46b836e88961f03", null ]
 ];

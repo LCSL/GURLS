@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -105,13 +105,25 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="title">gurls::BadKernelCreation Class Reference<div class="ingroups"><a class="el" href="../../d1/dc9/group___exceptions.html">Exceptions</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="gurls::BadKernelCreation" --><!-- doxytag: inherits="std::logic_error" -->
+<!-- doxytag: class="gurls::BadKernelCreation" --><!-- doxytag: inherits="gurls::gException" -->
 <p><a class="el" href="../../da/d16/classgurls_1_1_bad_kernel_creation.html" title="BadKernelCreation is thrown when factory tries to generate an unknown kernel.">BadKernelCreation</a> is thrown when factory tries to generate an unknown kernel.  
 </p>
 
 <p><code>#include &lt;<a class="el" href="../../d0/daa/kernel_8h_source.html">kernel.h</a>&gt;</code></p>
-
-<p>Inherits std::logic_error.</p>
+<div class="dynheader">
+Inheritance diagram for gurls::BadKernelCreation:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../da/d19/classgurls_1_1_bad_kernel_creation__inherit__graph.png" border="0" usemap="#gurls_1_1_bad_kernel_creation_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_bad_kernel_creation_inherit__map" id="gurls_1_1_bad_kernel_creation_inherit__map">
+<area shape="rect" id="node2" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package." alt="" coords="27,83,149,112"/><area shape="rect" id="node4" title="STL class." alt="" coords="36,5,140,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::BadKernelCreation:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../da/d32/classgurls_1_1_bad_kernel_creation__coll__graph.png" border="0" usemap="#gurls_1_1_bad_kernel_creation_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_bad_kernel_creation_coll__map" id="gurls_1_1_bad_kernel_creation_coll__map">
+<area shape="rect" id="node2" href="../../d1/d29/classgurls_1_1g_exception.html" title="gException is the class designed to deal with exceptions in Gurls++ package." alt="" coords="36,181,159,211"/><area shape="rect" id="node4" title="STL class." alt="" coords="5,85,109,115"/><area shape="rect" id="node6" title="STL class." alt="" coords="133,85,213,115"/><area shape="rect" id="node8" title="STL class." alt="" coords="91,5,256,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d7/d15/classgurls_1_1_bad_kernel_creation-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -120,6 +132,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a15635019ff499c70a50c9dc7183899"></a><!-- doxytag: member="gurls::BadKernelCreation::BadKernelCreation" ref="a4a15635019ff499c70a50c9dc7183899" args="(std::string type)" -->
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d16/classgurls_1_1_bad_kernel_creation.html#a4a15635019ff499c70a50c9dc7183899">BadKernelCreation</a> (std::string type)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception constructor. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a445ab976aefc262be7adca10a5ec2796"></a><!-- doxytag: member="gurls::BadKernelCreation::getMessage" ref="a445ab976aefc262be7adca10a5ec2796" args="() const " -->
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d29/classgurls_1_1g_exception.html#a445ab976aefc262be7adca10a5ec2796">getMessage</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a description of the exception. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8c7beef784bc8616004cc2f1afd612a"></a><!-- doxytag: member="gurls::BadKernelCreation::what" ref="ac8c7beef784bc8616004cc2f1afd612a" args="() const " -->
+const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d29/classgurls_1_1g_exception.html#ac8c7beef784bc8616004cc2f1afd612a">what</a> () const   throw ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a description of the exception. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock">
@@ -148,7 +166,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../da/d16/classgurls_1_1_bad_kernel_creation.html">BadKernelCreation</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

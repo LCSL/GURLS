@@ -148,17 +148,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
 <a name="l00046"></a>00046 <span class="preprocessor">#include &lt;cmath&gt;</span>
 <a name="l00047"></a>00047 
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">options.h</a>&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;optlist.h&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;gmat2d.h&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;gvec.h&quot;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gmath.h</a>&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;<a class="code" href="../../d7/d5b/options_8h.html">gurls++/options.h</a>&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;gurls++/optlist.h&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;gurls++/gmat2d.h&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;gurls++/gvec.h&quot;</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;<a class="code" href="../../dd/d75/gmath_8h.html" title="Contains functions that implement some relevant BLAS level 1,2 or 3 and Lapack functionalities.">gurls++/gmath.h</a>&quot;</span>
 <a name="l00053"></a>00053 
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;paramsel.h&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;perf.h&quot;</span>
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;gurls++/paramsel.h&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;gurls++/perf.h&quot;</span>
 <a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;rlsgp.h&quot;</span>
-<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;predgp.h&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;gurls++/rlsgp.h&quot;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;gurls++/predgp.h&quot;</span>
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 <span class="keyword">namespace </span>gurls {
 <a name="l00061"></a>00061 
@@ -198,20 +198,20 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00116"></a>00116     <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *va;
 <a name="l00117"></a>00117 
 <a name="l00118"></a>00118 
-<a name="l00119"></a>00119     T* work = <span class="keyword">new</span> T[t+n];
-<a name="l00120"></a>00120 
-<a name="l00121"></a>00121 <span class="comment">//    lmax = mean(std(y));</span>
-<a name="l00122"></a>00122     T* stdY = <span class="keyword">new</span> T[t];
-<a name="l00123"></a>00123 
-<a name="l00124"></a>00124     <a class="code" href="../../db/d4e/namespacegurls.html#ac18259120405abd399d5dccf5c9735fb" title="Generates a row vector containing the standard deviation of the elements of each column of an input m...">stdDev</a>(Y.<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>(), n, t, stdY, work);
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126     <span class="keyword">const</span> T lmax = <a class="code" href="../../db/d4e/namespacegurls.html#a2f1802e90fc6d89dcc35bfef3c369250" title="Computes the sum of all elements of a vector.">sumv</a>(stdY, t)/((T)t);
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128 <span class="comment">//    lmin = mean(std(y))*10^-5;</span>
-<a name="l00129"></a>00129     <span class="keyword">const</span> T lmin = lmax * (T)1.0e-5;
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131     <span class="keyword">delete</span>[] stdY;
-<a name="l00132"></a>00132     <span class="keyword">delete</span>[] work;
+<a name="l00119"></a>00119     T lmin;
+<a name="l00120"></a>00120     T lmax;
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122     <span class="keywordflow">if</span>(opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;lambdamin&quot;</span>))
+<a name="l00123"></a>00123         lmin = opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a45c4d02344b2c83c3641f4b41034e320" title="Returns a numeric option mapped with a key.">getOptAsNumber</a>(<span class="stringliteral">&quot;lambdamin&quot;</span>);
+<a name="l00124"></a>00124     <span class="keywordflow">else</span>
+<a name="l00125"></a>00125         lmin = 0.001;
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127     <span class="keywordflow">if</span>(opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a8ad74c36749b71119ea35fcd89a8aa3b" title="Checks if the list has an option mapped with a specified key.">hasOpt</a>(<span class="stringliteral">&quot;lambdamax&quot;</span>))
+<a name="l00128"></a>00128         lmax = opt.<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a45c4d02344b2c83c3641f4b41034e320" title="Returns a numeric option mapped with a key.">getOptAsNumber</a>(<span class="stringliteral">&quot;lambdamax&quot;</span>);
+<a name="l00129"></a>00129     <span class="keywordflow">else</span>
+<a name="l00130"></a>00130         lmax = 10;
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132 
 <a name="l00133"></a>00133 
 <a name="l00134"></a>00134 <span class="comment">//    guesses = lmin.*(lmax/lmin).^linspace(0,1,tot);</span>
 <a name="l00135"></a>00135     T* guesses = <span class="keyword">new</span> T[tot];
@@ -226,7 +226,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00144"></a>00144     <span class="keyword">delete</span>[] linspc;
 <a name="l00145"></a>00145 
 <a name="l00146"></a>00146     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* nestedOpt = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;nested&quot;</span>);
-<a name="l00147"></a>00147 <span class="comment">//    nestedOpt-&gt;copyOpt&lt;T&gt;(&quot;singlelambda&quot;, opt);</span>
+<a name="l00147"></a>00147     nestedOpt-&gt;copyOpt(<span class="stringliteral">&quot;singlelambda&quot;</span>, opt);
 <a name="l00148"></a>00148 
 <a name="l00149"></a>00149 
 <a name="l00150"></a>00150     <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* tmpPredKernel = <span class="keyword">new</span> <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>(<span class="stringliteral">&quot;predkernel&quot;</span>);
@@ -329,13 +329,13 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00247"></a>00247             lambda-&gt;<a class="code" href="../../d9/d8b/classgurls_1_1_base_array.html#a6bef0c3b86bdedcbc2886e8e4c2cbc16" title="Returns a const pointer to the vector buffer.">getData</a>()[0] = guesses[i];
 <a name="l00248"></a>00248 
 <a name="l00249"></a>00249 <span class="comment">//            opt.rls = rls_gpregr(X(tr,:),y(tr,:),opt);</span>
-<a name="l00250"></a>00250             <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* ret_rlsgp = rlsgp.<a class="code" href="../../d4/db3/classgurls_1_1_r_l_s_g_p_regr.html#ab72b8b676be7249b2efb84fc8c10fa0c" title="Performs GP inference.">execute</a>(subXtr, subYtr, opt);
+<a name="l00250"></a>00250             <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a>* ret_rlsgp = rlsgp.<a class="code" href="../../d4/db3/classgurls_1_1_r_l_s_g_p_regr.html#ab72b8b676be7249b2efb84fc8c10fa0c" title="Performs GP inference.">execute</a>(subXtr, subYtr, *nestedOpt);
 <a name="l00251"></a>00251 
 <a name="l00252"></a>00252             nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>);
 <a name="l00253"></a>00253             nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a93430579dc5f429ccc16106a7e643b69" title="Adds a generic option to the list indexed with a specified key.">addOpt</a>(<span class="stringliteral">&quot;optimizer&quot;</span>, ret_rlsgp);
 <a name="l00254"></a>00254 
 <a name="l00255"></a>00255 <span class="comment">//            tmp = pred_gpregr(X(va,:),y(va,:),opt);</span>
-<a name="l00256"></a>00256             <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> * pred_list = predgp.<a class="code" href="../../da/d9e/classgurls_1_1_pred_g_p_regr.html#a6de163b5ae890c0b09ceffef68da3ddd" title="computes the predictive distribution of the GP stored in opt.optimizer (L and alpha), on the samples passed in the X matrix.">execute</a>(subXva, subYva, opt);
+<a name="l00256"></a>00256             <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> * pred_list = predgp.<a class="code" href="../../da/d9e/classgurls_1_1_pred_g_p_regr.html#a6de163b5ae890c0b09ceffef68da3ddd" title="computes the predictive distribution of the GP stored in opt.optimizer (L and alpha), on the samples passed in the X matrix.">execute</a>(subXva, subYva, *nestedOpt);
 <a name="l00257"></a>00257 
 <a name="l00258"></a>00258 <span class="comment">//            opt.pred = tmp.means;</span>
 <a name="l00259"></a>00259             nestedOpt-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a7197b056bb30449f518a43cb564ec011" title="Removes the option mapped with a specified key.">removeOpt</a>(<span class="stringliteral">&quot;pred&quot;</span>);
@@ -347,7 +347,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00265"></a>00265 
 <a name="l00266"></a>00266 
 <a name="l00267"></a>00267 <span class="comment">//            opt.perf = opt.hoperf([],y(va,:),opt);</span>
-<a name="l00268"></a>00268             <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> * perf_list = perfClass-&gt;<a class="code" href="../../d5/dac/classgurls_1_1_performance.html#aced03c5a143ea22d0e7260737376eb82" title="Evaluates prediction performance.">execute</a>(subXva, subYva, opt);
+<a name="l00268"></a>00268             <a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name.">GurlsOptionsList</a> * perf_list = perfClass-&gt;<a class="code" href="../../d5/dac/classgurls_1_1_performance.html#aced03c5a143ea22d0e7260737376eb82" title="Evaluates prediction performance.">execute</a>(subXva, subYva, *nestedOpt);
 <a name="l00269"></a>00269             <a class="code" href="../../d1/d9e/classgurls_1_1g_mat2_d.html" title="gMat2D implements a matrix of generic size">gMat2D&lt;T&gt;</a>&amp; forho = perf_list-&gt;<a class="code" href="../../dc/d34/classgurls_1_1_gurls_options_list.html#a11e973e29694f9090d3d213e2bfa0632" title="Returns a reference to the value contained into an option mapped with a key.">getOptValue</a>&lt;<a class="code" href="../../de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix.">OptMatrix&lt;gMat2D&lt;T&gt;</a> &gt; &gt;(<span class="stringliteral">&quot;forho&quot;</span>);
 <a name="l00270"></a>00270 
 <a name="l00271"></a>00271 <span class="comment">//            for t = 1:T</span>
@@ -358,7 +358,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <a name="l00276"></a>00276         }
 <a name="l00277"></a>00277 
 <a name="l00278"></a>00278 <span class="comment">//        [dummy,idx] = max(perf,[],1);</span>
-<a name="l00279"></a>00279         work = NULL;
+<a name="l00279"></a>00279         T* work = NULL;
 <a name="l00280"></a>00280         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>* idx = <span class="keyword">new</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>[t];
 <a name="l00281"></a>00281         <a class="code" href="../../db/d4e/namespacegurls.html#a4b88bbd60e323172b176e170126583ea" title="Returns the indices of the largest elements along different dimensions of a matrix.">indicesOfMax</a>(perf, tot, t, idx, work, 1);
 <a name="l00282"></a>00282 
@@ -457,7 +457,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul>
       <li class="navelem"><b>hogpregr.h</b>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:36 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:45 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

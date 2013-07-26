@@ -13,6 +13,7 @@ var searchData=
   ['setkerneltype',['setKernelType',['../d1/db4/classgurls_1_1_kernel_wrapper.html#a18f7f3ef9026aee802fe6109e502bbf9',1,'gurls::KernelWrapper']]],
   ['setname',['setName',['../dc/d34/classgurls_1_1_gurls_options_list.html#ac8753ff4709662778892a766c84161bd',1,'gurls::GurlsOptionsList']]],
   ['setnparams',['setNparams',['../d5/d55/classgurls_1_1_gurls_wrapper.html#a38efad37063c60d1a63bcffb1368e707',1,'gurls::GurlsWrapper']]],
+  ['setnrandfeats',['setNRandFeats',['../db/de1/classgurls_1_1_random_features_wrapper.html#a4916acb6cc32d14c5f601be3735ba105',1,'gurls::RandomFeaturesWrapper']]],
   ['setnsigma',['setNSigma',['../d1/db4/classgurls_1_1_kernel_wrapper.html#af5b069b7f1d2751fd4395423758efcd9',1,'gurls::KernelWrapper']]],
   ['setparam',['setParam',['../d2/d25/classgurls_1_1_nystrom_wrapper.html#aa094580be9dc2dc749ddd8ca6cd5f7ea',1,'gurls::NystromWrapper::setParam()'],['../d5/d55/classgurls_1_1_gurls_wrapper.html#afacc664e3a01a1cc3f59a1dbdfa520f8',1,'gurls::GurlsWrapper::setParam()']]],
   ['setproblemtype',['setProblemType',['../d5/d55/classgurls_1_1_gurls_wrapper.html#a1e66490224a45ee6844ec1dbdf62fca6',1,'gurls::GurlsWrapper']]],

@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d5/dac/classgurls_1_1_performance.html" title="Performance is the class that evaluates prediction performance." alt="" coords="7,59,169,88"/>
+<area shape="rect" id="node3" href="$d8/dc8/classgurls_1_1_perf_macro_avg.html" title="PerfMacroAvg is the sub&#45;class of Performance that evaluates prediction accuracy." alt="" coords="219,5,392,35"/>
+<area shape="rect" id="node5" href="$d6/dbc/classgurls_1_1_perf_prec_rec.html" title="PerfPrecRec is the sub&#45;class of Performance that evaluates prediction precision." alt="" coords="223,59,388,88"/>
+<area shape="rect" id="node7" href="$d8/dc3/classgurls_1_1_perf_rmse.html" title="PerfRmse is the sub&#45;class of Performance that evaluates prediction error." alt="" coords="231,112,380,141"/>
+</map>

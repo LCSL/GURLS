@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['randomfeatureswrapper',['RandomFeaturesWrapper',['../db/de1/classgurls_1_1_random_features_wrapper.html',1,'gurls']]],
   ['recursiverlswrapper',['RecursiveRLSWrapper',['../d5/dc3/classgurls_1_1_recursive_r_l_s_wrapper.html',1,'gurls']]],
   ['rlsauto',['RLSAuto',['../d5/d00/classgurls_1_1_r_l_s_auto.html',1,'gurls']]],
   ['rlsdual',['RLSDual',['../d3/d15/classgurls_1_1_r_l_s_dual.html',1,'gurls']]],
@@ -10,5 +11,6 @@ var searchData=
   ['rlsprimalr',['RLSPrimalr',['../d0/df5/classgurls_1_1_r_l_s_primalr.html',1,'gurls']]],
   ['rlsprimalrecinit',['RLSPrimalRecInit',['../d2/d8f/classgurls_1_1_r_l_s_primal_rec_init.html',1,'gurls']]],
   ['rlsprimalrecupdate',['RLSPrimalRecUpdate',['../d6/dad/classgurls_1_1_r_l_s_primal_rec_update.html',1,'gurls']]],
+  ['rlsrandfeats',['RLSRandFeats',['../d4/dd6/classgurls_1_1_r_l_s_rand_feats.html',1,'gurls']]],
   ['rlswrapper',['RLSWrapper',['../d0/d09/classgurls_1_1_r_l_s_wrapper.html',1,'gurls']]]
 ];

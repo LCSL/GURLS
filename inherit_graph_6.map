@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$d5/dcc/classgurls_1_1_gurls_option.html" title="GurlsOption is an abstraction of a generic `option&#39;, which is widely used within the GURLS++ package ..." alt="" coords="7,219,132,248"/>
+<area shape="rect" id="node3" href="$dc/d34/classgurls_1_1_gurls_options_list.html" title="GurlsOptionsList is an option containing a list of options mapped by name." alt="" coords="181,5,336,35"/>
+<area shape="rect" id="node5" href="$da/d90/classgurls_1_1_opt_array.html" title="Optarray is an option containing an indexed array of options." alt="" coords="204,59,313,88"/>
+<area shape="rect" id="node7" href="$d8/d4b/classgurls_1_1_opt_function.html" title="OptFunction is an option representing a pointer to a generic function T (*function)(T* ..." alt="" coords="195,112,323,141"/>
+<area shape="rect" id="node9" href="$d3/dfe/classgurls_1_1_opt_matrix_base.html" title="OptMatrixBase is the base class for all options containing matrices." alt="" coords="187,165,331,195"/>
+<area shape="rect" id="node13" href="$d9/d58/classgurls_1_1_opt_number.html" title="OptNumber is an option containing a double precision floating point number." alt="" coords="196,219,321,248"/>
+<area shape="rect" id="node15" href="$df/dda/classgurls_1_1_opt_number_list.html" title="OptNumberList is an option containing a list of double precision floating point numbers." alt="" coords="185,272,332,301"/>
+<area shape="rect" id="node17" href="$db/d52/classgurls_1_1_opt_process.html" title="OptProcess is an option containing a sequence of actions that form a Gurls process." alt="" coords="196,325,321,355"/>
+<area shape="rect" id="node19" href="$d0/d48/classgurls_1_1_opt_string.html" title="OptString is an option containing a generic string." alt="" coords="203,379,315,408"/>
+<area shape="rect" id="node21" href="$d7/da3/classgurls_1_1_opt_string_list.html" title="OptStringList is an option containing a list of strings." alt="" coords="192,432,325,461"/>
+<area shape="rect" id="node11" href="$de/d63/classgurls_1_1_opt_matrix.html" title="OptMatrix is an option containing a matrix." alt="" coords="385,165,559,195"/>
+<area shape="rect" id="node23" href="$dc/d25/classgurls_1_1_opt_task_sequence.html" title="OptTaskSequence is an option containing a sequence of task that forms a pipeline." alt="" coords="389,432,555,461"/>
+</map>

@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -114,12 +114,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::PredKernelTrainTest&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../d3/dd7/classgurls_1_1_pred_kernel_train_test.png" usemap="#gurls::PredKernelTrainTest&lt; T &gt;_map" alt=""/>
-  <map id="gurls::PredKernelTrainTest&lt; T &gt;_map" name="gurls::PredKernelTrainTest&lt; T &gt;_map">
-<area href="../../d1/d99/classgurls_1_1_pred_kernel.html" title="PredKernel is the class that computes the kernel matrix for prediction." alt="gurls::PredKernel&lt; T &gt;" shape="rect" coords="0,0,193,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../d5/d6d/classgurls_1_1_pred_kernel_train_test__inherit__graph.png" border="0" usemap="#gurls_1_1_pred_kernel_train_test_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_pred_kernel_train_test_3_01_t_01_4_inherit__map" id="gurls_1_1_pred_kernel_train_test_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../d1/d99/classgurls_1_1_pred_kernel.html" title="PredKernel is the class that computes the kernel matrix for prediction." alt="" coords="32,5,187,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::PredKernelTrainTest&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d8/de9/classgurls_1_1_pred_kernel_train_test__coll__graph.png" border="0" usemap="#gurls_1_1_pred_kernel_train_test_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_pred_kernel_train_test_3_01_t_01_4_coll__map" id="gurls_1_1_pred_kernel_train_test_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d1/d99/classgurls_1_1_pred_kernel.html" title="PredKernel is the class that computes the kernel matrix for prediction." alt="" coords="32,5,187,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../db/dad/classgurls_1_1_pred_kernel_train_test-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -222,19 +227,17 @@ template&lt;typename T &gt; </div>
 
 
 <span class="comment">//                fk.distance = opt.predkernel.distance;</span>
-<span class="comment">//        predkernel-&gt;addOpt(&quot;distance&quot;, new OptMatrix&lt;gMat2D&lt;T&gt; &gt; (*dist));</span>
+        predkernel-&gt;addOpt(<span class="stringliteral">&quot;distance&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt; (*dist));
 
 
-<span class="comment">//        K = new gMat2D&lt;T&gt;(xr, rls_xr);</span>
-<span class="comment">//        copy(K-&gt;getData(), dist-&gt;getData(), dist-&gt;getSize());</span>
-
-        K = dist;
+        K = <span class="keyword">new</span> gMat2D&lt;T&gt;(xr, rls_xr);
+        <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(K-&gt;getData(), dist-&gt;getData(), dist-&gt;getSize());
 
 <span class="comment">//            fk.K = exp(-(opt.predkernel.distance)/(opt.paramsel.sigma^2));</span>
         <a class="code" href="../../db/d4e/namespacegurls.html#a82615df00122dfb0d589a5a245d612be" title="Template function to call BLAS *SCAL routines.">scal</a>(K-&gt;getSize(), (T)(-1.0/pow(sigma, 2)), K-&gt;getData(), 1);
         <a class="code" href="../../db/d4e/namespacegurls.html#a4d9ac407d614639d9fe776fca148585b" title="In place computation of the exponential for each element of a vector.">exp</a>(K-&gt;getData(), K-&gt;getSize());
 
-        <span class="keywordflow">if</span>(!optimizer-&gt;hasOpt(<span class="stringliteral">&quot;L&quot;</span>))
+        <span class="keywordflow">if</span>(optimizer-&gt;hasOpt(<span class="stringliteral">&quot;L&quot;</span>))
         {
             gMat2D&lt;T&gt; *Ktest = <span class="keyword">new</span> gMat2D&lt;T&gt;(xr, 1);
             <span class="keyword">set</span>(Ktest-&gt;getData(), (T)1.0, xr);
@@ -351,7 +354,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d3/dd7/classgurls_1_1_pred_kernel_train_test.html">PredKernelTrainTest</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

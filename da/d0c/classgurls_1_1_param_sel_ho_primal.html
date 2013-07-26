@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -115,13 +115,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::ParamSelHoPrimal&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../da/d0c/classgurls_1_1_param_sel_ho_primal.png" usemap="#gurls::ParamSelHoPrimal&lt; T &gt;_map" alt=""/>
-  <map id="gurls::ParamSelHoPrimal&lt; T &gt;_map" name="gurls::ParamSelHoPrimal&lt; T &gt;_map">
-<area href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="gurls::ParamSelection&lt; T &gt;" shape="rect" coords="0,0,187,24"/>
-<area href="../../db/dc8/classgurls_1_1_param_sel_ho_primalr.html" title="ParamSelHoPrimalr is the randomized version of ParamSelHoPrimal." alt="gurls::ParamSelHoPrimalr&lt; T &gt;" shape="rect" coords="0,112,187,136"/>
-</map>
- </div></div>
+<div class="center"><img src="../../db/d3b/classgurls_1_1_param_sel_ho_primal__inherit__graph.png" border="0" usemap="#gurls_1_1_param_sel_ho_primal_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_param_sel_ho_primal_3_01_t_01_4_inherit__map" id="gurls_1_1_param_sel_ho_primal_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node5" href="../../db/dc8/classgurls_1_1_param_sel_ho_primalr.html" title="ParamSelHoPrimalr is the randomized version of ParamSelHoPrimal." alt="" coords="5,160,211,189"/><area shape="rect" id="node2" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="17,5,199,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::ParamSelHoPrimal&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d4/dd7/classgurls_1_1_param_sel_ho_primal__coll__graph.png" border="0" usemap="#gurls_1_1_param_sel_ho_primal_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_param_sel_ho_primal_3_01_t_01_4_coll__map" id="gurls_1_1_param_sel_ho_primal_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d8/d85/classgurls_1_1_param_selection.html" title="ParamSelection is the class that implements parameter selection." alt="" coords="15,5,196,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../d7/d77/classgurls_1_1_param_sel_ho_primal-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -279,7 +283,7 @@ template&lt;typename T &gt; </div>
         <span class="keywordflow">if</span>(hasXt)
         {
             T* XvatXva = <span class="keyword">new</span> T[d*d];
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xva.getData(), Xva.getData(), XvatXva, n-last, d, n-last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Xva.getData(), Xva.getData(), XvatXva, n-last, d, n-last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
 
             <span class="keyword">const</span> gMat2D&lt;T&gt;&amp;XtX = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.XtX&quot;</span>);
 
@@ -295,7 +299,7 @@ template&lt;typename T &gt; </div>
             Xtr = <span class="keyword">new</span> T[last*d];
             <a class="code" href="../../db/d4e/namespacegurls.html#a4015e8417bc5f4375da5524d7b67338c" title="Generates a submatrix from an input matrix.">subMatrixFromRows</a>(X.getData(), n, d, tr, last, Xtr);
 
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Xtr, Xtr, Q, last, d, last, d, d, d, CblasTrans, CblasNoTrans, CblasColMajor);
         }
 
         <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> k = <a class="code" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html#a15fcb7f1e31693dc20540ed7632532ca" title="Auxiliary method used to call the right eig/svd function for this class.">eig_function</a>(Q, L, d, d, opt, last);
@@ -308,7 +312,7 @@ template&lt;typename T &gt; </div>
         <span class="keywordflow">if</span>(hasXt)
         {
             T* Xvatyva = <span class="keyword">new</span> T[d*t];
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xva.getData(), yva.getData(), Xvatyva, n-last, d, n-last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Xva.getData(), yva.getData(), Xvatyva, n-last, d, n-last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
             <span class="keyword">const</span> gMat2D&lt;T&gt;&amp;Xty = opt.getOptValue&lt;OptMatrix&lt;gMat2D&lt;T&gt; &gt; &gt;(<span class="stringliteral">&quot;kernel.Xty&quot;</span>);
 
@@ -320,7 +324,7 @@ template&lt;typename T &gt; </div>
             <a class="code" href="../../db/d4e/namespacegurls.html#acf8c56c7e1dddb56e5b6b65fcb817ded" title="Copies element form one vector to another one.">copy</a>(Xtrtytr, Xty.getData(), Xty.getSize());
             <a class="code" href="../../db/d4e/namespacegurls.html#a82ee9c80ec97ed26a84b7d311a2cef76" title="Template function to call BLAS *AXPY routines.">axpy</a>(d*t, (T)-1.0, Xvatyva, 1, Xtrtytr, 1);
 
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
             <span class="keyword">delete</span> [] Xvatyva;
             <span class="keyword">delete</span> [] Xtrtytr;
@@ -332,10 +336,10 @@ template&lt;typename T &gt; </div>
 
 
             T* Xtrtytr = <span class="keyword">new</span> T[d*t];
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Xtr, ytr, Xtrtytr, last, d, last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Xtr, ytr, Xtrtytr, last, d, last, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
             <span class="keyword">delete</span> [] Xtr;
 
-            <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
+            <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Q, Xtrtytr, QtXty, d, d, d, t, d, t, CblasTrans, CblasNoTrans, CblasColMajor);
 
             <span class="keyword">delete</span> [] ytr;
             <span class="keyword">delete</span> [] Xtrtytr;
@@ -453,7 +457,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00145">145</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
+<p>Definition at line <a class="el" href="../../d8/ded/paramsel_8h_source.html#l00146">146</a> of file <a class="el" href="../../d8/ded/paramsel_8h_source.html">paramsel.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
         <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;loocvprimal&quot;</span>)
             <span class="keywordflow">return</span> <span class="keyword">new</span> ParamSelLoocvPrimal&lt;T&gt;;
@@ -515,7 +519,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../da/d0c/classgurls_1_1_param_sel_ho_primal.html">ParamSelHoPrimal</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

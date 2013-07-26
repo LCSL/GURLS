@@ -80,7 +80,7 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
     <ul class="tablist">
       <li><a href="../../annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="../../classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="../../hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="../../inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="../../functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -114,12 +114,17 @@ var searchBox = new SearchBox("searchBox", "../../search",false,'Search');
 <div class="dynheader">
 Inheritance diagram for gurls::RLSDual&lt; T &gt;:</div>
 <div class="dyncontent">
- <div class="center">
-  <img src="../../d3/d15/classgurls_1_1_r_l_s_dual.png" usemap="#gurls::RLSDual&lt; T &gt;_map" alt=""/>
-  <map id="gurls::RLSDual&lt; T &gt;_map" name="gurls::RLSDual&lt; T &gt;_map">
-<area href="../../d6/ddf/classgurls_1_1_optimizer.html" title="Optimizer is a class that implements a Regularized Least Square algorithm." alt="gurls::Optimizer&lt; T &gt;" shape="rect" coords="0,0,130,24"/>
-</map>
- </div></div>
+<div class="center"><img src="../../d5/d7f/classgurls_1_1_r_l_s_dual__inherit__graph.png" border="0" usemap="#gurls_1_1_r_l_s_dual_3_01_t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="gurls_1_1_r_l_s_dual_3_01_t_01_4_inherit__map" id="gurls_1_1_r_l_s_dual_3_01_t_01_4_inherit__map">
+<area shape="rect" id="node2" href="../../d6/ddf/classgurls_1_1_optimizer.html" title="Optimizer is a class that implements a Regularized Least Square algorithm." alt="" coords="5,5,152,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for gurls::RLSDual&lt; T &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../d5/d29/classgurls_1_1_r_l_s_dual__coll__graph.png" border="0" usemap="#gurls_1_1_r_l_s_dual_3_01_t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="gurls_1_1_r_l_s_dual_3_01_t_01_4_coll__map" id="gurls_1_1_r_l_s_dual_3_01_t_01_4_coll__map">
+<area shape="rect" id="node2" href="../../d6/ddf/classgurls_1_1_optimizer.html" title="Optimizer is a class that implements a Regularized Least Square algorithm." alt="" coords="5,5,152,35"/></map>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="../../df/db9/classgurls_1_1_r_l_s_dual-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -268,7 +273,7 @@ template&lt;typename T &gt; </div>
        retC = <span class="keyword">new</span> gMat2D&lt;T&gt;(Q_rows, Y.cols());
 
        T* Qty = <span class="keyword">new</span> T[Q_cols*Y.cols()];
-       <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(Q, Y.getData(), Qty, Q_rows, Q_cols, Y.rows(), Y.cols(), Q_cols, Y.cols(), CblasTrans, CblasNoTrans, CblasColMajor);
+       <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(Q, Y.getData(), Qty, Q_rows, Q_cols, Y.rows(), Y.cols(), Q_cols, Y.cols(), CblasTrans, CblasNoTrans, CblasColMajor);
 
        T* work = <span class="keyword">new</span> T[L_len*(Q_rows+1)];
        <a class="code" href="../../db/d4e/namespacegurls.html#a0cd2d49089ac88dd5ccf4b91e3b97bff" title="Computes RLS estimator given the singular value decomposition of the kernel matrix.">rls_eigen</a>(Q, L, Qty, retC-&gt;getData(), lambda, n, Q_rows, Q_cols, L_len, Q_cols, Y.cols(), work);
@@ -289,7 +294,7 @@ template&lt;typename T &gt; </div>
    {
 <span class="comment">//           cfr.W = X&#39;*cfr.C;</span>
        gMat2D&lt;T&gt;* W  = <span class="keyword">new</span> gMat2D&lt;T&gt;(X.cols(), retC-&gt;cols());
-       <a class="code" href="../../db/d4e/namespacegurls.html#afaec98de689dfb205e909e39158b4bf3" title="Implements the standard GEMM routine from Level3 BLAS General Matrix-Matrix multiplication of two sin...">dot</a>(X.getData(), retC-&gt;getData(), W-&gt;getData(), X.rows(), X.cols(), retC-&gt;rows(), retC-&gt;cols(), W-&gt;rows(), W-&gt;cols(), CblasTrans, CblasNoTrans, CblasColMajor);
+       <a class="code" href="../../db/d4e/namespacegurls.html#a3f47b50b7b9a1b985181888eaeead53f" title="Template function to call BLAS *DOT routines.">dot</a>(X.getData(), retC-&gt;getData(), W-&gt;getData(), X.rows(), X.cols(), retC-&gt;rows(), retC-&gt;cols(), W-&gt;rows(), W-&gt;cols(), CblasTrans, CblasNoTrans, CblasColMajor);
        optimizer-&gt;addOpt(<span class="stringliteral">&quot;W&quot;</span>, <span class="keyword">new</span> OptMatrix&lt;gMat2D&lt;T&gt; &gt;(*W));
 
 <span class="comment">//           cfr.C = [];</span>
@@ -339,7 +344,7 @@ template&lt;typename T&gt; </div>
 <div class="memdoc">
 <dl class="warning"><dt><b>Warning:</b></dt><dd>The returned pointer is a plain, un-managed pointer. The calling function is responsible of deallocating the object. </dd></dl>
 
-<p>Definition at line <a class="el" href="../../dd/d83/optimization_8h_source.html#l00129">129</a> of file <a class="el" href="../../dd/d83/optimization_8h_source.html">optimization.h</a>.</p>
+<p>Definition at line <a class="el" href="../../dd/d83/optimization_8h_source.html#l00130">130</a> of file <a class="el" href="../../dd/d83/optimization_8h_source.html">optimization.h</a>.</p>
 <div class="fragment"><pre class="fragment">    {
       <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;rlsauto&quot;</span>)
         <span class="keywordflow">return</span> <span class="keyword">new</span> RLSAuto&lt;T&gt;;
@@ -359,6 +364,8 @@ template&lt;typename T&gt; </div>
         <span class="keywordflow">return</span> <span class="keyword">new</span> RLSPrimalRecInit&lt;T&gt;;
       <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;rlsprimalrecupdate&quot;</span>)
         <span class="keywordflow">return</span> <span class="keyword">new</span> RLSPrimalRecUpdate&lt;T&gt;;
+      <span class="keywordflow">if</span>(<span class="keywordtype">id</span> == <span class="stringliteral">&quot;rlsrandfeats&quot;</span>)
+        <span class="keywordflow">return</span> <span class="keyword">new</span> RLSRandFeats&lt;T&gt;;
 
         <span class="keywordflow">throw</span> BadOptimizerCreation(<span class="keywordtype">id</span>);
     }
@@ -389,7 +396,7 @@ template&lt;typename T&gt; </div>
       <li class="navelem"><a class="el" href="../../db/d4e/namespacegurls.html">gurls</a>      </li>
       <li class="navelem"><a class="el" href="../../d3/d15/classgurls_1_1_r_l_s_dual.html">RLSDual</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 1 2013 13:25:37 for GURLS++ by
+    <li class="footer">Generated on Fri Jul 26 2013 11:31:47 for GURLS++ by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

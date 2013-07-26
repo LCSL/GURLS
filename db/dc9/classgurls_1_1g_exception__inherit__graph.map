@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node5" href="$d3/d2a/classgurls_1_1_bad_confidence_creation.html" title="BadConfidenceCreation is thrown when factory tries to generate an unknown confidence method..." alt="" coords="343,5,537,35"/>
+<area shape="rect" id="node7" href="$da/d16/classgurls_1_1_bad_kernel_creation.html" title="BadKernelCreation is thrown when factory tries to generate an unknown kernel." alt="" coords="357,59,523,88"/>
+<area shape="rect" id="node9" href="$dc/d93/classgurls_1_1_bad_norm_creation.html" title="BadNormCreation is thrown when factory tries to generate an unknown norm." alt="" coords="359,112,521,141"/>
+<area shape="rect" id="node11" href="$d1/d0d/classgurls_1_1_bad_optimizer_creation.html" title="BadOptimizerCreation is thrown when factory tries to generate an unknown optimizer." alt="" coords="347,165,533,195"/>
+<area shape="rect" id="node13" href="$d9/dc4/classgurls_1_1_bad_param_selection_creation.html" title="BadParamSelectionCreation is thrown when factory tries to generate an unknown parameter selection met..." alt="" coords="329,219,551,248"/>
+<area shape="rect" id="node15" href="$dd/ddf/classgurls_1_1_bad_performance_creation.html" title="BadPerformanceCreation is thrown when factory tries to generate an unknown performance evaluator..." alt="" coords="339,272,541,301"/>
+<area shape="rect" id="node17" href="$d4/dd1/classgurls_1_1_bad_prediction_creation.html" title="BadPredictionCreation is thrown when factory tries to generate an unknown prediction method..." alt="" coords="347,325,533,355"/>
+<area shape="rect" id="node19" href="$d8/d5f/classgurls_1_1_bad_pred_kernel_creation.html" title="BadPredKernelCreation is thrown when factory tries to generate an unknown prediction kernel..." alt="" coords="343,379,537,408"/>
+<area shape="rect" id="node21" href="$d7/d5c/classgurls_1_1_bad_split_creation.html" title="BadSplitCreation is thrown when factory tries to generate an unknown split method." alt="" coords="363,432,517,461"/>
+<area shape="rect" id="node2" title="STL class." alt="" coords="5,219,109,248"/>
+</map>

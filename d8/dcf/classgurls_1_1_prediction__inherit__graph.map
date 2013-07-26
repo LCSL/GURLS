@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$d7/dcd/classgurls_1_1_pred_dual.html" title="PredDual is the sub&#45;class of Prediction that computes the predictions of a linear classifier in the d..." alt="" coords="221,5,365,35"/>
+<area shape="rect" id="node5" href="$da/d9e/classgurls_1_1_pred_g_p_regr.html" title="PredGPRegr is the sub&#45;class of Prediction that computes the predictions of GP." alt="" coords="212,59,375,88"/>
+<area shape="rect" id="node7" href="$d8/d06/classgurls_1_1_pred_primal.html" title="PredPrimal is the sub&#45;class of Prediction that computes the predictions of a linear classifier in the..." alt="" coords="216,112,371,141"/>
+<area shape="rect" id="node9" href="$d7/da4/classgurls_1_1_pred_rand_feats.html" title="PredRandFeats is the sub&#45;class of Prediction that computes the predictions of the linear classifier s..." alt="" coords="203,165,384,195"/>
+</map>

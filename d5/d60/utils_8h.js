@@ -10,5 +10,9 @@ var utils_8h =
     [ "random_svd", "db/d4e/namespacegurls.html#adf6dc7afcc579ec3a85a1b7e29962c4c", null ],
     [ "rls_pegasos_driver", "db/d4e/namespacegurls.html#aaf3d4c52d803726cffe2b9ae96fd7e12", null ],
     [ "rls_primal_driver", "db/d4e/namespacegurls.html#a9b01d39c5f186779f83e1b018b2d91e2", null ],
+    [ "rp_apply_real", "db/d4e/namespacegurls.html#a6b5a754d6c99cab678e84ca19be7b876", null ],
+    [ "rp_apply_real", "db/d4e/namespacegurls.html#a671674d082fca8e267457737df09e412", null ],
+    [ "rp_factorize_large_real", "db/d4e/namespacegurls.html#a554f828da229efada0549f0d3a44805f", null ],
+    [ "rp_projections", "db/d4e/namespacegurls.html#ade086a4dfbee1e3776148ba8b658e98b", null ],
     [ "test_classifier", "db/d4e/namespacegurls.html#ade3f4598bd1adbc6b009209aa409635e", null ]
 ];
