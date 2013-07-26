@@ -38,21 +38,21 @@ Documentation
 	accepted for publication on JMLR
 
 - Installation instructions can be found here:
-	https://github.com/CBCL/GURLS/wiki/2-Getting-Started
+	https://github.com/LCSL/GURLS/wiki/2-Getting-Started
 
 - Quick intructions on how to run the libraries for a default case can be found here: 
-	https://github.com/CBCL/GURLS/wiki/2-Getting-Started#wiki-Hello_World
+	https://github.com/LCSL/GURLS/wiki/2-Getting-Started#wiki-Hello_World
 
 - A User manual with several examples can be found here:
-	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-User_Manual
+	https://github.com/LCSL/GURLS/wiki/3-User-Manual#wiki-User_Manual
 
 - A collection of the most useful and common pipelines can be found here:
-	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-Examples
+	https://github.com/LCSL/GURLS/wiki/3-User-Manual#wiki-Examples
 
 - The list of all the available methods of the libraries can be found at
-	https://github.com/CBCL/GURLS/wiki/4-Available-methods
+	https://github.com/LCSL/GURLS/wiki/4-Available-methods
 
-- C++ Code Documentation can be found at: http://cbcl.github.io/GURLS/
+- C++ Code Documentation can be found at: http://lcsl.github.io/GURLS/
 
 - Further Documentation
 	* Have a look at the README files of each individual package.
