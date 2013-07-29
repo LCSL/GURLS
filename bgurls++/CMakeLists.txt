@@ -36,7 +36,8 @@ set(bgurls_sources       src/bigarray.cpp
                         src/mpi_utils.cpp
     )
 
-set(gurls_sources   ../gurls++/src/gmath.cpp
+set(gurls_sources   ../gurls++/src/blas_lapack.cpp
+                ../gurls++/src/gmath.cpp
                 ../gurls++/src/optarray.cpp
                 ../gurls++/src/optfunction.cpp
                 ../gurls++/src/options.cpp
