@@ -30,7 +30,13 @@ if isfield (opt,'paramsel')
 end
 [n,T]  = size(y);
 if ~isfield(opt,'kernel')
-	opt.kernel.type = 'rbf';
+    disp('');
+    disp('Kernel not specified, using Guassian kernel');
+    opt.kernel.type = 'rbf';
+elseif ~isfield(opt.kernel,'type')
+    disp('');
+    disp('Kernel not specified, using Guassian kernel');
+    opt.kernel.type = 'rbf';
 end
 if ~isfield(opt.kernel,'distance')
     opt.kernel.distance = square_distance(X',X');

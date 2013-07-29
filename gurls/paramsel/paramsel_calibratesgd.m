@@ -28,6 +28,9 @@ n_estimates = 1;
 for i = 1:n_estimates,
 
 	sub_size = opt.subsize;
+    if n<sub_size;
+        error('GURLS usage error: the option subsize of the option list must be smaller than the number of training samples!!');
+    end
 	idx = randsample(n, sub_size);
 
 	M = X(idx,:);

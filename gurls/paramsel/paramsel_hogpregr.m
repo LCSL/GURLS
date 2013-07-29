@@ -46,6 +46,7 @@ for nh = 1:opt.nholdouts
     
     opt.kernel.K = K(tr,tr);
     
+    
     opt.predkernel.K = K(va,tr);
     opt.predkernel.Ktest = diag(K(va,va));
 
