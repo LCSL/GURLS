@@ -82,9 +82,9 @@ public:
      *  - randfeats.samplesize
      *
      * \return adds to opt the field optimizer, which is a list containing the following fields:
-     * -W: matrix of coefficient vectors of rls estimator for each class
-     * -C: empty matrix
-     * -X: empty matrix
+     *  - W: matrix of coefficient vectors of rls estimator for each class
+     *  - C: empty matrix
+     *  - X: empty matrix
      */
     GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt);
 };
