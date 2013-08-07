@@ -69,9 +69,9 @@ public:
      * \param opt options with the following:
      *  - pred (settable with the class Prediction and its subclasses)
      *
-	 * \return perf, a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
+     * \return perf, a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
      *  - rmse = root mean square error for each class/task
-	 *  - forho = -rmse
+     *  - forho = -rmse
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 };
@@ -110,29 +110,31 @@ GurlsOptionsList* PerfRmse<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& 
 
     const gMat2D<T> &pred = opt.getOptValue<OptMatrix<gMat2D<T> > >("pred");
 
-    T *pred_t = new T[pred.getSize()];
-    copy(pred_t, pred.getData(), pred.getSize());
+    T *diff = new T[pred.getSize()];
+    copy(diff, pred.getData(), pred.getSize());
 
-    //pred = rows*cols
-
-//     n 	= size(X,1);
-    const T n = static_cast<T>(rows);
 
 //     diff 	= opt.pred - y;
-    axpy(rows*cols, (T)-1.0, y_true, 1, pred_t, 1);
+    axpy(rows*cols, (T)-1.0, y_true, 1, diff, 1);
 
-//  p.rmse = norm(diff,'fro') / sqrt(n);
-    T rmse = nrm2<T>(rows*cols, pred_t, 1)/sqrt(n);
+//    p.rmse = sqrt(sum(diff.^2,1));
+    gMat2D<T> *rmse = new gMat2D<T>(1, cols);
+    T* r_it = rmse->getData();
+    const T* diff_it = diff;
 
-    delete [] pred_t;
+    for(unsigned long i=0; i< cols; ++i, ++r_it, diff_it+=rows)
+        *r_it = nrm2(rows, diff_it, 1);
 
-    perf->addOpt("rmse", new OptNumber(rmse));
+    delete [] diff;
+
+    perf->addOpt("rmse", new OptMatrix<gMat2D<T> >(*rmse));
 
 //    p.forho 	= -p.rmse;
-    perf->addOpt("forho", new OptNumber(-rmse));
+    gMat2D<T> *forho = new gMat2D<T>(1, cols);
+    set(forho->getData(), (T)0.0, cols);
+    axpy(cols, (T)-1.0, rmse->getData(), 1, forho->getData(), 1);
+    perf->addOpt("forho", new OptMatrix<gMat2D<T> >(*forho));
 
-//    p.forplot 	= p.rmse;
-//    perf->addOpt("forplot", new OptNumber(rmse));
 
     return perf;
 }

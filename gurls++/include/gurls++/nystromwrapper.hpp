@@ -304,16 +304,9 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
             GurlsOptionsList *perf = perfTask->execute(empty, *yva, *opt);
             opt->removeOpt("pred");
 
-            if(regression)
-                *perf_it =  static_cast<T>(perf->getOptValue<OptNumber>("forho"));
-            else
-            {
-        //        vout.perf(guesses_c) = mean(perf.forho);
-                const gMat2D<T> &acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
-
-                *perf_it = sumv(acc.getData(), acc.getSize())/acc.getSize();
-            }
-
+    //        vout.perf(guesses_c) = mean(perf.forho);
+            const gMat2D<T> &acc = perf->getOptValue<OptMatrix<gMat2D<T> > >(regression? "forho": "acc");
+            *perf_it = sumv(acc.getData(), acc.getSize())/acc.getSize();
 
             delete perf;
         }
