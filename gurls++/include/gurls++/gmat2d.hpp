@@ -791,7 +791,9 @@ void gMat2D<T>::saveCSV(const std::string& fileName) const
 
     for (unsigned long i = 0; i < numrows; ++i)
     {
-        for (unsigned long j = 0; j < numcols; ++j)
+        out << this->data[i];
+
+        for (unsigned long j = 1; j < numcols; ++j)
             out << " " << this->data[i+numrows*j];
 
         out << std::endl;
