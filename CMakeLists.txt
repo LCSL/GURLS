@@ -88,6 +88,7 @@ if(GURLS_BUILD_GURLSPP)
     #if (GURLS_BUILD_BGURLSPP) #not ready for this yet...
     #	set (export_libraries ${export_libraries} ${BGurls++_LIBRARY})
     #endif()
+	set (export_libraries ${export_libraries} ${BLAS_LAPACK_LIBRARIES})
     configure_file(cmake-modules/GurlsConfig.cmake.in ${PROJECT_BINARY_DIR}/GurlsConfig.cmake @ONLY)
 
     #Gurls++Config.cmake for installation
