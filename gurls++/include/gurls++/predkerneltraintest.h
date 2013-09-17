@@ -176,6 +176,22 @@ GurlsOptionsList *PredKernelTrainTest<T>::execute(const gMat2D<T>& X, const gMat
         }
 
     }
+    else if(kernelType == "linear")
+    {
+        //fk.K = X*opt.rls.X';
+        K = new gMat2D<T>(xr, rls_xr);
+        dot(X.getData(), rls_X.getData(), K->getData(), xr, xc, rls_xr, xc, xr, rls_xr, CblasNoTrans, CblasTrans, CblasColMajor); 
+
+        //if isfield(opt.rls,'L')
+        if(optimizer->hasOpt("L"))
+        {
+            //fk.Ktest = sum(X.^2,2);
+            gMat2D<T> *Ktest = new gMat2D<T>(xr, 1);
+
+            sum_col_squared(X.getData(), Ktest->getData(), xr, xc);
+            predkernel->addOpt("Ktest", new OptMatrix<gMat2D<T> >(*Ktest));
+        }
+    }
 
     else
         throw gException(Exception_Required_Parameter_Missing);

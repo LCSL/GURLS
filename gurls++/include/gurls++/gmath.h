@@ -846,6 +846,23 @@ void sum_col(const T* A, T* result, const int A_rows, const int A_cols) throw (g
 }
 
 /**
+  * Sums all squared elements along the columns of a matrix
+  *
+  * \param A input matrix
+  * \param result vecotr of length A_rows containing sums for each column of the matrix
+  * \param A_rows number of rows of matrix A
+  * \param A_cols number of columns of matrix A
+  */
+template <typename T>
+void sum_col_squared(const T* A, T* result, const int A_rows, const int A_cols) throw (gException)
+{
+    const T *a_it = A;
+    
+    for(T *r_it = result, *r_end = result+A_rows; r_it != r_end; ++r_it, ++a_it)
+        *r_it = dot(A_cols, a_it, A_rows, a_it, A_rows);
+}
+
+/**
   * Computes the mean values along the rows of a matrix
   *
   * \param A input matrix
