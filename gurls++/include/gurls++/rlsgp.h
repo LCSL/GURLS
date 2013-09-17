@@ -51,6 +51,7 @@
 #include "gurls++/gmat2d.h"
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
+#include "gurls++/optfunction.h"
 
 namespace gurls {
 

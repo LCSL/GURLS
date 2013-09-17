@@ -46,6 +46,7 @@
 
 #include "gurls++/predkernel.h"
 #include "gurls++/gmath.h"
+#include "gurls++/utils.h"
 
 #include <string>
 
