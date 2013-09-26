@@ -16,6 +16,11 @@ opt.smallnumber = 1e-8; % lambda is searched between [min(eig_r, opt.smallnumber
 %% Random SVD options
 opt.eig_percentage = 5; %percentage of eigenvectors to be used in the randomized SVD
 
+%% Iteartive RLS options
+opt.IterRLSMaxIter = 1000;
+opt.IterRLSMinIter = 5;
+opt.IterRLSStopTol = 0.001;
+opt.IterRLSSeriesType = 'geometric';
 %% GD Options
 
 opt.gd.method = 0; % standard gradient descent
