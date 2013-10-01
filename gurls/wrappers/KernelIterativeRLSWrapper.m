@@ -10,6 +10,7 @@ if ~isfield(opt,'filter');
     opt.IterRLSFun = @rls_landweberdual;
 end
 
+vout = opt;
 
 % split data for parameter selection
 opt.split = split_ho(X,y,opt);
@@ -33,9 +34,9 @@ else
     guesses = unique(round(guesses));
 end
 
-
 % initialization
-vout.perf = zeros(length(guesses),1);
+% vout.kernelfun = opt.kernelfun;
+vout.X = X(tr,:);
 opt_perf = 0;
 prev_guess = 0;
 opt.paramsel.Knorm = norm(opt.kernel.K);
@@ -48,16 +49,13 @@ for i = 1:length(guesses);
 
     opt.pred = pred_dual(Xva,yva,opt);
     
-    perf = opt.hoperf([],yva,opt);
-    vout.perf(i) = mean(perf.forho);
+    new_perf = mean(getfield(opt.hoperf([],yva,opt),'forho'));
     
     % stops when accuracy starts lowering
-    new_perf = vout.perf(i);
     if new_perf>opt_perf;
-        vout.opt_guess = guesses(i);
+        vout.optimal_guess = guesses(i);
         opt_perf = new_perf;
-        vout.W = opt.rls.W;
-        vout.perf_opt = opt_perf;
+        vout.C = opt.rls.C;
     elseif (opt_perf-new_perf)/abs(opt_perf)>opt.IterRLSStopTol;
         break
     end
@@ -70,5 +68,5 @@ for i = 1:length(guesses);
     end
 end
 
-vout.guesses = guesses(1:i);
-vout.perf = vout.perf(1:i);    
+% vout.guesses = guesses(1:i);
+% vout.perf = vout.perf(1:i);    
