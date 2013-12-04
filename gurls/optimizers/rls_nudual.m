@@ -33,7 +33,7 @@ else
     tau=1/(2*norm(opt.kernel.K)); 
 end
 
-if isfiled(opt.paramsel,'f0');
+if isfield(opt.paramsel,'f0');
     alpha1 = opt.paramsel.f0.alpha1;
     alpha2 = opt.paramsel.f0.alpha2;
 else
