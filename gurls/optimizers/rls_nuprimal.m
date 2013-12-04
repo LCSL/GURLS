@@ -45,7 +45,7 @@ else
     tau=1/(2*norm(XtX)); 
 end
 
-if isfiled(opt.paramsel,'f0');
+if isfield(opt.paramsel,'f0');
     beta1 = opt.paramsel.f0.beta1;
     beta2 = opt.paramsel.f0.beta2;
 else
