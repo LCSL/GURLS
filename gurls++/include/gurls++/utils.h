@@ -65,6 +65,7 @@
 
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/mersenne_twister.hpp>
+#include <boost/version.hpp>
 
 namespace gurls {
 
@@ -963,9 +964,14 @@ gMat2D<T>* rp_apply_real(const gMat2D<T> &X, const gMat2D<T> &W)
 template<typename T>
 gMat2D<T>* rp_projections(const unsigned long d, const unsigned long D)
 {
-//    W = sqrt(2)*randn(d,D);
+    //    W = sqrt(2)*randn(d,D);
+#if   BOOST_VERSION < 104700
+    boost::mt19937 gen;
+    boost::normal_distribution<T> g(0.0, (T)sqrt(2.0));
+#else
     boost::random::mt19937 gen;
     boost::random::normal_distribution<T> g(0.0, (T)sqrt(2.0));
+#endif
 
     gMat2D<T> *W = new gMat2D<T>(d, D);
     for(T* W_it = W->getData(), *const W_end = W_it + (d*D); W_it != W_end; ++W_it)
