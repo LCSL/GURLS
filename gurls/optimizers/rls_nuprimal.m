@@ -55,11 +55,11 @@ end
 
 
 for i = 1:Niter;
+    beta = beta1 + u*(beta1 - beta2) +(w*tau)*(Xty - XtX*beta1);
     u=((i-1)*(2*i-3)*(2*i+2*nu-1))/((i+2*nu-1)*(2*i+4*nu-1)*(2*i+2*nu-3));
     w=4*(((2*i+2*nu-1)*(i+nu-1)) /((i+2*nu-1)*(2*i+4*nu-1)) );
     beta2=beta1;
     beta1=beta;
-    beta = beta1 + u*(beta1 - beta2) +(w*tau)*(Xty - XtX*beta1);
 end
 
 
