@@ -406,6 +406,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         }
 
 //        timelist->addOpt(processid, new OptNumberList(process_time));
+        timelist->removeOpt(processid);
         timelist->addOpt(processid, new OptMatrix<gMat2D<T> >(*process_time_vector));
 
         //fprintf('\nSave cycle...\n');

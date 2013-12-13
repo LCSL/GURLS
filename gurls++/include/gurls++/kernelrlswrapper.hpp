@@ -17,6 +17,8 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 {
     this->opt->removeOpt("split");
     this->opt->removeOpt("optimizer");
+    this->opt->removeOpt("seq");
+    this->opt->removeOpt("processes");
 
 
     const unsigned long nlambda = static_cast<unsigned long>(this->opt->getOptAsNumber("nlambda"));
