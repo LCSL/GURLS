@@ -134,7 +134,7 @@ install(TARGETS ${GURLSLIBRARY} EXPORT Gurlstargets-install
 )
 
 install (FILES ${gurls_headers} DESTINATION include/gurls++)
-install(EXPORT Gurlstargets-install DESTINATION lib)
+install(EXPORT Gurlstargets-install DESTINATION lib/Gurls)
 
 export(TARGETS gurls++ FILE ${gurls_BINARY_DIR}/Gurlstargets-buildtree.cmake)
 
