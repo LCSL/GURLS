@@ -215,7 +215,11 @@ void PerfMacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* 
 
 //% Macro
 //nClasses = max(TrueY);
-    int nClasses = *(std::max_element(trueY, trueY+length));
+    const unsigned long* maxPos=std::max_element(trueY, trueY+length);
+    if (maxPos==trueY+length) //range passed to max_element was empty
+       throw gException(Exception_Inconsistent_Size); //TODO check if there is a better exception
+
+    int nClasses = *maxPos;
 
     if(nClasses < 0)
         throw gException(Exception_Inconsistent_Size);
