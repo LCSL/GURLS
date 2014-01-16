@@ -30,7 +30,7 @@ else()
 
     set(Openblas_FOUND TRUE)
     #set(Openblas_LIBRARIES ${Openblas_LIBRARY})
-    set(BLAS_LAPACK_LIBRARIES ${EXTERNAL_PREFIX}/lib/libopenblas_sandybridgep-r0.2.8.a)
+    set(BLAS_LAPACK_LIBRARIES ${EXTERNAL_PREFIX}/lib/libopenblas.a)
 	if( CMAKE_COMPILER_IS_GNUCC)
 		list(APPEND BLAS_LAPACK_LIBRARIES gfortran pthread)
 	endif()
