@@ -92,7 +92,7 @@ void gMat2D<T>::submatrix(const gMat2D<T>& other, unsigned long r, unsigned long
     const unsigned long rows = std::min(other.numrows, this->numrows-r);
 
     for(unsigned long i=0; i< cols; ++i)
-        copy(this.data + r +((c+i)*this->numrows), other.data + (i*other.numrows), rows);
+        copy(this->data + r +((c+i)*this->numrows), other.data + (i*other.numrows), rows);
 }
 
 template <typename T>
@@ -283,7 +283,7 @@ gMat2D<T> gMat2D<T>::operator/(const gMat2D<T>& v) const {
 
 template <typename T>
 gMat2D<bool>& gMat2D<T>::operator ==(T threshold) const {
-    gMat2D<bool> *w(this->rows(), this->cols());
+    gMat2D<bool> *w = new gMat2D<bool>(this->rows(), this->cols());
     const T* ptr = this->data;
     bool* bptr = w->getData();
 

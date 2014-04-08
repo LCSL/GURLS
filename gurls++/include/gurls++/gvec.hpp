@@ -94,21 +94,23 @@ gVec<T> gVec<T>::rand(unsigned long n) {
 template <typename T>
 gVec<unsigned long> gVec<T>::nonzeros() const
 {
-    std::queue<unsigned> que;
+    std::vector<unsigned long> indices;
 
-    for(unsigned i=0;i<this->size();i++)
+    const T zero = static_cast<T>(0.0);
+
+    for(unsigned long i=0; i<this->size; ++i)
     {
-        if(this->at(i)!=0) que.push(i);
-    }
-    gVec<unsigned> indexes(que.size());
-    unsigned dim=0;
-    while(!que.empty())
-    {
-        indexes[dim++]=que.front();
-        que.pop();
+        if(!eq(this->data[i], zero))
+            indices.push_back(i);
     }
 
-    return indexes;
+    gVec<unsigned long> ret(indices.size());
+
+    unsigned long *r_it = ret.getData();
+    for(std::vector<unsigned long>::const_iterator it = indices.begin(), end = indices.end(); it != end; ++it, ++r_it)
+        *r_it = *it;
+
+    return ret;
 }
 
 
