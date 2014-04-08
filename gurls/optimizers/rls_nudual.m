@@ -45,9 +45,9 @@ end
 for i = 1:Niter;
     u=((i-1)*(2*i-3)*(2*i+2*nu-1))/((i+2*nu-1)*(2*i+4*nu-1)*(2*i+2*nu-3));
     w=4*(((2*i+2*nu-1)*(i+nu-1)) /((i+2*nu-1)*(2*i+4*nu-1)) );
+    alpha = alpha1 + u*(alpha1 - alpha2) +(w*tau)*(y - opt.kernel.K*alpha1);
     alpha2=alpha1;
     alpha1=alpha;
-    alpha = alpha1 + u*(alpha1 - alpha2) +(w*tau)*(y - opt.kernel.K*alpha1);
 end
 
 

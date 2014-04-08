@@ -6,21 +6,25 @@
 
 
 find_library(Openblas_LIBRARY
-    NAMES libopenblas.a libopenblas.so libopenblas.lib
+    NAMES libopenblas.so libopenblas.lib libopenblas.a
     PATHS ${Openblas_ROOT}/lib
+	/usr/lib/openblas-base
+	/usr/local/lib
     )
 
 if(NOT OPENBLAS_IGNORE_HEADERS)
 	find_path(Openblas_INCLUDE_DIR
 		NAMES openblas_config.h
 		PATHS ${Openblas_ROOT}/include
+                       /usr/include
+			/usr/local/include
 		)
 endif()
 
 if( ( Openblas_LIBRARY STREQUAL "Openblas_LIBRARY-NOTFOUND") OR ( Openblas_INCLUDE_DIR STREQUAL "Openblas_INCLUDE_DIR-NOTFOUND") )
     set(Openblas_ROOT "" CACHE PATH "Path to the root of a Openblas installation")
     set(Openblas_FOUND 0)
-    message(FATAL_ERROR "Openblas not found. Please try specifying Openblas_ROOT")
+    message(WARNING "Openblas not found. Please try specifying Openblas_ROOT")
 else()
     set(Openblas_FOUND 1)
     set(Openblas_INCLUDE_DIRS ${Openblas_INCLUDE_DIR})
@@ -30,3 +34,4 @@ else()
 	endif()
 
 endif()
+set(Openblas_FOUND FALSE)

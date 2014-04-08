@@ -78,7 +78,7 @@ Exception_Incipit("ERROR! ");
   * Message displayed when a non existent memory location has been accessed
   */
 static std::string
-Exception_Wrong_Memory_Access(Exception_Incipit+"An attempt to acces a non-existent memory location occurred.");
+Exception_Wrong_Memory_Access(Exception_Incipit+"An attempt to access a non-existent memory location occurred.");
 
 /**
   * \ingroup Exceptions

@@ -156,6 +156,8 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
         dist = &(OptMatrix<gMat2D<T> >::dynacast(dist_opt))->getValue();
     }
 
+    if (!dist->getData())
+        throw gException(Exception_Wrong_Memory_Access);
 
     //  if ~isfield(opt,'sigmamin')
     if(!opt.hasOpt("sigmamin"))
