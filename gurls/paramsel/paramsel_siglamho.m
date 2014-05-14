@@ -49,7 +49,7 @@ end
 if opt.sigmamin <= 0
 	opt.sigmamin = eps;
 end
-if opt.sigmamin <= 0
+if opt.sigmamax <= 0
 	opt.sigmamax = eps;
 end	
 q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));

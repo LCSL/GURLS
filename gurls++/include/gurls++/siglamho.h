@@ -218,8 +218,8 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
         sigmamin = std::numeric_limits<T>::epsilon();
     }
 
-    // if opt.sigmamin <= 0
-    if( le(sigmamin, (T)0.0) )
+    // if opt.sigmamax <= 0
+    if( le(sigmamax, (T)0.0) )
     {
         // 	opt.sigmamax = eps;
         nestedOpt->removeOpt("sigmamax");
@@ -286,7 +286,7 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
 //        guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
         unsigned long mm = std::max_element(perf, perf + nlambda) - perf;
 
-        if( gt(perf[mm], maxPerf) )
+        if( gt(perf[mm], maxPerf) || i==0 )
         {
             maxPerf = perf[mm];
             m = i;

@@ -1255,7 +1255,7 @@ T* lambdaguesses(const T* eigvals, const int len, const int r, const int n, cons
     delete[] tmp;
 
     T thr1 = std::min(lmin, minl*lmax);
-    T thr2 = 200*static_cast<T>(sqrt(std::numeric_limits<T>::epsilon()));
+    T thr2 = static_cast<T>(std::numeric_limits<T>::epsilon());
 
     lmin = std::max(thr1, thr2);
 

@@ -156,7 +156,7 @@ template <typename T>
 GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
     //    [n,T]  = size(y);
-    const unsigned long n = Y.rows();
+    const unsigned long y_rows = Y.rows();
     const unsigned long t = Y.cols();
 
     const unsigned long x_rows = X.rows();
@@ -174,6 +174,8 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
     const gMat2D< unsigned long > &indices_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("indices");
     const gMat2D< unsigned long > &lasts_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("lasts");
 
+	const unsigned long n = indices_mat.cols();
+	
     const unsigned long *lasts = lasts_mat.getData();
     const unsigned long* indices_buffer = indices_mat.getData();
 
@@ -252,7 +254,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         T* ap = new T[tot*t];
 
         T* Ytr = new T[last*t];
-        subMatrixFromRows(Y.getData(), n, t, tr, last, Ytr);
+        subMatrixFromRows(Y.getData(), y_rows, t, tr, last, Ytr);
 
         //    QtY = Q'*y(tr,:);
         T* Qty = new T[last*t];
@@ -277,7 +279,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
         subMatrixFromRows(X.getData(), x_rows, d, va, n-last, xx->getData());
 
         gMat2D<T>* yy = new gMat2D<T>(n-last, t);
-        subMatrixFromRows(Y.getData(), n, t, va, n-last, yy->getData());
+        subMatrixFromRows(Y.getData(), y_rows, t, va, n-last, yy->getData());
 
         delete [] va;
 
@@ -352,9 +354,6 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
         copy(lambdas_round +nh, lambdas_nh, t, nholdouts, 1);
 
-        //add lambdas_nh to lambdas
-        axpy< T >(t, (T)1, lambdas_nh, 1, lambdas, 1);
-
         delete [] lambdas_nh;
         delete [] idx;
 
@@ -401,15 +400,22 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
     //     if numel(vout.lambdas_round) > 1
     // 	lambdas = cell2mat(vout.lambdas_round');
-    // 	vout.lambdas = mean(lambdas);
+    // 	vout.lambdas = median(lambdas);
     //     else
     // 	vout.lambdas = vout.lambdas_round{1};
     //     end
     if(nholdouts>1)
     {
-        scal(t, (T)1.0/nholdouts, lambdas, 1);
+		T* work = new T[nholdouts];
+        median(lambdas_round, nholdouts, t, 1, lambdas, work);
+		delete [] work;
         scal(t, (T)1.0/nholdouts, acc_avg, 1);
     }
+	else
+    {
+        copy(lambdas, lambdas_round, t);
+    }
+
 
     paramsel->addOpt("acc_avg", new OptMatrix<gMat2D<T> >(*acc_avg_mat));
 

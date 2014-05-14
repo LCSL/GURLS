@@ -91,9 +91,10 @@ template <typename T>
 GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
     //    [n,T]  = size(y);
-    const unsigned long n = Y.rows();
+    const unsigned long y_rows = Y.rows();
     const unsigned long t = Y.cols();
-
+	
+    const unsigned long x_rows = X.rows();
     const unsigned long d = X.cols();
 
 //    tot = opt.nlambda;
@@ -108,11 +109,13 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
     const gMat2D< unsigned long > &indices_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("indices");
     const gMat2D< unsigned long > &lasts_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("lasts");
 
+	const unsigned long n = indices_mat.cols();
+	
     const unsigned long *lasts = lasts_mat.getData();
     const unsigned long *indices = indices_mat.getData();
 
 
-    unsigned long *tr = new unsigned long[indices_mat.cols()];
+    unsigned long *tr = new unsigned long[n];
     unsigned long *va;
 
 
@@ -174,7 +177,6 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
     Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
 
     const int nholdouts = static_cast<int>(opt.getOptAsNumber("nholdouts"));
-    const unsigned long indices_cols = indices_mat.cols();
 
     T *perf = new T[tot*t];
 
@@ -201,9 +203,9 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 //            va = opt.split.va;
 //        end
         unsigned long last = lasts[nh];
-        copy(tr, indices+nh, indices_cols, 1, indices_mat.rows());
+        copy(tr, indices+nh, n, 1, indices_mat.rows());
         va = tr+last;
-        const unsigned long va_size = indices_cols-last;
+        const unsigned long va_size = n-last;
 
 //        [n,T]  = size(y(tr,:));
 
@@ -228,16 +230,16 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
         delete[] tmpMat;
 
         subXtr.resize(last, d);
-        subMatrixFromRows(X.getData(), n, d, tr, last, subXtr.getData());
+        subMatrixFromRows(X.getData(), x_rows, d, tr, last, subXtr.getData());
 
         subYtr.resize(last, t);
-        subMatrixFromRows(Y.getData(), n, t, tr, last, subYtr.getData());
+        subMatrixFromRows(Y.getData(), y_rows, t, tr, last, subYtr.getData());
 
         subXva.resize(va_size, d);
-        subMatrixFromRows(X.getData(), n, d, va, va_size, subXva.getData());
+        subMatrixFromRows(X.getData(), x_rows, d, va, va_size, subXva.getData());
 
         subYva.resize(va_size, t);
-        subMatrixFromRows(Y.getData(), n, t, va, va_size, subYva.getData());
+        subMatrixFromRows(Y.getData(), y_rows, t, va, va_size, subYva.getData());
 
 
 //        for i = 1:tot

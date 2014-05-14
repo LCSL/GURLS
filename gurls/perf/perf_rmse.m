@@ -26,6 +26,6 @@ end
 T 		= size(y,2);
 n 		= size(y,1);
 diff 		= opt.pred - y;
-p.rmse		= sqrt(sum(diff.^2,1));
+p.rmse		= sqrt(sum(diff.^2,1)/n);
 p.forho 	= -p.rmse;
 p.forplot 	= p.rmse;

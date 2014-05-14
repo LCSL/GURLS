@@ -80,8 +80,8 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
             {
                 if(this->opt->hasOpt("paramsel.sigma") && this->opt->hasOpt("paramsel.lambdas"))
                 {
-                    *seq << "split:ho" << "kernel:rbf";
-                    *process1 << GURLS::computeNsave << GURLS::computeNsave;
+                    *seq << "kernel:rbf";
+                    *process1 << GURLS::computeNsave;
                 }
                 else
                     throw gException("Please set a valid value for kernel and regularization parameters, calling setParam(value) and setSigma(value)");

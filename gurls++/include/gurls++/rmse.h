@@ -117,14 +117,17 @@ GurlsOptionsList* PerfRmse<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& 
 //     diff 	= opt.pred - y;
     axpy(rows*cols, (T)-1.0, y_true, 1, diff, 1);
 
-//    p.rmse = sqrt(sum(diff.^2,1));
+//    p.rmse = sqrt(sum(diff.^2,1)/n);
     gMat2D<T> *rmse = new gMat2D<T>(1, cols);
     T* r_it = rmse->getData();
     const T* diff_it = diff;
 
     for(unsigned long i=0; i< cols; ++i, ++r_it, diff_it+=rows)
-        *r_it = nrm2(rows, diff_it, 1);
-
+	{
+		*r_it = nrm2(rows, diff_it, 1);
+		*r_it /= sqrt((T)rows);
+	}
+	
     delete [] diff;
 
     perf->addOpt("rmse", new OptMatrix<gMat2D<T> >(*rmse));
