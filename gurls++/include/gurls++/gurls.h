@@ -69,6 +69,7 @@
 #include "gurls++/precisionrecall.h"
 #include "gurls++/macroavg.h"
 #include "gurls++/rmse.h"
+#include "gurls++/abserr.h"
 
 #include "gurls++/rlsauto.h"
 #include "gurls++/rlsprimal.h"

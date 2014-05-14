@@ -67,6 +67,10 @@ class PerfPrecRec;
 template <typename T>
 class PerfRmse;
 
+template <typename T>
+class PerfAbsErr;
+
+
 /**
  * \ingroup Exceptions
  *
@@ -116,6 +120,8 @@ public:
             return new PerfMacroAvg<T>;
         if(id == "rmse")
             return new PerfRmse<T>;
+        if(id == "abserr")
+            return new PerfAbsErr<T>;
 
         throw BadPerformanceCreation(id);
     }

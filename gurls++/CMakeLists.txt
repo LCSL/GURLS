@@ -8,7 +8,8 @@ endif()
 set(GURLSLIBRARY gurls++)
 project(${GURLSLIBRARY})
 
-set(gurls_headers   include/gurls++/basearray.h
+set(gurls_headers   include/gurls++/abserr.h
+                    include/gurls++/basearray.h
                     include/gurls++/basearray.hpp
                     include/gurls++/blas_lapack.h
                     include/gurls++/blas_lapack.hpp
