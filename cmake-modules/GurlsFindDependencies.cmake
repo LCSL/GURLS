@@ -83,7 +83,7 @@ set(Boost_USE_STATIC_RUNTIME    OFF)
 option(Boost_USE_STATIC_LIBS "Link statically against boost libs" ON)
 
 #should not be needed #set(CMAKE_PREFIX_PATH $ENV{GURLSPP_ROOT} ${CMAKE_PREFIX_PATH})
-find_package( Boost ${BOOST_MINIMUM_VERSION} COMPONENTS serialization date_time filesystem unit_test_framework system signals REQUIRED)
+find_package( Boost ${BOOST_MINIMUM_VERSION} COMPONENTS serialization date_time filesystem unit_test_framework system signals)
 mark_as_advanced(Boost_DIR)
 
     if(MSVC)

@@ -19,16 +19,16 @@ include(ExternalProject)
     if( NOT ZLIB_FOUND)
         if(MSVC)
             ExternalProject_add(zlib
-                URL http://zlib.net/zlib-1.2.7.tar.gz
-                URL_MD5 60df6a37c56e7c1366cca812414f7b85
+                URL http://zlib.net/zlib-1.2.8.tar.gz
+                URL_MD5 44d667c142d7cda120332623eab69f40
                 SOURCE_DIR  ${EXTERNAL_PREFIX}/src/zlib
                 #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${EXTERNAL_PREFIX}
                 CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${EXTERNAL_PREFIX}
             )
         else()
             ExternalProject_add(zlib
-                URL http://zlib.net/zlib-1.2.7.tar.gz
-                URL_MD5 60df6a37c56e7c1366cca812414f7b85
+                URL http://zlib.net/zlib-1.2.8.tar.gz
+                URL_MD5 44d667c142d7cda120332623eab69f40
                 BUILD_IN_SOURCE 1
                 SOURCE_DIR  ${EXTERNAL_PREFIX}/src/zlib
                 INSTALL_DIR ${EXTERNAL_PREFIX}/

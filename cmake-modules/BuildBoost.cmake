@@ -14,7 +14,6 @@ include(ExternalProject)
 ############## Boost
 if(MSVC)
     set(EXT "bat")
-#address-model=64
     if(MSVC_VERSION GREATER 1699)
             set(CONF_TOOLSET "vc11")
             set(BUILD_TOOLSET "msvc-11.0")
@@ -33,18 +32,35 @@ if(MSVC)
     elseif(MSVC_VERSION GREATER 1199)
             message(FATAL_ERROR "vc6 is not supported by Boost: Please upgrade your compiler.")
     endif()
+    set(BUILD_TOOLSET "toolset=${BUILD_TOOLSET}")
+    
+    if (CMAKE_CL_64)
+        set(ADDRESS_MODEL "address-model=64")
+    else()
+        set(ADDRESS_MODEL "address-model=32")
+    endif()
 else()
+    set(BUILD_TOOLSET "")
     set(EXT "sh")
+    set(ADDRESS_MODEL "") # for linux??
 endif()
 
+set(Boost_VARIANT "debug,release" CACHE STRING "Possible values: debug, release, profile")
+
 ExternalProject_add(buildBoost
-    URL http://downloads.sourceforge.net/boost/boost_1_53_0.tar.gz
-    URL_MD5 57a9e2047c0f511c4dfcf00eb5eb2fbb
+    URL http://downloads.sourceforge.net/boost/boost_1_55_0.tar.gz
+    URL_MD5 93780777cfbf999a600f62883bd54b17
     BUILD_IN_SOURCE 1
     SOURCE_DIR  ${EXTERNAL_PREFIX}/src/boost
     INSTALL_DIR ${EXTERNAL_PREFIX}/
     CONFIGURE_COMMAND <SOURCE_DIR>/bootstrap.${EXT} ${CONF_TOOLSET}
-    BUILD_COMMAND <SOURCE_DIR>/b2 toolset=${BUILD_TOOLSET} ${MAKE_ARGS} -d0 --layout=tagged variant=release link=static threading=multi runtime-link=shared
+    BUILD_COMMAND <SOURCE_DIR>/b2 ${BUILD_TOOLSET} ${MAKE_ARGS} ${ADDRESS_MODEL} 
+                variant=${Boost_VARIANT}
+                link=static 
+                threading=multi 
+                runtime-link=shared
+                -d0 
+                --layout=tagged
                 --prefix=${EXTERNAL_PREFIX}
                 --with-serialization
                 --with-date_time
