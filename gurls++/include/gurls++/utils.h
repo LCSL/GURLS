@@ -76,7 +76,7 @@ namespace gurls {
 template<typename T>
 class LtCompare{
 public:
-    bool operator()(const T&a, const T&b){ return gurls::lt(a, b);}
+    bool operator()(const T&a, const T&b) const { return gurls::lt(a, b);}
 };
 
 /**
