@@ -1,0 +1,16 @@
+
+IF(APPLE)
+   	FIND_LIBRARY(VECLIB_FRAMEWORK vecLib)
+   	MARK_AS_ADVANCED(VECLIB_FRAMEWORK)
+   	IF(VECLIB_FRAMEWORK STREQUAL "VECLIB_FRAMEWORK-NOTFOUND")
+   		SET(VECLIB_FOUND FALSE)
+	ELSE()
+   		SET(VECLIB_FOUND TRUE)
+   		SET(VECLIB_LIBRARIES 
+   			"${VECLIB_FRAMEWORK}/Versions/Current/libBLAS.dylib"
+   			"${VECLIB_FRAMEWORK}/Versions/Current/libLAPACK.dylib"
+   			)
+   	ENDIF()
+ELSE()
+	MESSAGE(WARNING "vecLib framework is available only on Apple systems!")
+ENDIF (APPLE)
