@@ -45,7 +45,7 @@ elseif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "ATLAS")
 elseif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "OPENBLAS")
 
     if(CMAKE_COMPILER_IS_GNUCC)
-            enable_language(Fortran)
+        enable_language(Fortran)
     endif()
     set (OPENBLAS_IGNORE_HEADERS ON)
     find_package(Openblas)
