@@ -146,10 +146,9 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
 
             int last = nsamples - static_cast<int>(std::floor(nsamples*fraction));
 
+            copy(indices+count_tr+state*n, it_idx, last, 1, 1);
 
-            copy(indices+(nSplits*count_tr)+state, it_idx, last, nSplits, 1);
-
-            copy(indices+(nSplits*count_va)+state, it_idx+last, nsamples-last, nSplits, 1);
+            copy(indices+count_va+state*n, it_idx+last, nsamples-last, 1, 1);
 
             count_tr += last;
             count_va += nsamples-last;
