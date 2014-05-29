@@ -30,8 +30,6 @@ if(NOT BLAS_LAPACK_FOUND OR NOT Boost_FOUND) #boost should be optional at some p
     set(GURLS_BUILD_GURLSPP OFF)
 endif()
 
-message(${BLAS_LAPACK_FOUND})
-
 if(GURLS_BUILD_GURLSPP)
 
     if(HDF5_FOUND)
