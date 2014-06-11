@@ -242,7 +242,7 @@ public:
         if(vec.getSize() != this->numrows)
             throw gException(Exception_Inconsistent_Size);
 
-        gurls::copy(this->data+(i*this->numrows), vec.getData(), this->numrows, 1, 1, 1, 1, 1, 1, 1);
+        gurls::copy(this->data+(i*this->numrows), vec.getData(), this->numrows, 1, 1);
     }
 
     /**
