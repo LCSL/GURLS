@@ -203,7 +203,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 //            va = opt.split.va;
 //        end
         unsigned long last = lasts[nh];
-        copy(tr, indices+nh, n, 1, indices_mat.rows());
+        copy(tr, indices+nh, n, 1, 1);
         va = tr+last;
         const unsigned long va_size = n-last;
 
