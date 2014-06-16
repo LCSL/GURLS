@@ -278,7 +278,7 @@ GurlsOptionsList* ParamSelSiglam<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
         unsigned long mm = std::max_element(perf, perf + nlambda) - perf;
 
-        if( gt(perf[mm], maxTmp))
+        if( gt(perf[mm], maxTmp) || i==0)
         {
             maxTmp = perf[mm];
             m = i;
