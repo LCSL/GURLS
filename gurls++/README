@@ -44,7 +44,7 @@ GURLS++ depends on several external libraries:
   - ATLAS;
   - Intel’s MKL;
   - Netlib’s reference implementation: http://www.netlib.org/blas and http://www.netlib.org/lapack/;
-  - OpenBLAS (Currently only under Linux);
+  - OpenBLAS;
   - Boost’s (v1.46.0 or higher) libraries serialization, date_time, filesystem, unit_test_framework, system, signals.
 
 2) Automatic dependencies building
@@ -156,7 +156,7 @@ command-line interface.
 4. In the main screen you may change a number of variables. Most of them can be left unchanged, but some must be 
    set to appropriate values. The following are the variables whose values should be checked:
     - BLAS_LAPACK_IMPLEMENTATION. Allows user to specify an implementation of the Blas/Lapack routines. 
-      Available choices are: ACML, ATLAS, MKL, NETLIB, OPENBLAS (under linux). Depending on the choice you make, 
+      Available choices are: ACML, ATLAS, MKL, NETLIB, OPENBLAS. Depending on the choice you make, 
       CMake will try to find the libraries in standard locations in the system. Normally this process should run 
       fine, however, in case the libraries have been installed in some non-standard directory, you may have 
       to manually specify their location.
@@ -198,4 +198,6 @@ Documentation
 	  Remark: GURLS++ is still under development please contact the authors before starting your own development.
 	
 	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive RLS API 
-
+	
+    * In wrappers-tutorial.pdf you can find a simple Tutorial for the gurls++ weappers
+	
