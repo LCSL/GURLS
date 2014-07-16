@@ -53,23 +53,26 @@ GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long>
     return OptMatrixBase::ULONG;
 }
 
-//template <>
-//GURLS_EXPORT bool OptMatrix <BigArray<float> >::hasBigArray() const
-//{
-//    return true;
-//}
-//
-//template <>
-//GURLS_EXPORT bool OptMatrix <BigArray<double> >::hasBigArray() const
-//{
-//    return true;
-//}
-//
-//template <>
-//GURLS_EXPORT bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const
-//{
-//    return true;
-//}
+template<>
+GURLS_EXPORT bool containsBigArray<BigArray<float> >()
+{
+    return true;
+}
+
+
+template<>
+GURLS_EXPORT bool containsBigArray<BigArray<double> >()
+{
+    return true;
+}
+
+
+template<>
+GURLS_EXPORT bool containsBigArray<BigArray<unsigned long> >()
+{
+    return true;
+}
+
 
 #endif
 

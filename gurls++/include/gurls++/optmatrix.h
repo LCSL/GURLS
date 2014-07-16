@@ -124,6 +124,18 @@ GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<double> >();
 template<>
 GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long> >();
 
+template<typename T>
+bool containsBigArray()
+{return false;}
+
+template<>
+GURLS_EXPORT bool containsBigArray<BigArray<float> >();
+
+template<>
+GURLS_EXPORT bool containsBigArray<BigArray<double> >();
+
+template<>
+GURLS_EXPORT bool containsBigArray<BigArray<unsigned long> >();
 #endif
 
 
@@ -233,7 +245,7 @@ public:
       */
     virtual bool hasBigArray() const
     {
-        return false;
+       return containsBigArray<MatrixType>();
     }
 #endif
 
@@ -265,19 +277,6 @@ public:
     virtual std::ostream& operator<<(std::ostream& os) const;
 
 };
-
-#ifdef _BGURLS
-
-template <>
-bool OptMatrix<BigArray<float> >::hasBigArray() const{return true;};
-
-template <>
-bool OptMatrix <BigArray<double> >::hasBigArray() const{return true;};
-
-template <>
-bool OptMatrix <BigArray<unsigned long> >::hasBigArray() const{return true;};
-
-#endif
 
 
 /**
