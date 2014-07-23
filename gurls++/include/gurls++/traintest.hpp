@@ -41,14 +41,15 @@ gurls::GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsi
 		else
 			gurlsWrap->setSavefile("temp");
 
-		if(problem=="classification")
-			gurlsWrap->setProblemType(gurlsWrap->CLASSIFICATION);
+		if(problem=="classification"){
+			gurlsWrap->setProblemType(gurlsWrap->CLASSIFICATION);}
 		else if(problem=="regression")
 			gurlsWrap->setProblemType(gurlsWrap->REGRESSION);
 		else{
 			const char * probList[] = { "Classification", "Regression"};
             typename KernelWrapper<T>::ProblemType prob =gurlsWrap->problemTypeFromData(Xtr, ytr);
-			std::cout<<"Problem set to "<<probList[prob];}
+			std::cout<<"Problem set to "<<probList[prob];
+			gurlsWrap->setProblemType(prob);}
 
 		gurlsWrap->train(Xtr, ytr);
 		if(savefile=="")

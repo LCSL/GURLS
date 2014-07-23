@@ -56,9 +56,13 @@ int main(int argc, char* argv[])
 		gMat2D<T> Xtr, ytr, Xte, yte;
 		try
 		{
+			std::cout<<"Reading Xtr"<<std::endl;
         Xtr.readCSV(std::string(argv[1]) + "/Xtr.txt");
+			std::cout<<"Reading ytr"<<std::endl;
         ytr.readCSV(std::string(argv[1]) + "/ytr.txt");
+			std::cout<<"Reading Xte"<<std::endl;
         Xte.readCSV(std::string(argv[1]) + "/Xte.txt");
+			std::cout<<"Reading yte"<<std::endl;
         yte.readCSV(std::string(argv[1]) + "/yte.txt");
 		}
 		catch(gurls::gException &e)
@@ -71,7 +75,7 @@ int main(int argc, char* argv[])
 		T* predBuffer = new T[yte.cols()*yte.rows()];
 
 		std::cout<<"Testing with (kernel)"<<std::endl;
-		gurls::GurlsOptionsList opt = train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "kernel");
+		gurls::GurlsOptionsList opt = train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "gaussian");
 		test(opt, Xte.getData(), yte.getData(), predBuffer, perfBuffer, Xte.rows(), Xte.cols(), yte.cols(), "auto");
 
 		std::cout<<"Performance:"<<std::endl;
