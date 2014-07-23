@@ -65,6 +65,7 @@ gMat2D<T>::gMat2D(T* buf, unsigned long r, unsigned long c,  bool owner) : numco
     {
         this->isowner = owner;
         this->data = buf;
+		this->size = r*c;
     }
 }
 
