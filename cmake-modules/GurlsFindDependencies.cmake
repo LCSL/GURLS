@@ -3,6 +3,9 @@
 
 
 #Check if BLAS and LAPACK are already available on the system
+option(GURLS_USE_EXTERNAL_BLAS_LAPACK "build external project Openblas" ON)
+
+if(NOT GURLS_USE_EXTERNAL_BLAS_LAPACK)
 
 if(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
 
@@ -46,7 +49,7 @@ elseif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "OPENBLAS")
 
     if(CMAKE_COMPILER_IS_GNUCC)
         enable_language(Fortran)
-    endif()
+    endif(CMAKE_COMPILER_IS_GNUCC)
     set (OPENBLAS_IGNORE_HEADERS ON)
     find_package(Openblas)
 
@@ -61,7 +64,7 @@ else(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
 
     if(CMAKE_COMPILER_IS_GNUCC)
             enable_language(Fortran)
-    endif()
+    endif(CMAKE_COMPILER_IS_GNUCC)
     find_package(BLAS)
     find_package(LAPACK)
 
@@ -73,18 +76,39 @@ else(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
         set(BLAS_LAPACK_FOUND TRUE)
     else()
         set(BLAS_LAPACK_FOUND FALSE)
-    endif()
+    endif(${BLAS_FOUND} AND ${LAPACK_FOUND})
 
 
 endif(BLAS_LAPACK_IMPLEMENTATION STREQUAL "MKL")
 
-if(NOT BLAS_LAPACK_FOUND)
-    option(GURLS_USE_EXTERNAL_BLAS_LAPACK "build external project Openblas" OFF)
-endif()
+endif(NOT GURLS_USE_EXTERNAL_BLAS_LAPACK)
 
-if(GURLS_USE_EXTERNAL_BLAS_LAPACK)
+if(GURLS_USE_EXTERNAL_BLAS_LAPACK AND NOT WIN32)
     include(BuildOpenblas)
-endif()
+endif(GURLS_USE_EXTERNAL_BLAS_LAPACK AND NOT WIN32)
+
+if(GURLS_USE_EXTERNAL_BLAS_LAPACK AND WIN32)
+	if(CMAKE_COMPILER_IS_GNUCC)
+        enable_language(Fortran)
+    endif(CMAKE_COMPILER_IS_GNUCC)
+    set (OPENBLAS_IGNORE_HEADERS ON)
+	if (CMAKE_CL_64)
+    		set (Openblas_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/amd64)
+	else(CMAKE_CL_64)
+		set (Openblas_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/win32)
+	endif(CMAKE_CL_64)
+	
+    find_package(Openblas)
+
+    set(BLAS_LAPACK_INCLUDE_DIRS ${Openblas_INCLUDE_DIRS})
+    set(BLAS_LAPACK_LIBRARY_DIRS )
+    set(BLAS_LAPACK_DEFINITIONS )
+    set(BLAS_LAPACK_LIBRARIES ${Openblas_LIBRARIES})
+    set(BLAS_LAPACK_FOUND ${Openblas_FOUND})
+
+endif(GURLS_USE_EXTERNAL_BLAS_LAPACK AND WIN32)
+
+
 #################### BOOST
 
 
@@ -92,6 +116,9 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 option(Boost_USE_STATIC_LIBS "Link statically against boost libs" ON)
 
+option(GURLS_USE_EXTERNAL_BOOST "build external project Boost" ON)
+
+if(NOT GURLS_USE_EXTERNAL_BOOST)
 #should not be needed #set(CMAKE_PREFIX_PATH $ENV{GURLSPP_ROOT} ${CMAKE_PREFIX_PATH})
 find_package( Boost ${BOOST_MINIMUM_VERSION} COMPONENTS serialization date_time filesystem unit_test_framework system signals)
 mark_as_advanced(Boost_DIR)
@@ -100,9 +127,7 @@ mark_as_advanced(Boost_DIR)
         add_definitions(-DBOOST_ALL_NO_LIB)
     endif()
 
-if(NOT Boost_FOUND)
-    option(GURLS_USE_EXTERNAL_BOOST "build external project Boost" OFF)
-endif()
+endif(NOT GURLS_USE_EXTERNAL_BOOST)
 
 if(GURLS_USE_EXTERNAL_BOOST) #if GURLS_USE_EXTERNAL_BOOST was enabled by the user...
     include(BuildBoost)
@@ -110,7 +135,12 @@ endif()
 
 
 # HDF_5
-find_package(HDF5 COMPONENTS C)
+if(GURLS_BUILD_BGURLSPP)
+
+if(NOT GURLS_USE_EXTERNAL_HDF5)
+	find_package(HDF5 COMPONENTS C)
+endif()
+
 if (NOT HDF5_FOUND)
     option(GURLS_USE_EXTERNAL_HDF5 "build external project HDF5" OFF)
 endif()
@@ -119,3 +149,4 @@ if(GURLS_USE_EXTERNAL_HDF5) #if GURLS_USE_EXTERNAL_HDF5 was enabled by the user.
     include(BuildHDF5)
 endif()
 
+endif(GURLS_BUILD_BGURLSPP)

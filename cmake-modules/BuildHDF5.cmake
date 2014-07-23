@@ -16,13 +16,13 @@ include(ExternalProject)
     set(hdf5_dependencies)
 
     find_package(ZLIB)
-    if( NOT ZLIB_FOUND)
+    if(NOT ZLIB_FOUND)	
         if(MSVC)
             ExternalProject_add(zlib
                 URL http://zlib.net/zlib-1.2.8.tar.gz
                 URL_MD5 44d667c142d7cda120332623eab69f40
                 SOURCE_DIR  ${EXTERNAL_PREFIX}/src/zlib
-                #CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${EXTERNAL_PREFIX}
+                #CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_PREFIX}
                 CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${EXTERNAL_PREFIX}
             )
         else()
@@ -40,10 +40,11 @@ include(ExternalProject)
 
         set_target_properties(zlib PROPERTIES EXCLUDE_FROM_ALL 1)
         set(ZLIB_FOUND TRUE)
-        set(ZLIB_INCLUDE_DIRS ${EXTERNAL_PREFIX}/include) #cached?
-        #set(ZLIB_LIBRARY_DIRS ${EXTERNALS_PREFIX}/lib) #cached?
+        set(ZLIB_INCLUDE_DIRS ${EXTERNAL_PREFIX}/include) 
+        set(ZLIB_INCLUDE_DIR ${EXTERNAL_PREFIX}/include)         #set(ZLIB_LIBRARY_DIRS ${EXTERNALS_PREFIX}/lib) #cached?
         if(MSVC)
-            set(ZLIB_LIBRARIES ${EXTERNAL_PREFIX}/lib/zlibstatic.lib)
+           set(ZLIB_LIBRARIES ${EXTERNAL_PREFIX}/lib/zlibstatic.lib) 
+           set(ZLIB_LIBRARY ${EXTERNAL_PREFIX}/lib/zlibstatic.lib)
         else()
             set(ZLIB_LIBRARIES ${EXTERNAL_PREFIX}/lib/libz.a)
         endif()

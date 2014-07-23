@@ -17,8 +17,6 @@ if(WIN32)
     if (GURLS_USE_EXTERNAL_BLAS_LAPACK)
         if (NOT CMAKE_CL_64)
             set (Openblas_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/win32")
-        else()
-            message(WARNING "Openblas library for 64-bit compilers is not shipped yet")
         endif()
     endif()
 endif()
@@ -32,11 +30,7 @@ endif()
 
 if(GURLS_BUILD_GURLSPP)
 
-    if(HDF5_FOUND)
-        option(GURLS_BUILD_BGURLSPP "Build Bgurls++" OFF)
-    else()
-        set(GURLS_BUILD_BGURLSPP OFF )
-    endif()
+option(GURLS_BUILD_BGURLSPP "Build Bgurls++" OFF)
 
     option(GURLS_USE_BINARY_ARCHIVES "If ON all the data structures in GURLS are saved/loaded using binary files." ON)
 
@@ -107,17 +101,25 @@ if(GURLS_BUILD_GURLSPP)
 
     add_custom_target(uninstall
         COMMAND ${CMAKE_COMMAND} -P "${PROJECT_BINARY_DIR}/gurls-uninstall.cmake")
-
-    if( (BLAS_LAPACK_IMPLEMENTATION STREQUAL "OPENBLAS") AND WIN32 AND NOT CMAKE_CL64)
+	if( (BLAS_LAPACK_IMPLEMENTATION STREQUAL "OPENBLAS") AND WIN32)
+	 if(NOT CMAKE_CL_64)
         set(dllDir ${CMAKE_SOURCE_DIR}/dependencies/win32/bin)
         set(files_to_copy ${dllDir}/libgcc_s_sjlj-1.dll
                    ${dllDir}/libgfortran-3.dll
                    ${dllDir}/libopenblas.dll
                    ${dllDir}/libquadmath-0.dll
                    ${dllDir}/libwinpthread-1.dll)
-
+	 else(NOT CMAKE_CL_64)
+	    set(dllDir ${CMAKE_SOURCE_DIR}/dependencies/amd64/lib)
+        set(files_to_copy ${dllDir}/libgcc_s_seh-1.dll
+                   ${dllDir}/libgfortran-3.dll
+                   ${dllDir}/libopenblas.dll
+                   ${dllDir}/libquadmath-0.dll
+                   ${dllDir}/libwinpthread-1.dll)
+	 endif(NOT CMAKE_CL_64)
         file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
         install(FILES ${files_to_copy} DESTINATION bin)
+
     endif()
 
 else(GURLS_BUILD_GURLSPP)
