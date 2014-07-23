@@ -1,6 +1,6 @@
-#include "gurls++/kernelrlswrapper.h"
 
 #include "gurls++/gurls.h"
+#include "gurls++/kernelrlswrapper.h"
 #include "gurls++/predkerneltraintest.h"
 #include "gurls++/primal.h"
 #include "gurls++/dual.h"
@@ -20,9 +20,11 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     this->opt->removeOpt("seq");
     this->opt->removeOpt("processes");
 
-
     const unsigned long nlambda = static_cast<unsigned long>(this->opt->getOptAsNumber("nlambda"));
     const unsigned long nsigma = static_cast<unsigned long>(this->opt->getOptAsNumber("nsigma"));
+	
+	unsigned int n=X.rows();
+	unsigned int d=X.cols();
 
     OptTaskSequence *seq = new OptTaskSequence();
     GurlsOptionsList * process = new GurlsOptionsList("processes", false);
@@ -35,7 +37,10 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     {
         if(nlambda > 1ul)
         {
-            *seq << "split:ho" << "kernel:linear" << "paramsel:hodual";
+			if(n>d)
+				*seq << "split:ho" << "kernel:linear" << "paramsel:hoprimal";
+			else
+				*seq << "split:ho" << "kernel:linear" << "paramsel:hodual";
             *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
         }
         else if(nlambda == 1ul)
@@ -93,22 +98,30 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
             throw gException("Please set a valid value for NParam, calling setNParam(value)");
     }
 
-    *seq << "optimizer:rlsdual";
+	if (this->kType == KernelWrapper<T>::LINEAR && n>d)
+		*seq << "optimizer:rlsprimal";
+	else
+		*seq << "optimizer:rlsdual";
+
     *process1 << GURLS::computeNsave;
 
     GURLS G;
     G.run(X, y, *(this->opt), "one");
-
+	
 }
 
 template <typename T>
 gMat2D<T>* KernelRLSWrapper<T>::eval(const gMat2D<T> &X)
 {
+	
+    if(!this->trainedModel())
+        throw gException("Error, Train Model First");
+
     Prediction<T> *pred;
     PredKernelTrainTest<T> predkTrainTest;
 
     gMat2D<T> empty;
-
+	
     switch (this->kType)
     {
     case KernelWrapper<T>::LINEAR:
@@ -118,14 +131,15 @@ gMat2D<T>* KernelRLSWrapper<T>::eval(const gMat2D<T> &X)
         pred = new PredDual<T>();
         this->opt->removeOpt("predkernel");
         this->opt->addOpt("predkernel", predkTrainTest.execute(X, empty, *(this->opt)));
+		break;
+	default:
+		throw gException("Kernel not recognized");
     }
-
     OptMatrix<gMat2D<T> >* result = OptMatrix<gMat2D<T> >::dynacast(pred->execute(X, empty, *(this->opt)));
-    result->detachValue();
     delete pred;
+    result->detachValue();
 
     gMat2D<T>* ret = &(result->getValue());
-
     delete result;
     return ret;
 }

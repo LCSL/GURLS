@@ -58,9 +58,25 @@ void GurlsWrapper<T>::saveModel(const std::string &fileName)
 }
 
 template <typename T>
+void GurlsWrapper<T>::setSavefile(const std::string &fileName)
+{
+		opt->removeOpt("savefile");
+		opt->addOpt("savefile",fileName);
+}
+
+template <typename T>
 void GurlsWrapper<T>::loadModel(const std::string &fileName)
 {
+	delete opt;
+    opt = new GurlsOptionsList("Loaded",false);
     opt->load(fileName);
+}
+
+template <typename T>
+void GurlsWrapper<T>::loadOpt(GurlsOptionsList &optnew)
+{
+    delete opt;
+    opt = new GurlsOptionsList(optnew);
 }
 
 template <typename T>
@@ -103,8 +119,13 @@ template <typename T>
 void GurlsWrapper<T>::setProblemType(typename GurlsWrapper::ProblemType value)
 {
     probType = value;
-
     opt->getOptValue<OptString>("hoperf") = (value == CLASSIFICATION)? "macroavg": "rmse";
+}
+
+template <typename T>
+typename GurlsWrapper<T>::ProblemType GurlsWrapper<T>::getProblemType()
+{
+    return probType;
 }
 
 template <typename T>
@@ -112,7 +133,6 @@ bool GurlsWrapper<T>::trainedModel()
 {
     return opt->hasOpt("optimizer");
 }
-
 
 template <typename T>
 KernelWrapper<T>::KernelWrapper(const std::string &name): GurlsWrapper<T>(name), kType(RBF)
@@ -167,6 +187,44 @@ void KernelWrapper<T>::setNSigma(unsigned long value)
         std::cout << "Warning: ignoring previous values of the kernel parameter" << std::endl;
         this->opt->template getOptAs<GurlsOptionsList>("paramsel")->removeOpt("sigma");
     }
+}
+
+template <typename T>
+typename GurlsWrapper<T>::ProblemType GurlsWrapper<T>::problemTypeFromData( const gMat2D<T> &X, const gMat2D<T> &y)
+{
+	// if 
+	// max(max(abs(double(int32(y))-y))) > eps
+	// probType = REGRESSION
+	// else
+	// probType = CLASSIFICATION
+
+	for(unsigned long i=0; i<y.cols(); ++i)
+		for (unsigned long j=0; j<y.rows(); ++j)
+			if((y[j][i]-std::floor(y[j][i]))>0)
+			{return REGRESSION;}
+	return CLASSIFICATION;
+
+}
+
+template <typename T>
+gMat2D<T>* GurlsWrapper<T>::perf(const gMat2D<T> &y, gMat2D<T> &pred, const std::string perfstring)
+{
+	std::string name=perfstring;
+	if (perfstring=="macroavg")
+		name=std::string("acc");
+    Performance<T> *perf = Performance<T>::factory(perfstring);
+    gMat2D<T> empty;
+
+    this->opt->removeOpt("pred");
+    this->opt->addOpt("pred", new OptMatrix<gMat2D<T> >(pred));
+
+	GurlsOptionsList* perfList =perf->execute(empty, y, *(this->opt));
+	gMat2D<T>* ret = &(perfList->getOptValue<OptMatrix<gMat2D<T> > >(name));
+
+	delete perf;
+
+	
+    return ret;
 }
 
 }

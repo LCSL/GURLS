@@ -8,6 +8,9 @@ target_link_libraries(GURLSloocvprimal ${Gurls++_LIBRARIES})
 add_executable(helloworld helloworld.cpp)
 target_link_libraries(helloworld ${Gurls++_LIBRARIES})
 
+add_executable(traintest_demo traintest_demo.cpp)
+target_link_libraries(traintest_demo ${Gurls++_LIBRARIES})
+
 add_executable(recursiveRLS recursiveRLS.cpp)
 target_link_libraries(recursiveRLS ${Gurls++_LIBRARIES})
 

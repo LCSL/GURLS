@@ -112,6 +112,8 @@
 #include "gurls++/boltzmangap.h"
 #include "gurls++/gap.h"
 #include "gurls++/maxscore.h"
+ 
+#include "gurls++/wrapper.h"
 
 namespace gurls {
 
