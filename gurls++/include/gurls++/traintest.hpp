@@ -89,8 +89,10 @@ int test(gurls::GurlsOptionsList& model, T* X, T* Y, T* predbuff, T* perfbuff, u
 			perfstring=model.getOptAsString("hoperf");
 		else
 			perfstring="macroavg";
+		
 	}
-	std::cout<<"Performance measure set to: "<<perfstring<<std::endl;
+	if(perfstring!="")
+		std::cout<<"Performance measure set to: "<<perfstring<<std::endl;
 
         //load the test data
 	gMat2D<T> *pred= gurlsWrap->eval(Xte);

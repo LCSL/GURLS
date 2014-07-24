@@ -11,6 +11,9 @@ target_link_libraries(helloworld ${Gurls++_LIBRARIES})
 add_executable(traintest_demo traintest_demo.cpp)
 target_link_libraries(traintest_demo ${Gurls++_LIBRARIES})
 
+add_executable(sandbox sandbox.cpp)
+target_link_libraries(sandbox ${Gurls++_LIBRARIES})
+
 add_executable(recursiveRLS recursiveRLS.cpp)
 target_link_libraries(recursiveRLS ${Gurls++_LIBRARIES})
 

@@ -50,76 +50,58 @@ int main(int argc, char* argv[])
 {
 		typedef double T;
 
-		if (argc<2){
+		if (argc!=2){
 			std::cout<<"\tUsage:\t traintest_demo \"data folder\""<<std::endl;
 			return EXIT_FAILURE;}
+		//gurls Matrix objects
 		gMat2D<T> Xtr, ytr, Xte, yte;
+
 		try
 		{
+		//reading CSV with standard names from selected path
 			std::cout<<"Reading Xtr"<<std::endl;
-        Xtr.readCSV(std::string(argv[1]) + "/Xtr.txt");
+        Xtr.readCSV(std::string(argv[1]) + "/Xtr.csv");
 			std::cout<<"Reading ytr"<<std::endl;
-        ytr.readCSV(std::string(argv[1]) + "/ytr.txt");
+        ytr.readCSV(std::string(argv[1]) + "/Ytr.csv");
 			std::cout<<"Reading Xte"<<std::endl;
-        Xte.readCSV(std::string(argv[1]) + "/Xte.txt");
+        Xte.readCSV(std::string(argv[1]) + "/Xts.csv");
 			std::cout<<"Reading yte"<<std::endl;
-        yte.readCSV(std::string(argv[1]) + "/yte.txt");
+        yte.readCSV(std::string(argv[1]) + "/Yts.csv");
 		}
+
 		catch(gurls::gException &e)
 		{
 			std::cout<<e.getMessage();
 			return EXIT_FAILURE;
 		}
-
+		
+		//allocating the buffers where to write prediction and performance information
+		//perfBuffer must be greater or equal than the number of columns of Y
 		T* perfBuffer = new T[yte.cols()];
+		//predBuffer must be greater or equal to total size of Yts
 		T* predBuffer = new T[yte.cols()*yte.rows()];
 
-		std::cout<<"Testing with (kernel), keeping opt in memory"<<std::endl;	
+		std::cout<<"Running train and test functions..."<<std::endl;	
 		try
 		{
+		//train function return a GurlsOptionsList, containing the trained model parameters, "linear" is selected as kernel value in this demo
 		gurls::GurlsOptionsList opt = train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "gaussian");
+		//test writes directly prediction and performance in predBuffer and perfBuffer, "auto" is selected as performance type in this demo
 		test(opt, Xte.getData(), yte.getData(), predBuffer, perfBuffer, Xte.rows(), Xte.cols(), yte.cols(), "auto");
 		}
 		catch(gException &e)
 		{
-		std::cout<<e.what();
-		delete [] perfBuffer;
-		delete [] predBuffer;
-		return EXIT_FAILURE;
+			std::cout<<e.getMessage();
+			delete [] perfBuffer;
+			delete [] predBuffer;
+			return EXIT_FAILURE;
 		}
 		catch(std::exception &e)
 		{
-		std::cout<<e.what();
-		delete [] perfBuffer;
-		delete [] predBuffer;
-		return EXIT_FAILURE;
-		}
-
-		std::cout<<"Performance:"<<std::endl;
-		for(unsigned int i=0; i<yte.cols(); ++i)
-			std::cout<<perfBuffer[i]<<" ";
-		std::cout<<std::endl;
-		
-		std::cout<<"Testing with (linear), writing opt to file"<<std::endl;
-		try
-		{
-		train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "linear","","tempfile");
-		test("tempfile", Xte.getData(), yte.getData(), predBuffer, perfBuffer, Xte.rows(), Xte.cols(), yte.cols(), "auto");
-		std::remove("tempfile");
-		}
-		catch(gException &e)
-		{
-		std::cout<<e.what();
-		delete [] perfBuffer;
-		delete [] predBuffer;
-		return EXIT_FAILURE;
-		}
-		catch(std::exception &e)
-		{
-		std::cout<<e.what();
-		delete [] perfBuffer;
-		delete [] predBuffer;
-		return EXIT_FAILURE;
+			std::cout<<e.what();
+			delete [] perfBuffer;
+			delete [] predBuffer;
+			return EXIT_FAILURE;
 		}
 
 		std::cout<<"Performance:"<<std::endl;
