@@ -53,13 +53,48 @@
 
 namespace gurls{
 
+//"easy train" fucntion
+//requires in input:
+//		- X, a T(float or double) buffer, intended as a matrix n x d
+//		- Y, a T(float or double) buffer, intended as a matrix n x t
+//		- n, d and t, geometry parameters described above
+//		- algorithm, an optional string containing the selected algorithm (only "krls" available now)
+//		- kernel, an optional string containing the selected kernel type ("gaussian" and "linear" available now)
+//		- problem, an optional string containing the selected problem type ("classification" and "regression" available)
+//		- savefile, an optional string containing the path in which to save the model
+//gives in output
+//		- a GurlsOptionList with the trained model, ready to be used with "test" function
 template <typename T>
 GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsigned long t, 
 		   std::string algorithm="krls", std::string kerneltype="gaussian", std::string problem="", std::string savefile="");
 
+//"easy test" fucntion
+//requires in input:
+//		- model, previously saved opt, already trained on data using "train" function
+//		- X, a T(float or double) buffer, intended as a matrix n x d
+//		- predbuff, a T(float or double) buffer, intended as a matrix n x t, where prediction will be saved
+//		- Y, an optional T(float or double) buffer, intended as a matrix n x t
+//		- perfbuff, an optional T(float or double) buffer, intended as a t length vector, where performance will be saved
+//		- n, d and t, geometry parameters described above
+//		- perfstring, a string containing the type of perf to be calculated, "rmse", "macroavg" and "auto" are the accepted values,
+//					  leave blank to skip performance calculation (perfbuff will remain untouched)
+//gives in output
+//		- EXIT_SUCCESS or EXIT_FAILURE
 template <typename T>
 int test(gurls::GurlsOptionsList& model, T* X, T* Y, T* predbuff, T* perfbuff, unsigned long n, unsigned long d, unsigned long t, std::string perfstring="");
 
+//"easy test" function, with load from file
+//requires in input:
+//		- loadfile, path to previously saved optionlist in .bin format, already trained on data using "train" function
+//		- X, a T(float or double) buffer, intended as a matrix n x d
+//		- predbuff, a T(float or double) buffer, intended as a matrix n x t, where prediction will be saved
+//		- Y, an optional T(float or double) buffer, intended as a matrix n x t
+//		- perfbuff, an optional T(float or double) buffer, intended as a t length vector, where performance will be saved
+//		- n, d and t, geometry parameters described above
+//		- perfstring, a string containing the type of perf to be calculated, "rmse", "macroavg" and "auto" are the accepted values,
+//					  leave blank to skip performance calculation (perfbuff will remain untouched)
+//gives in output
+//		- EXIT_SUCCESS or EXIT_FAILURE
 template <typename T>
 int test(std::string loadfile, T* X, T* Y, T* predbuff, T* perfbuff, unsigned long n, unsigned long d, unsigned long t, std::string perfstring="");
 }
