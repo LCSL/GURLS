@@ -74,19 +74,53 @@ int main(int argc, char* argv[])
 		T* perfBuffer = new T[yte.cols()];
 		T* predBuffer = new T[yte.cols()*yte.rows()];
 
-		std::cout<<"Testing with (kernel)"<<std::endl;
+		std::cout<<"Testing with (kernel), keeping opt in memory"<<std::endl;	
+		try
+		{
 		gurls::GurlsOptionsList opt = train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "gaussian");
 		test(opt, Xte.getData(), yte.getData(), predBuffer, perfBuffer, Xte.rows(), Xte.cols(), yte.cols(), "auto");
+		}
+		catch(gException &e)
+		{
+		std::cout<<e.what();
+		delete [] perfBuffer;
+		delete [] predBuffer;
+		return EXIT_FAILURE;
+		}
+		catch(std::exception &e)
+		{
+		std::cout<<e.what();
+		delete [] perfBuffer;
+		delete [] predBuffer;
+		return EXIT_FAILURE;
+		}
 
 		std::cout<<"Performance:"<<std::endl;
 		for(unsigned int i=0; i<yte.cols(); ++i)
 			std::cout<<perfBuffer[i]<<" ";
 		std::cout<<std::endl;
 		
-		std::cout<<"Testing with (linear)"<<std::endl;
+		std::cout<<"Testing with (linear), writing opt to file"<<std::endl;
+		try
+		{
 		train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "linear","","tempfile");
 		test("tempfile", Xte.getData(), yte.getData(), predBuffer, perfBuffer, Xte.rows(), Xte.cols(), yte.cols(), "auto");
 		std::remove("tempfile");
+		}
+		catch(gException &e)
+		{
+		std::cout<<e.what();
+		delete [] perfBuffer;
+		delete [] predBuffer;
+		return EXIT_FAILURE;
+		}
+		catch(std::exception &e)
+		{
+		std::cout<<e.what();
+		delete [] perfBuffer;
+		delete [] predBuffer;
+		return EXIT_FAILURE;
+		}
 
 		std::cout<<"Performance:"<<std::endl;
 		for(unsigned int i=0; i<yte.cols(); ++i)

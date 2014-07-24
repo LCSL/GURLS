@@ -29,7 +29,8 @@ gurls::GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsi
 		else{
 			algorithm="krls";
 			gurlsWrap= new KernelRLSWrapper<T>("Train");
-			std::cout<<"algorithm forced to krls"<<std::endl;}
+			std::cout<<"algorithm forced to krls"<<std::endl;
+			}
 		
 		if(kernel=="linear" && algorithm=="krls")
 			 dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
@@ -48,7 +49,7 @@ gurls::GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsi
 		else{
 			const char * probList[] = { "Classification", "Regression"};
             typename KernelWrapper<T>::ProblemType prob =gurlsWrap->problemTypeFromData(Xtr, ytr);
-			std::cout<<"Problem set to "<<probList[prob];
+			std::cout<<"Problem automatically set to: "<<probList[prob];
 			gurlsWrap->setProblemType(prob);}
 
 		gurlsWrap->train(Xtr, ytr);
@@ -94,7 +95,7 @@ int test(gurls::GurlsOptionsList& model, T* X, T* Y, T* predbuff, T* perfbuff, u
 		}
 	else
 		{
-			std::cout<<"no kernel found... setting to linear";
+			std::cout<<"No kernel found... setting to linear"<<std::endl;
 			gurlsWrap = new KernelRLSWrapper<T>("test");
 			dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
 		}
@@ -109,8 +110,8 @@ int test(gurls::GurlsOptionsList& model, T* X, T* Y, T* predbuff, T* perfbuff, u
 			perfstring=model.getOptAsString("hoperf");
 		else
 			perfstring="macroavg";
-		std::cout<<"Performance measure set to default for selected problem: "<<perfstring<<std::endl;
 	}
+	std::cout<<"Performance measure set to: "<<perfstring<<std::endl;
 
         //load the test data
 	gMat2D<T> *pred= gurlsWrap->eval(Xte);
@@ -162,6 +163,12 @@ int test(std::string loadfile, T* X, T* Y, T* predbuff, T* perfbuff, unsigned lo
 			if (kernelType=="linear")
 				dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
 		}
+	else
+		{
+			std::cout<<"No kernel found... setting to linear"<<std::endl;
+			gurlsWrap = new KernelRLSWrapper<T>("test");
+			dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
+		}
 
 	gurlsWrap->loadOpt(model);
 	gMat2D<T> *perfMat;
@@ -173,9 +180,9 @@ int test(std::string loadfile, T* X, T* Y, T* predbuff, T* perfbuff, unsigned lo
 			perfstring=model.getOptAsString("hoperf");
 		else
 			perfstring="macroavg";
-		std::cout<<"Performance measure set to default for selected problem: "<<perfstring<<std::endl;
 	}
-
+	std::cout<<"Performance measure set to: "<<perfstring<<std::endl;
+	
         //load the test data
 	gMat2D<T> *pred= gurlsWrap->eval(Xte);
 	copy(predbuff, pred->getData(), pred->getSize());

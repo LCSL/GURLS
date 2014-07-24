@@ -25,7 +25,6 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
 	
 	unsigned int n=X.rows();
 	unsigned int d=X.cols();
-
     OptTaskSequence *seq = new OptTaskSequence();
     GurlsOptionsList * process = new GurlsOptionsList("processes", false);
     OptProcess* process1 = new OptProcess();
@@ -37,18 +36,20 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     {
         if(nlambda > 1ul)
         {
-			if(n>d)
-				*seq << "split:ho" << "kernel:linear" << "paramsel:hoprimal";
-			else
+			if(n>d){
+				*seq << "split:ho" << "paramsel:hoprimal";
+				*process1 << GURLS::computeNsave << GURLS::computeNsave;}
+			else{
 				*seq << "split:ho" << "kernel:linear" << "paramsel:hodual";
-            *process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
+				*process1 << GURLS::computeNsave << GURLS::computeNsave << GURLS::computeNsave;
+			}
         }
         else if(nlambda == 1ul)
         {
             if(this->opt->hasOpt("paramsel.lambdas"))
-            {
+            { if(n<=d){
                 *seq << "kernel:linear";
-                *process1 << GURLS::computeNsave;
+				*process1 << GURLS::computeNsave;}
              }
             else
                 throw gException("Please set a valid value for the regularization parameter, calling setParam(value)");
