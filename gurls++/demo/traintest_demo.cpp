@@ -84,10 +84,17 @@ int main(int argc, char* argv[])
 		std::cout<<"Running train and test functions..."<<std::endl;	
 		try
 		{
-		//train function return a GurlsOptionsList, containing the trained model parameters, "linear" is selected as kernel value in this demo
-		gurls::GurlsOptionsList opt = train(Xtr.getData(), ytr.getData(), Xtr.rows(), Xtr.cols(), ytr.cols(), "krls", "gaussian");
+		unsigned long n= Xtr.rows();
+		unsigned long d= Xtr.cols();
+		unsigned long t= ytr.cols();
+		unsigned long nTest= Xte.rows();
+
+		//train function returns a GurlsOptionsList pointer, containing the trained model parameters, "linear" is selected as kernel value in this demo
+		gurls::GurlsOptionsList* model = train(Xtr.getData(), ytr.getData(), n, d, t, "krls", "linear");
 		//test writes directly prediction and performance in predBuffer and perfBuffer, "auto" is selected as performance type in this demo
-		test(opt, Xte.getData(), yte.getData(), predBuffer, perfBuffer, Xte.rows(), Xte.cols(), yte.cols(), "auto");
+		test(*model, Xte.getData(), yte.getData(), predBuffer, perfBuffer, nTest, d, t, "auto");
+		
+		delete model;
 		}
 		catch(gException &e)
 		{

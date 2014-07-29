@@ -10,7 +10,7 @@ template <typename T>
 GurlsWrapper<T>::GurlsWrapper(const std::string& name):opt(NULL), name(name)
 {
     opt = new GurlsOptionsList(name, true);
-
+	this->isowner=true;
     setSplitProportion(0.2);
     setNparams(20);
     setProblemType(CLASSIFICATION);
@@ -19,6 +19,7 @@ GurlsWrapper<T>::GurlsWrapper(const std::string& name):opt(NULL), name(name)
 template <typename T>
 GurlsWrapper<T>::~GurlsWrapper()
 {
+if(this->isowner)
     delete opt;
 }
 
@@ -65,18 +66,30 @@ void GurlsWrapper<T>::setSavefile(const std::string &fileName)
 }
 
 template <typename T>
-void GurlsWrapper<T>::loadModel(const std::string &fileName)
+void GurlsWrapper<T>::loadOpt(const std::string &fileName)
 {
-	delete opt;
-    opt = new GurlsOptionsList("Loaded",false);
+	if(this->isowner)
+		delete opt;
+    opt = new GurlsOptionsList(name,false);
+	this->isowner=true;
     opt->load(fileName);
 }
 
 template <typename T>
-void GurlsWrapper<T>::loadOpt(GurlsOptionsList &optnew)
+void GurlsWrapper<T>::loadOpt(GurlsOptionsList &optnew, bool owner)
 {
-    delete opt;
-    opt = new GurlsOptionsList(optnew);
+	if(this->isowner)
+		delete opt;
+	if(owner)
+	{
+		opt = new GurlsOptionsList(optnew);
+		this->isowner=true;
+	}
+	else
+	{
+		opt = &optnew;
+		this->isowner=false;
+	}
 }
 
 template <typename T>

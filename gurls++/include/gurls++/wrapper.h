@@ -99,10 +99,12 @@ public:
     virtual gMat2D<T>* eval(const gMat2D<T> &X) = 0;
 	
     /**
-      * Estimates performance for an input matrix
+      * Estimates performance
       *
-      * \param[in] X Input matrix
-      * \returns Matrix of predicted labels
+      * \param[in] y Test labels matrix
+      * \param[in] pred Prediction labels matrix
+      * \param[in] perfname Performance type string
+      * \returns Matrix of performance
       */
     virtual gMat2D<T>* perf(const gMat2D<T> &y, gMat2D<T> &pred, const std::string perfname);
 
@@ -126,13 +128,18 @@ public:
 	virtual void setSavefile(const std::string &fileName);
 
     /**
-      * Loads a computed model from a file
+      * Loads a computed model from file
       *
-      * \param fileName name of the file containing the data to load
+      * \param fileName name of the file containing the GurlsOptionList to load
       */
-    virtual void loadModel(const std::string &fileName);
+    virtual void loadOpt(const std::string &fileName);
 
-	virtual void loadOpt(GurlsOptionsList &opt);
+    /**
+      * Loads a computed model from memory
+      *
+      * \param opt GurlsOptionsList to be loaded
+      */
+	virtual void loadOpt(GurlsOptionsList &opt, bool owner=true);
 
 //    virtual void exportModel(const std::string &fileName);
 //    virtual void importModel(const std::string &fileName);
@@ -180,7 +187,7 @@ protected:
 
     std::string name;       ///< Name of the options structure
     GurlsOptionsList *opt;  ///< Options structure where information about initial training is stored
-
+	bool isowner;
     ProblemType probType;   ///< Problem type
 
 };

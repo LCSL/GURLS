@@ -4,7 +4,7 @@ namespace gurls
 {
 
 template <typename T>
-gurls::GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsigned long t, 
+gurls::GurlsOptionsList* train(T* X, T* y, unsigned long n, unsigned long d, unsigned long t, 
 							std::string algorithm, std::string kernel, std::string problem, std::string savefile)
 {
     gMat2D<T> Xtr(X, n, d, false);
@@ -21,6 +21,9 @@ gurls::GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsi
 			std::cout<<"algorithm forced to krls"<<std::endl;
 			}
 		
+		GurlsOptionsList *retopt = new GurlsOptionsList(gurlsWrap->getOpt());
+		gurlsWrap->loadOpt(*retopt, false);
+
 		if(kernel=="linear" && algorithm=="krls")
 			 dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
 		else if(algorithm=="krls")
@@ -44,7 +47,6 @@ gurls::GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsi
 		gurlsWrap->train(Xtr, ytr);
 		if(savefile=="")
 			std::remove("temp");
-		GurlsOptionsList retopt=gurlsWrap->getOpt();
 		
 		delete gurlsWrap;
 		return retopt;
@@ -79,7 +81,7 @@ int test(gurls::GurlsOptionsList& model, T* X, T* Y, T* predbuff, T* perfbuff, u
 			dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
 		}
 
-	gurlsWrap->loadOpt(model);
+	gurlsWrap->loadOpt(model, false);
 	gMat2D<T> *perfMat;
     gMat2D<T> Xte(X, n, d, false);
 
@@ -123,58 +125,8 @@ int test(std::string loadfile, T* X, T* Y, T* predbuff, T* perfbuff, unsigned lo
 	
 	GurlsOptionsList model("model");
 	model.load(loadfile);
-	GurlsWrapper<T> *gurlsWrap;
 
-    try
-    {
-	if (model.hasOpt("kernel"))
-		{
-			gurlsWrap = new KernelRLSWrapper<T>("test");
-			std::string kernelType = model.getOptValue<OptString>("kernel.type");
-			if (kernelType=="linear")
-				dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
-		}
-	else
-		{
-			std::cout<<"No kernel found... setting to linear"<<std::endl;
-			gurlsWrap = new KernelRLSWrapper<T>("test");
-			dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
-		}
-
-	gurlsWrap->loadOpt(model);
-	gMat2D<T> *perfMat;
-    gMat2D<T> Xte(X, n, d, false);
-
-	if(perfstring!="macroavg" && perfstring != "rmse" && perfstring != "" && t>0 || perfstring=="auto")
-	{
-		if(model.hasOpt("hoperf"))
-			perfstring=model.getOptAsString("hoperf");
-		else
-			perfstring="macroavg";
-	}
-	std::cout<<"Performance measure set to: "<<perfstring<<std::endl;
-	
-        //load the test data
-	gMat2D<T> *pred= gurlsWrap->eval(Xte);
-	copy(predbuff, pred->getData(), pred->getSize());
-
-	if (t>0 && perfstring != "")
-	{
-		gMat2D<T> yte(Y, n, t, false);
-		perfMat = gurlsWrap->perf(yte, *pred, perfstring);
-		copy(perfbuff, perfMat->getData(), perfMat->getSize());
-		delete perfMat;
-	}
-	
-	delete gurlsWrap;
-    return EXIT_SUCCESS;
-    }
-    catch (gException& e)
-    {
-		delete gurlsWrap;
-        std::cout << e.getMessage() << std::endl;
-        return EXIT_FAILURE;
-    }
+	return test(model, X, Y, predbuff, perfbuff, n, d, t, perfstring);
 }
 
 }

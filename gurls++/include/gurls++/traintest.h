@@ -63,9 +63,9 @@ namespace gurls{
 //		- problem, an optional string containing the selected problem type ("classification" and "regression" available)
 //		- savefile, an optional string containing the path in which to save the model
 //gives in output
-//		- a GurlsOptionList with the trained model, ready to be used with "test" function
+//		- a GurlsOptionList pointer containing the trained model, ready to be used with "test" function
 template <typename T>
-GurlsOptionsList train(T* X, T* y, unsigned long n, unsigned long d, unsigned long t, 
+GurlsOptionsList* train(T* X, T* y, unsigned long n, unsigned long d, unsigned long t, 
 		   std::string algorithm="krls", std::string kerneltype="gaussian", std::string problem="", std::string savefile="");
 
 //"easy test" fucntion
