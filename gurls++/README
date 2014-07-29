@@ -27,12 +27,6 @@ The GURLS webpage can be found at: http://lcsl.mit.edu/gurls.html
 
 Installation
 ============
-
-You can download the precompiled binaries here
-	https://github.com/CBCL/GURLS/tree/master/precompiled-binaries
-and start using GURLS++, however such a version may be not optimized for your machine.
-
-If you want a version which is optimized for your machine, follow the steps described in the rest of the section.
  
 1) Dependencies
 ---------------
@@ -50,16 +44,14 @@ GURLS++ depends on several external libraries:
 2) Automatic dependencies building
 ----------------------------------
 
-The GURLS++ CMake configurator suppports automatic downloading and building 
-of all dependencies by setting the GURLS_USE_EXTERNALS variable to ON (See section 
-Configuriation below for details). 
-Due to licence restrictions, on Windows this "Superbuild" system does not permit to automatically 
-install a blas/lapack implementation so users must install manually blas/lapack libraries.
+The GURLS++ CMake configurator supports automatic downloading and building 
+of all dependencies by setting the GURLS_USE_EXTERNAL_* variables to ON (See section 
+Configuration below for details).
 
 3) Installing GURLS++ on Linux
 -------------------------------
 
-Below we describe how to build and install GURLS++ on Ubuntu (tested on Ubuntu 12.04). 
+Below we describe how to build and install GURLS++ on Ubuntu (tested on Ubuntu 12.04 and Ubuntu 13.10). 
 For other distributions, the same packages must be installed with the distribution-specific method.
 
 1. Install the cmake build system (www.cmake.org/)
@@ -92,25 +84,22 @@ these variables and how to set them to appropriate values.
 
  $ make install
 
-The command wil also install to the same path all the dependencies that user chose to build automatically.
+The command will also install to the same path all the dependencies that user chose to build automatically.
 
 4) Installing GURLS++ on Windows
 --------------------------------
 
 Below we describe how to build and install GURLS++ on Windows with Visual Studio (tested with 
-VS Express 2010 and VS Express 2008).
+VS Express 2010 and 2012).
 
 1. Install the CMake build system downloading the installer from http://cmake.org/cmake/resources/software.html.
 
-2. Install your favourite Blas/Lapack implementation. Under Windows AMD’s ACML is probably the easiest choice, 
-since they provide the library binaries for free, however it supports only compilers with 64 bits.
+2. Create a build directory (e.g. $GURLSROOT/build).
 
-3. Create a build directory (e.g. $GURLSROOT/build).
-
-4. Run the CMake GUI. You will have to set the source directory to $GURLSROOT directory, and the build directory 
+3. Run the CMake GUI. You will have to set the source directory to $GURLSROOT directory, and the build directory 
    to the directory created at the previous step. After pressing the configure button, you will have 
    to chose the generator for the project (e.g. Visual Studio 10). 
-   On Windows you may encounter the error message "error in conﬁguration process, project files may be invalid", 
+   On Windows you may encounter the error message "error in configuration process, project files may be invalid", 
    check that the you have writing rights to the path specified in the variable CMAKE_INSTALL_PREFIX. 
    If this is not the case, change such a variable to a folder to which you have writing rights and 
    press 'configure'. Now you have to set the values of some variables used for building and installing the 
@@ -118,9 +107,12 @@ since they provide the library binaries for free, however it supports only compi
    variables and how to set them to appropriate values. 
    After having configured the build options, press the generate button to create the solution file.
 
-5. Open the generated solution under Visual Studio and build it.
+4. Open the generated solution under Visual Studio and build it.
 
-6. Optional: install GURLS++ by explicitely building the install project included in the solution 
+5. If you used external Blas-Lapack, the Openblas DLLs will be automatically copied in the  "$GURLSROOT/build/bin" folder, 
+   please add it to your path to run executables.
+
+5. Optional: install GURLS++ by explicitly building the install project included in the solution 
   (it is not automatically built when building the solution).
 
 
@@ -140,17 +132,14 @@ command-line interface.
     - GURLSPP_BUILD_DOC (OFF): Enable the building of the GURLS++documentation using doxygen;
     - GURLS_USE_BINARY_ARCHIVES (ON): If set to ON, all data structures are stored in binary (rather than text) 
       files, saving storage space and time;
-    - GURLS_USE_EXTERNALS (ON): Enable automatic building of external dependencies.
-      If set to ON CMake also evaluates the variables
-        - GURLS_USE_EXTERNAL_BLAS_LAPACK (ON): Enable automatic building of blas and lapack, 
-          using OpenBLAS (LINUX-ONLY).
-        - GURLS_USE_EXTERNAL_BOOST (ON): Enable automatic building of boost. If set to OFF, press 'advanced' 
+    - GURLS_USE_EXTERNAL_BLAS_LAPACK (ON): Enable automatic building of Blas and Lapack, using OpenBLAS, under linux, 
+	  or automatic linking to the provided OpenBLAS pre-built libraries, under windows.
+    - GURLS_USE_EXTERNAL_BOOST (ON): Enable automatic building of boost. If set to OFF, press 'advanced' 
           to visualize the variables related to the BOOST library, typically you have to specify only the 
           variable BOOST_INCLUDE_DIR;
-        For each variable which is set to OFF, you must specify the path to the corresponding library.
-      If GURLS_USE_EXTERNALS is set to OFF you have to manually specify the path to all of the above libraries.
 
-3. If CMake does not find some required library, an error message will be displayed. Change the path to required 
+3. For each variable GURLS_USE_EXTERNAL_* which is set to OFF, you must specify the path to the corresponding library.
+   If CMake does not find some required library, an error message will be displayed. Change the path to required 
    library and press 'configure' again.
    
 4. In the main screen you may change a number of variables. Most of them can be left unchanged, but some must be 
