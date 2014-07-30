@@ -67,8 +67,8 @@ public:
      *   - nholdouts (default)
      *
      * \return adds to opt the field split, which is a list containing the following fields:
-     *  - indices = nholdoutsxn matrix, each row contains the indices of training and validation samples
-     *  - lasts = nholdoutsx1 array, each row contains the number of elements of training set, which will be build taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
+     *  - indices = n x nholdouts matrix, each column contains the indices of training and validation samples
+     *  - lasts = nholdout x 1 array, each row contains the number of elements of training set, which will be built taking the samples corresponding to the first lasts+1 elements of indices, the remainder indices will be used for validation.
      */
 
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
@@ -119,7 +119,7 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
 
     delete[] y;
 
-    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(nSplits, n);
+    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(n, nSplits);
     unsigned long* indices = m_indices->getData();
 
     int count_tr;

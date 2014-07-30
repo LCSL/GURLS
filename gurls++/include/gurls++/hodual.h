@@ -174,7 +174,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
     const gMat2D< unsigned long > &indices_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("indices");
     const gMat2D< unsigned long > &lasts_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("lasts");
 
-	const unsigned long n = indices_mat.cols();
+	const unsigned long n = indices_mat.rows();
 	
     const unsigned long *lasts = lasts_mat.getData();
     const unsigned long* indices_buffer = indices_mat.getData();

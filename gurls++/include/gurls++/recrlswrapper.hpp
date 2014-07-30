@@ -187,7 +187,7 @@ void RecursiveRLSWrapper<T>::retrain()
     split->removeOpt("lasts");
 
 
-    gMat2D<unsigned long>* indices = new gMat2D<unsigned long>(1, nTot);
+    gMat2D<unsigned long>* indices = new gMat2D<unsigned long>(nTot, 1);
     gMat2D<unsigned long>* lasts = new gMat2D<unsigned long>(1, 1);
 
     set(indices->getData(), 0ul, nTot-nva);

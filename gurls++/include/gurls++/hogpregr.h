@@ -109,7 +109,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
     const gMat2D< unsigned long > &indices_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("indices");
     const gMat2D< unsigned long > &lasts_mat = split->getOptValue<OptMatrix<gMat2D< unsigned long > > >("lasts");
 
-	const unsigned long n = indices_mat.cols();
+	const unsigned long n = indices_mat.rows();
 	
     const unsigned long *lasts = lasts_mat.getData();
     const unsigned long *indices = indices_mat.getData();
@@ -203,7 +203,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 //            va = opt.split.va;
 //        end
         unsigned long last = lasts[nh];
-        copy(tr, indices+nh, n, 1, 1);
+        copy(tr, indices+n*nh, n, 1, 1);
         va = tr+last;
         const unsigned long va_size = n-last;
 
