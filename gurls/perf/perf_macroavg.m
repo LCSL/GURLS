@@ -29,10 +29,11 @@ y_pred = opt.pred;
 
 if size(y,2) == 1
 	predlab = sign(y_pred);
+	ylab = sign(y_true);
 
-	p.acc = mean(predlab == y);
-	p.forho = mean(predlab == y);
-	p.forplot = mean(predlab == y);
+	p.acc = mean(predlab == ylab);
+	p.forho = mean(predlab == ylab);
+	p.forplot = mean(predlab == ylab);
 else
 	%% Assumes single label prediction.
 	[dummy, predlab] = max(y_pred,[],2);

@@ -129,8 +129,8 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
     {
 //        predlab = sign(y_pred);
         T* predLab = sign(y_pred.getData(), y_pred.getSize());
-
-        T* tmp = compare<T>(predLab, Y.getData(), rows, &eq);
+		T* yLab = sign(Y.getData(), Y.getSize());
+        T* tmp = compare<T>(predLab, yLab, rows, &eq);
 
 //        p.acc = mean(predlab == y);
         mean(tmp, acc, rows, 1, 1);
@@ -140,6 +140,7 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
 
         delete [] tmp;
         delete [] predLab;
+        delete [] yLab;
     }
     else
     {
