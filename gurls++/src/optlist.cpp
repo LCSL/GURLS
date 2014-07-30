@@ -88,7 +88,8 @@ GurlsOptionsList::GurlsOptionsList(std::string ExpName, bool usedefopt): GurlsOp
 #else
         (*table)["savefile"] = new OptString(ExpName.append(".txt"));
 #endif
-
+		
+        (*table)["todisk"] = new OptNumber(1);
         // ================================================== Algorithm options
 
         //		opt.kernel.type = 'rbf';

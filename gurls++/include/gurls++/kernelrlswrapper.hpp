@@ -19,6 +19,7 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     this->opt->removeOpt("optimizer");
     this->opt->removeOpt("seq");
     this->opt->removeOpt("processes");
+    this->opt->removeOpt("todisk");
 
     const unsigned long nlambda = static_cast<unsigned long>(this->opt->getOptAsNumber("nlambda"));
     const unsigned long nsigma = static_cast<unsigned long>(this->opt->getOptAsNumber("nsigma"));
@@ -31,6 +32,7 @@ void KernelRLSWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     process->addOpt("one", process1);
     this->opt->addOpt("seq", seq);
     this->opt->addOpt("processes", process);
+    this->opt->addOpt("todisk", new OptNumber(0));
 
     if(this->kType == KernelWrapper<T>::LINEAR)
     {

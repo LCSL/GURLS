@@ -224,7 +224,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         //%end
 
         GurlsOptionsList *timelist;
-
+		
         if (opt.hasOpt("time"))
             timelist = GurlsOptionsList::dynacast(opt.getOpt("time"));
         else
@@ -233,6 +233,9 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
             opt.addOpt("time", timelist);
         }
 
+		int todisk=1;
+        if (opt.hasOpt("todisk"))
+			todisk=opt.getOptAsNumber("todisk");
 
 //        std::vector <double> process_time(seq->size(), 0.0);
         gMat2D<T>* process_time_vector = new gMat2D<T>(1, seq->size());
@@ -457,7 +460,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
             }
         }
 
-        if(save)
+        if(save && todisk)
         {
             std::cout << std::endl << "Saving opt in " << saveFile << std::endl;
             opt.save(saveFile);

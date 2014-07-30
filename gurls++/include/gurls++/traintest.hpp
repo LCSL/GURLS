@@ -29,11 +29,6 @@ gurls::GurlsOptionsList* train(T* X, T* y, unsigned long n, unsigned long d, uns
 		else if(algorithm=="krls")
 			dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::RBF);
 
-		if(savefile!="")
-			gurlsWrap->setSavefile(savefile);	
-		else
-			gurlsWrap->setSavefile("temp");
-
 		if(problem=="classification"){
 			gurlsWrap->setProblemType(gurlsWrap->CLASSIFICATION);}
 		else if(problem=="regression")
@@ -45,9 +40,10 @@ gurls::GurlsOptionsList* train(T* X, T* y, unsigned long n, unsigned long d, uns
 			gurlsWrap->setProblemType(prob);}
 
 		gurlsWrap->train(Xtr, ytr);
-		if(savefile=="")
-			std::remove("temp");
 		
+		if(savefile!="")
+			retopt->save(savefile);
+
 		delete gurlsWrap;
 		return retopt;
     }
