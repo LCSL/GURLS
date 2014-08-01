@@ -22,7 +22,7 @@ Introduction
 GURLS++ is a C++ software library for regression and (multiclass) classification 
 based on the Regularized Least Squares (RLS) loss function.
 
-The GURLS webpage can be found at: http://lcsl.mit.edu/gurls.html
+The GURLS webpage can be found at: http://lcsl.mit.edu/#/downloads/gurls
 
 
 Installation
@@ -39,8 +39,9 @@ GURLS++ depends on several external libraries:
   - Intel’s MKL;
   - Netlib’s reference implementation: http://www.netlib.org/blas and http://www.netlib.org/lapack/;
   - OpenBLAS;
-  - Boost’s (v1.46.0 or higher) libraries serialization, date_time, filesystem, unit_test_framework, system, signals.
-
+  - Boost’s (v1.46.0 or higher) libraries serialization, date_time, filesystem, 
+    unit_test_framework, system, signals.
+	
 2) Automatic dependencies building
 ----------------------------------
 
@@ -96,21 +97,22 @@ VS Express 2010 and 2012).
 
 2. Create a build directory (e.g. $GURLSROOT/build).
 
-3. Run the CMake GUI. You will have to set the source directory to $GURLSROOT directory, and the build directory 
-   to the directory created at the previous step. After pressing the configure button, you will have 
-   to chose the generator for the project (e.g. Visual Studio 10). 
-   On Windows you may encounter the error message "error in configuration process, project files may be invalid", 
-   check that the you have writing rights to the path specified in the variable CMAKE_INSTALL_PREFIX. 
-   If this is not the case, change such a variable to a folder to which you have writing rights and 
-   press 'configure'. Now you have to set the values of some variables used for building and installing the 
-   libraries according to your preferences. See the section Configuration below for more information on these 
-   variables and how to set them to appropriate values. 
+3. Run the CMake GUI. You will have to set the source directory to $GURLSROOT directory, and the build
+   directory to the directory created at the previous step. After pressing the configure button, 
+   you will have to chose the generator for the project (e.g. Visual Studio 10). 
+   On Windows you may encounter the error message "error in configuration process, 
+   project files may be invalid", check that the you have writing rights to the path specified 
+   in the variable CMAKE_INSTALL_PREFIX. If this is not the case, change such a variable
+   to a folder to which you have writing rights and press 'configure'. 
+   Now you have to set the values of some variables used for building and installing the 
+   libraries according to your preferences. See the section Configuration below for more information
+   on these variables and how to set them to appropriate values. 
    After having configured the build options, press the generate button to create the solution file.
 
 4. Open the generated solution under Visual Studio and build it.
 
-5. If you used external Blas-Lapack, the Openblas DLLs will be automatically copied in the  "$GURLSROOT/build/bin" folder, 
-   please add it to your path to run executables.
+5. If you used external Blas-Lapack, the Openblas DLLs will be automatically copied in the 
+	"$GURLSROOT/build/bin" folder, please add it to your path to run executables.
 
 5. Optional: install GURLS++ by explicitly building the install project included in the solution 
   (it is not automatically built when building the solution).
@@ -130,32 +132,32 @@ command-line interface.
     - GURLS_BUILD_GURLSPP (ON): Build GURLS++. If set to ON CMake also evaluates the variables
     - GURLSPP_BUILD_DEMO (ON): Enable the building of the GURLS++ demo programs;
     - GURLSPP_BUILD_DOC (OFF): Enable the building of the GURLS++documentation using doxygen;
-    - GURLS_USE_BINARY_ARCHIVES (ON): If set to ON, all data structures are stored in binary (rather than text) 
-      files, saving storage space and time;
-    - GURLS_USE_EXTERNAL_BLAS_LAPACK (ON): Enable automatic building of Blas and Lapack, using OpenBLAS, under linux, 
-	  or automatic linking to the provided OpenBLAS pre-built libraries, under windows.
+    - GURLS_USE_BINARY_ARCHIVES (ON): If set to ON, all data structures are stored in binary
+	 (rather than text) files, saving storage space and time;
+    - GURLS_USE_EXTERNAL_BLAS_LAPACK (ON): Enable automatic building of Blas and Lapack, using OpenBLAS,
+   	  under linux, or automatic linking to the provided OpenBLAS pre-built libraries, under windows.
     - GURLS_USE_EXTERNAL_BOOST (ON): Enable automatic building of boost. If set to OFF, press 'advanced' 
-          to visualize the variables related to the BOOST library, typically you have to specify only the 
-          variable BOOST_INCLUDE_DIR;
+      to visualize the variables related to the BOOST library, typically you have to specify only the 
+      variable BOOST_INCLUDE_DIR;
 
-3. For each variable GURLS_USE_EXTERNAL_* which is set to OFF, you must specify the path to the corresponding library.
-   If CMake does not find some required library, an error message will be displayed. Change the path to required 
-   library and press 'configure' again.
+3. For each variable GURLS_USE_EXTERNAL_* which is set to OFF, you must specify the path
+   to the corresponding library. If CMake does not find some required library, an error 
+   message will be displayed. Change the path to required library and press 'configure' again.
    
-4. In the main screen you may change a number of variables. Most of them can be left unchanged, but some must be 
-   set to appropriate values. The following are the variables whose values should be checked:
+4. In the main screen you may change a number of variables. Most of them can be left unchanged, but some 
+   must be set to appropriate values. The following are the variables whose values should be checked:
     - BLAS_LAPACK_IMPLEMENTATION. Allows user to specify an implementation of the Blas/Lapack routines. 
       Available choices are: ACML, ATLAS, MKL, NETLIB, OPENBLAS. Depending on the choice you make, 
-      CMake will try to find the libraries in standard locations in the system. Normally this process should run 
-      fine, however, in case the libraries have been installed in some non-standard directory, you may have 
-      to manually specify their location.
+      CMake will try to find the libraries in standard locations in the system. 
+	  Normally this process should run fine, however, in case the libraries have been installed 
+	  in some non-standard directory, you may have to manually specify their location.
       
-5. Once all variables have been set, press 'configure' again, and CMake will check the settings. As in step (3), 
-   if something is wrong an error message will be displayed and you will have to go back to the main screen to 
-   tweak the configuration.
+5. Once all variables have been set, press 'configure' again, and CMake will check the settings. 
+   As in step (3), if something is wrong an error message will be displayed and you will have 
+   to go back to the main screen to tweak the configuration.
 
-6. When the settings are correct, the option ’generate’ will appear. Press 'generate'. CMake will generate the 
-   files and exit.
+6. When the settings are correct, the option ’generate’ will appear. Press 'generate'. 
+   CMake will generate the files and exit.
 
 After the build files (e.g. the Makefile under Linux) have been generated, you can proceed as explained above.
 
@@ -183,10 +185,11 @@ Documentation
 
 - Further documentation	
 	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
-          together with the Developer's Guide. GURLS is designed for easy expansion. Give it a try!
-	  Remark: GURLS++ is still under development please contact the authors before starting your own development.
+	  together with the Developer's Guide. GURLS is designed for easy expansion. Give it a try!
+	  Remark: GURLS++ is still under development please contact the authors before starting 
+	  your own development.
 	
 	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive RLS API 
 	
-    * In wrappers-tutorial.pdf you can find a simple Tutorial for the gurls++ weappers
+	* In wrappers-tutorial.pdf you can find a simple Tutorial for the gurls++ weappers
 	

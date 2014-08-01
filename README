@@ -20,8 +20,7 @@ The GRAND UNIFIED REGULARIZED LEAST SQUARES software library comprises the follo
 -bGURLS (b is for big), a MATLAB software library that allows to use RLS on very large
  matrices by means of memory-mapped storage and a simple distributed task manager.
 
--GURLS++, a C++ standalone implementation of GURLS, with additional simple API's for specific learning 
- pipelines
+-GURLS++, a C++ standalone implementation of GURLS, with additional simple API's for specific learning pipelines
 
 -bGURLS++, a  C++ standalone implementation of bGURLS.
 
@@ -30,7 +29,7 @@ Documentation
 =============
 
 - Webpage 
-	the GURLS webpage can be found at: http://lcsl.mit.edu/gurls.html
+	the GURLS webpage can be found at: http://lcsl.mit.edu/#/downloads/gurls
 
 - Reference paper
 	Tacchetti,  Mallapragada, Santoro and Rosasco,
@@ -57,12 +56,13 @@ Documentation
 - Further Documentation
 	* Have a look at the README files of each individual package.
 	
-	* In gurls-manual.pdf you can find both the installation instructions and user manual, 
-          together with the Matlab and C++ Developer's Guide. GURLS is designed 
-	  for easy expansion. Give it a try!
+	* In gurls-manual.pdf you can find both the installation instructions 
+	  and user manual, together with the Matlab and C++ Developer's Guide. 
+	  GURLS is designed for easy expansion. Give it a try!
 	
 	* In recursiveRLS-tutorial.pdf you can find a simple Tutorial for the Recursive 
 	  RLS API 
 
-	* The description of the available methods, demos and data for each package can be found at
+	* The description of the available methods, demos and data 
+	  for each package can be found at
 	 	https://github.com/CBCL/GURLS/wiki/4-Code-Description
