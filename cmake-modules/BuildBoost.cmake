@@ -93,6 +93,8 @@ if(NOT MSVC)
 
 set(Boost_INCLUDE_DIR ${EXTERNAL_PREFIX}/include)
 
+set(Boost_INCLUDE_DIRS ${EXTERNAL_PREFIX}/include)
+
 else()
 
 set(TAG_TOOLSET ${CONF_TOOLSET}0)

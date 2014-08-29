@@ -84,7 +84,7 @@ option(GURLS_BUILD_BGURLSPP "Build Bgurls++" OFF)
     #if (GURLS_BUILD_BGURLSPP) #not ready for this yet...
     #	set (export_libraries ${export_libraries} ${BGurls++_LIBRARY})
     #endif()
-	set (export_libraries ${export_libraries} ${BLAS_LAPACK_LIBRARIES})
+	set (export_libraries ${export_libraries} ${BLAS_LAPACK_LIBRARIES} ${Boost_SERIALIZATION_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
     configure_file(cmake-modules/GurlsConfig.cmake.in ${PROJECT_BINARY_DIR}/GurlsConfig.cmake @ONLY)
 
     #Gurls++Config.cmake for installation
