@@ -119,7 +119,7 @@ public:
     /**
       * Copies all elements of a given vector \c v to the vector starting from \c start
       */
-    void set(const gVec<T>& v, unsigned long start=0) { this->set(v.data(), v.size(), start); }
+    void set(const gVec<T>& v, unsigned long start=0) { this->set(v.data, v.size, start); }
 
     /**
       * Returns a const reference to the i-th element

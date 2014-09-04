@@ -142,7 +142,7 @@ void gVec<T>::resize(unsigned long n) {
 template <typename T>
 gVec<T> gVec<T>::subvec(unsigned int len, unsigned int start) const {
     gVec<T> v(len);
-    v.set(&(this->data()[start]), len);
+    v.set(&(this->data[start]), len);
     return v;
 }
 

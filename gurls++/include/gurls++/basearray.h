@@ -149,22 +149,22 @@ public:
     /**
       * Returns a const pointer to the begin of vector buffer
       */
-    const T* begin() const { return this->data(); }
+    const T* begin() const { return this->data; }
 
     /**
       * Returns a non-const pointer to the begin of vector buffer
       */
-    T* begin() { return this->data(); }
+    T* begin() { return this->data; }
 
     /**
       * Returns a const pointer to the end of vector buffer
       */
-    const T* end() const { return (this->data() + this->size); }
+    const T* end() const { return (this->data + this->size); }
 
     /**
       * Returns a non-const pointer to the end of vector buffer
       */
-    T* end() { return (this->data() + this->size); }
+    T* end() { return (this->data + this->size); }
 
 
     /**
