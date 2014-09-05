@@ -81,6 +81,8 @@
 #include "gurls++/rlsprimalrecinit.h"
 #include "gurls++/rlsprimalrecupdate.h"
 #include "gurls++/rlsrandfeats.h"
+#include "gurls++/rlsprimalrecinitcholesky.h"
+#include "gurls++/rlsprimalrecupdatecholesky.h"
 
 #include "gurls++/loocvprimal.h"
 #include "gurls++/loocvdual.h"

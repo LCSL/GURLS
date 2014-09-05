@@ -89,6 +89,12 @@ class RLSPrimalRecUpdate;
 template <typename T>
 class RLSRandFeats;
 
+template <typename T>
+class RLSPrimalRecInitCholesky;
+
+template <typename T>
+class RLSPrimalRecUpdateCholesky;
+
 /**
  * \ingroup Exceptions
  *
@@ -149,6 +155,10 @@ public:
         return new RLSPrimalRecUpdate<T>;
       if(id == "rlsrandfeats")
         return new RLSRandFeats<T>;
+      if(id == "rlsprimalrecinitcholesky")
+        return new RLSPrimalRecInitCholesky<T>;
+      if(id == "rlsprimalrecupdatecholesky")
+        return new RLSPrimalRecUpdateCholesky<T>;
 
         throw BadOptimizerCreation(id);
     }
