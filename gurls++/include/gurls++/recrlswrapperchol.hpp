@@ -1,6 +1,4 @@
 
-//#include "gurls.h"
-//#include "optlist.h"
 #include "gurls++/recrlswrapperchol.h"
 
 namespace gurls

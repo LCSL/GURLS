@@ -4,7 +4,7 @@
   * Copyright (C) 2011-1013, IIT@MIT Lab
   * All rights reserved.
   *
-  * authors:  Raffaello Camoriano
+  * author:  Raffaello Camoriano
   * email:   raffaello.camoriano@iit.it
   * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
@@ -63,10 +63,10 @@ class RLSPrimalRecInitCholesky: public Optimizer<T>
 
 public:
     /**
-     * Computes a classifier for the primal formulation of RLS, computes and stores the Cholesky decomposition of the 
+     * Computes a classifier for the primal formulation of RLS, storing the Cholesky decomposition of the 
      * covariance matrix.
      * The regularization parameter is set to the one found in the field paramsel of opt.
-	 * The variables necessary for further recursive update (R, W, b) are stored in the output structure
+     * The variables necessary for further recursive update (R, W, b) are stored in the output structure
      * In case of multiclass problems, the regularizers need to be combined with the function specified inthe field singlelambda of opt
      *
      * \param X input data matrix
@@ -87,19 +87,18 @@ public:
 template <typename T>
 GurlsOptionsList* RLSPrimalRecInitCholesky<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {
-    //	lambda = opt.singlelambda(opt.paramsel.lambdas);
+    //lambda = opt.singlelambda(opt.paramsel.lambdas);
     const gMat2D<T> &ll = opt.getOptValue<OptMatrix<gMat2D<T> > >("paramsel.lambdas");
     T lambda = opt.getOptAs<OptFunction>("singlelambda")->getValue(ll.getData(), ll.getSize());
     
     // NOTE: An error should be thrown if paramsel.lambdas is not defined
 
-    //	[n,d] = size(X);
+    //[n,d] = size(X);
     const unsigned long n = opt.hasOpt("nTot")? static_cast<unsigned long>(opt.getOptAsNumber("nTot")) : X.rows();
     unsigned long d;
     unsigned long t;
 
-
-    //	XtX = X'*X;
+    //XtX = X'*X;
     T* XtX;
     if(!opt.hasOpt("kernel.XtX"))
     {
@@ -115,7 +114,7 @@ GurlsOptionsList* RLSPrimalRecInitCholesky<T>::execute(const gMat2D<T>& X, const
         copy(XtX, XtX_mat.getData(), d*d);
     }
 
-    //	Xty = X'*y;
+    //Xty = X'*y;
     T* Xty;
     if(!opt.hasOpt("kernel.Xty"))
     {
@@ -139,25 +138,24 @@ GurlsOptionsList* RLSPrimalRecInitCholesky<T>::execute(const gMat2D<T>& X, const
 
     // Cholesky factorization
 
-    //	R = chol(XtX);
+    //R = chol(XtX);
     T* R = new T[d*d];
-    cholesky(XtX, d, d, R);	// Computes the upper Cholesky factor by default
+    cholesky(XtX, d, d, R);     // Computes the upper Cholesky factor by default
     gMat2D<T> *R_mat = new gMat2D<T>(R, d, d, 1);
     
     // Initialize weights vector
     // W = R\(R'\Xty);
     gMat2D<T> *W = new gMat2D<T>(d, t);
 
-    copy(W->getData(), Xty, W->getSize());      // WARNING
+    copy(W->getData(), Xty, W->getSize());
     
     // Forward substitution
-    mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasTrans);    //(R'\Xty) WARNING
+    mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasTrans);    //(R'\Xty)
     
     // Backward substitution
-    mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasNoTrans);  //R\(R'\Xty) WARNING
+    mldivide_squared(R, W->getData(), d, d, W->rows(), W->cols(), CblasNoTrans);  //R\(R'\Xty)
     
     // Initialize b
-    
     gMat2D<T> *b = new gMat2D<T>(Xty, d, t, 1);
     
     delete[] XtX;
@@ -165,27 +163,12 @@ GurlsOptionsList* RLSPrimalRecInitCholesky<T>::execute(const gMat2D<T>& X, const
     //Save results in OPT
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
     
-
     std::cout << "W:" << std::endl;
     std::cout << *W << std::endl;
     std::cout << "b:" << std::endl;
     std::cout << *b << std::endl;
     std::cout << "R:" << std::endl;
     std::cout << *R_mat << std::endl;
-    // DEBUG ///////////////////
-//     std::cout << "-----------------------------------------------" << std::endl;
-//     std::cout << "----- Initial R (10x10 submatrix) -----" << std::endl;
-//     std::cout.precision(3);
-//     std::cout.width(5);
-//     for (int foo = 0; foo < 8 ; foo++){
-//         for (int bar = 0; bar < 8; bar++){
-//      
-//             std::cout<< (*R_mat)(foo , bar) << "\t";
-//         }
-//         std::cout << std::endl;
-//     }
-//     std::cout << "-----------------------------------------------" << std::endl;
-    ////////////////////////////
     
     //  cfr.W = W;
     optimizer->addOpt("W", new OptMatrix<gMat2D<T> >(*W));

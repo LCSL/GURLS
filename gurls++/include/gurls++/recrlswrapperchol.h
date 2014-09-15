@@ -4,8 +4,8 @@
   * Copyright (C) 2011-1013, IIT@MIT Lab
   * All rights reserved.
   *
-  * author:  M. Santoro
-  * email:   msantoro@mit.edu
+  * author:  Raffaello Camoriano
+  * email:   raffaello.camoriano@iit.it
   * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
   * Redistribution and use in source and binary forms, with or without
@@ -49,14 +49,16 @@ namespace gurls
 
 /**
   * \ingroup Wrappers
-  * \brief RecursiveRLSWrapper is the sub-class of GurlsWrapper that implements recursive update
-  * of the RLS estimator with retraining capability.
+  * \brief RecursiveRLSCholUpdateWrapper is the sub-class of GurlsWrapper that implements recursive Cholesky update
+  * of the RLS estimator.
+  * 
+  * Hyperparameter retuning is not available.
   *
   * Initial parameter selection and training are carried out on a initial set of samples via method train() 
   * which stores all information necessary for efficient recursive update in the options structure.
   * Once the information about initial training is stored, given a new input-output pair, 
   * the RLS estimator can be efficiently updated via the method update().
-  * Every time a new input-output pair is available, method update() can be invoked again. Parameter selection and RLS estimation ( method retrain()) can be repeated after any number of online updates.
+  * Every time a new input-output pair is available, method update() can be invoked again.
   * Finally, the eval() method estimates the output for new data.
   */
 template<typename T>
@@ -95,7 +97,7 @@ public:
     gMat2D<T>* eval(const gMat2D<T> &X);
 
     /**
-      * WARNING: This functionality has not been implemented yet
+      * NOTE: This functionality has not been implemented yet
       * Selection of the new regularization parameter.
       * \brief Selection is performed via hold-out validation using the subset
       * Xva,yva of the total training set as validation set.

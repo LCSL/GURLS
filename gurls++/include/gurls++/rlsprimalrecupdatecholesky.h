@@ -4,8 +4,8 @@
   * Copyright (C) 2011-1013, IIT@MIT Lab
   * All rights reserved.
   *
-  * authors:  M. Santoro
-  * email:   msantoro@mit.edu
+  * author:  Raffaello Camoriano
+  * email:   raffaello.camoriano@iit.it
   * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
   * Redistribution and use in source and binary forms, with or without
@@ -65,7 +65,7 @@ class RLSPrimalRecUpdateCholesky: public Optimizer<T>
 {
 public:
     /**
-     * Computes a classifier for the primal formulation of RLS, using a
+     * Computes an estimator for the primal formulation of RLS, using a
      * recursive Cholesky update, starting from an initial estimator found in opt.optimizer.
      *
      * \param X input data matrix
@@ -88,7 +88,7 @@ template <typename T>
 GurlsOptionsList* RLSPrimalRecUpdateCholesky<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList &opt)
 {   
     // Get significant sizes
-    //	[n,d] = size(X);
+    //  [n,d] = size(X);
 
     const unsigned long n = X.rows();   // Number of updates to be performed
     const unsigned long d = X.cols();
@@ -117,15 +117,13 @@ GurlsOptionsList* RLSPrimalRecUpdateCholesky<T>::execute(const gMat2D<T>& X, con
     for(unsigned long i=0; i<n; i++)
     {
         // Get pointer to the i-th input
-//         gVec<T> v( X[i] );
-//         double* input =  v.getData();
         double* input = (double*) X.getData() + i;
         
         // Rank-1 Cholesky update of R
         cholupdate(*R, *input, 1);
 
         // Update b = b + X[i]ty
-        // TODO: Maybe the update of b can be done in 1-shot outside the for loop.
+        // NOTE: Maybe the update of b can be done in 1-shot outside the for loop.
         gMat2D<T> transposedinput(d, 1);
         X.transpose(transposedinput);
         gMat2D<T> res( d , t );          // Temporary variable for result storage
