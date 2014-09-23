@@ -1,12 +1,11 @@
-function [p] = perf_gpregr(X, y, opt)
+function [p] = perf_gpregr(X,y, opt)
 
-%	perf_gpregr(X, y, opy)
+%	perf_gpregr(opt)
 % 	Computes the predictive log probability for gaussian process regression
 %
 % INPUTS:
-% -X: not used
-% -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
+%   -y: labels matrix
 %   fields that need to be set through previous gurls tasks:
 %       -pred (set by the pred_* routines)
 % 

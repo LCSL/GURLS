@@ -24,6 +24,6 @@ if isfield (opt,'perf')
 		      % unless they have the same name
 end
 diff 		= opt.pred - y;
-p.abserr		= mean(abs(diff));
+p.abserr	= mean(abs(diff));
 p.forho 	= -p.abserr;
 p.forplot 	= p.abserr;

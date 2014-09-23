@@ -1,13 +1,12 @@
-function [X] = norm_zscore(X, y, opt)
-% norm_zscore(X,Y,OPT)
+function [X] = norm_zscore(X,y, opt)
+% norm_zscore(OPT)
 % Normalizes the data, centering them and rescaling them so that each dimension has std. deviation 1.
 % Then saves stats in a file with name root specified in opt.name 
 %
 % INPUTS:
-% -X: input data matrix
-% -y: not used
 % -OPT: structure of options with the following fields (and subfields):
 %		- opt.name
+%       - opt.X
 % 
 % OUTPUT:
 % -X: normalized input data matrix

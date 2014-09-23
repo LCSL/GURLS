@@ -6,8 +6,6 @@ function [cfr] = rls_primal (X, y, opt)
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)

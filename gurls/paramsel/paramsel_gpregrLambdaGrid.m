@@ -1,11 +1,9 @@
-function vout = paramsel_gpregrLambdaGrid(X,y,opt)
-% paramsel_gpregrLambdaGrid(X,Y,OPT)
+function vout = paramsel_gpregrLambdaGrid(X,y, opt)
+% paramsel_gpregrLambdaGrid(X,y, OPT)
 % Performs parameter selection for gaussian process regression by 
 % maximizing the likelihood.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- kernel.K (set by the kernel_* routines)
@@ -22,24 +20,26 @@ function vout = paramsel_gpregrLambdaGrid(X,y,opt)
 % -lambdas: array of values of the regularization parameter lambda
 %           minimizing the validation error for each class
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 n = size(y,1);
         
-if isfield(opt,'lambdamin')
+if isprop(opt,'lambdamin')
     lmin = opt.lambdamin;
 else
     lmin = 0.001;
 end
-if isfield(opt,'lambdamax')
+if isprop(opt,'lambdamax')
     lmax = opt.lambdamax;
 else
     lmax = 10;
 end
-powers = linspace(0,1,tot);
+powers = linspace(0,1,opt.nlambda);
 guesses = lmin.*(lmax/lmin).^(powers);
 	
 
@@ -52,12 +52,12 @@ guesses = lmin.*(lmax/lmin).^(powers);
 % powers = linspace(0,1,tot);
 % guesses = lmin.*(lmax/lmin).^(powers);
 
-for i = 1:tot
+for i = 1:opt.nlambda
     opt.paramsel.lambdas = guesses(i);
-    opt.rls = rls_gpregr(X,y,opt);
+    opt.newprop('rls', rls_gpregr(X,y,opt));
     perf(i,:) = opt.rls.logprob;
-    vout.datafit(i,:) = opt.rls.datafit;
-    vout.penalty(i,:) = opt.rls.penalty;
+    %vout.datafit(i,:) = opt.rls.datafit;
+    %vout.penalty(i,:) = opt.rls.penalty;
 
 end
 [dummy,idx] = max(perf,[],1);

@@ -1,13 +1,11 @@
-function [cfr] = rls_primalr(X, y, opt)
-% rls_primalr(X,Y,OPT)
+function [cfr] = rls_primalr(X,y, opt)
+% rls_primalr(X, y, opt)
 % computes a classifier for the primal formulation of RLS.
 % It uses a randomized method to solve the associated linear system.
 % The regularization parameter is set to the one found in opt.paramsel.
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)
@@ -32,7 +30,7 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 XtX = X'*X; % n\lambda is added in rls_eigen;
 
 % tic;
-k = round(opt.eig_percentage*d/100);
+k = max(round(opt.eig_percentage*d/100),1);
 [Q,L,U] = tygert_svd(XtX,k);
 % cfr.dcomptime = toc;
 Q = double(Q);
@@ -40,7 +38,7 @@ L = double(diag(L));
 
 Xty = X'*y;
 
-if isfield(opt,'W0') 
+if isprop(opt,'W0') 
 	Xty = Xty + opt.W0;
 end
 

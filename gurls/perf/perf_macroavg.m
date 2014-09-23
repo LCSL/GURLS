@@ -1,11 +1,10 @@
-function [p] = perf_macroavg(X, y, opt)
-% perf_macroavg(X,y,opt)
+function [p] = perf_macroavg(X,y, opt)
+% perf_macroavg(opt)
 % Computes the average classification accuracy per class.
 %
 % INPUTS:
-% -X: not used
-% -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
+%   -y: labels matrix
 %   fields that need to be set through previous gurls tasks:
 %       -pred (set by the pred_* routines)
 % 
@@ -13,6 +12,7 @@ function [p] = perf_macroavg(X, y, opt)
 % -acc: array of prediction accuracy for each class
 % -forho: ""
 % -forplot: ""
+
 
 if isstruct(opt.pred)
 	opt.pred = opt.pred.means;
@@ -29,11 +29,10 @@ y_pred = opt.pred;
 
 if size(y,2) == 1
 	predlab = sign(y_pred);
-	ylab = sign(y_true);
 
-	p.acc = mean(predlab == ylab);
-	p.forho = mean(predlab == ylab);
-	p.forplot = mean(predlab == ylab);
+	p.acc = mean(predlab == y);
+	p.forho = mean(predlab == y);
+	p.forplot = mean(predlab == y);
 else
 	%% Assumes single label prediction.
 	[dummy, predlab] = max(y_pred,[],2);

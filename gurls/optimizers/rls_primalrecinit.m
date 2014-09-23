@@ -1,5 +1,5 @@
-function [cfr] = rls_primalrecinit(X, y, opt)
-% rls_primalrecinit(X,y,opt)
+function [cfr] = rls_primalrecinit(X,y, opt)
+% rls_primalrecinit(X, y, opt)
 % computes a classifier for the primal formulation of RLS. 
 % The variables necessary for further recursive update are stored in the
 % output structure.
@@ -7,8 +7,6 @@ function [cfr] = rls_primalrecinit(X, y, opt)
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)
@@ -26,18 +24,18 @@ function [cfr] = rls_primalrecinit(X, y, opt)
 
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
-if isfield(opt,'kernel');
-    if isfield(opt.kernel,'XtX');
+if isprop(opt,'kernel');
+    if isprop(opt.kernel,'XtX');
         XtX = opt.kernel.XtX;
     else
         XtX = X'*X;
     end
-    if isfield(opt.kernel,'Xty');
+    if isprop(opt.kernel,'Xty');
         Xty = opt.kernel.Xty;
     else
         Xty = X'*y;
     end
-    if isfield(opt.kernel,'n');
+    if isprop(opt.kernel,'n');
         n = opt.kernel.n;
     else
         n = size(y,1);

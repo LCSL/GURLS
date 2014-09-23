@@ -1,12 +1,10 @@
 function vout = paramsel_bfprimal(X,y,opt)
-% paramsel_bfprimal(X,Y,OPT)
+% paramsel_bfprimal(X,y, OPT)
 % Performs parameter selection when the primal formulation of RLS is used.
 % This method uses the hold-out cross validation approach in a brute force way
 % i.e. the RLS problem is solved from scratch for each value of the regularizer.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- split (set by the split_* routine)
@@ -30,10 +28,11 @@ function vout = paramsel_bfprimal(X,y,opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
-
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 [n,T] = size(y);
@@ -49,9 +48,9 @@ for nh = 1:opt.nholdouts
 
 	for i = 1:numel(opt.paramsel.guesses)
 		opt.paramsel.lambdas = opt.paramsel.guesses(i);
-		opt.rls = opt.paramsel.optimizer(X(tr,:),y(tr,:),opt);
-		opt.pred = pred_primal(X(va,:),y(va,:),opt);
-		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);
+		opt.newprop('rls', opt.paramsel.optimizer(X(tr,:),y(tr,:),opt));
+		opt.newprop('pred', pred_primal(X(va,:),y(va,:),opt));
+		opt.newprop('perf', opt.hoperf(X(va,:),y(va,:),opt));
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);
 		end	

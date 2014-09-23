@@ -1,12 +1,10 @@
-function [vout] = paramsel_hodual(X, y, opt)
-% paramsel_hopdual(X,Y,OPT)
+function [vout] = paramsel_hodual(X,y,opt)
+% paramsel_hopdual(X,y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The hold-out approach is used. 
 % The performance measure specified by opt.hoperf is maximized.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- split (set by the split_* routine)
@@ -31,9 +29,11 @@ function [vout] = paramsel_hodual(X, y, opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 for nh = 1:opt.nholdouts
@@ -63,6 +63,11 @@ for nh = 1:opt.nholdouts
 	
 	ap = zeros(tot,T);
 	QtY = Q'*y(tr,:);
+    
+    if ~isprop(opt, 'rls')
+        opt.newprop('rls', struct());
+    end
+    
 	for i = 1:tot
 		%%%%%% REPLICATING CODE FROM RLS_DUAL %%%%%%%%
 		opt.rls.C = rls_eigen(Q,L,QtY,guesses(i),n);
@@ -82,8 +87,8 @@ for nh = 1:opt.nholdouts
 			opt.predkernel.K = opt.kernel.K(va,tr);
 		end	
 	
-		opt.pred = pred_dual(Xva,yva,opt);
-		opt.perf = opt.hoperf(Xva,yva,opt);
+		opt.newprop('pred', pred_dual(Xva,yva,opt));
+		opt.newprop('perf', opt.hoperf(Xva,yva,opt));
 		%p{i} = perf(scores,yho,{'precrec'});
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);

@@ -5,8 +5,6 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 % The performance measure specified by opt.hoperf is maximized.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- split (set by the split_* routine)
@@ -29,7 +27,7 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
     
@@ -39,12 +37,14 @@ if isfield (opt,'paramsel')
     if isfield(opt.paramsel,'guesses')
         vout = rmfield(vout,'guesses');
     end
+else
+    opt.newprop('paramsel', struct());
 end
 
 savevars = [];
 
 %verify if matrix XtX has already been computed (especially for online RLS)
-if isfield(opt,'kernel');
+if isprop(opt,'kernel');
     if isfield(opt.kernel,'XtX');
         Ktot = opt.kernel.XtX;
     else
@@ -58,6 +58,7 @@ if isfield(opt,'kernel');
 else
     Ktot = X'*X;
     Xtytot = X'*y;
+    opt.newprop('kernel',struct());
 end
 
 d = size(X,2);
@@ -83,12 +84,16 @@ for nh = 1:opt.nholdouts
 	QtXtY = Q'*(Xtytot - X(va,:)'*y(va,:));
 	
 	guesses = paramsel_lambdaguesses(L, min(n,d), n, opt);
-		
+    
+    if ~isprop(opt, 'rls')
+        opt.newprop('rls', struct());
+    end
+    
 	ap = zeros(tot,T);
 	for i = 1:tot
 		opt.rls.W = rls_eigen(Q,L,QtXtY,guesses(i),n);
-		opt.pred = pred_primal(X(va,:),y(va,:),opt);
-		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);
+		opt.newprop('pred', pred_primal(X(va,:),y(va,:),opt));
+		opt.newprop('perf', opt.hoperf(X(va,:),y(va,:),opt));
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);
 		end	

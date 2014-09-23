@@ -1,6 +1,6 @@
-function [rls] = rls_randfeats (X, y, opt)
+function [rls] = rls_randfeats (X,y, opt)
 
-% rls_primalRF(X,y,opt)
+% rls_primalRF(X, y, opt)
 % computes a classifier for the primal formulation of RLS using the Random
 % Features approach proposed in: 
 %   Ali Rahimi, Ben Recht;
@@ -11,8 +11,7 @@ function [rls] = rls_randfeats (X, y, opt)
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
+
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)

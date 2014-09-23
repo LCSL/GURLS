@@ -1,5 +1,5 @@
-function [vout] = paramsel_horandfeats(X,y,opt)
-% paramsel_horandfeat(X,Y,OPT)
+function [vout] = paramsel_horandfeats(X,y, opt)
+% paramsel_horandfeat(X,y, OPT)
 % Performs parameter selection when the Random Features approach to RLS is used: 
 %   Ali Rahimi, Ben Recht;
 %   Random Features for Large-Scale Kernel Machines;
@@ -8,10 +8,10 @@ function [vout] = paramsel_horandfeats(X,y,opt)
 % The performance measure specified by opt.hoperf is maximized.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
+%       -X: input data matrix
+%       -Y: labels matrix
 %		- split (set by the split_* routine)
 %   fields with default values set through the defopt function:
 %		- nlambda
@@ -32,9 +32,11 @@ function [vout] = paramsel_horandfeats(X,y,opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 savevars = [];
@@ -57,7 +59,7 @@ for nh = 1:opt.nholdouts
     else 
         ni = opt.randfeats.samplesize;
     end
-
+    opt.newprop('rls.proj', []);
     [XtX,Xty,opt.rls.proj] = rp_factorize_large_real(X(tr,:)',y(tr,:)',opt.randfeats.D,'gaussian',ni);
     
 	tot = opt.nlambda;
@@ -69,10 +71,15 @@ for nh = 1:opt.nholdouts
 	guesses = paramsel_lambdaguesses(L, min(n,opt.randfeats.D*2), n, opt);
 
 	perf = zeros(tot,T);
+    
+    if ~isprop(opt, 'rls')
+        opt.newprop('rls', struct);
+    end
+    
 	for i = 1:tot
 		opt.rls.W = rls_eigen(Q,L,QtXtY,guesses(i),n);
-		opt.pred = pred_randfeats(X(va,:),y(va,:),opt);
-		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);
+		opt.newprop('pred', pred_randfeats(X(va,:),y(va,:),opt));
+		opt.newprop('perf', opt.hoperf(X(va,:),y(va,:),opt));
 		for t = 1:T
 			perf(i,t) = opt.perf.forho(t);
 		end	

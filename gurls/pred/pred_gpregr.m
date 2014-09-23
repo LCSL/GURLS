@@ -1,12 +1,11 @@
-function [pred] = pred_gpregr(X, y, opt)
-% pred_gpregr(X,y,opt)
+function [pred] = pred_gpregr(X,y, opt)
+% pred_gpregr(opt)
 % Computes the predictive distribution (mean and variance) for a gaussian
 % process
 %
 % INPUTS:
-% -X: not used
-% -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
+%   -y: labels matrix
 % 
 % OUTPUT:  struct with the following fields:
 %  -means

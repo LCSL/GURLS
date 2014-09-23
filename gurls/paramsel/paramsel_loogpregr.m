@@ -1,11 +1,9 @@
-function vout = paramsel_loogpregr(X,y,opt)
-% paramsel_loogpregr(X,Y,OPT)
+function vout = paramsel_loogpregr(X,y, opt)
+% paramsel_loogpregr(X,y, OPT)
 % Performs parameter selection for gaussian process regression.
 % The leave-one-out approach is used.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- kernel.K (set by the kernel_* routines)
@@ -22,23 +20,24 @@ function vout = paramsel_loogpregr(X,y,opt)
 % -lambdas: array of values of the regularization parameter lambda
 %           minimizing the validation error for each class
 
-
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
-end
-
+else
+    opt.newprop('paramsel', struct());
+end    
+    
 [n,T]  = size(y);
 tot = opt.nlambda;
 K = opt.kernel.K;
 
 
-if isfield(opt,'lambdamin')
+if isprop(opt,'lambdamin')
     lmin = opt.lambdamin;
 else
     lmin = 0.001;
 end
-if isfield(opt,'lambdamax')
+if isprop(opt,'lambdamax')
     lmax = opt.lambdamax;
 else
     lmax = 10;
@@ -51,19 +50,24 @@ perf = zeros(tot,T);
 for k = 1:n;
     tr = setdiff(1:n,k);
     opt.kernel.K = K(tr,tr);
+    if ~isprop(opt, 'predkernel')
+        opt.newprop('predkernel', struct());
+    end
     opt.predkernel.K = K(k,tr);
     opt.predkernel.Ktest = K(k,k);
     for i = 1:tot
         opt.paramsel.lambdas = guesses(i);
-        opt.rls = rls_gpregr(X(tr,:),y(tr,:),opt);
+        opt.newprop('rls', rls_gpregr(X(tr,:),y(tr,:),opt));
         tmp = pred_gpregr(X(k,:),y(k,:),opt);
-        opt.pred = tmp.means;
-        opt.perf = opt.hoperf([],y(k,:),opt);
+        opt.newprop('pred',tmp.means);
+        opt.newprop('perf', opt.hoperf([],y(k,:),opt));
         for t = 1:T
             perf(i,t) = opt.perf.forho(t)./n+perf(i,t);
         end	
     end
 end	
+
+opt.kernel.K = K;
 
 [dummy,idx] = max(perf,[],1);	
 vout.lambdas = 	guesses(idx);

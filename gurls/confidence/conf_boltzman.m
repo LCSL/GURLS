@@ -1,11 +1,9 @@
-function [out] = conf_boltzman(X,y,opt)
-% conf_boltzman(X,Y,OPT)	
+function [out] = conf_boltzman(X,y, opt)
+% conf_boltzman(OPT)	
 % Computes the probability of belonging to the highest scoring class.
 % The scores are converted in probabilities using the Boltzman distribution.
 %
 % INPUTS:
-% -X: not used
-% -Y: not used
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- pred (set by the pred_* routine)

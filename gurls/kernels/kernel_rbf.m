@@ -1,31 +1,58 @@
-function [kernel] = kernel_rbf(X,y,opt)
+function [kernel] = kernel_rbf(X,y, opt)
 
-% 	kernel_rbf(X,y,opt)
+% 	kernel_rbf(opt)
 %	Computes the kernel matrix for a Gaussian kernel.
 %	INPUTS:
-%		-X: input data matrix
-%		-y: not used 
 %		-OPT: struct with the following options:
 %			- paramsel : struct containing the following fields (computed by paramsel_*).
 %				- sigma : width of the gaussian kernel.
+%           -X: input data matrix
 %	
 %	OUTPUT: struct with the following fields:
 %		-type: 'rbf'
 %		-K: kernel matrix
 
+kernel = opt.kernel;
 
-if ~isfield(opt,'kernel')
-	opt.kernel.type = 'rbf';
-end
-
-
-if ~isfield(opt.kernel,'distance')
-	opt.kernel.distance = square_distance(X',X');
+if ~isfield(kernel,'distance')
+	kernel.distance = square_distance(X',X');
 end	
 
-kernel = opt.kernel;
-D = -(opt.kernel.distance);
-K = exp(D/(opt.paramsel.sigma^2));
+n = size(kernel.distance,1);
 
-kernel.type = 'rbf';
-kernel.K = K;
+if ~isfield(kernel, 'kerrange')
+    if ~isprop(opt,'sigmamin')
+        D = sort(kernel.distance(tril(true(n),-1)));
+        firstPercentile = round(0.01*numel(D)+0.5);
+        opt.newprop('sigmamin', sqrt(D(firstPercentile)));
+        clear D;
+    end
+    if ~isprop(opt,'sigmamax')
+        opt.newprop('sigmamax', sqrt(max(max(kernel.distance))));
+    end
+    if opt.sigmamin <= 0
+        opt.sigmamin = eps;
+    end
+    if opt.sigmamin <= 0
+        opt.sigmamax = eps;
+    end	
+    q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));
+    kernel.kerrange = opt.sigmamin*(q.^(opt.nsigma:-1:0));
+end
+
+if ~isfield(kernel, 'init') || ~kernel.init
+    
+    if ~isfield(opt.paramsel, 'sigma')
+        sigma = kernel.kerrange(opt.paramsel.sigmanum);
+    else
+        sigma = opt.paramsel.sigma;
+    end
+    
+    D = -(kernel.distance);
+    K = exp(D/(sigma^2));
+
+    kernel.type = 'rbf';
+    kernel.K = K;
+else
+    kernel.init = 0;
+end
