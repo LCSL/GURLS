@@ -115,6 +115,18 @@ void gemv(const CBLAS_TRANSPOSE TransA,
           const int M, const int N, const T alpha, const T *A, const int lda,
           const T *X, const int incX,
           const T beta, T *Y, const int incY);
+		  
+/**
+  * Template function to call BLAS *ROT routines
+  */
+template<typename T>
+void rot(int *N, T *X, int *incX, T *Y, int *incY, T *c, T *s);
+		  
+/**
+  * Template function to call BLAS *ROTG routines
+  */
+template<typename T>
+void rotg(T *a, T *b, T *c, T *s);
 
 /**
   * Template function to call LAPACK *SYEV routines

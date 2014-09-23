@@ -205,6 +205,42 @@ GURLS_EXPORT void gemv(const CBLAS_TRANSPOSE TransA,
           const_cast<double*>(X), const_cast<int*>(&incX), const_cast<double*>(&beta),
           const_cast<double*>(Y), const_cast<int*>(&incY));
 }
+/**
+  * Specialized version of rot for float buffers
+  */
+template<>
+GURLS_EXPORT void rot(int *N, float *X, int *incX, float *Y, int *incY, float *c, float *s)
+{
+srot_(N, X, incX, Y, incY, c, s);
+}
+
+/**
+  * Specialized version of rot for double buffers
+  */
+template<>
+GURLS_EXPORT void rot(int *N, double *X, int *incX, double *Y, int *incY, double *c, double *s)
+{
+drot_(N, X, incX, Y, incY, c, s);
+}
+
+/**
+  * Specialized version of rotg for float buffers
+  */
+template<>
+GURLS_EXPORT void rotg(float *a, float *b, float *c, float *s)
+{
+srotg_(a, b, c, s);
+}
+
+/**
+  * Specialized version of rotg for double buffers
+  */
+template<>
+GURLS_EXPORT void rotg(double *a, double *b, double *c, double *s)
+{
+drotg_(a, b, c, s);
+}
+
 
 /**
   * Specialized version of syev for float buffers

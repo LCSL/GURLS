@@ -67,6 +67,106 @@ extern "C"
 
 // ------ BLAS
 
+/**
+  * \brief Prototype for Blas SROT
+  *		
+  *  Applies an orthogonal plane rotation.
+  */
+void srot_  (   int *      N,
+                float *         X,
+                int *      incX,
+                float *         Y,
+                int *      incY,
+                float *   c,
+                float *   s 
+            );
+/**
+  * \brief Prototype for Blas DROT
+  *
+  * DROT - BLAS level one, plane rotation subroutines
+  * 
+  * DROT   applies  a  plane  rotation matrix to a real sequence of ordered
+       pairs:
+
+            (x , y ), for all i = 1, 2, ..., n.
+              i   i
+              
+              
+    ARGUMENTS
+       n       INTEGER. (input)
+               Number of ordered pairs (planar points in DROT) to be  rotated.
+               If n <= 0, this routine returns without computation.
+
+       x       DOUBLE PRECISION, (input and output)
+               Array  of dimension (n-1) * |incx| + 1.  On input, array x con-
+               tains the x-coordinate of each planar point to be rotated.   On
+               output,  array x contains the x-coordinate of each rotated pla-
+               nar point.
+
+       incx    INTEGER. (input)
+               Increment between elements of x.  If incx = 0, the results will
+               be unpredictable.
+
+       y       DOUBLE PRECISION, (input and output)
+               array of dimension (n-1) * |incy| + 1.
+               On  input,  array  y  contains  the y-coordinate of each planar
+               point to be rotated.  On output, array y contains the y-coordi-
+               nate of each rotated planar point.
+
+       incy    INTEGER. (input)
+               Increment between elements of y.  If incy = 0, the results will
+               be unpredictable.
+
+       c       DOUBLE PRECISION, Cosine of the angle of rotation.
+               (input)
+
+       s       DOUBLE PRECISION, Sine of the angle of rotation. (input)
+  */
+
+void drot_  (   int *      N,
+                double *         X,
+                int *      incX,
+                double *         Y,
+                int *      incY,
+                double *   c,
+                double *   s 
+            );
+			
+/**
+  * \brief Prototype for Blas SROTG
+  *		
+  *  Constructs a Givens plane rotation.
+  */
+void srotg_ (   float *        a,
+                float *        b,
+                float *        c,
+                float *        s 
+            );
+			
+/**
+  * \brief Prototype for Blas DROTG
+  *
+  * DGROTG - BLAS level one rotation subroutines
+  * 
+  * DROTG  computes  the  elements  of  a Givens plane rotation matrix such
+       that:
+
+             _      _     _   _    _   _
+             | c  s |     | a |    | r |
+             |-s  c | *   | b | =  | 0 |
+             -      -     -   -    -   -
+
+       where  r = +- sqrt ( a**2 + b**2 )  and c**2 + s**2 =1.
+
+       The Givens plane rotation can be used to introduce zero elements into
+       a matrix selectively.
+
+  */
+void drotg_ (   double *        a,
+                double *        b,
+                double *        c,
+                double *        s 
+            );
 
 /**
   * \brief Prototype for Blas SDOT
