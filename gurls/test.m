@@ -85,7 +85,9 @@ function ytrue = analyzeYtrue(model, y)
                 I = 2*eye(size(ind,1)) - 1;
                 ytrue = I(yp,:);              
             case 'extended'
+                ytrue = y;
             case 'notinteger'
+                ytrue = y;
         end
     else
         ytrue = y;
