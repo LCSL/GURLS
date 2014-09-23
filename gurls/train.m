@@ -49,10 +49,8 @@ function opt = prodOptions(lst)
 fprintf('\n\n\nGurls 2.0\n');
 
     if numel(lst) == 1
-        opt = lst{1};
-        if ~isa(opt, 'GurlsOptions')
-            opt = GurlsOptions(opt);
-        end
+        opt = defopt('');
+        opt.newprops(lst{1});
     elseif ~mod(numel(lst),2)
         opt = defopt('');
         for i=1:numel(lst)/2

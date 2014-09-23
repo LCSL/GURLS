@@ -8,16 +8,20 @@ classdef GurlsOptions < dynamicprops
     methods
         function obj = GurlsOptions(oldOpt)
             if nargin == 1
-                if isa(oldOpt, 'struct')
-                    names = fieldnames(oldOpt);
-                elseif isa(oldOpt, 'GurlsOptions')
-                    names = properties(oldOpt);
-                else
-                    error('Unrecognizable GURLS option list');
-                end
-                for name=names'
-                    obj.newprop(name{1}, oldOpt.(name{1}));
-                end
+                obj.newprops(oldOpt);
+            end
+        end
+        
+        function newprops(obj, oldOpt)
+            if isa(oldOpt, 'struct')
+                names = fieldnames(oldOpt);
+            elseif isa(oldOpt, 'GurlsOptions')
+                names = properties(oldOpt);
+            else
+                error('Unrecognizable GURLS option list');
+            end
+            for name=names'
+                obj.newprop(name{1}, oldOpt.(name{1}));
             end
         end
         

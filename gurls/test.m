@@ -11,6 +11,7 @@ function [y, performance] = test(model, Xtest, varargin)
             error('Too many options');
         end
         
+        ms3 = model.seq{3};
         if numel(varargin) == 2
             perfm = analyzePerfm(model, varargin{2});
             model.seq{3} = ['perf:' perfm];
@@ -18,7 +19,7 @@ function [y, performance] = test(model, Xtest, varargin)
         if numel(varargin) >= 1
             ytrue = analyzeYtrue(model, varargin{1});
             gurls(Xtest, ytrue, model, 1);
-
+            
             switch model.seq{end}
                 case 'perf:rmse'
                     performance = model.perf.rmse;
@@ -31,6 +32,7 @@ function [y, performance] = test(model, Xtest, varargin)
                 otherwise
                     performance = model.perf;
             end
+            model.seq{3} = ms3;
         end
     end
     y = convertFormat(model, model.pred);
@@ -95,7 +97,7 @@ function ytrue = analyzeYtrue(model, y)
     end
 end
 
-function perfm = analyzePerfm(p)
+function perfm = analyzePerfm(model, p)
     if ~isequal(regexp(p,'(rmse|macroavg|gpregr|precrec)'),1)
         error('Performance measure not recognized');
     else
