@@ -68,6 +68,19 @@ extern "C"
 // ------ BLAS
 
 /**
+  * \brief Prototype for Blas SROT
+  *		
+  *  Applies an orthogonal plane rotation.
+  */
+void srot_  (   int *      N,
+                float *         X,
+                int *      incX,
+                float *         Y,
+                int *      incY,
+                float *   c,
+                float *   s 
+            );
+/**
   * \brief Prototype for Blas DROT
   *
   * DROT - BLAS level one, plane rotation subroutines
@@ -118,7 +131,18 @@ void drot_  (   int *      N,
                 double *   c,
                 double *   s 
             );
-
+			
+/**
+  * \brief Prototype for Blas SROTG
+  *		
+  *  Constructs a Givens plane rotation.
+  */
+void srotg_ (   float *        a,
+                float *        b,
+                float *        c,
+                float *        s 
+            );
+			
 /**
   * \brief Prototype for Blas DROTG
   *

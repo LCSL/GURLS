@@ -46,8 +46,9 @@
 
 namespace gurls {
 
-void dchud(double* r, int ldr, int p, double* x, double* z, int ldz, int nz,
-           double* y, double* rho, double* c, double* s,
+template<typename T>
+void chud(T* r, int ldr, int p, T* x, T* z, int ldz, int nz,
+           T* y, T* rho, T* c, T* s,
            unsigned char rtrans, unsigned char ztrans) {
   
     // WARNING: This function only updates R. The update of z and rho is not implemented.
@@ -72,13 +73,13 @@ void dchud(double* r, int ldr, int p, double* x, double* z, int ldz, int nz,
     
     unsigned int i;
     unsigned int stp;   // Step to apply to r to get the next row element
-    double* work = (double*) 0x0;   // Pointer to the elements of the update sample
-    double* tbuff = (double*) 0x0;  // Pointer to the elements of the diagonal of R
+    T* work = (T*) 0x0;   // Pointer to the elements of the update sample
+    T* tbuff = (T*) 0x0;  // Pointer to the elements of the diagonal of R
 
     // create working copy of x
-    work = (double*) malloc(p * sizeof(double));
+    work = (T*) malloc(p * sizeof(T));
     int one = 1;
-    dcopy_(&p, x, &one, work, &one);
+    copy(work, x, p, one, one);
 
     stp = (rtrans == 1) ? p : 1;
 
@@ -86,7 +87,7 @@ void dchud(double* r, int ldr, int p, double* x, double* z, int ldz, int nz,
     for(i = 0, tbuff = r; (int)i < p; tbuff += (p+1), i++) {
         
         // Compute i-th Givens rotation
-        drotg_(tbuff, work+i, c+i, s+i);   
+        rotg(tbuff, work+i, c+i, s+i);   
 
         // force positive values on the diagonal (not strictly necessary)
         //if(*tbuff < 0) {
@@ -101,12 +102,12 @@ void dchud(double* r, int ldr, int p, double* x, double* z, int ldz, int nz,
             int n = p - i - 1;
             int one = 1;
             int step = stp;
-            double* xcoord = tbuff + stp;
-            double* ycoord = work + i + 1;
-            double* costh = c + i;
-            double* sinth = s + i;
+            T* xcoord = tbuff + stp;
+            T* ycoord = work + i + 1;
+            T* costh = c + i;
+            T* sinth = s + i;
             
-            drot_(&n, xcoord, &step, ycoord, &one, costh, sinth);
+            rot(&n, xcoord, &step, ycoord, &one, costh, sinth);
             
         }
     }
@@ -145,25 +146,25 @@ void dchud(double* r, int ldr, int p, double* x, double* z, int ldz, int nz,
 //     }
 }
 
-// WARNING: cholupdate only works with double parameters, not generic typename T
-void cholupdate(gMat2D<double>& R, double& x, bool rtrans) {  
+template<typename T>
+void cholupdate(gMat2D<T>& R, T& x, bool rtrans) {  
    
     // rPtr points to the vectorized R matrix
-    double* rPtr = R.getData();
+    T* rPtr = R.getData();
     
     int d = (int) R.cols();
     
-    double* xPtr = &x;          // Initialize pointer to the x vector
-    double* c = new double[d];  
-    double* s = new double[d];  
+    T* xPtr = &x;          // Initialize pointer to the x vector
+    T* c = new T[d];  
+    T* s = new T[d];  
 
-    // dchud should be called in place of gsl_linalg_cholesky_update, since GSL is not available in GURLS
-    dchud(rPtr, 0, d, xPtr, 0, 0, 0,
+    // chud should be called in place of gsl_linalg_cholesky_update, since GSL is not available in GURLS
+    chud<T>(rPtr, 0, d, xPtr, 0, 0, 0,
           0, 0, c, s,
           (unsigned char) rtrans, 0);
     
     // Store the updated matrix in R    
-    R = gMat2D<double>(rPtr, (unsigned long) d, (unsigned long) d, 1);
+    R = gMat2D<T>(rPtr, (unsigned long) d, (unsigned long) d, 1);
 
     // Free memory
     delete[] c;
