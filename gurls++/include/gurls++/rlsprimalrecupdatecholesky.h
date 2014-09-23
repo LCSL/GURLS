@@ -4,8 +4,8 @@
   * Copyright (C) 2011-1013, IIT@MIT Lab
   * All rights reserved.
   *
-  * authors:  M. Santoro
-  * email:   msantoro@mit.edu
+  * authors:  Raffaello Camoriano
+  * email:   raffaello.camoriano@iit.it
   * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
   *
   * Redistribution and use in source and binary forms, with or without
