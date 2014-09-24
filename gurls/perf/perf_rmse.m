@@ -1,12 +1,11 @@
-function [p] = perf_rmse(X, y, opt)
+function [p] = perf_rmse(X,y, opt)
 
-% perf_rmse(X, y, opy)		
+% perf_rmse(opt)		
 % Computes the root mean squared error for the predictions.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
+%   -y: labels matrix
 %   fields that need to be set through previous gurls tasks:
 %       -pred (set by the pred_* routines)
 % 
@@ -14,7 +13,6 @@ function [p] = perf_rmse(X, y, opt)
 % -rmse: array of rmse for each class/output
 % -forplot: ""
 % -forho: array of -rmse for each class/output
-
 
 if isstruct(opt.pred)
 	opt.pred = opt.pred.means;
@@ -26,6 +24,6 @@ end
 T 		= size(y,2);
 n 		= size(y,1);
 diff 		= opt.pred - y;
-p.rmse		= sqrt(sum(diff.^2,1)/n);
+p.rmse		= sqrt(sum(diff.^2,1)/size(diff,1));
 p.forho 	= -p.rmse;
 p.forplot 	= p.rmse;

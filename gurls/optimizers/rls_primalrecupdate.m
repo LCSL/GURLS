@@ -1,12 +1,10 @@
-function [rls] = rls_primalrecupdate (X, y, opt)
+function [rls] = rls_primalrecupdate (X,y, opt)
 
 % rls_primalrecupdate(X,y,opt)
 % computes a classifier for the primal formulation of RLS, using a
 % recursive update, starting from an initial estimator found in OPT.RLS.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- rls.W (set by the rls_primalrecinit)

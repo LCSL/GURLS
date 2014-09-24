@@ -1,13 +1,11 @@
-function [rls] = rls_conjgradprimal (X, y, opt)
+function [rls] = rls_conjgradprimal (X,y, opt)
 
-% rls_conjgradprimal(X,y,opt)
+% rls_conjgradprimal(X, y, opt)
 % computes the regression function for conjugate gradient least squares 
 % [Christian Hansen (DTU) and Michael Saunders] in the primal space.
 % The regularization parameter (i.e. the number of iterations) is set to the one found in opt.paramsel.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)
@@ -21,8 +19,6 @@ function [rls] = rls_conjgradprimal (X, y, opt)
 % -W: matrix of coefficient vectors of rls estimator for each class
 % -C: empty matrix
 % -X: empty matrix
-
-
 
 Niter = opt.singlelambda(opt.paramsel.lambdas);
 

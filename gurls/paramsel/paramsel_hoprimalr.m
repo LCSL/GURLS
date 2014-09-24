@@ -1,13 +1,11 @@
-function [vout] = paramsel_hoprimalr(X,y,opt)
-% paramsel_hoprimalr(X,Y,OPT)
+function [vout] = paramsel_hoprimalr(X,y, opt)
+% paramsel_hoprimalr(X,y, OPT)
 % Performs parameter selection when the primal formulation of RLS is used.
 % The hold-out approach is used. 
 % The eigendecomposition used to compute the regularization path is computed using a randoamized method.
 % The performance measure specified by opt.hoperf is maximized.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- split (set by the split_* routine)
@@ -30,9 +28,11 @@ function [vout] = paramsel_hoprimalr(X,y,opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 savevars = [];
 
@@ -50,7 +50,7 @@ for nh = 1:opt.nholdouts
 	
 	K = X(tr,:)'*X(tr,:);
 	
-	k = round(opt.eig_percentage*d/100);
+	k = max(round(opt.eig_percentage*d/100),1);
 
 	[Q,L,U] = tygert_svd(K,k); % dxd matrix
 	Q = double(Q);
@@ -59,12 +59,16 @@ for nh = 1:opt.nholdouts
 	QtXtY = Q'*(X(tr,:)'*y(tr,:));
 	guesses = paramsel_lambdaguesses(L, k, n, opt);
 	
+    if ~isprop(opt, 'rls')
+        opt.newprop('rls', struct());
+    end
+    
 	tot = opt.nlambda;
 	ap = zeros(tot,T);
 	for i = 1:tot
 		opt.rls.W = rls_eigen(Q,L,QtXtY,guesses(i),n);
-		opt.pred = pred_primal(X(va,:),y(va,:),opt);
-		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);
+		opt.newprop('pred', pred_primal(X(va,:),y(va,:),opt));
+		opt.newprop('perf', opt.hoperf(X(va,:),y(va,:),opt));
 		%p{i} = perf(scores,yho,{'precrec'});
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);

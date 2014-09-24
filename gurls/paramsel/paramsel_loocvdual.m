@@ -1,12 +1,12 @@
-function vout = paramsel_loocvdual(X,y,opt)
-% paramsel_loocvdual(X,Y,OPT)
+function vout = paramsel_loocvdual(X,y, opt)
+% paramsel_loocvdual(X,y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The leave-one-out approach is used.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields:
+%   -X: input data matrix
+%   -Y: labels matrix
 %   fields that need to be set through previous gurls tasks:
 %		- kernel.K (set by the kernel_* routines)
 %   fields with default values set through the defopt function:
@@ -24,9 +24,11 @@ function vout = paramsel_loocvdual(X,y,opt)
 %        and for each class
 % -guesses: array of guesses for the regularization parameter lambda 
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 [n,T]  = size(y);
@@ -47,11 +49,11 @@ guesses = paramsel_lambdaguesses(L, r, n, opt);
 for i = 1:tot
 	C = rls_eigen(Q,L,Qty,guesses(i),n);
 	Z = GInverseDiagonal(Q,L,guesses(i));
-	opt.pred = zeros(n,T);
+	opt.newprop('pred',zeros(n,T));
 	for t = 1:T
 		opt.pred(:,t) = y(:,t) - (C(:,t)./Z);
 	end
-	opt.perf = opt.hoperf([],y,opt);
+	opt.newprop('perf', opt.hoperf([],y,opt));
 	for t = 1:T
 		ap(i,t) = opt.perf.forho(t);
 	end	

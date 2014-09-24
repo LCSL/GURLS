@@ -1,5 +1,5 @@
-function [vout] = paramsel_hodualr(X, y, opt)
-% paramsel_hopdualr(X,Y,OPT)
+function [vout] = paramsel_hodualr(X,y, opt)
+% paramsel_hopdualr(X,y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The hold-out approach is used. 
 % The eigendecomposition used to compute the regularization path is
@@ -7,8 +7,6 @@ function [vout] = paramsel_hodualr(X, y, opt)
 % The performance measure specified by opt.hoperf is maximized.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- split (set by the split_* routine)
@@ -33,10 +31,13 @@ function [vout] = paramsel_hodualr(X, y, opt)
 %       array of guesses for the regularization parameter lambda
 % -lambdas: mean of the optimal lambdas across splits
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
+
 savevars = [];
 for nh = 1:opt.nholdouts
 	if strcmp(class(opt.split),'cell')
@@ -57,7 +58,7 @@ for nh = 1:opt.nholdouts
 %         r = n;
 % 	end
 	
-    k = round(opt.eig_percentage*n/100);
+    k = max(1,round(opt.eig_percentage*n/100));
 	[Q,L,U] = tygert_svd(opt.kernel.K(tr,tr),k);
 	Q = double(Q);
 	L = double(diag(L));
@@ -68,7 +69,7 @@ for nh = 1:opt.nholdouts
 	QtY = Q'*y(tr,:);
 	for i = 1:tot
 		%%%%%% REPLICATING CODE FROM RLS_DUAL %%%%%%%%
-		opt.rls.C = rls_eigen(Q,L,QtY,guesses(i),n);
+		opt.newprop('rls.C', rls_eigen(Q,L,QtY,guesses(i),n));
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 		if size(X,1) > 0
@@ -85,8 +86,8 @@ for nh = 1:opt.nholdouts
 			opt.predkernel.K = opt.kernel.K(va,tr);
 		end	
 	
-		opt.pred = pred_dual(Xva,yva,opt);
-		opt.perf = opt.hoperf(Xva,yva,opt);
+		opt.newprop('pred',pred_dual(Xva,yva,opt));
+		opt.newprop('perf',opt.hoperf(Xva,yva,opt));
 		%p{i} = perf(scores,yho,{'precrec'});
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);

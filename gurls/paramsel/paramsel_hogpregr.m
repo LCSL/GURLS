@@ -1,11 +1,9 @@
-function vout = paramsel_hogpregr(X,y,opt)
-% paramsel_hogpregr(X,Y,OPT) 
+function vout = paramsel_hogpregr(X,y, opt)
+% paramsel_hogpregr(X,y, OPT) 
 % Performs parameter selection for gaussian process regression.
 % The hold-out approach is used.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- kernel.K (set by the kernel_* routines)
@@ -25,12 +23,18 @@ function vout = paramsel_hogpregr(X,y,opt)
 %           minimizing the validation error for each class
 % -sigma: value of the kernel parameter minimizing the validation error
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 K = opt.kernel.K;
+
+if ~isprop(opt, 'predkernel')
+    opt.newprop('predkernel', struct());
+end
 
 for nh = 1:opt.nholdouts
 
@@ -45,19 +49,17 @@ for nh = 1:opt.nholdouts
 	[n,T]  = size(y(tr,:));
     
     opt.kernel.K = K(tr,tr);
-    
-    
     opt.predkernel.K = K(va,tr);
     opt.predkernel.Ktest = diag(K(va,va));
 
     tot = opt.nlambda;
     
-    if isfield(opt,'lambdamin')
+    if isprop(opt,'lambdamin')
         lmin = opt.lambdamin;
     else
         lmin = 0.001;
     end
-    if isfield(opt,'lambdamax')
+    if isprop(opt,'lambdamax')
         lmax = opt.lambdamax;
     else
         lmax = 10;
@@ -65,14 +67,17 @@ for nh = 1:opt.nholdouts
     powers = linspace(0,1,tot);
     guesses = lmin.*(lmax/lmin).^(powers);
     
+    if ~isprop(opt, 'rls')
+        opt.newprop('rls', struct());
+    end
+    
     for i = 1:tot
         opt.paramsel.lambdas = guesses(i);
         opt.rls = rls_gpregr(X(tr,:),y(tr,:),opt);
         tmp = pred_gpregr(X(va,:),y(va,:),opt);
-        opt.pred = tmp.means;
-        opt.pred = tmp;
+        opt.newprop('pred', tmp);
         
-        opt.perf = opt.hoperf([],y(va,:),opt);
+        opt.newprop('perf', opt.hoperf([],y(va,:),opt));
         for t = 1:T
             perf(i,t) = opt.perf.forho(t);
         end	
@@ -83,6 +88,8 @@ for nh = 1:opt.nholdouts
 	vout.perf{nh} = perf;
 	vout.guesses{nh} = guesses;
 end
+
+opt.kernel.K = K;
 
 if numel(vout.lambdas_round) > 1
 	lambdas = cell2mat(vout.lambdas_round');

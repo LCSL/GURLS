@@ -1,11 +1,11 @@
-function [splits] = split_ho(X, y, opt)
-% [splits] = split_ho(X, y, opt)
+function [splits] = split_ho(X,y, opt)
+% [splits] = split_ho(opt)
 % Splits data into train and validation set
 
 % INPUTS:
-% -X: not used
-% -y: labels matrix
 % -OPT: structure of options, with the following field with default values
+%       -X: not used
+%       -y: labels matrix
 %       set through the defopt function:
 %       -nholdouts
 %       -hoproportion

@@ -1,12 +1,12 @@
-function [scores] = pred_dual(X, y, opt)
+function [scores] = pred_dual(X,y, opt)
 % pred_primal(X,y,opt)
 % computes the predictions of the classifier stored in opt.rls on 
 % the samples passed in the X matrix.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
+%   -X: input data matrix
+%   -y: labels matrix
 %   fields with default values set through the defopt function:
 %		- kernel.type
 %   fields that need to be set through previous gurls tasks:
@@ -17,7 +17,7 @@ function [scores] = pred_dual(X, y, opt)
 % OUTPUT:
 % -scores: matrix of predicted labels
 
-if isfield(opt,'predkernel')
+if ~strcmp(opt.kernel.type , 'linear') && isprop(opt,'predkernel')
 	scores = opt.predkernel.K*opt.rls.C;
 elseif strcmp(opt.kernel.type , 'linear')
 	scores = pred_primal(X, y, opt);

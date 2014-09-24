@@ -1,12 +1,10 @@
 function vout = paramsel_bfdual(X,y,opt)
-% paramsel_bfdual(X,Y,OPT)
+% paramsel_bfdual(X,y,OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % This method uses the hold-out cross validation approach in a brute force way
 % i.e. the RLS problem is solved from scratch for each value of the regularizer.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- split (set by the split_* routine)
@@ -32,14 +30,21 @@ function vout = paramsel_bfdual(X,y,opt)
 % -lambdas: mean of the optimal lambdas across splits
 
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 [n,T] = size(y);
 
 K = opt.kernel.K;
+
+if ~isprop(opt, 'predkernel')
+    opt.newprop('predkernel', struct());
+end
+
 for nh = 1:opt.nholdouts
 	% This is memory inefficient but I do not know
 	% how to make it better. Maybe, MATLAB has a copy on write policy
@@ -56,9 +61,9 @@ for nh = 1:opt.nholdouts
 
 	for i = 1:numel(opt.paramsel.guesses)
 		opt.paramsel.lambdas = opt.paramsel.guesses(i);
-		opt.rls = opt.paramsel.optimizer(X(tr,:),y(tr,:),opt);
-		opt.pred = pred_dual(X(va,:),y(va,:),opt);
-		opt.perf = opt.hoperf(X(va,:),y(va,:),opt);
+		opt.newprop('rls', opt.paramsel.optimizer(X(tr,:),y(tr,:),opt));
+		opt.newprop('pred', pred_dual(X(va,:),y(va,:),opt));
+		opt.newprop('perf', opt.hoperf(X(va,:),y(va,:),opt));
 		for t = 1:T
 			ap(i,t) = opt.perf.forho(t);
 		end
@@ -66,8 +71,11 @@ for nh = 1:opt.nholdouts
 	[dummy,idx] = max(ap,[],1);	
 	vout.lambdas_round{nh} = opt.paramsel.guesses(idx);
 	vout.forho{nh} = ap;
-
+    vout.perf{nh} = ap;
 end
+
+opt.kernel.K = K;
+
 if numel(vout.lambdas_round) > 1
 	lambdas = cell2mat(vout.lambdas_round');
 	vout.lambdas = mean(lambdas);

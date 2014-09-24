@@ -1,10 +1,8 @@
-function [cfr] = rls_gpregr(X, y, opt)
-% rls_gpregr(X,y,opt)
+function [cfr] = rls_gpregr(X,y, opt)
+% rls_gpregr(X, y, opt)
 % Performs gaussian process regression
 % 
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: struct of options with the following fields (and subfields):
 %       -opt.paramsel.lambdas (set through the paramsel routines)
 %       -opt.singlelambda (default)

@@ -1,20 +1,25 @@
-function [kernel] = kernel_load(X, y, opt)
+function [kernel] = kernel_load(X,y, opt)
 
-% 	kernel_load(X,y,opt)
+% 	kernel_load(opt)
 %	Loads the kernel matrix from disk.
 %	INPUTS:
-%		-X: input data matrix
-%		-y: not used 
 %		-OPT: struct with the following options:
 %			- trainkernel : name of the file where the kernel matrix is saved.
 %	
 %	OUTPUT: struct with the following fields:
 %		-type: 'load'
 %		-K: kernel matrix
-		
-	if ~isfield(opt,'kernel')
-		opt.kernel.type = 'load';
-	end
-	load(opt.trainkernel);
-	kernel.type = 'load';
-	kernel.K = K;
+    
+kernel = opt.kernel;
+kernel.type = 'load';
+
+if ~isfield(kernel, 'kerrange')
+    kernel.kerrange = 1;
+end
+
+if ~isfield(kernel, 'init') || ~kernel.init
+    load(opt.trainkernel);
+    kernel.K = K;
+else
+    kernel.init = 0;
+end

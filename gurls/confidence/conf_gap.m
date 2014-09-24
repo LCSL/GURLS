@@ -1,5 +1,5 @@
-function [out] = conf_gap(X,y,opt)
-% conf_gap(X,Y,OPT)	
+function [out] = conf_gap(X,y, opt)
+% conf_gap(OPT)	
 % Computes the probability of belonging to the highest scoring class.
 % The scores are converted in probabilities and then the
 % difference between the highest scoring class and the second highest
@@ -7,8 +7,6 @@ function [out] = conf_gap(X,y,opt)
 
 %
 % INPUTS:
-% -X: not used
-% -Y: not used
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- pred (set by the pred_* routine)

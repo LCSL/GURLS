@@ -1,12 +1,10 @@
-function vout = paramsel_gpregrSigLamGrid(X,y,opt)
-% paramsel_gpregrSigLamGrid(X,Y,OPT)
+function vout = paramsel_gpregrSigLamGrid(X,y, opt)
+% paramsel_gpregrSigLamGrid(X,y, OPT)
 % Performs parameter selection for gaussian process regression by 
 % maximizing the likelihood.
 % It selects both the noise level lambda and the kernel parameter sigma.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- kernel.K (set by the kernel_* routines)
@@ -26,42 +24,25 @@ function vout = paramsel_gpregrSigLamGrid(X,y,opt)
 %           minimizing the validation error for each class
 % -sigma: value of the kernel parameter minimizing the validation error
 
-if isfield (opt,'paramsel')
+
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
-[n,T]  = size(y);
-if ~isfield(opt,'kernel')
-	opt.kernel.type = 'rbf';
-end
-if ~isfield(opt.kernel,'distance')
-    opt.kernel.distance = square_distance(X',X');
-end	
-if ~isfield(opt,'sigmamin')
-	D = sort(opt.kernel.distance(tril(true(n),-1)));
-	firstPercentile = round(0.01*numel(D)+0.5);
-	opt.sigmamin = sqrt(D(firstPercentile));
-end
-if ~isfield(opt,'sigmamax')
-	opt.sigmamax = sqrt(max(max(opt.kernel.distance)));
-end
-if opt.sigmamin <= 0
-	opt.sigmamin = eps;
-end
-if opt.sigmamin <= 0
-	opt.sigmamax = eps;
-end
+[~,T]  = size(y);
 
-q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));
+opt.kernel.init = 1;
+opt.kernel = opt.kernel.func(X,y,opt);
+nsigma = numel(opt.kernel.kerrange);
 
-PERF = zeros(opt.nsigma,opt.nlambda,T);
-sigmas = zeros(1,opt.nsigma);
+PERF = zeros(nsigma,opt.nlambda,T);
 
 for i = 1:opt.nsigma
-	sigmas(i) = (opt.sigmamin*(q^(i-1)));
-	opt.paramsel.sigma = sigmas(i);
-	opt.kernel = kernel_rbf(X,y,opt);
+	opt.paramsel.sigmanum = i;
+	opt.kernel = opt.kernel.func(X,y,opt);
 	paramsel = paramsel_gpregrLambdaGrid(X,y,opt);
 	PERF(i,:,:) = paramsel.perf;
 	guesses(i,:) = paramsel.guesses;
@@ -80,6 +61,6 @@ M = sum(PERF,3); % sum over classes
 [m,n] = ind2sub(size(M),i);
 % opt sigma
 vout.perf = M;
-vout.sigma = opt.sigmamin*(q^(m-1));
+vout.sigma = opt.kernel.kerrange(m);
 % opt lambda
 vout.lambdas = guesses(m,n)*ones(1,T);

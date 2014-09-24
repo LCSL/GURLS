@@ -1,10 +1,8 @@
-function [param] = paramsel_fixsiglam(X, y, opt)
-% paramsel_fixlambda(X,Y,OPT)
+function [param] = paramsel_fixsiglam(X,y, opt)
+% paramsel_fixlambda(X,y, OPT)
 % Set the regularization parameter to the value set in OPT
 % 
 % INPUTS:
-% -X: not used
-% -Y: not used
 % -OPT: not used
 % 
 % OUTPUT: struct with the following field:

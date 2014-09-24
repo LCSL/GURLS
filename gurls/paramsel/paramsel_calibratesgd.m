@@ -1,11 +1,10 @@
-function [params] = paramsel_calibratesgd(X, y, opt)
-% paramsel_calibratesgd(X,Y,OPT)
+function [params] = paramsel_calibratesgd(X,y, opt)
+% paramsel_calibratesgd(X,y, OPT)
 % Performs parameter selection when one wants to solve the problem using rls_pegasos.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
-% -OPT: structure of options with the following fields with default values  set through the defopt function:
+% -OPT: structure of options with the following fields:
+%   with default values  set through the defopt function:
 %		- subsize
 %		- calibfile
 %		- hoperf
@@ -18,7 +17,6 @@ function [params] = paramsel_calibratesgd(X, y, opt)
 % - lambda: selected value for the regularization parameter
 % - W: rls coefficient vector
 %
-
 
 n_estimates = 1;
 [n,d] = size(X);

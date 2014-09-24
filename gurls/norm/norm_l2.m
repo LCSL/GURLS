@@ -1,11 +1,9 @@
-function [X] = norm_l2(X,y,opt)
-% norm_l2(X,Y,OPT)
+function [X] = norm_l2(X,y, opt)
+% norm_l2(OPT)
 %	Spheriphies the data according to the l2 norm.
 % 
 % INPUTS:
-% -X: input data matrix
-% -y: not used
-% -OPT: not used
+% -OPT: must contain the field X
 % 
 % OUTPUT:
 % -X: normalized input data matrix

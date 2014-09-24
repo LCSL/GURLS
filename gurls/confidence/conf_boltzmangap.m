@@ -1,6 +1,6 @@
-function [out] = conf_boltzmangap(X,y,opt)
+function [out] = conf_boltzmangap(X,y, opt)
 
-%	conf_boltzmangap(X,y,opt)	
+%	conf_boltzmangap(opt)	
 %	computes a confidence estimation for the predicted class (i.e. highest scoring class).
 %	The scores are converted in probabilities using the
 %	Boltzman distribution and the difference between the highest
@@ -8,8 +8,6 @@ function [out] = conf_boltzmangap(X,y,opt)
 % 	an estimate.
 %
 %	 INPUTS:
-% 		-X: input data matrix
-% 		-y: labels matrix
 % 		-OPT: struct of options with the following fields:
 %			- pred : predicted values (computed by the pred_* routines).
 % 	OUTPUT: 

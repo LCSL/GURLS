@@ -32,7 +32,7 @@
 % ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
 
-function [opt] = gurls (X, y, opt, jobid)
+function [opt] = gurls(X, y, opt, jobid)
 	
 
 
@@ -48,6 +48,10 @@ if jobid == 0
 	return;
 end
 
+if ~isa(opt, 'GurlsOptions')
+    opt = GurlsOptions(opt);
+end
+
 for i = 1:numel(opt.process)
 	if numel(opt.process{i}) ~= numel(opt.seq)
 		error('Number of elements in process and sequence not same\n');
@@ -61,11 +65,13 @@ seq = opt.seq;
 
 if exist(opt.savefile) == 2
 	t = load(opt.savefile);
-	if isfield(t.opt,'time');
+	if isprop(t.opt,'time');
 		opt.time = t.opt.time;
 	end	
 else
-	fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
+    if ~isequal(opt.name,'')
+        fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
+    end
 end	
 %try
 %	t = load(opt.savefile);
@@ -101,13 +107,13 @@ for i = 1:numel(process) % Go by the length of process.
 		fName = [reg{1} '_' reg{2}];
 		fun = str2func(fName);
 		tic;
-		opt = setfield(opt, reg{1}, fun(X, y, opt));
+        opt.newprop(reg{1}, fun(X,y,opt));
 		opt.time{jobid} = setfield(opt.time{jobid},reg{1}, toc);
 		fprintf('\tdone\n');
 
 	case LDF,
-		if exist('t','var') && isfield (t.opt, reg{1})
-			opt = setfield(opt, reg{1}, getfield(t.opt, reg{1}));
+		if exist('t','var') && isprop(opt, reg{1})
+			opt.reg{1} = t.opt.reg{1};
 			fprintf('\tcopied\n');
 		else
 			fprintf('\tcopy failed\n');
@@ -118,22 +124,24 @@ for i = 1:numel(process) % Go by the length of process.
 	end	
 end
 
-fprintf('\nSave cycle...\n');
-% Delete whats not necessary
-for i = 1:numel(process)
-	reg = regexp(seq{i},':','split');
-	fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
-	switch process(i)
-		case {CSV, LDF}
-			fprintf('\tsaving..\n');
-		otherwise
-			if isfield (opt, reg{1})
-				opt = rmfield(opt, reg{1});
-				fprintf('\tremoving..\n');
-			else
-				fprintf('\tnot found..\n');
-			end
-	end
+if ~isequal(opt.name, '')
+    fprintf('\nSave cycle...\n');
+    % Delete whats not necessary
+    for i = 1:numel(process)
+        reg = regexp(seq{i},':','split');
+        fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
+        switch process(i)
+            case {CSV, LDF}
+                fprintf('\tsaving..\n');
+            otherwise
+                if isprop(opt, reg{1})
+                    opt.(reg{1}) = [];
+                    fprintf('\tremoving..\n');
+                else
+                    fprintf('\tnot found..\n');
+                end
+        end
+    end
+    save(opt.savefile, 'opt', '-v7.3');
+    fprintf('Saving opt in %s\n', opt.savefile);
 end
-save(opt.savefile, 'opt', '-v7.3');
-fprintf('Saving opt in %s\n', opt.savefile);

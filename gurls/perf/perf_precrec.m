@@ -1,11 +1,10 @@
-function [p] =  perf_precrec(X, y, opt)
-% perf_precrec(X,y,opt)
+function [p] =  perf_precrec(X,y, opt)
+% perf_precrec(opt)
 % Computes the average precision per class
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: structure of options with the following fields (and subfields):
+%   -y: labels matrix
 %   fields that need to be set through previous gurls tasks:
 %       -pred (set by the pred_* routines)
 % 

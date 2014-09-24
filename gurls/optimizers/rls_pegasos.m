@@ -1,13 +1,11 @@
-function [cfr] = rls_pegasos(X, bY, opt)
-% rls_pegasos(X,BY,OPT)
+function [cfr] = rls_pegasos(X,bY, opt)
+% rls_pegasos(X, bY, opt)
 % computes a classifier for the primal formulation of RLS.
 % The optimization is carried out using a stochastic gradient descent algorithm.
 % The regularization parameter is set to the one found in opt.paramsel (set by the paramsel_* routines).
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
 % INPUTS:
-% -X: input data matrix
-% -BY: binary coded labels matrix
 % -OPT: structure of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)
@@ -33,6 +31,7 @@ function [cfr] = rls_pegasos(X, bY, opt)
 
 T = size(bY,2);
 
+opt.newprop('cfr', struct());
 opt.cfr.W = zeros(d,T);
 opt.cfr.W_sum = zeros(d,T);
 opt.cfr.count = 0;

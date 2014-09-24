@@ -1,13 +1,11 @@
-function [out] = conf_maxscore(X,y,opt)
+function [out] = conf_maxscore(X,y, opt)
 
-%	conf_maxscore(X,y,opt)	
+%	conf_maxscore(opt)	
 %	computes a codfidence estimation for the predicted class (i.e. highest scoring class).
 %	The difference between the highest scoring class and the second highest
 %	scoring class is considered.
 %
 %	INPUT:
-%		- X 	: input data matrix (not used).
-%		- y 	: labels matrix (not used).
 %		- opt 	: struct of options containing the following fields:
 %				- pred : predicted valies (computed by the pred_* routines).
 % 	Output:

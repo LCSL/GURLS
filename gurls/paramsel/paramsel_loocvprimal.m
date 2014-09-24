@@ -1,11 +1,9 @@
-function vout = paramsel_loocvprimal(X,y,opt)
-% paramsel_loocvprimal(X,Y,OPT)
+function vout = paramsel_loocvprimal(X,y, opt)
+% paramsel_loocvprimal(X,y, OPT)
 % Performs parameter selection when the primal formulation of RLS is used.
 % The leave-one-out approach is used.
 %
 % INPUTS:
-% -X: input data matrix
-% -Y: labels matrix
 % -OPT: structure of options with the following fields with default values
 % set through the defopt function:
 %		- nlambda
@@ -23,19 +21,22 @@ function vout = paramsel_loocvprimal(X,y,opt)
 % -XtX: kernel matrix in the primal space (X'*X)
 % -Xty: X'*y
 
-if isfield (opt,'paramsel')
+if isprop(opt,'paramsel')
 	vout = opt.paramsel; % lets not overwrite existing parameters.
 			      		 % unless they have the same name
+else
+    opt.newprop('paramsel', struct());
 end
 
 %verify if matrix XtX has already been computed (especially for online RLS)
-if isfield(opt,'rls');
+if isprop(opt,'rls');
     if isfield(opt.kernel,'XtX');
         Ktot = opt.kernel.XtX;
     else
         Ktot = X'*X;
     end
 else
+    opt.newprop('rls', struct());
     Ktot = X'*X;
 end
 Xtytot = X'*y;
@@ -62,11 +63,11 @@ for i = 1:tot
 	for j = 1:n
 		den(j) = 1-LEFT(j,:)*LL*right(:,j);
 	end	
-	opt.pred = zeros(n,T);
+	opt.newprop('pred', zeros(n,T));
 	for t = 1:T
 		opt.pred(:,t) = y(:,t) - (num(:,t)./den);
 	end
-	opt.perf = opt.hoperf([],y,opt);
+	opt.newprop('perf', opt.hoperf([],y,opt));
 	for t = 1:T
 		ap(i,t) = opt.perf.forho(t);
 	end	

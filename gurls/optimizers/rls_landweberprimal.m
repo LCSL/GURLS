@@ -1,12 +1,10 @@
-function [rls] = rls_landweberprimal (X, y, opt)
+function [rls] = rls_landweberprimal (X,y,opt)
 
-% rls_landweberprimal(X,y,opt)
+% rls_landweberprimal(X, y, opt)
 % computes the regression function for landweber regularization in the primal space.
 % The regularization parameter (i.e. the number of iterations) is set to the one found in opt.paramsel.
 %
 % INPUTS:
-% -X: input data matrix
-% -y: labels matrix
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)
@@ -21,14 +19,18 @@ function [rls] = rls_landweberprimal (X, y, opt)
 % -C: empty matrix
 % -X: empty matrix
 
-
-
-Niter = opt.singlelambda(opt.paramsel.lambdas);
+Niter = ceil(opt.singlelambda(opt.paramsel.lambdas));
 
 d = size(X,2);
 T = size(y,2);
 
-if isfield(opt.paramsel,'f0');
+if isfield(opt.paramsel,'niter');
+    niter = ceil(opt.paramsel.niter);
+else
+    niter = 1;
+end
+
+if isfield(opt.paramsel,'f0') && niter <= Niter;
     W = opt.paramsel.f0;
 else
     W=zeros(d,T);
@@ -51,9 +53,12 @@ else
     tau=1/(2*norm(XtX)); 
 end
 
-for i = 1:Niter;
+for i = niter:Niter;
     W = W + tau*(Xty- XtX*W);
 end
+
+opt.paramsel.f0 = W;
+opt.paramsel.niter = Niter;
 
 rls.C = [];
 rls.X = [];
