@@ -57,7 +57,20 @@ namespace gurls {
 template <typename T>
 class KernelChisquared: public Kernel<T>
 {
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	KernelChisquared():Kernel<T>("chisquared"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new KernelChisquared<T>();
+	}
+
     /**
      * Builds the symmetric kernel matrix of matrix X for a chi-squared model.
      *

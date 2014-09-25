@@ -58,6 +58,19 @@ template <typename T>
 class SplitHo: public Split<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	SplitHo():Split<T>("ho"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new SplitHo<T>();
+	}
+
     /**
      * Splits data into one or more pairs of training and test samples, to be used for cross-validation. The fraction of samples for the validation set is specified in the field hoproportion of opt, and the number of pairs is specified in the field nholdouts of opt
      * \param X not used
@@ -86,6 +99,21 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
 //    [n,T] = size(y);
     const int n = Y.rows();
     const int t = Y.cols();
+	
+    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(n, nSplits);
+    unsigned long* indices = m_indices->getData();
+	
+    gMat2D<unsigned long>* m_lasts = new gMat2D<unsigned long>(nSplits, 1);
+
+	//check if Y is in gurls classification format
+	bool islabel = isLabel(Y);
+
+	if(islabel)
+	{
+
+	int nclass=t;
+	if(t==1)
+		nclass=2;
 
 //    [dummy, y] = max(y,[],2);
     T* work = new T[Y.getSize()];
@@ -100,7 +128,7 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
 //        classes{t}.idx = find(y == t);
 //    end
 
-    int* nSamples = new int[t];
+    int* nSamples= new int[nclass];
     int nva = 0;
     unsigned long* idx = new unsigned long[n];
     unsigned long* it_idx = idx;
@@ -109,18 +137,22 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
     for(int i=0; i<t; ++i)
     {
 //        nSamples(t) = numel(classes{t}.idx);
-        indicesOfEqualsTo<unsigned long>(y, n, i, it_idx, nSamples[i]);
-
 //        nva = nva + floor(fraction*nSamples(t));
-        nva += static_cast<int>(std::floor(fraction*nSamples[i]));
-
-        it_idx += nSamples[i];
+		if(t>1){
+			indicesOfEqualsTo<unsigned long>(y, n, i, it_idx, nSamples[i]);
+			nva += static_cast<int>(std::floor(fraction*nSamples[i]));
+			it_idx += nSamples[i];
+		}
+		else{
+			indicesOfEqualsTo(Y.getData(), n, Y.min(), it_idx, nSamples[0]);
+			indicesOfEqualsTo(Y.getData(), n, Y.max(), it_idx+nSamples[0], nSamples[1]);
+			nva =  static_cast<int>(std::floor(fraction*(nSamples[0]))+std::floor(fraction*(nSamples[1])));
+			}
     }
 
+	set(m_lasts->getData(), (unsigned long) (n-nva), nSplits);
     delete[] y;
 
-    gMat2D<unsigned long>* m_indices = new gMat2D<unsigned long>(n, nSplits);
-    unsigned long* indices = m_indices->getData();
 
     int count_tr;
     int count_va;
@@ -135,7 +167,7 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
         it_idx = idx;
 
 //        for t = 1:T,
-        for(int i=0; i<t; ++i)
+        for(int i=0; i<nclass; ++i)
         {
             const int nsamples = nSamples[i];
 
@@ -149,7 +181,7 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
             copy(indices+count_tr+state*n, it_idx, last, 1, 1);
 
             copy(indices+count_va+state*n, it_idx+last, nsamples-last, 1, 1);
-
+			
             count_tr += last;
             count_va += nsamples-last;
             it_idx += nsamples;
@@ -157,22 +189,30 @@ GurlsOptionsList *SplitHo<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y
         }
 
     }
+	delete[] idx;
+	delete[] nSamples;
+	}
+	else
+	{
+		int nva =  static_cast<int>(std::floor(fraction*(n)));
+		set(m_lasts->getData(), (unsigned long) (n-nva), nSplits);
+		
+		unsigned long* idx = new unsigned long[n];
+		unsigned long* it_idx = idx;
 
-    delete[] nSamples;
-    delete[] idx;
-
-
-    gMat2D<unsigned long>* m_lasts = new gMat2D<unsigned long>(nSplits, 1);
-    set(m_lasts->getData(), (unsigned long) (n-nva), nSplits);
-
-
+		for(int state=0; state<nSplits; ++state)
+			{
+            randperm(n, it_idx, true, 0);
+            copy(indices+state*n, it_idx, n, 1, 1);
+			}
+		delete[] idx;
+	}
     GurlsOptionsList* split = new GurlsOptionsList("split");
     split->addOpt("indices", new OptMatrix<gMat2D<unsigned long> >(*m_indices));
     split->addOpt("lasts", new OptMatrix<gMat2D<unsigned long> >(*m_lasts));
 
     return split;
 }
-
 }
 
 #endif //_GURLS_SPLITHO_H_

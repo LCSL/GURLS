@@ -20,6 +20,19 @@ template <typename T>
 class PerfAbsErr: public Performance<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	PerfAbsErr():Performance<T>("abserr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PerfAbsErr<T>();
+	}
+
     /**
      * Evaluates the absolute mean error of the predicted labels stored in the field pred of opt with respect to the true input labels Y. 
      * \param X not used

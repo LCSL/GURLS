@@ -58,7 +58,20 @@ namespace gurls {
 template <typename T>
 class KernelLinear: public Kernel<T>
 {
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	KernelLinear():Kernel<T>("linear"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new KernelLinear<T>();
+	}
+
     /**
      * Builds the symmetric kernel matrix of matrix X for a linear model.
      *

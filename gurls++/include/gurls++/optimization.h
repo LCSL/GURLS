@@ -49,6 +49,7 @@
 #include <map>
 #include <string>
 
+#include "gurls++/task.h"
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
 #include "gurls++/gmat2d.h"
@@ -100,25 +101,38 @@ class RLSPrimalRecUpdateCholesky;
  *
  * \brief BadOptimizerCreation is thrown when \ref factory tries to generate an unknown optimizer
  */
-class BadOptimizerCreation : public gException
+class BadOptimizerCreation : public BadTaskCreation
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadOptimizerCreation(std::string type): gException("Cannot create type " + type) {}
+    BadOptimizerCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
  * \brief Optimizer is a class that implements a Regularized Least Square algorithm
  */
 template <typename T>
-class Optimizer
+class Optimizer : public Task<T>
 {
 public:
 
-    /**
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Optimizer(const std::string& taskName)
+    	:Task<T>("optimizer", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Optimizer()
+    	:Task<T>("optimizer", ""){}
+
+	/**
      * Implements a Regularized Least Square algorithm
      * \param X input data matrix
      * \param Y labels matrix

@@ -57,9 +57,12 @@
 
 namespace gurls
 {
-
+	
 template <typename T>
 class PerfMacroAvg;
+
+template <typename T>
+class PerfTotalAvg;
 
 template <typename T>
 class PerfPrecRec;
@@ -76,14 +79,14 @@ class PerfAbsErr;
  *
  * \brief BadPerformanceCreation is thrown when \ref factory tries to generate an unknown performance evaluator
  */
-class BadPerformanceCreation : public gException
+class BadPerformanceCreation : public BadTaskCreation
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadPerformanceCreation(std::string type): gException("Cannot create type " + type) {}
+    BadPerformanceCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -91,11 +94,24 @@ public:
  * \brief Performance is the class that evaluates prediction performance
  */
 template <typename T>
-class Performance
+class Performance : public Task<T>
 {
 public:
 
-    /**
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Performance(const std::string& taskName)
+    	:Task<T>("perf", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Performance()
+    	:Task<T>("perf", ""){}
+
+	/**
      * Evaluates prediction performance
      *
      * \param X input data matrix
@@ -104,6 +120,7 @@ public:
      *
      * \return a GurlsOptionList
      */
+
     virtual GurlsOptionsList *execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
 
     /**
@@ -118,6 +135,8 @@ public:
             return new PerfPrecRec<T>;
         if(id == "macroavg")
             return new PerfMacroAvg<T>;
+        if(id == "totalavg")
+            return new PerfTotalAvg<T>;
         if(id == "rmse")
             return new PerfRmse<T>;
         if(id == "abserr")

@@ -62,7 +62,20 @@ namespace gurls {
 template <typename T>
 class ParamSelCalibrateSGD: public ParamSelection<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	ParamSelCalibrateSGD():ParamSelection<T>("calibratesgd"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelCalibrateSGD<T>();
+	}
+
     /**
      * Performs parameter selection when one wants to solve the problem using rls_pegasos.
      * \param X input data matrix

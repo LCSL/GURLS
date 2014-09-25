@@ -59,6 +59,8 @@
 #include "gurls++/optarray.h"
 #include "gurls++/optfunction.h"
 #include "gurls++/optmatrix.h"
+#include "gurls++/opttask.h"
+#include "gurls++/opttasksequence.h"
 
 #include "gurls++/linearkernel.h"
 #include "gurls++/rbfkernel.h"
@@ -68,6 +70,7 @@
 
 #include "gurls++/precisionrecall.h"
 #include "gurls++/macroavg.h"
+#include "gurls++/totalavg.h"
 #include "gurls++/rmse.h"
 #include "gurls++/abserr.h"
 
@@ -117,6 +120,8 @@
  
 #include "gurls++/wrapper.h"
 
+#include "gurls++/taskfactory.h"
+
 namespace gurls {
 
     /**
@@ -163,18 +168,9 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
                 GurlsOptionsList& opt, std::string processid)
 {
 
-    boost::posix_time::ptime begin, end;
+    boost::posix_time::ptime begintime, endtime;
     boost::posix_time::time_duration diff;
 
-    Optimizer<T> *taskOpt;
-    ParamSelection<T> *taskParSel;
-    Prediction<T> *taskPrediction;
-    Performance<T> *taskPerformance;
-    Kernel<T> *taskKernel;
-    Norm<T> *taskNorm;
-    Split<T> *taskSplit;
-    PredKernel<T> *taskPredKernel;
-    Confidence<T> *taskConfidence;
 
 //    try{
 
@@ -206,27 +202,11 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
         GurlsOption* tmpOpt;
 
-        //% Load and copy
-
-        //if exist(opt.savefile) == 2
-        //	t = load(opt.savefile);
-        //	if isfield(t.opt,'time');
-        //		opt.time = t.opt.time;
-        //	end
-        //else
-        //	fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
-        //end
-        //%try
-        //%	t = load(opt.savefile);
-        //%	if isfield(t.opt,'time')
-        //%		opt.time = t.opt.time;
-        //%	end
-        //%catch
-        //%	fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
-        //%end
-
         GurlsOptionsList *timelist;
 		
+		std::string fieldName;
+		std::string taskName;
+
         if (opt.hasOpt("time"))
             timelist = GurlsOptionsList::dynacast(opt.getOpt("time"));
         else
@@ -237,7 +217,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
 		int todisk=1;
         if (opt.hasOpt("todisk"))
-			todisk=opt.getOptAsNumber("todisk");
+			todisk=(int)opt.getOptAsNumber("todisk");
 
 //        std::vector <double> process_time(seq->size(), 0.0);
         gMat2D<T>* process_time_vector = new gMat2D<T>(1, seq->size());
@@ -248,20 +228,22 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
         //opt.time{jobid} = struct;
         //%end
 
-        std::string reg1;
-        std::string reg2;
 //        std::string fun("");
         std::cout << std::endl
                   <<"####### New task sequence... "
                   << std::endl;
-
-        for (unsigned long i = 0; i < seq->size(); ++i)
+		
+	unsigned int i=0;
+	for(gurls::OptTaskSequence::iterator it = seq->begin(), end = seq->end(); it != end; ++it, ++i)
         {
-            seq->getTaskAt(i, reg1, reg2);
+        gurls::OptTask &taskOption = *it;
+		gurls::Task<T>* task = taskOption.getValue<T>();
+		OptTaskSequence::isValid(taskOption.getString(), fieldName, taskName);
+		
+    	std::cout << "\t" << "[Task " << i << ": "
+              	<< fieldName << "]: " << taskName << "... ";
+    	std::cout.flush();
 
-            std::cout << "\t" << "[Task " << i << ": "
-                      << reg1 << "]: " << reg2 << "... ";
-            std::cout.flush();
 
 
 //            switch ( static_cast<int>(process[i]) )
@@ -273,178 +255,65 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
 
             case GURLS::compute:
             case GURLS::computeNsave:
-                // WARNING: we should consider the case in which
-                // the following statements holds true because the
-                // field reg{1} already exists in opt.
-                //	case {CPT, CSV, ~isfield(opt,reg{1})}
+                begintime = boost::posix_time::microsec_clock::local_time();
+             
+    			opt.removeOpt(task->fieldName());
+    			opt.addOpt(task->fieldName(), task->execute(X, y, opt));
 
-                begin = boost::posix_time::microsec_clock::local_time();
-
-                if (!reg1.compare("optimizer"))
-                {
-                    taskOpt = Optimizer<T>::factory(reg2);
-                    GurlsOption* ret = taskOpt->execute(X, y, opt);
-                    opt.removeOpt("optimizer");
-                    opt.addOpt("optimizer", ret);
-
-                    delete taskOpt;
-                }
-                else if (!reg1.compare("paramsel"))
-                {
-                    taskParSel = ParamSelection<T>::factory(reg2);
-                    GurlsOption* ret = taskParSel->execute(X, y, opt);
-                    opt.removeOpt("paramsel");
-                    opt.addOpt("paramsel", ret);
-
-                    delete taskParSel;
-                }
-                else if (!reg1.compare("pred"))
-                {
-                    taskPrediction = Prediction<T>::factory(reg2);
-                    GurlsOption* ret = taskPrediction->execute(X, y, opt);
-                    opt.removeOpt("pred");
-                    opt.addOpt("pred", ret);
-
-                    delete taskPrediction;
-                }
-                else if (!reg1.compare("perf"))
-                {
-                    taskPerformance = Performance<T>::factory(reg2);
-                    GurlsOption* ret = taskPerformance->execute(X, y, opt);
-                    opt.removeOpt("perf");
-                    opt.addOpt("perf", ret);
-
-                    delete taskPerformance;
-                }
-                else if (!reg1.compare("kernel"))
-                {
-                    taskKernel = Kernel<T>::factory(reg2);
-                    GurlsOption* ret = taskKernel->execute(X, y, opt);
-                    opt.removeOpt("kernel");
-                    opt.addOpt("kernel", ret);
-
-                    delete taskKernel;
-                }
-                else if (!reg1.compare("norm"))
-                {
-                    taskNorm = Norm<T>::factory(reg2);
-                    GurlsOption* ret = taskNorm->execute(X, y, opt);
-                    opt.removeOpt("norm");
-                    opt.addOpt("norm", ret);
-
-                    delete taskNorm;
-                }
-                else if (!reg1.compare("split"))
-                {
-                    taskSplit = Split<T>::factory(reg2);
-                    GurlsOption* ret = taskSplit->execute(X, y, opt);
-                    opt.removeOpt("split");
-                    opt.addOpt("split", ret);
-
-                    delete taskSplit;
-                }
-                else if (!reg1.compare("predkernel"))
-                {
-                    taskPredKernel = PredKernel<T>::factory(reg2);
-                    GurlsOption* ret = taskPredKernel->execute(X, y, opt);
-                    opt.removeOpt("predkernel");
-                    opt.addOpt("predkernel", ret);
-
-                    delete taskPredKernel;
-                }
-                else if (!reg1.compare("conf"))
-                {
-                    taskConfidence = Confidence<T>::factory(reg2);
-                    GurlsOption* ret = taskConfidence->execute(X, y, opt);
-                    opt.removeOpt("conf");
-                    opt.addOpt("conf", ret);
-
-                    delete taskConfidence;
-                }
-
-//                fun = reg1;
-//                fun+="_";
-//                fun+=reg2;
-//                opt.addOpt(reg1, new OptString(fun));
-
-                end = boost::posix_time::microsec_clock::local_time();
-                diff = end-begin;
+                endtime = boost::posix_time::microsec_clock::local_time();
+                diff = endtime-begintime;
 
                 process_time[i] = ((T)diff.total_milliseconds())/1000.0;
 
-                //		fName = [reg{1} '_' reg{2}];
-                //		fun = str2func(fName);
-                //		tic;
-                //		opt = setfield(opt, reg{1}, fun(X, y, opt));
-                //		opt.time{jobid} = setfield(opt.time{jobid},reg{1}, toc);
-                //		fprintf('\tdone\n');
                 std::cout << " done." << std::endl;
                 break;
 
             case GURLS::load:
-                //	case LDF,
-                //		if exist('t','var') && isfield (t.opt, reg{1})
-                //			opt = setfield(opt, reg{1}, getfield(t.opt, reg{1}));
-                //			fprintf('\tcopied\n');
-                //		else
-                //			fprintf('\tcopy failed\n');
-                //		end
-//                std::cout << " skipped." << std::endl;
 
                 if(loadOpt == NULL)
+				{
+					delete task;
                     throw gException("Opt savefile not found");
-                if(!loadOpt->hasOpt(reg1))
+				}
+                if(!loadOpt->hasOpt(task->fieldName()))
                 {
-                    std::string s = "Task " + reg1 + " not found in opt savefile";
+                    std::string s = "Task " +  task->fieldName() + " not found in opt savefile";
                     gException e(s);
+					delete task;
                     throw e;
                 }
 
-                opt.removeOpt(reg1);
-                tmpOpt = loadOpt->getOpt(reg1);
-                loadOpt->removeOpt(reg1, false);
-                opt.addOpt(reg1, tmpOpt);
+                opt.removeOpt( task->fieldName());
+                tmpOpt = loadOpt->getOpt( task->fieldName());
+                loadOpt->removeOpt( task->fieldName(), false);
+                opt.addOpt( task->fieldName(), tmpOpt);
                 std::cout << " copied" << std::endl;
 
                 break;
             default:
+				delete task;
                 throw gException("Unknown task assignment");
             }
-
+			
+			delete task;
         }
 
-//        timelist->addOpt(processid, new OptNumberList(process_time));
         timelist->removeOpt(processid);
         timelist->addOpt(processid, new OptMatrix<gMat2D<T> >(*process_time_vector));
-
-        //fprintf('\nSave cycle...\n');
-        //% Delete whats not necessary
-        //for i = 1:numel(process)
-        //	fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
-        //	reg = regexp(seq{i},':','split');
-        //	switch process(i)
-        //		case {CSV, LDF}
-        //			fprintf('\tsaving..\n');
-        //		otherwise
-        //			if isfield (opt, reg{1})
-        //				opt = rmfield(opt, reg{1});
-        //				fprintf('\tremoving..\n');
-        //			else
-        //				fprintf('\tnot found..\n');
-        //			end
-        //	end
-        //end
-        //save(opt.savefile, 'opt', '-v7.3');
-        //fprintf('Saving opt in %s\n', opt.savefile);
 
         bool save = false;
 
         std::cout << std::endl << "Save cycle..." << std::endl;
-        for (unsigned long i = 0; i < seq->size(); ++i)
+	i=0;
+	for(gurls::OptTaskSequence::iterator it = seq->begin(),
+												end = seq->end(); it != end; ++it, ++i)
         {
-            seq->getTaskAt(i, reg1, reg2);
-            std::cout << "\t" << "[Task " << i << ": " << reg1 << "]: " << reg2 << "... ";
-            std::cout.flush();
+			gurls::OptTask &taskOption = *it;
+
+			OptTaskSequence::isValid(taskOption.getString(), fieldName, taskName);
+		
+    		std::cout << "\t" << "[Task " << i << ": "<< fieldName << "]: " << taskName << "... ";
+    		std::cout.flush();
 
             switch ( (*process)[i] )
             {
@@ -452,7 +321,7 @@ void GURLS::run(const gMat2D<T>& X, const gMat2D<T>& y,
             case GURLS::compute:
             case GURLS::remove:
                 std::cout << "not saved" << std::endl;
-                opt.removeOpt(reg1);
+                opt.removeOpt(fieldName);
                 break;
             case GURLS::load:
             case GURLS::computeNsave:

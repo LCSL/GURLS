@@ -70,6 +70,19 @@ template <typename T>
 class RLSRandFeats: public Optimizer<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	RLSRandFeats():Optimizer<T>("rlsrandfeats"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSRandFeats<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS using the Random Features approach.
      *

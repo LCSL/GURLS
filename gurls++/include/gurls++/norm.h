@@ -45,10 +45,10 @@
 #include <cstring>
 #include <cmath>
 
+#include "gurls++/task.h" 
 #include "gurls++/gvec.h"
 #include "gurls++/gmat2d.h"
 #include "gurls++/exceptions.h"
-
 #include "gurls++/optlist.h"
 
 namespace gurls
@@ -115,14 +115,14 @@ class NormTestZScore;
  *
  * \brief BadNormCreation is thrown when \ref factory tries to generate an unknown norm
  */
-class BadNormCreation : public gException
+class BadNormCreation : public BadTaskCreation
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadNormCreation(const std::string& type): gException("Cannot create type " + type) {}
+    BadNormCreation(const std::string& type): BadTaskCreation(type) {}
 };
 
 /**
@@ -130,11 +130,24 @@ public:
  * \brief Norm is a class that spherifies the data
  */
 template<typename T>
-class Norm
+class Norm : public Task<T>
 {
 public:
 
-    /**
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Norm(const std::string& taskName)
+    	:Task<T>("norm", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Norm()
+    	:Task<T>("norm", ""){}
+
+	/**
      * Spherifies the data
      * \param X input data matrix
      * \param Y labels matrix

@@ -58,6 +58,19 @@ template <typename T>
 class ConfGap: public Confidence<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	ConfGap():Confidence<T>("gap"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ConfGap<T>();
+	}
+
     /**
      * Computes a confidence estimation for the predicted class (i.e. highest scoring class). The difference between the highest scoring class and the second highest scoring class is used as an estimate.
      * \param X not used

@@ -58,6 +58,19 @@ template <typename T>
 class ConfMaxScore: public Confidence<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	ConfMaxScore():Confidence<T>("maxscore"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ConfMaxScore<T>();
+	}
+
     /**
      * Computes a confidence estimation for the predicted class (i.e. highest scoring class).
      * The difference between the highest scoring class and the second highest scoring class is considered.

@@ -61,6 +61,19 @@ template <typename T>
 class NormZScore: public Norm<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	NormZScore():Norm<T>("zscore"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new NormZScore<T>();
+	}
+
     /**
      * Normalizes the input data matrix X, centering them and rescaling it so that each dimension has std. deviation 1. Then saves stats in a file with name root specified in the field name of opt
      * \param X input data matrix

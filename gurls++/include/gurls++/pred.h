@@ -49,6 +49,7 @@
 #include <cmath>
 #include <algorithm>
 
+#include "gurls++/task.h"
 #include "gurls++/gmath.h"
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
@@ -75,13 +76,13 @@ class PredRandFeats;
  *
  * \brief BadPredictionCreation is thrown when \ref factory tries to generate an unknown prediction method
  */
-class BadPredictionCreation : public gException
+class BadPredictionCreation : public BadTaskCreation
 {
 public:
     /**
      * Exception constructor.
      */
-    BadPredictionCreation(std::string type): gException("Cannot create type " + type) {}
+    BadPredictionCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -89,20 +90,23 @@ public:
  * \brief Prediction is the class that computes predictions
  */
 template <typename T>
-class Prediction
+class Prediction : public Task<T>
 {
 public:
 
-    /**
-     * Computes predictions of the classifier stored in the field optimizer of opt on the samples passed in the X matrix.
-     * \param X input data matrix
-     * \param Y labels matrix
-     * \param opt options with the different required fields based on the sub-class
-     *
-     * \return pred
-     */
-    virtual GurlsOption* execute( const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
-
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Prediction(const std::string& taskName)
+    	:Task<T>("pred", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Prediction()
+    	:Task<T>("pred", ""){}
+	
     /**
      * Factory function returning a pointer to the newly created object.
      *

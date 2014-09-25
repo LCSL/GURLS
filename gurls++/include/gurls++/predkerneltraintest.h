@@ -62,6 +62,19 @@ template <typename T>
 class PredKernelTrainTest: public PredKernel<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	PredKernelTrainTest():PredKernel<T>("traintest"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PredKernelTrainTest<T>();
+	}
+
    /**
      * Computes the kernel matrix between the training set and the test set X, in order to predict the labels for X
      *
@@ -197,7 +210,6 @@ GurlsOptionsList *PredKernelTrainTest<T>::execute(const gMat2D<T>& X, const gMat
         throw gException(Exception_Required_Parameter_Missing);
 
     predkernel->addOpt("K", new OptMatrix<gMat2D<T> > (*K));
-
 
     return predkernel;
 }

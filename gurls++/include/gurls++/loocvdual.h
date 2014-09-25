@@ -71,6 +71,19 @@ template <typename T>
 class ParamSelLoocvDual: public ParamSelection<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelLoocvDual():ParamSelection<T>("loocvdual"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelLoocvDual<T>();
+	}
+
     /**
      * Performs parameter selection when the dual formulation of RLS is used.
      * The leave-one-out approach is used.
@@ -146,8 +159,8 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
     OptMatrix<gMat2D<T> >* pred_opt = new OptMatrix<gMat2D<T> >(*pred);
     nestedOpt->addOpt("pred", pred_opt);
 
-
-    Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
+	
+	Task<T>* perfClass = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
 
     gMat2D<T>* perf = new gMat2D<T>(tot, t);
     T* ap = perf->getData();
@@ -173,7 +186,7 @@ GurlsOptionsList* ParamSelLoocvDual<T>::execute(const gMat2D<T>& X, const gMat2D
 
 //        opt.perf = opt.hoperf([],y,opt);
         const gMat2D<T> dummy;
-        GurlsOptionsList* perf_opt = perfClass->execute(dummy, Y, *nestedOpt);
+        GurlsOptionsList* perf_opt = GurlsOptionsList::dynacast(perfClass->execute(dummy, Y, *nestedOpt));
 
         gMat2D<T> &forho_vec = perf_opt->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 

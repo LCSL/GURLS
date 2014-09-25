@@ -58,6 +58,19 @@ template <typename T>
 class RLSAuto: public Optimizer<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	RLSAuto():Optimizer<T>("rlsauto"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSAuto<T>();
+	}
+
     /**
       * computes a RLS classifier, with automatic selection of primal/dual procedure.
       * The regularization parameter is set to the one found in the field paramsel of opt

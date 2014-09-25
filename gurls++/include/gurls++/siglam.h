@@ -72,6 +72,19 @@ template <typename T>
 class ParamSelSiglam: public ParamSelection<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelSiglam():ParamSelection<T>("siglam"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelSiglam<T>();
+	}
+
     /**
      * Performs parameter selection when the dual formulation of RLS is used with rbf kernel.
      * The leave-one-out approach is used oer a 2-dimensional grid of values for the parameters sigma (kernel) and lambda (regularization)
@@ -275,8 +288,7 @@ GurlsOptionsList* ParamSelSiglam<T>::execute(const gMat2D<T>& X, const gMat2D<T>
             for(T* it = looe_mat.getData()+j; it< end ; it+=nlambda)
                 perf[j] += *it;
         }
-
-        unsigned long mm = std::max_element(perf, perf + nlambda) - perf;
+        std::size_t mm = std::max_element(perf, perf + nlambda) - perf;
 
         if( gt(perf[mm], maxTmp) || i==0)
         {

@@ -62,6 +62,19 @@ template <typename T>
 class PredGPRegr: public Prediction<T> {
 
 public:
+	///
+	/// Default constructor
+	///
+	PredGPRegr():Prediction<T>("gpregr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PredGPRegr<T>();
+	}
+
     /**
      * computes the predictive distribution of the GP stored in opt.optimizer (L and alpha), on the samples passed in the X matrix.
      * \param X input data matrix

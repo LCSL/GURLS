@@ -62,6 +62,19 @@ template <typename T>
 class PerfRmse: public Performance<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	PerfRmse():Performance<T>("rmse"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PerfRmse<T>();
+	}
+
     /**
      * Evaluates the root mean square error of the predicted labels stored in the field pred of opt with respect to the true input labels Y. It computes it as the frobenius norm over the classes and the samples of the difference between the true and predicted labels matrices.
      * \param X not used

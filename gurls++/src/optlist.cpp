@@ -169,7 +169,7 @@ GurlsOptionsList::~GurlsOptionsList()
     delete table;
 }
 
-void GurlsOptionsList::printAll()
+void GurlsOptionsList::printAll() const
 {
     std::cout << *this;
 }
@@ -350,7 +350,10 @@ void GurlsOptionsList::copyOpt(string key, const GurlsOptionsList &from)
         newOpt = new OptArray(*OptArray::dynacast(toCopy));
         break;
     case TaskSequenceOption:
-        newOpt = new OptTaskSequence(OptTaskSequence::dynacast(toCopy)->getValue());
+        newOpt = new OptTaskSequence(*OptTaskSequence::dynacast(toCopy));
+        break;
+    case TaskOption:
+        newOpt = new OptTask(*OptTask::dynacast(toCopy));
         break;
     case TaskIDOption:
     case GenericOption:

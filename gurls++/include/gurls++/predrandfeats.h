@@ -67,6 +67,19 @@ template <typename T>
 class PredRandFeats: public Prediction<T> {
 
 public:
+	///
+	/// Default constructor
+	///
+	PredRandFeats():Prediction<T>("randfeats"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PredRandFeats<T>();
+	}
+
     /**
      * computes the predictions of the linear classifier stored in opt.rls.W
      * \param X input data matrix

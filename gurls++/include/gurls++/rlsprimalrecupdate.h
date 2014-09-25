@@ -61,6 +61,19 @@ template <typename T>
 class RLSPrimalRecUpdate: public Optimizer<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	RLSPrimalRecUpdate():Optimizer<T>("rlsprimalrecupdate"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSPrimalRecUpdate<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS, using a
      * recursive update, starting from an initial estimator found in opt.optimizer.

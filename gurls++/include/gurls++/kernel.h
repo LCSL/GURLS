@@ -42,17 +42,10 @@
 #ifndef _GURLS_KERNEL_H_
 #define _GURLS_KERNEL_H_
 
-//#include <cstdio>
-//#include <algorithm>
 #include <cstdlib>
-//#include <string>
-//#include <vector>
 
-//#include "gvec.h"
-//#include "gmat2d.h"
-
+#include "gurls++/task.h"
 #include "gurls++/exceptions.h"
-
 #include "gurls++/optlist.h"
 
 namespace gurls
@@ -73,13 +66,13 @@ class KernelChisquared;
  *
  * \brief BadKernelCreation is thrown when \ref factory tries to generate an unknown kernel
  */
-class BadKernelCreation : public gException
+class BadKernelCreation : public BadTaskCreation
 {
 public:
     /**
      * Exception constructor.
      */
-    BadKernelCreation(std::string type): gException("Cannot create type " + type) {}
+    BadKernelCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -87,10 +80,25 @@ public:
  * \brief Kernel is the class that computes the kernel matrix
  */
 template<typename T>
-class Kernel
+class Kernel: public Task<T>
+
 {
 public:
-    /**
+
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Kernel(const std::string& taskName)
+    	:Task<T>("kernel", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Kernel()
+    	:Task<T>("kernel", ""){}
+
+	/**
      * Computes (or loads) the kernel matrix for the data matrix passed in the X matrix
      * \param X input data matrix
      * \param Y labels matrix
@@ -99,7 +107,6 @@ public:
      * \return a GurlsOptionList
      */
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
-
 
     /**
      * Factory function returning a pointer to the newly created object.

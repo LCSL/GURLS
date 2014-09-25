@@ -43,6 +43,7 @@
 #define _GURLS_CONFIDENCE_H_
 
 
+#include "gurls++/task.h"
 #include "gurls++/optlist.h"
 #include "gurls++/exceptions.h"
 
@@ -66,13 +67,13 @@ class ConfMaxScore;
  *
  * \brief BadConfidenceCreation is thrown when \ref factory tries to generate an unknown confidence method
  */
-class BadConfidenceCreation : public gException
+class BadConfidenceCreation : public BadTaskCreation
 {
 public:
     /**
      * Exception constructor.
      */
-    BadConfidenceCreation(std::string type): gException("Cannot create type " + type) {}
+    BadConfidenceCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -80,10 +81,24 @@ public:
  * \brief Confidence is the class that computes a confidence score for the predicted labels
  */
 template<typename T>
-class Confidence
+class Confidence : public Task<T>
 {
 public:
-    /**
+
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Confidence(const std::string& taskName)
+    	:Task<T>("conf", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Confidence()
+    	:Task<T>("conf", ""){}
+
+   /**
      * Computes a confidence score for the predicted labels specified in the field pred of opt
      * \param X not used
      * \param Y not used

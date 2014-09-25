@@ -49,12 +49,10 @@
 #include <cmath>
 #include <algorithm>
 
-
+#include "gurls++/task.h"
+#include "gurls++/gmath.h"
 #include "gurls++/options.h"
 #include "gurls++/optlist.h"
-#include "gurls++/gmat2d.h"
-#include "gurls++/gvec.h"
-#include "gurls++/gmath.h"
 #include "gurls++/exceptions.h"
 
 namespace gurls
@@ -110,13 +108,13 @@ class ParamSelSiglamHoGPRegr;
  *
  * \brief BadParamSelectionCreation is thrown when \ref factory tries to generate an unknown parameter selection method
  */
-class BadParamSelectionCreation : public gException
+class BadParamSelectionCreation : public BadTaskCreation
 {
 public:
     /**
      * Exception constructor.
      */
-    BadParamSelectionCreation(std::string type): gException("Cannot create type " + type) {}
+    BadParamSelectionCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -124,11 +122,24 @@ public:
  * \brief ParamSelection is the class that implements parameter selection
  */
 template <typename T>
-class ParamSelection
+class ParamSelection : public Task<T>
 {
 public:
 
-    /**
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	ParamSelection(const std::string& taskName)
+    	:Task<T>("paramsel", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	ParamSelection()
+    	:Task<T>("paramsel", ""){}
+
+	/**
      * Implements the selection of the regularization parameter(s)
      * \param X input data matrix
      * \param Y labels matrix

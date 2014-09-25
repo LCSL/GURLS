@@ -64,6 +64,19 @@ template <typename T>
 class RLSGPRegr: public Optimizer<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	RLSGPRegr():Optimizer<T>("rlsgpregr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSGPRegr<T>();
+	}
+
     /**
      * Performs GP inference.
      * The noiselevel is set to the one found in the field paramsel of opt.

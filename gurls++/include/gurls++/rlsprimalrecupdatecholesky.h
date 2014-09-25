@@ -64,6 +64,19 @@ template <typename T>
 class RLSPrimalRecUpdateCholesky: public Optimizer<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	RLSPrimalRecUpdateCholesky():Optimizer<T>("rlsprimalrecupdatecholesky"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSPrimalRecUpdateCholesky<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS, using a
      * recursive Cholesky update, starting from an initial estimator found in opt.optimizer.

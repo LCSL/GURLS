@@ -58,6 +58,19 @@ template <typename T>
 class ConfBoltzmanGap: public Confidence<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	ConfBoltzmanGap():Confidence<T>("boltzmangap"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ConfBoltzmanGap<T>();
+	}
+
     /**
      * Computes a confidence estimation for the predicted class (i.e. highest scoring class).
      * The scores are converted in probabilities using the Boltzman distribution and the difference between the highest scoring class and the second highest scoring class is used as an estimate.

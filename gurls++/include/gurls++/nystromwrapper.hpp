@@ -43,7 +43,7 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     const gMat2D<T> empty;
 
     const double sigma = opt->getOptAsNumber("paramsel.sigma");
-    Performance<T> *perfTask = Performance<T>::factory(opt->getOptAsString("hoperf"));
+	Task<T>* perfTask = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
 
 
     const double n_nystrom = opt->getOptAsNumber("n_nystrom");
@@ -301,7 +301,7 @@ void NystromWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
             opt->addOpt("pred", new OptMatrix<gMat2D<T> >(*pred));
 
     //        perf = opt.hoperf([],yva,opt);
-            GurlsOptionsList *perf = perfTask->execute(empty, *yva, *opt);
+			GurlsOptionsList* perf = GurlsOptionsList::dynacast(perfTask->execute(empty, *yva, *opt));
             opt->removeOpt("pred");
 
     //        vout.perf(guesses_c) = mean(perf.forho);

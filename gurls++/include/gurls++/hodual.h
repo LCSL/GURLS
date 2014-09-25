@@ -73,6 +73,19 @@ template <typename T>
 class ParamSelHoDual: public ParamSelection<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelHoDual():ParamSelection<T>("hodual"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelHoDual<T>();
+	}
+
     /**
      * Performs parameter selection when the dual formulation of RLS is used.
      * The hold-out approach is used.
@@ -94,6 +107,7 @@ public:
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 
 protected:
+	ParamSelHoDual(std::string id):ParamSelection<T>(id){}
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
@@ -111,7 +125,21 @@ protected:
 template <typename T>
 class ParamSelHoDualr: public ParamSelHoDual<T>{
 
-protected:
+public:
+	///
+	/// Default constructor
+	///
+	ParamSelHoDualr():ParamSelHoDual<T>("hodualr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelHoDualr<T>();
+	}
+	
+protected:	
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
@@ -199,8 +227,8 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
 
     //     for nh = 1:opt.nholdouts
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
-
-    Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
+	
+	Task<T>* perfClass = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
     PredDual<T> dual;
 
     nestedOpt->addOpt("optimizer",optimizer);
@@ -320,7 +348,7 @@ GurlsOptionsList *ParamSelHoDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>
             nestedOpt->addOpt("pred", ret_pred);
 
             // 	opt.perf = opt.hoperf(Xva,yva,opt);
-            GurlsOptionsList* ret_perf = perfClass->execute(*xx, *yy, *nestedOpt);
+            GurlsOptionsList* ret_perf = GurlsOptionsList::dynacast(perfClass->execute(*xx, *yy, *nestedOpt));
 
             gMat2D<T> &forho_vec = ret_perf->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 

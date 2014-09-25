@@ -62,6 +62,19 @@ template <typename T>
 class ParamSelFixLambda: public ParamSelection<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelFixLambda():ParamSelection<T>("fixlambda"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelFixLambda<T>();
+	}
+
     /**
      * Sets the regularization parameter lambda to the constant 1.
      * \param X not used

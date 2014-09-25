@@ -59,6 +59,19 @@ template <typename T>
 class NormTestZScore: public Norm<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	NormTestZScore():Norm<T>("testzscore"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new NormTestZScore<T>();
+	}
+
     /**
      * Spheriphies test data using the same mean and std deviation computed for the training set,
      * previously computed and stored in opt by the NormZScore sub-class of the class Norm.

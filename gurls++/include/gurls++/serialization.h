@@ -48,8 +48,10 @@
 #include "gurls++/optlist.h"
 #include "gurls++/optfunction.h"
 #include "gurls++/optmatrix.h"
+#include "gurls++/opttasksequence.h"
 
 #include <boost/serialization/split_free.hpp>
+#include <boost/serialization/vector.hpp>
 
 namespace boost {
 namespace serialization {
@@ -314,8 +316,6 @@ void load(Archive &ar, gurls::OptArray &t, const unsigned int)
         }
     }
 }
-
-
 
 /**
   * Serializes a GurlsOptionsList to a generic archive
@@ -591,7 +591,6 @@ void load(Archive & ar, gurls::GurlsOptionsList& opt, const unsigned int /* file
 }
 
 
-
 /**
   * Serializes an OptFunction to a generic archive
   */
@@ -621,7 +620,6 @@ void load(Archive & ar, gurls::OptFunction& opt, const unsigned int /* file_vers
 }
 
 
-
 template<class Archive, class OptType>
 inline void serialize_opt( Archive& ar, OptType& opt, const unsigned int /*file_version*/)
 {
@@ -640,7 +638,7 @@ void save_vector_opt(Archive & ar, const OptType& opt, const unsigned int /* fil
 
     const typename OptType::ValueType& value = opt.getValue();
 
-    int n = value.size();
+    int n = (int)value.size();
     ar & n;
 
     for (int i = 0; i < n; ++i)
@@ -691,6 +689,32 @@ inline void serialize(Archive& ar, gurls::OptMatrix<gurls::gMat2D<T> >& opt, con
     serialize_opt<Archive, gurls::OptMatrix<gurls::gMat2D<T> > >(ar, opt, file_version);
 }
 
+/**
+  * Serializes an OptTask to a generic archive
+  */
+template<class Archive, typename T>
+inline void save(Archive& ar, gurls::OptTask& opt, const unsigned int file_version)
+{   
+	gurls::OptTypes type = opt.getType();
+    ar & type;
+	
+	std::string &taskString = opt.getString();
+    ar & taskString;
+}
+
+/**
+  * Deserializes an OptTask from a generic archive
+  */
+template<class Archive, typename T>
+inline void load(Archive& ar, gurls::OptTask& opt, const unsigned int file_version)
+{   
+	gurls::OptTypes type;
+    ar & type;
+	
+	std::string &taskString = opt.getString();
+    ar & taskString;
+}
+
 #ifdef _BGURLS
 /**
   * Serializes and deserializes an OptMatrix to/from a generic archive
@@ -710,8 +734,6 @@ void serialize(Archive& ar, gurls::OptString& opt, const unsigned int file_versi
 {
     serialize_opt<Archive, gurls::OptString>(ar, opt, file_version);
 }
-
-
 
 /**
   * Serializes an OptStringList to a generic archive
@@ -760,23 +782,47 @@ void load(Archive & ar, gurls::OptNumberList& opt, const unsigned int file_versi
     load_vector_opt<Archive, gurls::OptNumberList>(ar, opt, file_version);
 }
 
-
 /**
   * Serializes an OptTaskSequence to a generic archive
   */
 template<class Archive>
 void save(Archive & ar, const gurls::OptTaskSequence& opt, const unsigned int file_version)
 {
-    save_vector_opt<Archive, gurls::OptTaskSequence>(ar, opt, file_version);
+	gurls::OptTypes type = opt.getType();
+    ar & type;
+
+    const typename gurls::OptTaskSequence::ValueType& value = opt.getValue();
+
+    int n = (int)value.size();
+    ar & n;
+	   std::string tmp;
+    for (int i = 0; i < n; ++i)
+	{
+     tmp = value[i]->getString();
+		ar & tmp;
+	}
 }
 
 /**
   * Deserializes an OptTaskSequence from a generic archive
   */
 template<class Archive>
-void load(Archive & ar, gurls::OptTaskSequence& opt, const unsigned int file_version)
+void load(Archive & ar, gurls::OptTaskSequence& opt, const unsigned int file_version )
 {
-    load_vector_opt<Archive, gurls::OptTaskSequence>(ar, opt, file_version);
+	gurls::OptTypes type = opt.getType();
+    ar & type;
+
+    int n = 0;
+    ar & n;
+
+    opt.clear();
+	
+	std::string tmp;
+    for(int i = 0; i < n; ++i)
+    {
+        ar & tmp;
+        opt << tmp;
+    }
 }
 
 

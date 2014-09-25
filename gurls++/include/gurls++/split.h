@@ -43,6 +43,7 @@
 #define _GURLS_SPLIT_H_
 
 
+#include "gurls++/task.h"
 #include "gurls++/optlist.h"
 #include "gurls++/exceptions.h"
 
@@ -57,14 +58,14 @@ class SplitHo;
  *
  * \brief BadSplitCreation is thrown when \ref factory tries to generate an unknown split method
  */
-class BadSplitCreation : public gException
+class BadSplitCreation : public BadTaskCreation
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadSplitCreation(std::string type): gException("Cannot create type " + type) {}
+    BadSplitCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -72,11 +73,10 @@ public:
  * \brief Split is the class that splits data into pair(s) of training and test samples
  */
 template<typename T>
-class Split
+class Split : public Task<T>
 {
 public:
-
-    /**
+	/**
      * Splits data into pair(s) of training and test samples, to be used for cross-validation
      * \param X not used
      * \param Y labels matrix
@@ -85,6 +85,20 @@ public:
      * \return a GurlsOptionList
      */
     virtual GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) = 0;
+
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	Split(const std::string& taskName)
+    	:Task<T>("split", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	Split()
+    	:Task<T>("split", ""){}
+	
 
     /**
      * Factory function returning a pointer to the newly created object.

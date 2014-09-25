@@ -182,7 +182,7 @@ public:
     /**
       * Prints the options list
       */
-    void printAll();
+    void printAll() const;
 
     /**
       * Checks if the list has an option mapped with a specified key

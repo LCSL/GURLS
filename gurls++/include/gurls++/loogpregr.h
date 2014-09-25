@@ -68,6 +68,19 @@ template <typename T>
 class ParamSelLooGPRegr: public ParamSelection<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelLooGPRegr():ParamSelection<T>("loogpregr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelLooGPRegr<T>();
+	}
+
     /**
      * Performs parameter selection for Gaussian Process regression.
      * The leave-one-out approach is used.
@@ -187,7 +200,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
 
     RLSGPRegr<T> rlsgp;
     PredGPRegr<T> predgp;
-    Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
+	Task<T>* perfClass = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
 
     gMat2D<T> *lambda = new gMat2D<T>(1,1);
     tmpParamSel->addOpt("lambdas", new OptMatrix<gMat2D<T> >(*lambda));
@@ -237,7 +250,7 @@ GurlsOptionsList* ParamSelLooGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D
             delete pred_list;
 
 //            opt.perf = opt.hoperf([],y(k,:),opt);
-            GurlsOptionsList * perf_list = perfClass->execute(predX, predY, *nestedOpt);
+            GurlsOptionsList * perf_list = GurlsOptionsList::dynacast(perfClass->execute(predX, predY, *nestedOpt));
 
             gMat2D<T>& forho = perf_list->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 

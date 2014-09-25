@@ -58,14 +58,14 @@ class PredKernelTrainTest;
  *
  * \brief BadPredKernelCreation is thrown when \ref factory tries to generate an unknown prediction kernel
  */
-class BadPredKernelCreation : public gException
+class BadPredKernelCreation : public BadTaskCreation
 {
 public:
 
     /**
      * Exception constructor.
      */
-    BadPredKernelCreation(std::string type): gException("Cannot create type " + type) {}
+    BadPredKernelCreation(std::string type): BadTaskCreation(type) {}
 };
 
 /**
@@ -73,11 +73,24 @@ public:
  * \brief PredKernel is the class that computes the kernel matrix for prediction
  */
 template<typename T>
-class PredKernel
+class PredKernel : public Task<T>
 {
 public:
 
-    /**
+	///
+	/// \brief Constructor
+	/// \param taskName The task name
+	///
+	PredKernel(const std::string& taskName)
+    	:Task<T>("predkernel", taskName){}
+	
+	///
+	/// \brief Default constructor
+	///
+	PredKernel()
+    	:Task<T>("predkernel", ""){}
+
+	/**
      * Computes the kernel matrix necessary for predicting the labels associated to X
      *
      * \param X input data matrix

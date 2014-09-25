@@ -40,8 +40,8 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
     const unsigned long n = X.rows();
     const unsigned long d = X.cols();
     const unsigned long t = y.cols();
-
-    Performance<T> * perfTask = Performance<T>::factory(opt->getOptAsString("hoperf"));
+	
+	Task<T>* perfTask = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
 
     bool computePred = (opt->hasOpt("split.Xva") && opt->hasOpt("split.yva"));
 
@@ -345,7 +345,8 @@ void ICholWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T> &y)
                 // perf_macroavg
 
                 perf_opt->addOpt("pred", new OptMatrix<gMat2D<T> >(*pred));
-                GurlsOptionsList* perf = perfTask->execute(empty, *yva, *perf_opt);
+
+				GurlsOptionsList* perf = GurlsOptionsList::dynacast(perfTask->execute(empty, *yva, *perf_opt));
 
                 gMat2D<T>& acc = perf->getOptValue<OptMatrix<gMat2D<T> > >("acc");
                 T perf_i = sumv(acc.getData(), acc.getSize())/acc.getSize();

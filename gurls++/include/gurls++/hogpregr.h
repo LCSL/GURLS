@@ -67,7 +67,20 @@ namespace gurls {
 template <typename T>
 class ParamSelHoGPRegr: public ParamSelection<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	ParamSelHoGPRegr():ParamSelection<T>("hogpregr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelHoGPRegr<T>();
+	}
+
     /**
      * Performs parameter selection for Gaussian Process regression.
      * The hold-out approach is used.
@@ -174,7 +187,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     RLSGPRegr<T> rlsgp;
     PredGPRegr<T> predgp;
-    Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
+	Task<T>* perfClass = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
 
     const int nholdouts = static_cast<int>(opt.getOptAsNumber("nholdouts"));
 
@@ -267,7 +280,7 @@ GurlsOptionsList *ParamSelHoGPRegr<T>::execute(const gMat2D<T>& X, const gMat2D<
 
 
 //            opt.perf = opt.hoperf([],y(va,:),opt);
-            GurlsOptionsList * perf_list = perfClass->execute(subXva, subYva, *nestedOpt);
+            GurlsOptionsList * perf_list = GurlsOptionsList::dynacast(perfClass->execute(subXva, subYva, *nestedOpt));
             gMat2D<T>& forho = perf_list->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
 //            for t = 1:T

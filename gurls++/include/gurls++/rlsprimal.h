@@ -59,7 +59,20 @@ namespace gurls {
 template <typename T>
 class RLSPrimal: public Optimizer<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	RLSPrimal():Optimizer<T>("rlsprimal"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSPrimal<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS.
      * The regularization parameter is set to the one found in the field paramsel of opt.

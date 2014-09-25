@@ -60,6 +60,19 @@ template <typename T>
 class PerfPrecRec: public Performance<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	PerfPrecRec():Performance<T>("precrec"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PerfPrecRec<T>();
+	}
+
     /**
      * Evaluates the average precision per class through precision and recall.
      *

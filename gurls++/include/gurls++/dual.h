@@ -67,6 +67,19 @@ template <typename T>
 class PredDual: public Prediction<T> {
 
 public:
+	///
+	/// Default constructor
+	///
+	PredDual():Prediction<T>("dual"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PredDual<T>();
+	}
+
     /**
      * Computes the predictions of the linear classifier stored in opt.W and computed using the primal formulation, on the samples passed in the X matrix.
      * \param X input data matrix

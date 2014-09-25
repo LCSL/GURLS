@@ -66,9 +66,38 @@ namespace gurls {
 template <typename T>
 class ParamSelSiglamHoGPRegr: public ParamSelection<T>{
 
-public:
-    /**
+public:	
+	///
+	/// Default constructor
+	///
+	ParamSelSiglamHoGPRegr():ParamSelection<T>("siglamhogpregr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelSiglamHoGPRegr<T>();
+	}
+
+     /**
+     * Performs parameter selection for Gaussian process regression with the dual formulation with rbf kernel.
+	 * The hold-out approach is used oer a 2-dimensional grid of values for the parameters sigma (kernel) and lambda (regularization)
+     * The performance measure specified by opt.hoperf is maximized.
+     * \param X input data matrix
+     * \param Y labels matrix
+     * \param opt options with the following:
+     *  - nlambda (default)
+     *  - nsigma (default)
+     *  - hoperf (default)
+     *  - smallnumber (default)
+     *  - split (settable with the class Split and its subclasses)
      *
+     * \return adds the field paramsel to opt, which is alist containing the following fields:
+     *  - lambdas = array containing the value of the regularization parameter lambda maximizing the mean validation accuracy over the classes, replicated as many times as the number of classes
+     *  - sigma = values of the kernel parameter maximizing the validation accuracy
+     *  - guesses = array of guesses for the regularization parameter lambda
+     *  - acc = matrix of validation accuracies for each lambda guess and for each class
      */
    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 };
@@ -264,11 +293,10 @@ GurlsOptionsList* ParamSelSiglamHoGPRegr<T>::execute(const gMat2D<T>& X, const g
 //    M = sum(PERF,3); % sum over classes
 
 //    [dummy,i] = max(M(:));
-    int i = std::max_element(perf, perf +(nsigma*nlambda)) - perf;
+    std::size_t i =std::max_element(perf, perf +(nsigma*nlambda)) - perf;
 
 //    [m,n] = ind2sub(size(M),i);
     int im = i%nsigma;
-
     delete[] perf;
 
     GurlsOptionsList* paramsel = new GurlsOptionsList("paramsel");

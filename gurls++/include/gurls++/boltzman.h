@@ -58,6 +58,19 @@ template <typename T>
 class ConfBoltzman: public Confidence<T>
 {
 public:
+	///
+	/// Default constructor
+	///
+	ConfBoltzman():Confidence<T>("boltzman"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ConfBoltzman<T>();
+	}
+
     /**
      * Computes the probability of belonging to the highest scoring class.
 The scores are converted in probabilities using the Boltzman distribution.

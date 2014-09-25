@@ -68,6 +68,19 @@ template <typename T>
 class PredPrimal: public Prediction<T > {
 
 public:
+	///
+	/// Default constructor
+	///
+	PredPrimal():Prediction<T>("primal"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new PredPrimal<T>();
+	}
+
     /**
      * Computes the predictions of the linear classifier stored in the field optimizer of opt and computed using the primal formulation on the samples passed in the X matrix.
      * \param X input data matrix

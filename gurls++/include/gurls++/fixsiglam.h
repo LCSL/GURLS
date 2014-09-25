@@ -61,7 +61,20 @@ namespace gurls {
 template <typename T>
 class ParamSelFixSigLam: public ParamSelection<T>
 {
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	ParamSelFixSigLam():ParamSelection<T>("fixsiglam"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelFixSigLam<T>();
+	}
+
     /**
      * Sets the regularization parameter lambda  and sigma to the constant 1.
      * \param X not used

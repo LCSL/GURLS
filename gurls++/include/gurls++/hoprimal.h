@@ -71,7 +71,20 @@ namespace gurls {
 template <typename T>
 class ParamSelHoPrimal: public ParamSelection<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	ParamSelHoPrimal():ParamSelection<T>("hoprimal"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelHoPrimal<T>();
+	}
+
     /**
      * Performs parameter selection when the primal formulation of RLS is used.
      * The hold-out approach is used.
@@ -92,6 +105,7 @@ public:
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt);
 
 protected:
+	ParamSelHoPrimal(std::string id):ParamSelection<T>(id){}
     /**
      * Auxiliary method used to call the right eig/svd function for this class
      */
@@ -106,7 +120,20 @@ protected:
 
 template <typename T>
 class ParamSelHoPrimalr: public ParamSelHoPrimal<T>{
-
+	public:
+	///
+	/// Default constructor
+	///
+	ParamSelHoPrimalr():ParamSelHoPrimal<T>("hoprimalr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelHoPrimalr<T>();
+	}
+	
 protected:
     /**
      * Auxiliary method used to call the right eig/svd function for this class
@@ -180,7 +207,8 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
     T* lambdas_round = lambdas_round_mat->getData();
 
     PredPrimal< T > primal;
-    Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
+	Task<T>* perfClass = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
+
 
     GurlsOptionsList* optimizer = new GurlsOptionsList("optimizer");
     nestedOpt->addOpt("optimizer",optimizer);
@@ -288,7 +316,7 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
             nestedOpt->removeOpt("pred");
             nestedOpt->addOpt("pred", ret_pred);
 
-            GurlsOptionsList* ret_perf = perfClass->execute(Xva, yva, *nestedOpt);
+            GurlsOptionsList* ret_perf = GurlsOptionsList::dynacast(perfClass->execute(Xva, yva, *nestedOpt));
 
             gMat2D<T> &forho_vec = ret_perf->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 
@@ -331,7 +359,7 @@ GurlsOptionsList *ParamSelHoPrimal<T>::execute(const gMat2D<T>& X, const gMat2D<
 
     delete nestedOpt;
 
-    delete perfClass;
+	delete perfClass;
     delete [] Q;
     delete [] QtXty;
     delete [] L;

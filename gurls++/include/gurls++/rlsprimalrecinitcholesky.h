@@ -61,7 +61,20 @@ template <typename T>
 class RLSPrimalRecInitCholesky: public Optimizer<T>
 {
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	RLSPrimalRecInitCholesky():Optimizer<T>("rlsprimalrecinitcholesky"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSPrimalRecInitCholesky<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS, storing the Cholesky decomposition of the 
      * covariance matrix.

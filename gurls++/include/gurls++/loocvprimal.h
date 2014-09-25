@@ -77,6 +77,19 @@ class ParamSelLoocvPrimal: public ParamSelection<T>
 {
 
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelLoocvPrimal():ParamSelection<T>("loocvprimal"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelLoocvPrimal<T>();
+	}
+
     /**
      * Performs parameter selection when the primal formulation of RLS is used.
      * The leave-one-out approach is used.
@@ -197,8 +210,8 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
         nestedOpt->addOpt("pred", pred_opt);
 
 //        const int pred_size = pred->getSize();
-
-        Performance<T>* perfClass = Performance<T>::factory(opt.getOptAsString("hoperf"));
+		
+		Task<T>* perfClass = OptTask::getValue<T, Performance<T> >(opt, "hoperf");
 
         gMat2D<T>* perf = new gMat2D<T>(tot, t);
         T* ap = perf->getData();
@@ -264,7 +277,7 @@ GurlsOptionsList *ParamSelLoocvPrimal<T>::execute(const gMat2D<T>& X, const gMat
 
     //        opt.perf = opt.hoperf([],y,opt);
             const gMat2D<T> dummy;
-            GurlsOptionsList* perf = perfClass->execute(dummy, Y, *nestedOpt);
+			GurlsOptionsList* perf = GurlsOptionsList::dynacast(perfClass->execute(dummy, Y, *nestedOpt));
 
             gMat2D<T> &forho_vec = perf->getOptValue<OptMatrix<gMat2D<T> > >("forho");
 

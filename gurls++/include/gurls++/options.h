@@ -53,8 +53,6 @@
 #include "gurls++/gmat2d.h"
 #include "gurls++/gvec.h"
 #include "gurls++/exceptions.h"
-
-
 /**
   * \ingroup Settings
   * \file
@@ -70,7 +68,7 @@ namespace gurls
 enum OptTypes	{GenericOption, StringOption, NumberOption,
                  StringListOption, NumberListOption, FunctionOption,
                  MatrixOption, VectorOption,
-                OptListOption, TaskSequenceOption, TaskIDOption, OptArrayOption, ProcessOption};
+                 OptListOption, TaskSequenceOption, TaskIDOption, OptArrayOption, ProcessOption, TaskOption};
 
 
 
@@ -499,80 +497,6 @@ public:
   * String used to tokenize task strings (e.g. "<task_desc>TASKDESC_SEPARATOR<task_name>")
   */
 static const std::string TASKDESC_SEPARATOR(":");
-
-/**
-  * \ingroup Settings
-  * \brief OptTaskSequence is an option containing
-  * a sequence of task that forms a pipeline
-  */
-class GURLS_EXPORT OptTaskSequence: public OptStringList
-{
-protected:
-    /**
-      * Parses a string cheching if it's a valid task string, in the form "<task_desc>TASKDESC_SEPARATOR<task_name>"
-      */
-    bool isValid(const std::string & str, std::string& type, std::string& name);
-
-public:
-
-    typedef OptStringList::ValueType ValueType;
-
-    /**
-      * Empty constructor
-      */
-    OptTaskSequence();
-
-    /**
-      * Constructor from a buffer of chars, builds a 1-size vector of strings
-      */
-    OptTaskSequence(const char* str);
-
-    /**
-      * Constructor from a string, builds a 1-size vector of strings
-      */
-    OptTaskSequence(std::string &str);
-
-    /**
-      * Constructor from a string vector
-      */
-    OptTaskSequence(const std::vector<std::string>& data);
-
-    /**
-      * Copies the matrix from an existing \ref OptTaskSequence
-      */
-    OptTaskSequence& operator=(const OptTaskSequence& other);
-
-    /**
-      * Adds a new task string to the sequence
-      */
-    void addTask(const std::string newtask);
-
-    /**
-      * Checks if the option has the given type
-      */
-    virtual bool isA(OptTypes id) const;
-
-    /**
-      * Tries to cast a pointer to a generic option to a pointer to an \ref OptTaskSequence
-      */
-    static OptTaskSequence* dynacast(GurlsOption* opt);
-
-    /**
-      * Tries to cast a pointer to a generic option to a pointer to an \ref OptTaskSequence
-      */
-    static const OptTaskSequence* dynacast(const GurlsOption* opt);
-
-    /**
-      * Parse the task string at a given index and returns the task description and the task name
-      */
-    void getTaskAt(int index, std::string& taskdesc, std::string& taskname);
-
-    /**
-      * Returns the number of tasks into the sequence
-      */
-    unsigned long size();
-
-};
 
 /**
   * \ingroup Settings

@@ -59,6 +59,19 @@ template <typename T>
 class RLSPegasos: public Optimizer<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	RLSPegasos():Optimizer<T>("rlspegasos"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSPegasos<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS.
      * The optimization is carried out using a stochastic gradient descent algorithm.

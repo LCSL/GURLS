@@ -40,8 +40,8 @@
  */
 
 
-#ifndef _GURLS_MACROAVG_H_
-#define _GURLS_MACROAVG_H_
+#ifndef _GURLS_TOTALAVG_H_
+#define _GURLS_TOTALAVG_H_
 
 #include "gurls++/perf.h"
 
@@ -55,28 +55,28 @@ namespace gurls {
 
 /**
  * \ingroup Performance
- * \brief PerfMacroAvg is the sub-class of Performance that evaluates prediction accuracy
+ * \brief PerfTotalAvg is the sub-class of Performance that evaluates average prediction accuracy
  */
 
 template <typename T>
-class PerfMacroAvg: public Performance<T>{
+class PerfTotalAvg: public Performance<T>{
 
 public:
 	///
 	/// Default constructor
 	///
-	PerfMacroAvg():Performance<T>("macroavg"){}
+	PerfTotalAvg():Performance<T>("totalavg"){}
 	
 	///
 	/// Clone method
 	///
 	TaskBase *clone()
 	{
-		return new PerfMacroAvg<T>();
+		return new PerfTotalAvg<T>();
 	}
 
     /**
-     * Evaluates the average accuracy per class.
+     * Evaluates the total average accuracy.
      *
      * \param X input data matrix
      * \param Y labels matrix
@@ -84,17 +84,17 @@ public:
      *  - pred (settable with the class Prediction and its subclasses)
      *
      * \return perf, a GurslOptionList equal to the field pred of opt, with the following fields added or substituted:
-     *  - acc = array of prediction accuracy for each class
+     *  - acc = array of average prediction accuracy for each class
      *  - forho = acc
      */
     GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException);
 
 protected:
-    void macroavg(const unsigned long* trueY, const unsigned long* predY, const int length,int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length);
+    void totalavg(const unsigned long* trueY, const unsigned long* predY, const int length,int totClasses, T* &totClass, T &totalAverage, unsigned long &perClass_length);
 };
 
 template<typename T>
-GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException)
+GurlsOptionsList* PerfTotalAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<T>& Y, const GurlsOptionsList& opt) throw(gException)
 {
     const unsigned long rows = Y.rows();
     const unsigned long cols = Y.cols();
@@ -116,7 +116,7 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
         tmp_opt->removeOpt("perf", false);
         delete tmp_opt;
 
-        perf->removeOpt("acc");
+        perf->removeOpt("totacc");
         perf->removeOpt("forho");
 //        perf->removeOpt("forplot");
     }
@@ -140,60 +140,21 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
 //    if size(y,2) == 1
     if(cols == 1)
     {
-		unsigned long nPos=0;
-		unsigned long nNeg=0;
-		T totPos=0;
-		T totNeg=0;
-		
-        T* predLab = sign(y_pred.getData(), y_pred.getSize());
-//        ylab = sign(y_pred);
-		T* yLab = sign(Y.getData(), Y.getSize());
-	
-		for(unsigned long i=0; i<Y.getSize(); ++i)
-		{
-			if(yLab[i]==1)
-				++nPos;
-			else if(yLab[i]==-1)
-				++nNeg;
-		}
-		
-		for(unsigned long i=0; i<2; ++i)
-		{
-		int label=-1;
-		if(i==1)
-			label=1;
-
-		T tot=0;
-
 //        predlab = sign(y_pred);
-        T* totalPred = compare<T>(predLab, label, rows, &eq);
-        T* totalTrue = compare<T>(yLab, label, rows, &eq);
-		
-		T* ty_and_py = new T[Y.getSize()];
+        T* predLab = sign(y_pred.getData(), y_pred.getSize());
+		T* yLab = sign(Y.getData(), Y.getSize());
+        T* tmp = compare<T>(predLab, yLab, rows, &eq);
 
-		mult(totalTrue, totalPred, ty_and_py, Y.getSize());
-
-        sum(ty_and_py, &tot, Y.getSize(), 1, 1);
-		
-		if(label==1)
-			totPos=tot;
-		else if(label==-1)
-			totNeg=tot;
-
+//        p.acc = mean(predlab == y);
+        mean(tmp, acc, rows, 1, 1);
 
 //        p.forho = mean(predlab == y);
 //        p.forplot = mean(predlab == y);
-		
-		delete [] totalPred;
-		delete [] totalTrue;
-		delete [] ty_and_py;
-		}
 
-		*acc=  (totPos/(nPos + std::numeric_limits<T>::epsilon()) + totNeg/(nNeg + std::numeric_limits<T>::epsilon()))/2;
-	
+        delete [] tmp;
         delete [] predLab;
         delete [] yLab;
-	}
+    }
     else
     {
 //        %% Assumes single label prediction.
@@ -210,13 +171,13 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
 
         delete[] work;
 
-//        [MacroAvg, PerClass] = macroavg(truelab, predlab);
+//        [TotalAvg, PerClass] = totalavg(truelab, predlab);
 
-        T macroAverage;
-        T* perClass;
+        T totalAverage;
+        T* totClass;
         unsigned long perClass_length;
 
-        macroavg(trueLab, predLab, rows, cols, perClass, macroAverage, perClass_length);
+        totalavg(trueLab, predLab, rows, cols, totClass, totalAverage, perClass_length);
 
         if(perClass_length > cols)
             throw gException(Exception_Inconsistent_Size);
@@ -235,17 +196,17 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
 //            p.forplot(t) = 0;
 //        end
 
-        copy(acc, perClass, perClass_length);
+        set(acc, totalAverage, perClass_length);
 
         if(perClass_length < cols)
-            set(acc+perClass_length, (T)0.0, cols-perClass_length);
+            set(acc+perClass_length, totalAverage, cols-perClass_length);
 
-        delete[] perClass;
+        delete[] totClass;
 
     }
 
     OptMatrix<gMat2D<T> >* acc_opt = new OptMatrix<gMat2D<T> >(*acc_mat);
-    perf->addOpt("acc", acc_opt);
+    perf->addOpt("totacc", acc_opt);
 
 
     OptMatrix<gMat2D<T> >* forho_opt = new OptMatrix<gMat2D<T> >(*(new gMat2D<T>(*acc_mat)));
@@ -261,24 +222,25 @@ GurlsOptionsList* PerfMacroAvg<T>::execute(const gMat2D<T>& /*X*/, const gMat2D<
  * Auxiliary function called by \ref execute method
  */
 template<typename T>
-void PerfMacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* predY, const int length, int totClasses, T* &perClass, T &macroAverage, unsigned long &perClass_length)
+void PerfTotalAvg<T>::totalavg(const unsigned long* trueY, const unsigned long* predY, const int length, int totClasses, T* &totClass, T &totalAverage, unsigned long &perClass_length)
 {
-//function [MacroAverage, PerClass] = macroavg(TrueY, PredY)
+//function [TotalAverage, PerClass] = totalavg(TrueY, PredY)
 //% Computes average of performance for each class.
 
-//% Macro
+//% Total
 //nClasses = max(TrueY);
     const unsigned long* maxPos=std::max_element(trueY, trueY+length);
     if (maxPos==trueY+length) //range passed to max_element was empty
        throw gException(Exception_Inconsistent_Size); //TODO check if there is a better exception
 
     int nClasses = *maxPos;
+
     if(nClasses < 0)
         throw gException(Exception_Inconsistent_Size);
 
     perClass_length = nClasses+1;
-//     perClass = new T[perClass_length];
-    perClass = new T[totClasses];
+//     totClass = new T[perClass_length];
+    totClass = new T[totClasses];
 
     unsigned long* ty_and_py = new unsigned long[length];
     unsigned long* num = new unsigned long[1];
@@ -294,9 +256,8 @@ void PerfMacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* 
         mult(tyEqI, pyEqI, ty_and_py, length);
 
         sum(ty_and_py, num, length, 1, 1);
-        sum(tyEqI, den, length, 1, 1);
 
-        perClass[i] = ((T)(*num))/((*den) + std::numeric_limits<T>::epsilon());
+        totClass[i] = ((T)(*num));
 
         delete [] tyEqI;
         delete [] pyEqI;
@@ -304,25 +265,24 @@ void PerfMacroAvg<T>::macroavg(const unsigned long* trueY, const unsigned long* 
 
     delete [] ty_and_py;
     delete [] num;
-    delete [] den;
 
-    //set accuracy =1 on classes with no samples
+    //set total =0 on classes with no samples
 //    for(int i=perClass_length; i<totClasses; ++i)
-//      perClass[i] = 1;
-    set(perClass+perClass_length, (T)1.0, totClasses-perClass_length);
+//      totClass[i] = 0;
+    set(totClass+perClass_length, (T)0.0, totClasses-perClass_length);
 
 
 //PerClass = acc;
 
-//MacroAverage = mean(acc);
-    T* meanValue = new T[1];
-    mean(perClass, meanValue, nClasses+1, 1, 1);
+//TotalAverage = mean(acc);
+    T* totValue = new T[1];
+    sum(totClass, totValue, nClasses+1, 1, 1);
 
-    macroAverage = *meanValue;
+	totalAverage = *totValue/length;
 
-    delete[] meanValue;
+    delete[] totValue;
 }
 
 }
 
-#endif //_GURLS_MACROAVG_H_
+#endif //_GURLS_TOTALAVG_H_

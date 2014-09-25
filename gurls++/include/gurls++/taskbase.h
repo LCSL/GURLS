@@ -1,10 +1,10 @@
 /*
  * The GURLS Package in C++
  *
- * Copyright (C) 2011-1013, IIT@MIT Lab
+ * Copyright (C) 2011-2013, IIT@MIT Lab
  * All rights reserved.
  *
- * authors:  M. Santoro
+ * author:  M. Santoro
  * email:   msantoro@mit.edu
  * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
  *
@@ -39,80 +39,60 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _GURLS_TASKBASE_H_
+#define _GURLS_TASKBASE_H_
 
-#ifndef _GURLS_NORML2_H_
-#define _GURLS_NORML2_H_
+#include "gurls++/exceptions.h"
 
-
-#include "gurls++/norm.h"
-#include "gurls++/gmath.h"
-#include "gurls++/optmatrix.h"
-
-#include <limits>
-
-namespace gurls {
-
-/**
- * \ingroup Norms
- * \brief NormL2 is the sub-class of Norm that spheriphies the data according to the l2 norm.
- */
-
-template <typename T>
-class NormL2: public Norm<T>
+namespace gurls
 {
-public:	
-	///
-	/// Default constructor
-	///
-	NormL2():Norm<T>("l2"){}
 	
+class TaskBase
+{
+public:
 	///
-	/// Clone method
+	/// \brief Constructor
+	/// \param fieldName The name to be used to index the task outputin the options list
+	/// \param taskName The task name
 	///
-	TaskBase *clone()
+	TaskBase(const std::string &fieldName, const std::string &taskName)
+    	:m_fieldName(fieldName), m_taskName(taskName){}
+	///
+	/// \brief Performs a deep-copy of the task
+	///
+	virtual TaskBase* clone()
 	{
-		return new NormL2<T>();
+		throw gException(std::string("Undefined 'clone' method in subtask of \"") + fieldName() + std::string("\".") +
+			std::string("\nInitialize Task Sequence using standard string, or define 'clone'."));
 	}
 
-    /**
-     * Spheriphies the data according to the l2 norm.
-     * \param X input data matrix
-     * \param Y not used
-     * \param opt not used
-     * \return spheriphied input data matrix
-     */
-    GurlsOptionsList* execute(const gMat2D<T>& X, const gMat2D<T>& Y, const GurlsOptionsList& opt)  throw(gException);
+	///
+	/// \brief Gets the name to be used to index the task output in the options list
+	///
+	const std::string &fieldName()
+	{
+    	return m_fieldName;
+	}
+
+	///
+	/// \brief Gets the task name
+	///
+	const std::string &taskName()
+	{
+    	return m_taskName;
+	}
+
+private:
+
+	/// \brief The name to be used to index the task output in the options list
+	std::string m_fieldName;
+
+	/// \brief The task name
+	std::string m_taskName;
+
 };
 
-template<typename T>
-GurlsOptionsList* NormL2<T>::execute(const gMat2D<T>& X, const gMat2D<T>& /*Y*/, const GurlsOptionsList& /*opt*/) throw(gException)
-{
-    const unsigned long m = X.rows();
-    const unsigned long n = X.cols();
-
-
-    gMat2D<T>* retX = new gMat2D<T>(m, n);
-    copy(retX->getData(), X.getData(), retX->getSize());
-    T *rx_it = retX->getData();
-
-    const T epsilon = std::numeric_limits<T>::epsilon();
-    const T one = (T)1.0;
-    T norm2;
-
-//    for j = 1:size(X,1)
-    for(unsigned long j=0; j<m; ++j, ++rx_it)
-    {
-//        X(j,:) = X(j,:)/(norm(X(j,:)) + eps);
-        norm2 = nrm2(n, rx_it, m) + epsilon;
-        scal(n, one/norm2, rx_it, m);
-    }
-
-    GurlsOptionsList* norm = new GurlsOptionsList("norm");
-    norm->addOpt("X", new OptMatrix<gMat2D<T> >(*retX));
-
-    return norm;
 }
 
-}
+#endif // _GURLS_TASKBASE_H_
 
-#endif //_GURLS_NORML2_H_

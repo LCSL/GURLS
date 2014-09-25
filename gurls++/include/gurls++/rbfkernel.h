@@ -58,7 +58,20 @@ namespace gurls {
 template <typename T>
 class KernelRBF: public Kernel<T>
 {
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	KernelRBF():Kernel<T>("rbf"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new KernelRBF<T>();
+	}
+
     /**
      * Builds the symmetric kernel matrix of matrix X for a gaussian model.
      *

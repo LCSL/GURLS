@@ -59,7 +59,20 @@ namespace gurls {
 template <typename T>
 class RLSDualr: public Optimizer<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	RLSDualr():Optimizer<T>("rlsdualr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSDualr<T>();
+	}
+
     /**
      * Computes a classifier for the dual formulation of RLS, using a randomized version of Singular value decomposition.
      * The regularization parameter is set to the one found in the field paramsel of opt.

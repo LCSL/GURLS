@@ -65,7 +65,20 @@ namespace gurls {
 template <typename T>
 class ParamSelSiglamLooGPRegr: public ParamSelection<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	ParamSelSiglamLooGPRegr():ParamSelection<T>("siglamloogpregr"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelSiglamLooGPRegr<T>();
+	}
+
      /**
      * Performs parameter selection for Gaussian process regression with the dual formulation with rbf kernel.
      * The leave-one-out approach is used on a 2-dimensional grid of values for the parameters sigma (kernel) and lambda (regularization)
@@ -261,7 +274,7 @@ GurlsOptionsList *ParamSelSiglamLooGPRegr<T>::execute(const gMat2D<T>& X, const 
 
 //    M = sum(perf,3); % sum over classes
 //    [dummy,i] = max(M(:));
-    int i = std::max_element(perf, perf +(nsigma*nlambda)) - perf;
+    std::size_t i = std::max_element(perf, perf +(nsigma*nlambda)) - perf;
 
 //    [m,n] = ind2sub(size(M),i);
     int im = i%nsigma;

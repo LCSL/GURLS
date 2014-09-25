@@ -62,6 +62,19 @@ class RLSPrimalRecInit: public Optimizer<T>
 {
 
 public:
+	///
+	/// Default constructor
+	///
+	RLSPrimalRecInit():Optimizer<T>("rlsprimalrecinit"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSPrimalRecInit<T>();
+	}
+
     /**
      * Computes a classifier for the primal formulation of RLS.
      * The regularization parameter is set to the one found in the field paramsel of opt.

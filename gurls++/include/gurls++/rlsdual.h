@@ -57,7 +57,20 @@ namespace gurls {
 template <typename T>
 class RLSDual: public Optimizer<T>{
 
-public:
+public:	
+	///
+	/// Default constructor
+	///
+	RLSDual():Optimizer<T>("rlsdual"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new RLSDual<T>();
+	}
+
     /**
      * Computes a classifier for the dual formulation of RLS.
      * The regularization parameter is set to the one found in the field paramsel of opt.
@@ -183,8 +196,8 @@ GurlsOptionsList* RLSDual<T>::execute(const gMat2D<T>& X, const gMat2D<T>& Y, co
        optimizer->addOpt("C", new OptMatrix<gMat2D<T> >(*emptyC));
 
 //           cfr.X = [];
-       gMat2D<T>* emptyX = new gMat2D<T>();
-       optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*emptyX));
+       gMat2D<T>* optX = new gMat2D<T>(X);
+       optimizer->addOpt("X", new OptMatrix<gMat2D<T> >(*optX));
 
        delete retC;
    }

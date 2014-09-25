@@ -72,6 +72,18 @@ template <typename T>
 class ParamSelSiglamHo: public ParamSelection<T>{
 
 public:
+	///
+	/// Default constructor
+	///
+	ParamSelSiglamHo():ParamSelection<T>("siglamho"){}
+	
+	///
+	/// Clone method
+	///
+	TaskBase *clone()
+	{
+		return new ParamSelSiglamHo<T>();
+	}
 
     /**
      * Performs parameter selection when the dual formulation of RLS is used with rbf kernel.
@@ -284,7 +296,7 @@ GurlsOptionsList *ParamSelSiglamHo<T>::execute(const gMat2D<T>& X, const gMat2D<
         }
 
 //        guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
-        unsigned long mm = std::max_element(perf, perf + nlambda) - perf;
+        std::size_t mm =std::max_element(perf, perf + nlambda) - perf;
 
         if( gt(perf[mm], maxPerf) || i==0 )
         {
