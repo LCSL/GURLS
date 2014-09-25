@@ -207,6 +207,11 @@ public:
         return this->data[ row + this->numrows*col];
     }
 
+	T operator() (unsigned long row, unsigned long col) const
+    {
+        return this->data[ row + this->numrows*col];
+    }
+
     /**
       * Returns a vector containing the elements at the i-th column
       */
@@ -468,13 +473,13 @@ public:
       * Returns a vector containing the smallest elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>* min(int order);
+    gVec<T>* min(int order) const;
 
     /**
       * Returns a vector containing the largest elements along the columns
       * if order == \ref COLUMNWISE  or along the rows if order == \ref ROWWISE
       */
-    gVec<T>* max(int order);
+    gVec<T>* max(int order) const;
 
     /**
       * Returns a vector containing the smallest elements along the columns

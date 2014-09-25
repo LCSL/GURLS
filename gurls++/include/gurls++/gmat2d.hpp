@@ -247,8 +247,8 @@ gMat2D<T>& gMat2D<T>::operator-=(const gMat2D<T>& v) {
 
 template <typename T>
 gMat2D<T> gMat2D<T>::operator-(const gMat2D<T>& v) const {
-    gMat2D<T> w(v);
-    w -= *this;
+    gMat2D<T> w(*this);
+    w -= v;
     return w;
 }
 
@@ -527,7 +527,7 @@ gVec<T>* gMat2D<T>::sum(int order) const
 }
 
 template <typename T>
-gVec<T>* gMat2D<T>::max(int order)
+gVec<T>* gMat2D<T>::max(int order) const
 {
     gVec<T> *v;
     unsigned long n;
@@ -560,7 +560,7 @@ gVec<T>* gMat2D<T>::max(int order)
 }
 
 template <typename T>
-gVec<T>* gMat2D<T>::min(int order)
+gVec<T>* gMat2D<T>::min(int order) const
 {
     gVec<T> *v;
     unsigned long n;
