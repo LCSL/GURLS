@@ -24,6 +24,9 @@ gurls::GurlsOptionsList* train(T* X, T* y, unsigned long n, unsigned long d, uns
 		GurlsOptionsList *retopt = new GurlsOptionsList(gurlsWrap->getOpt());
 		gurlsWrap->loadOpt(*retopt, false);
 
+		retopt->removeOpt("nholdouts");
+        retopt->addOpt("nholdouts", new OptNumber(5));
+
 		if(kernel=="linear" && algorithm=="krls")
 			 dynamic_cast<KernelRLSWrapper<T>*>(gurlsWrap)->setKernelType(KernelWrapper<T>::LINEAR);
 		else if(algorithm=="krls")

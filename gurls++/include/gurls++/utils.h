@@ -1048,6 +1048,61 @@ gMat2D<T>* rp_factorize_large_real(const gMat2D<T> &X, const gMat2D<T> &y, const
     return W;
 }
 
+/**
+ * Utility function used to detect if a matrix is in an accepted Label form
+ *
+ * \param A gMat2D matrix
+ */
+template<typename T>
+bool isLabel(const gMat2D<T>& Y)
+{
+	
+    const unsigned long n = Y.rows();
+    const unsigned long t = Y.cols();
+
+	if (t==1)
+		{
+		T min = Y.min();
+		T max = Y.max();
+		if ((min>0 || max<0))
+			return false;
+		for(unsigned long i=0; i<Y.getSize(); ++i)
+			if ((Y.getData()[i]!=min)&&(Y.getData()[i]!=max))
+			return false;
+		return true;
+		}
+	else
+		{
+		gVec<T> *min= Y.min(COLUMNWISE);
+		gVec<T> *max= Y.max(COLUMNWISE);
+		
+		for(unsigned long j=0; j<n; ++j)
+		{
+			unsigned long maxRowCount=0;
+			for(unsigned long i=0; i<t; ++i)
+			{
+				if (Y(j,i)==max->at(i) && max->at(i)!=0)
+					maxRowCount+=1;
+				else if (Y(j,i)!=min->at(i))
+				{
+					delete min;
+					delete max;
+					return false;
+				}
+			}
+			if (maxRowCount!=1){
+					delete min;
+					delete max;
+					return false;}
+		}
+
+		
+		delete min;
+		delete max;
+		return true;
+		}
+}
+
 }
 
 #endif // _GURLS_UTILS_H_
