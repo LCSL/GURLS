@@ -18,6 +18,7 @@ function [y, performance] = test(model, Xtest, varargin)
         end
         if numel(varargin) >= 1
             ytrue = analyzeYtrue(model, varargin{1});
+            model.process{1}(end) = 1;
             gurls(Xtest, ytrue, model, 1);
             
             switch model.seq{end}
@@ -33,9 +34,11 @@ function [y, performance] = test(model, Xtest, varargin)
                     performance = model.perf;
             end
             model.seq{3} = ms3;
+            model.newprop('perf', struct());
         end
     end
     y = convertFormat(model, model.pred);
+    model.newprop('predkernel', struct());
 end
 
 function ypred = convertFormat(model, y)
