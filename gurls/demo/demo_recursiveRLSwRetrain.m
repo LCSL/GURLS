@@ -8,7 +8,7 @@
 % Finally the gurls testing process is run on the test set.
 
 clear all
-addpath('utilities')
+addpath('utils')
 gurls_install
 resdir = 'RESULTS';
 mkdir(resdir);
@@ -66,8 +66,9 @@ opt.perf = perf_macroavg(Xte, yte, opt);
 
 optRetrained = defopt(name);
 optRetrained.kernel = opt.kernel;
-nva = size(yva);
-optRetrained.split{1}.tr = zeros(opt.kernel.n - nva,1);
+nva = size(yva,1);
+optRetrained.newprop( 'split', {});
+optRetrained.split{1}.tr = zeros(opt.kernel.n - nva , 1);
 optRetrained.split{1}.va = 1:nva;
 
 optRetrained.seq = {'paramsel:hoprimal','rls:primalrecinit','pred:primal','perf:macroavg'};

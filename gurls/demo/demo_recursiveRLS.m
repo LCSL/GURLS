@@ -10,7 +10,7 @@
 clear all
 resdir = 'RESULTS';
 mkdir(resdir);
-addpath('utilities')
+addpath('utils')
 gurls_install
 
 n0 = 100; %size of first batch to be used for initialization
@@ -51,7 +51,8 @@ opt.perf = perf_macroavg(Xte, yte, opt);
 %% compare with batch RLS
 name = [resdir '/standardRLSfixlambda'];
 optRLSfixlambda = defopt(name);
-optRLSfixlambda.paramsel.lambdas = opt.paramsel.lambdas*n0/ntr_tot;
+optRLSfixlambda.newprop('paramsel.lambdas' , opt.paramsel.lambdas*n0/ntr_tot);
+
 optRLSfixlambda.seq = {'rls:primal','pred:primal','perf:macroavg'};
 optRLSfixlambda.process{1} = [2,0,0];
 optRLSfixlambda.process{2} = [3,2,2];
