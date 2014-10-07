@@ -1,7 +1,7 @@
 %load the training data 
 load('data/quickanddirty_traindata'); 
 %train the classifier 
-model = train(Xtr,ytr, 'nsigma', 3, 'nlambda', 5); 
+model = train(Xtr,ytr, 'nsigma', 10, 'nlambda', 10); 
 %load the test data 
 load('data/quickanddirty_testdata'); 
 %predict the labels for the test set and asses prediction accuracy 
