@@ -18,7 +18,7 @@ function [p] =  perf_precrec(X,y, opt)
 if isstruct(opt.pred)
 	opt.pred = opt.pred.means;
 end	
-if isfield (opt,'perf')
+if isprop(opt,'perf')
 	p = opt.perf; % lets not overwrite existing performance measures.
 		      % unless they have the same name
 end

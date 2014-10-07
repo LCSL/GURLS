@@ -12,7 +12,7 @@ function [p] = perf_gpregr(X,y, opt)
 % OUTPUT: struct with the following field:
 % -logprob: predictive log probability
 
-if isfield (opt,'perf')
+if isprop(opt,'perf')
 	p = opt.perf; % lets not overwrite existing performance measures.
 		      % unless they have the same name
 end
