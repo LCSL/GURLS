@@ -43,6 +43,7 @@ set(gurls_sources   ../gurls++/src/blas_lapack.cpp
                 ../gurls++/src/options.cpp
                 ../gurls++/src/optlist.cpp
                 ../gurls++/src/optmatrix.cpp
+                ../gurls++/src/opttasksequence.cpp
     )
 
 set(BGurls++_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE INTERNAL "" )
