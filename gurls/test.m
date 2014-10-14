@@ -11,7 +11,7 @@ function [y, performance] = test(model, Xtest, varargin)
             error('Too many options');
         end
         
-        ms3 = model.seq{end};
+        ms3 = model.seq{end}; 
         if numel(varargin) == 2
             perfm = analyzePerfm(model, varargin{2});
             model.seq{end} = ['perf:' perfm];
