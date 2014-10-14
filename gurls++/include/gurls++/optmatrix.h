@@ -126,7 +126,8 @@ GURLS_EXPORT OptMatrixBase::MatrixType getMatrixCellType<BigArray<unsigned long>
 
 template<typename T>
 bool containsBigArray()
-{return false;}
+{
+	return false;}
 
 template<>
 GURLS_EXPORT bool containsBigArray<BigArray<float> >();
@@ -245,7 +246,7 @@ public:
       */
     virtual bool hasBigArray() const
     {
-       return containsBigArray<MatrixType>();
+       return containsBigArray<ValueType>();
     }
 #endif
 
