@@ -40,7 +40,7 @@ classdef GurlsOptions < dynamicprops
 
         function s = toStruct(obj)
 	    s = struct();
-            names = properties(oldOpt);
+            names = properties(obj);
             for name=names'
                 s.(name{1}) = obj.(name{1});
             end
