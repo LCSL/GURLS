@@ -115,12 +115,11 @@ for i = 1:numel(process) % Go by the length of process.
 		fprintf('\tdone\n');
 
 	case LDF,
-		if exist('t','var') && isprop(opt, reg{1})
-			opt.(reg{1}) = t.opt.(reg{1});
+		if exist('t','var') && (isprop(t.opt, reg{1}) || isfield(t.opt, reg{1}))
+			opt.newprop(reg{1}, t.opt.(reg{1}));
 			fprintf('\tcopied\n');
         else
-            opt.newprop(reg{1}, t.opt.(reg{1}))
-			fprintf('\tcopied\n');
+			fprintf('\tcopy failed\n');
 		end
 
 	otherwise
