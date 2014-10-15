@@ -48,7 +48,10 @@ if jobid == 0
 	return;
 end
 
+compmode = 0;
 if ~isa(opt, 'GurlsOptions')
+    warning('Compatibility mode with GURLS 1.0'); 
+    compmode = 1;
     opt = GurlsOptions(opt);
 end
 
@@ -144,4 +147,8 @@ if ~isequal(opt.name, '')
     end
     save(opt.savefile, 'opt', '-v7.3');
     fprintf('Saving opt in %s\n', opt.savefile);
+end
+
+if compmode == 1
+   opt = opt.toStruct();
 end
