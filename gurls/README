@@ -70,15 +70,17 @@ being the number of classes.
 
 Run:
 
->> opt = gurls_train(X,y);
+>> model = gurls_train(X, y);
+
+This will train a non-linear model based on a gaussian kernel and validated by hold out cross validation.
 
 Put your test data in a n-by-d matrix Xte like above and your test labels in 
 a n-by-one vector yte. Let the labels go from 1 to T with T being the number of classes.
 
 Run: 
 
->> [yhat, acc] = gurls_test(Xte,yte,opt)
+>> [ypred, acc] = gurls_test(model, Xte, yte)
 
-This will train a non-linear model based on a gaussian kernel and validated by hold out cross validation.
+This will compute the outputs predicted by the model with the associated accuracy. 
 
 
