@@ -17,7 +17,9 @@ void RecursiveRLSCholUpdateWrapper<T>::train(const gMat2D<T> &X, const gMat2D<T>
     this->opt->removeOpt("optimizer");
     this->opt->removeOpt("kernel");
 
-
+    this->opt->removeOpt("hoperf");
+    this->opt->addOpt("hoperf", "rmse");
+    
     SplitHo<T> splitTask;
     GurlsOptionsList* split = splitTask.execute(X, y, *(this->opt));
     this->opt->addOpt("split", split);
