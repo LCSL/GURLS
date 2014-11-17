@@ -4,33 +4,35 @@ function opt = defopt(expname)
         fprintf('Your experiment must be given a unique name\n');
     end
 
-    opt = GurlsOptions();
+    warning('This is the old defopt, please use gurls_defopt');
+
+    opt = struct();
     
-    opt.newprop('time', {});
+    opt.time = {};
 
     %% Experiment options
-    opt.newprop('name', expname); % We can make this argument mandatory; Unique name per experiment
-    opt.newprop('savefile', [opt.name '.mat']);
-    opt.newprop('save', true);
+    opt.name = expname; % We can make this argument mandatory; Unique name per experiment
+    opt.savefile = [opt.name '.mat'];
+    opt.save = true;
 
     %% Algorithm options
-    opt.newprop( 'kernel', struct());
-    opt.newprop( 'predkernel', struct());
+    opt.kernel = struct();
+    opt.predkernel = struct();
     opt.kernel.type = 'rbf';
-    opt.newprop( 'singlelambda', @median); % give the function for combining your lambdas; could be max, min or mean, for instance.
-    opt.newprop( 'smallnumber' ,1e-8); % lambda is searched between [min(eig_r, opt.smallnumber), eig_1], where r = rank, eig_1 = max eig val.
+    opt.singlelambda = @median; % give the function for combining your lambdas; could be max, min or mean, for instance.
+    opt.smallnumber = 1e-8; % lambda is searched between [min(eig_r, opt.smallnumber), eig_1], where r = rank, eig_1 = max eig val.
 
     %% Random SVD options
-    opt.newprop('eig_percentage', 5); %percentage of eigenvectors to be used in the randomized SVD
+    opt.eig_percentage = 5; %percentage of eigenvectors to be used in the randomized SVD
 
     %% Iteartive RLS options
-    opt.newprop('IterRLSMaxIter', 1000);
-    opt.newprop('IterRLSMinIter', 5);
-    opt.newprop('IterRLSStopTol', 0.001);
-    opt.newprop('IterRLSSeriesType','geometric');
+    opt.IterRLSMaxIter = 1000;
+    opt.IterRLSMinIter = 5;
+    opt.IterRLSStopTol = 0.001;
+    opt.IterRLSSeriesType = 'geometric';
     %% GD Options
 
-    opt.newprop('gd', struct());
+    opt.gd = struct();
     opt.gd.method = 0; % standard gradient descent
     opt.gd.maxiter = 1000;
     opt.gd.singleiter = @median;
@@ -39,40 +41,40 @@ function opt = defopt(expname)
 
     %% CG Options
 
-    opt.newprop('cg', struct());
+    opt.cg = struct();
     opt.cg.maxiter = 1000;
     opt.cg.singleiter = @median;
 
 
     %% Output options
-    opt.newprop('hoperf', @perf_macroavg);
-    opt.newprop('nholdouts', 1);
+    opt.hoperf = @perf_macroavg;
+    opt.nholdouts = 1;
     %% Data option
-    opt.newprop( 'hoproportion', 0.2);
-    opt.newprop( 'nlambda', 20);
-    opt.newprop( 'nsigma', 25);
+    opt.hoproportion = 0.2;
+    opt.nlambda = 20;
+    opt.nsigma = 25;
 
 
 
     %% Quiet
     % Currenty either 0 or 1; levels of verbosity may be implemented later;
-    opt.newprop( 'verbose', 1);
+    opt.verbose = 1;
 
     %% Version info
-    opt.newprop( 'version', 2.0);
+    opt.version = 2.0;
 
     %% Online
-    opt.newprop( 'epochs', 4);
-    opt.newprop( 'subsize', 50);
-    opt.newprop( 'calibfile', 'foo');
+    opt.epochs = 4;
+    opt.subsize = 50;
+    opt.calibfile = 'foo';
 
     %% Random features options
-    opt.newprop( 'randfeats', struct());
+    opt.randfeats = struct();
     opt.randfeats.D = 500;
     opt.randfeats.samplesize = 100;
     
     %% opt base
-    opt.newprop( 'jobid', 1);
-    opt.newprop( 'seq', {});
-    opt.newprop( 'process', {});
+    opt.jobid = 1;
+    opt.seq = {};
+    opt.process = {};
 end

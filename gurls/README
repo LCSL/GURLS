@@ -35,10 +35,13 @@ Documentation
 
 - Demos
 	GURLS has exstensively commented demos in the "demo" subdirectory. 
-	Have a look, and run gurlsdemo.m. We feel this is the best way to learn how to use
+	Have a look, and run gurls_helloworld.m. We feel this is the best way to learn how to use
 	these packages.
 
-- A User manual with several examples can be found here:
+- A Quick reference with several examples can be found here:
+	https://github.com/LCSL/GURLS/blob/master/gurls/guide-train-test.pdf?raw=true
+
+- A User manual can be found here:
 	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-GURLS_Usage
 
 - A collection of the most useful and common pipelines can be found here:
@@ -52,9 +55,13 @@ Documentation
 	GURLS is designed for easy expansion. Give it a try!
 
 
-Quick and Dirty
-===============
-A straightforward example of GURLS usage can be found in gurls_helloworld.m, which employs the Quick and Dirty utilities.
+Quick start
+===========
+A straightforward example of GURLS usage can be found in gurls_helloworld.m, 
+which employs gurls_train and gurls_test functions. 
+The most important functionalities of the library can be controlled just
+by using gurls_train and gurls_test with the appropriate options.
+
 Below we describe more in details how to use them on your data.
 
 Put your training data in a n-by-d matrix X with each row being a data sample.
@@ -63,15 +70,17 @@ being the number of classes.
 
 Run:
 
->> opt = gurls_train(X,y);
+>> model = gurls_train(X, y);
+
+This will train a non-linear model based on a gaussian kernel and validated by hold out cross validation.
 
 Put your test data in a n-by-d matrix Xte like above and your test labels in 
 a n-by-one vector yte. Let the labels go from 1 to T with T being the number of classes.
 
 Run: 
 
->> [yhat, acc] = gurls_test(Xte,yte,opt)
+>> [ypred, acc] = gurls_test(model, Xte, yte)
 
-This will train a linear model in the dual space using leave-one-out cross validation.
+This will compute the outputs predicted by the model with the associated accuracy. 
 
 

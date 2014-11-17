@@ -37,6 +37,14 @@ classdef GurlsOptions < dynamicprops
                 obj.(name) = value;
             end
         end
+
+        function s = toStruct(obj)
+            s = struct();
+            names = properties(obj);
+            for name=names'
+                s.(name{1}) = obj.(name{1});
+            end
+        end
     end 
 end
 

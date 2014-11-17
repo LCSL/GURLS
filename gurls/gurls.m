@@ -48,7 +48,10 @@ if jobid == 0
 	return;
 end
 
+compmode = 0;
 if ~isa(opt, 'GurlsOptions')
+    warning('Compatibility mode with GURLS 1.0'); 
+    compmode = 1;
     opt = GurlsOptions(opt);
 end
 
@@ -112,10 +115,10 @@ for i = 1:numel(process) % Go by the length of process.
 		fprintf('\tdone\n');
 
 	case LDF,
-		if exist('t','var') && isprop(opt, reg{1})
-			opt.(reg{1}) = t.opt.(reg{1});
+		if exist('t','var') && (isprop(t.opt, reg{1}) || isfield(t.opt, reg{1}))
+			opt.newprop(reg{1}, t.opt.(reg{1}));
 			fprintf('\tcopied\n');
-		else
+        else
 			fprintf('\tcopy failed\n');
 		end
 
@@ -144,4 +147,8 @@ if ~isequal(opt.name, '')
     end
     save(opt.savefile, 'opt', '-v7.3');
     fprintf('Saving opt in %s\n', opt.savefile);
+end
+
+if compmode == 1
+   opt = opt.toStruct();
 end
