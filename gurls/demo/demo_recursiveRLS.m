@@ -28,10 +28,10 @@ Xtr = Xtr_tot(1:n0,:);
 ytr = ytr_tot(1:n0,:);
 
 name = [resdir '/recursiveRLS'];
-opt = defopt(name);
+opt = gurls_defopt(name);
 opt.seq = {'split:ho','paramsel:hoprimal','rls:primalrecinit'};
 opt.process{1} = [2,2,2];
-opt = gurls (Xtr, ytr, opt,1);
+opt = gurls(Xtr, ytr, opt,1);
 
 %% UPDATE: update RLS estimator recursively
 % update estimator recursively
@@ -50,14 +50,14 @@ opt.perf = perf_macroavg(Xte, yte, opt);
 
 %% compare with batch RLS
 name = [resdir '/standardRLSfixlambda'];
-optRLSfixlambda = defopt(name);
-optRLSfixlambda.newprop('paramsel.lambdas' , opt.paramsel.lambdas*n0/ntr_tot);
+optRLSfixlambda = gurls_defopt(name);
+optRLSfixlambda.newprop('paramsel.lambdas', opt.paramsel.lambdas*n0/ntr_tot);
 
 optRLSfixlambda.seq = {'rls:primal','pred:primal','perf:macroavg'};
 optRLSfixlambda.process{1} = [2,0,0];
 optRLSfixlambda.process{2} = [3,2,2];
-optRLSfixlambda = gurls (Xtr_tot, ytr_tot, optRLSfixlambda,1);
-optRLSfixlambda = gurls (Xte, yte, optRLSfixlambda,2);
+optRLSfixlambda = gurls(Xtr_tot, ytr_tot, optRLSfixlambda,1);
+optRLSfixlambda = gurls(Xte, yte, optRLSfixlambda,2);
 
 % check that solutions coincide
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')

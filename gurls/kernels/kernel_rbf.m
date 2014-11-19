@@ -1,4 +1,4 @@
-function [kernel] = kernel_rbf(X,y, opt)
+function [kernel] = kernel_rbf(X, y, opt)
 
 % 	kernel_rbf(opt)
 %	Computes the kernel matrix for a Gaussian kernel.
@@ -12,6 +12,9 @@ function [kernel] = kernel_rbf(X,y, opt)
 %		-type: 'rbf'
 %		-K: kernel matrix
 
+if ~isprop(opt,'kernel')
+    opt.newprop('kernel', struct());
+end
 kernel = opt.kernel;
 
 if ~isfield(kernel,'distance')

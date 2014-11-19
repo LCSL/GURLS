@@ -3,7 +3,7 @@ function [W] = rls_primal_driver(XtX, Xty, n, lambda)
 % Utility function used by rls_primal
 % 
 % INPUTS:
-% -XtX: simmetric dxd square matrix
+% -XtX: symmetric dxd square matrix
 % -Xty: dxT matrix
 % -n: number of training samples
 % -lambda: regularization parameter

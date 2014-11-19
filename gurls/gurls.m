@@ -66,16 +66,16 @@ end
 seq = opt.seq;
 % Load and copy
 
-if exist(opt.savefile) == 2
-	t = load(opt.savefile);
-	if isprop(t.opt,'time');
-		opt.time = t.opt.time;
-	end	
+if exist(opt.savefile, 'file') == 2
+    t = load(opt.savefile);
+    if isprop(t.opt,'time');
+        opt.time = t.opt.time;
+    end
 else
     if ~isequal(opt.name,'')
         fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
     end
-end	
+end
 %try
 %	t = load(opt.savefile);
 %	if isfield(t.opt,'time')

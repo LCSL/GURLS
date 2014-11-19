@@ -1,5 +1,5 @@
-function vout = paramsel_siglamho(X,y,opt)
-% paramsel_siglam(X,y, OPT)
+function vout = paramsel_siglamho(X, y, opt)
+% paramsel_siglamho(X, y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The hold-out approach is used.
 % It selects both the regularization parameter lambda and the kernel parameter sigma.
@@ -28,6 +28,11 @@ if isprop(opt,'paramsel')
 			      		 % unless they have the same name
 else
     opt.newprop('paramsel', struct());
+end
+
+% case: sigma was prev. set & paramsel_siglam is called to re-compute it
+if isfield(opt.paramsel, 'sigma')
+    opt.paramsel = rmfield(opt.paramsel, 'sigma');
 end
 
 [~,T]  = size(y);

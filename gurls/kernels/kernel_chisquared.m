@@ -1,4 +1,4 @@
-function [kernel] = kernel_chisquared(X,y, opt)
+function [kernel] = kernel_chisquared(X, y, opt)
 % kernel_chisquared(opt)
 % Computes the Kernel matrix for chi-squared kernel.		
 %
@@ -9,6 +9,9 @@ function [kernel] = kernel_chisquared(X,y, opt)
 % -type: 'chisquared'
 % -K: kernel matrix
 
+if ~isprop(opt,'kernel')
+    opt.newprop('kernel', struct());
+end
 kernel = opt.kernel;
 kernel.type = 'chisquared';
 

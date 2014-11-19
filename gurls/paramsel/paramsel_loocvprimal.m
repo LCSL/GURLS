@@ -1,4 +1,4 @@
-function vout = paramsel_loocvprimal(X,y, opt)
+function vout = paramsel_loocvprimal(X, y, opt)
 % paramsel_loocvprimal(X,y, OPT)
 % Performs parameter selection when the primal formulation of RLS is used.
 % The leave-one-out approach is used.
