@@ -1,6 +1,6 @@
-function [out] = conf_maxscore(X,y, opt)
+function [out] = conf_maxscore(X, y, opt)
 
-%	conf_maxscore(opt)	
+%	conf_maxscore(opt)
 %	computes a codfidence estimation for the predicted class (i.e. highest scoring class).
 %	The difference between the highest scoring class and the second highest
 %	scoring class is considered.
@@ -13,6 +13,5 @@ function [out] = conf_maxscore(X,y, opt)
 %			- confidence 	: confidence estimate for the predicted label.
 %			- labels	: predicted label.
 
-		out = struct;
-		[out.confidence, out.labels] = max(opt.pred,[],2);
-
+out = struct;
+[out.confidence, out.labels] = max(opt.pred,[],2);

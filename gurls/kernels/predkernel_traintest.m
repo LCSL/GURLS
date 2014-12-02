@@ -1,4 +1,4 @@
-function [fk] = predkernel_traintest(X,y, opt)
+function [fk] = predkernel_traintest(X, y, opt)
 % predkernel_traintest(OPT)
 % Computes the kernel matrix between the training points and the
 % test points. It can be used by pred_dual.
@@ -26,8 +26,8 @@ switch opt.kernel.type
 			opt.newprop('predkernel', struct());
 			opt.predkernel.type = 'rbf';
 		end
-		if ~isfield(opt.predkernel,'distance')
-			opt.predkernel.distance = square_distance(X',opt.rls.X');
+        if ~isfield(opt.predkernel,'distance')
+            opt.predkernel.distance = square_distance(X',opt.rls.X');
         end
 		fk.distance = opt.predkernel.distance;
 			%D = -(opt.finalkernel.distance.^2);
@@ -44,12 +44,12 @@ switch opt.kernel.type
 		fk.type = 'linear';
 		fk.K = X*opt.rls.X';
 	case {'chisquared'}
-		for i = 1:size(X,1)
-			for j = 1:size(opt.rls.X,1)
-				fk.K(i,j) = sum(...
-					( (X(i,:) - opt.rls.X(j,:)).^2 ) ./ ...
-					( 0.5*(X(i,:) + opt.rls.X(j,:)) + eps));
-			end
+        for i = 1:size(X,1)
+            for j = 1:size(opt.rls.X,1)
+                fk.K(i,j) = sum(...
+                    ( (X(i,:) - opt.rls.X(j,:)).^2 ) ./ ...
+                    ( 0.5*(X(i,:) + opt.rls.X(j,:)) + eps));
+            end
         end
 
 	case {'datatype'}

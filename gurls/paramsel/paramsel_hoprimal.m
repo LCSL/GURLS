@@ -1,4 +1,4 @@
-function [vout] = paramsel_hoprimal(X,y,opt)
+function [vout] = paramsel_hoprimal(X, y, opt)
 % paramsel_hoprimal(X,Y,OPT)
 % Performs parameter selection when the primal formulation of RLS is used.
 % The hold-out approach is used. 
@@ -12,7 +12,7 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 %		- nlambda
 %		- smallnumber
 %		- hoperf
-%       	- nholdouts
+%       - nholdouts
 %
 %   For more information on standard OPT fields
 %   see also defopt
@@ -28,8 +28,8 @@ function [vout] = paramsel_hoprimal(X,y,opt)
 % -lambdas: mean of the optimal lambdas across splits
 
 if isprop(opt,'paramsel')
-	vout = opt.paramsel; % lets not overwrite existing parameters.
-			      		 % unless they have the same name
+    vout = opt.paramsel; % lets not overwrite existing parameters.
+    % unless they have the same name
     
     if isfield(opt.paramsel,'perf')
         vout = rmfield(vout,'perf');
@@ -41,7 +41,6 @@ else
     opt.newprop('paramsel', struct());
 end
 
-savevars = [];
 
 %verify if matrix XtX has already been computed (especially for online RLS)
 if isprop(opt,'kernel');
@@ -65,7 +64,7 @@ d = size(X,2);
 T = size(y,2);
 
 for nh = 1:opt.nholdouts
-	if strcmp(class(opt.split),'cell')
+	if iscell(opt.split)
 		tr = opt.split{nh}.tr;
 		va = opt.split{nh}.va;
 	else	
@@ -98,7 +97,7 @@ for nh = 1:opt.nholdouts
 			ap(i,t) = opt.perf.forho(t);
 		end	
 	end	
-	[dummy,idx] = max(ap,[],1);	
+	[dummy, idx] = max(ap,[],1);	
 	vout.lambdas_round{nh} = guesses(idx);
 	vout.perf{nh} = ap;
 	vout.guesses{nh} = guesses;

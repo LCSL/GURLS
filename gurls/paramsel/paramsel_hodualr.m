@@ -1,4 +1,4 @@
-function [vout] = paramsel_hodualr(X,y, opt)
+function [vout] = paramsel_hodualr(X, y, opt)
 % paramsel_hopdualr(X,y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The hold-out approach is used. 
@@ -38,16 +38,14 @@ else
     opt.newprop('paramsel', struct());
 end
 
-savevars = [];
 for nh = 1:opt.nholdouts
-	if strcmp(class(opt.split),'cell')
+	if iscell(opt.split)
 		tr = opt.split{nh}.tr;
 		va = opt.split{nh}.va;
 	else	
 		tr = opt.split.tr;
 		va = opt.split.va;
 	end	
-
 
 	[n,T]  = size(y(tr,:));
 	
@@ -83,7 +81,7 @@ for nh = 1:opt.nholdouts
 		if strcmp(opt.kernel.type,'linear')
 			opt.rls.W = X(tr,:)'*opt.rls.C; 
 		else
-			opt.predkernel.K = opt.kernel.K(va,tr);
+            opt.newprop('predkernel.K', opt.kernel.K(va,tr));
 		end	
 	
 		opt.newprop('pred',pred_dual(Xva,yva,opt));

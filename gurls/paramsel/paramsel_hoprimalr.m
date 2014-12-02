@@ -1,4 +1,4 @@
-function [vout] = paramsel_hoprimalr(X,y, opt)
+function [vout] = paramsel_hoprimalr(X, y, opt)
 % paramsel_hoprimalr(X,y, OPT)
 % Performs parameter selection when the primal formulation of RLS is used.
 % The hold-out approach is used. 
@@ -34,10 +34,9 @@ if isprop(opt,'paramsel')
 else
     opt.newprop('paramsel', struct());
 end
-savevars = [];
 
 for nh = 1:opt.nholdouts
-	if strcmp(class(opt.split),'cell')
+	if iscell(opt.split)
 		tr = opt.split{nh}.tr;
 		va = opt.split{nh}.va;
 	else	
@@ -46,7 +45,7 @@ for nh = 1:opt.nholdouts
 	end	
 
 	[n,d] = size(X(tr,:));
-	[n,T]  = size(y(tr,:));
+	[n,T] = size(y(tr,:));
 	
 	K = X(tr,:)'*X(tr,:);
 	

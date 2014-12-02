@@ -1,5 +1,5 @@
 function vout = paramsel_siglam(X, y, opt)
-% paramsel_siglam(X,y, OPT)
+% paramsel_siglam(X, y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The leave-one-out approach is used.
 % It selects both the regularization parameter lambda and the kernel parameter sigma.
@@ -26,13 +26,18 @@ function vout = paramsel_siglam(X, y, opt)
 %savevars = {'LOOSQE','M','sigmas','guesses'};
 
 if isprop(opt,'paramsel')
-	vout = opt.paramsel; % lets not overwrite existing parameters.
-			      		 % unless they have the same name
+    vout = opt.paramsel; % lets not overwrite existing parameters.
+    % unless they have the same name
 else
     opt.newprop('paramsel', struct());
 end
 
-[~,T]  = size(y);
+% case: sigma was prev. set & paramsel_siglam is called to re-compute it
+if isfield(opt.paramsel, 'sigma')
+    opt.paramsel = rmfield(opt.paramsel, 'sigma');
+end
+
+[~, T]  = size(y);
 
 if ~isprop(opt,'kernel')
     opt.newprop('kernel', struct());
@@ -62,8 +67,8 @@ end
 
 M = sum(PERF,3); % sum over classes
 
-[dummy,i] = max(M(:));
-[m,n] = ind2sub(size(M),i);
+[dummy, i] = max(M(:));
+[m, n] = ind2sub(size(M),i);
 
 % opt sigma
 vout.sigma = opt.kernel.kerrange(m);

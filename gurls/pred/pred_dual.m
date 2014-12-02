@@ -17,9 +17,9 @@ function [scores] = pred_dual(X,y, opt)
 % OUTPUT:
 % -scores: matrix of predicted labels
 
-if ~strcmp(opt.kernel.type , 'linear') && isprop(opt,'predkernel')
+if ~strcmp(opt.kernel.type, 'linear') && isprop(opt, 'predkernel')
 	scores = opt.predkernel.K*opt.rls.C;
-elseif strcmp(opt.kernel.type , 'linear')
+elseif strcmp(opt.kernel.type, 'linear')
 	scores = pred_primal(X, y, opt);
 else	
 	error('Please provide a predkernel');

@@ -2,7 +2,7 @@ function [] = test_driver(task,dirname,opt)
 
     disp(dirname)
 
-    if nargin<3; opt = struct(); end
+    if nargin<3; opt = struct(); end    
 
     opt.hoMOnline = 0;
     opt.nlambda = load('nlambda.txt');
@@ -48,6 +48,7 @@ function [] = test_driver(task,dirname,opt)
                 opt.split = split;
             end
             opt = addopt(opt,'kernel',allfiles,dirname,filein);
+            opt = checkopt(opt);
             vout = task(X,y,opt);
             saveopt(vout,'paramsel',dirname,fileout)
         case 'rls'
@@ -60,7 +61,8 @@ function [] = test_driver(task,dirname,opt)
         case 'kernel'
             X = load('Xtr.txt');
             y = load('ytr.txt');
-            opt = addopt(opt,'paramsel',allfiles,dirname,filein);        
+            opt = addopt(opt,'paramsel',allfiles,dirname,filein);  
+            opt = checkopt(opt);
             vout = task(X,y,opt);
             saveopt(vout,'kernel',dirname,fileout)
         case 'predkernel'
@@ -68,7 +70,8 @@ function [] = test_driver(task,dirname,opt)
             y = load('ytr.txt');
             opt = addopt(opt,'paramsel',allfiles,dirname,filein);        
             opt = addopt(opt,'rls',allfiles,dirname,filein);             
-            opt = addopt(opt,'kernel',allfiles,dirname,filein);        
+            opt = addopt(opt,'kernel',allfiles,dirname,filein); 
+            opt = checkopt(opt);
             vout = task(X,y,opt);
             saveopt(vout,'predkernel',dirname,fileout)
         case 'pred'
@@ -77,6 +80,7 @@ function [] = test_driver(task,dirname,opt)
             opt = addopt(opt,'rls',allfiles,dirname,filein);        
             opt = addopt(opt,'predkernel',allfiles,dirname,filein);      
             opt = addopt(opt,'kernel',allfiles,dirname,filein);
+            opt = checkopt(opt);
             vout = task(X,y,opt);
             saveopt(vout,'pred',dirname,fileout)
         case 'perf'
@@ -92,6 +96,7 @@ function [] = test_driver(task,dirname,opt)
             vout = task(X,y,opt);
             saveopt(vout,'conf',dirname,fileout)
     end
+       
 end
 
 function opt = addopt(opt,optfield,allfiles,dirname,typesfile)
@@ -195,4 +200,12 @@ function []  = savevar(var,filename,typesfile)
     fprintf(fid,'%s %s\n',filename,vartype);
     fclose(fid);
     
+end
+
+function opt = checkopt(opt)
+% Checking compatibility, transforming to new GURLS opt
+if ~isa(opt, 'GurlsOptions')
+    warning('Compatibility mode with GURLS 1.0');
+    opt = GurlsOptions(opt);
+end
 end
