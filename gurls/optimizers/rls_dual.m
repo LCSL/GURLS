@@ -33,14 +33,13 @@ n = size(opt.kernel.K,1);
 T = size(y,2);
 
 %fprintf('\tSolving dual RLS...(n = %d, % = %d)', n, T);
-K = opt.kernel.K + (n*lambda)*eye(n);
 
 try
-	R = chol(K); 
+	R = chol(opt.kernel.K + (n*lambda)*eye(n)); 
 	
 	cfr.C = R\(R'\y);
 catch
-	[Q,L,V] = svd(K);
+	[Q,L,V] = svd(opt.kernel.K);
 	Q = double(Q);
 	L = double(diag(L));
 	cfr.C = rls_eigen(Q,L,Q'*y,lambda,n);
