@@ -35,7 +35,9 @@ for i = 1:n_estimates,
 
 
 	if ~exist([opt.calibfile '.mat'],'file')
-		fprintf('\n\tCalibrating...');
+        if opt.verbose
+    		fprintf('\n\tCalibrating...');
+        end
 		%% Step 1 : Hold out parameter selection in the dual
 		name = opt.calibfile;
 		tmp = defopt(name);
@@ -45,8 +47,10 @@ for i = 1:n_estimates,
 		tmp.singlelambda = opt.singlelambda;
 
 		gurls(M,y(idx,:),tmp,1);
-	end
-	fprintf('\n\tLoading existing calibration');
+    end
+    if opt.verbose
+    	fprintf('\n\tLoading existing calibration');
+    end
 	load([opt.calibfile '.mat']);
 	lambdas(i) = opt.singlelambda(opt.paramsel.lambdas);
 
