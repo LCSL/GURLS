@@ -72,8 +72,14 @@ switch opt.kernel.type
 		fk.K = fk.K + (1-opt.paramsel.alpha)*exp(-D./(opt.paramsel.sigma^2));
 		if isfield(opt.rls,'L')
 		    fk.Ktest = ones(size(X,1),1);
-		end
-
+        end
+    
+    otherwise
+        kern = str2func(['kernel_', opt.kernelfun]);
+        opt.kernel.sigma = opt.paramsel.sigma;
+        opt.kernel.Y = opt.rls.X
+        
+        fk = kern(X, [], opt);
 end	
  
 		

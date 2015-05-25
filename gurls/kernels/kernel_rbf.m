@@ -18,7 +18,7 @@ end
 kernel = opt.kernel;
 
 if ~isfield(kernel,'distance')
-	kernel.distance = square_distance(X',X');
+    kernel.distance = square_distance(X',X');
 end	
 
 n = size(kernel.distance,1);

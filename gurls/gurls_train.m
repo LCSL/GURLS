@@ -236,13 +236,18 @@ function kernel = selectKernel(opt, isLRLS)
     
     if isprop(opt, 'kernelfun')
         if ischar(opt.kernelfun)
-            if ~isequal('', unknelem('kernel', opt.kernelfun, '(linear|datatype|user-supplied|rbf|chisquared|quasiperiodic|string)', ''))
+            adstr = ')';
+            rtl = functions(str2func(['kernel_' opt.kernelfun]));
+            if ~isequal('', rtl.file)
+                adstr = ['|' opt.kernelfun ')'];
+            end
+            if ~isequal('', unknelem('kernel', opt.kernelfun, ['(linear|datatype|user-supplied|rbf|chisquared|quasiperiodic|string' adstr], ''))
                 switch opt.datatype
                     case 'vector'
                         if isLRLS
                             kernel = allowelem('kernel', 'vector datatype and lrls algorithm', opt.kernelfun, 'linear', 'linear');
                         else
-                            kernel = allowelem('kernel', 'vector datatype', opt.kernelfun, '(linear|rbf|chisquared|quasiperiodic)', 'rbf');
+                            kernel = allowelem('kernel', 'vector datatype', opt.kernelfun, ['(linear|rbf|chisquared|quasiperiodic' adstr], 'rbf');
                         end
                     case 'kernel'
                         kernel = allowelem('kernel', 'kernel datatype', opt.kernelfun, 'datatype', 'datatype');
