@@ -734,7 +734,7 @@ function algorithm = lrlsalg(algorithm,opt)
     end
 end
 
-function algorithm = krlsalg(algorithm)
+function algorithm = krlsalg(algorithm, opt)
     if ~isequal(algorithm,'krls')
         if opt.verbose
            fprintf(['The dual formulation is more efficient for this problem.'...
