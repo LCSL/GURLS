@@ -588,6 +588,7 @@ function modelselection(opt)
     
     if isprop(opt, 'regrange')
         opt.newprop('paramsel.guesses', opt.regrange);
+        opt.newprop('paramsel.regrange', opt.regrange);
     end
     
     if isprop(opt, 'kerrange')

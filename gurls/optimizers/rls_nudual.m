@@ -24,6 +24,7 @@ Niter = ceil(opt.singlelambda(opt.paramsel.lambdas));
 [n,T] = size(y);
 nu=1;
 
+alpha = zeros(n, T);
 
 if ~isfield(opt.paramsel,'Knorm');
     opt.paramsel.Knorm = norm(opt.kernel.K);

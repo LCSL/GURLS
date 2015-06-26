@@ -35,6 +35,7 @@ if isprop(opt,'paramsel')
 else
     opt.newprop('paramsel', struct());
 end
+vout.guesses = {};
 
 for nh = 1:opt.nholdouts
     if iscell(opt.split)
@@ -58,8 +59,13 @@ for nh = 1:opt.nholdouts
     Q = double(Q);
     L = double(diag(L));
     
-    tot = opt.nlambda;
-    guesses = paramsel_lambdaguesses(L, r, n, opt);
+    if ~isfield(vout, 'regrange')
+        tot = opt.nlambda;
+        guesses = paramsel_lambdaguesses(L, r, n, opt);
+    else
+        tot = numel(vout.regrange);
+        guesses = vout.regrange;
+    end
     
     ap = zeros(tot,T);
     QtY = Q'*y(tr,:);
