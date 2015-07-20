@@ -66,16 +66,18 @@ end
 seq = opt.seq;
 % Load and copy
 
-if exist(opt.savefile) == 2
-	t = load(opt.savefile);
-	if isprop(t.opt,'time');
-		opt.time = t.opt.time;
-	end	
+if exist(opt.savefile, 'file') == 2
+    t = load(opt.savefile);
+    if isprop(t.opt,'time');
+        opt.time = t.opt.time;
+    end
 else
     if ~isequal(opt.name,'')
-        fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
+        if opt.verbose
+            fprintf('Could not load %s. Starting from scratch.\n', opt.savefile);
+        end
     end
-end	
+end
 %try
 %	t = load(opt.savefile);
 %	if isfield(t.opt,'time')
@@ -91,18 +93,26 @@ process = opt.process{jobid};
 %for i = 1:numel(opt.process) % Go by the length of process.
 opt.time{jobid} = struct;
 %end
+if opt.verbose
+    fprintf('\nNew job sequence...\n');
+end
 
-fprintf('\nNew job sequence...\n');
 for i = 1:numel(process) % Go by the length of process.
 	reg = regexp(seq{i},':','split');
 	if length(reg) < 2
 		error('Command format incorrect. Requires a ":" \n');
-	end
-	fprintf('[Job %d: %15s]: %15s ',jobid, reg{1}, reg{2});
-
+    end
+    
+    if opt.verbose
+    	fprintf('[Job %d: %15s]: %15s ',jobid, reg{1}, reg{2});
+    end
+    
 	switch process(i)
 	case IGN
-		fprintf('\tignored\n');
+        if opt.verbose
+    		fprintf('\tignored\n');
+        end
+        
 		continue;
 
 	case {CPT, CSV, ~isfield(opt,reg{1})}
@@ -112,41 +122,66 @@ for i = 1:numel(process) % Go by the length of process.
 		tic;
         opt.newprop(reg{1}, fun(X,y,opt));
 		opt.time{jobid} = setfield(opt.time{jobid},reg{1}, toc);
-		fprintf('\tdone\n');
+        
+        if opt.verbose
+    		fprintf('\tdone\n');
+        end
 
 	case LDF,
 		if exist('t','var') && (isprop(t.opt, reg{1}) || isfield(t.opt, reg{1}))
 			opt.newprop(reg{1}, t.opt.(reg{1}));
-			fprintf('\tcopied\n');
+            
+            if opt.verbose
+    			fprintf('\tcopied\n');
+            end
         else
-			fprintf('\tcopy failed\n');
+            
+            if opt.verbose
+                fprintf('\tcopy failed\n');
+            end
 		end
 
-	otherwise
-		fprintf('Unknown process statement\n');
+        otherwise
+        if opt.verbose
+    		fprintf('Unknown process statement\n');
+        end
 	end	
 end
 
 if ~isequal(opt.name, '')
-    fprintf('\nSave cycle...\n');
+    if opt.verbose
+        fprintf('\nSave cycle...\n');
+    end
+    
     % Delete whats not necessary
     for i = 1:numel(process)
         reg = regexp(seq{i},':','split');
-        fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
+        if opt.verbose
+            fprintf('[Job %d: %15s] %15s: ',jobid, reg{1}, reg{2});
+        end
+        
         switch process(i)
             case {CSV, LDF}
-                fprintf('\tsaving..\n');
+                if opt.verbose
+                    fprintf('\tsaving..\n');
+                end
             otherwise
                 if isprop(opt, reg{1})
                     opt.(reg{1}) = [];
-                    fprintf('\tremoving..\n');
+                    if opt.verbose
+                        fprintf('\tremoving..\n');
+                    end
                 else
-                    fprintf('\tnot found..\n');
+                   if opt.verbose
+                       fprintf('\tnot found..\n');
+                   end
                 end
         end
     end
     save(opt.savefile, 'opt', '-v7.3');
-    fprintf('Saving opt in %s\n', opt.savefile);
+    if opt.verbose
+        fprintf('Saving opt in %s\n', opt.savefile);
+    end
 end
 
 if compmode == 1

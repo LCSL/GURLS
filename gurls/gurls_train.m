@@ -46,13 +46,15 @@ function model = gurls_train(X, y, varargin)
 end
 
 function opt = prodOptions(lst)
-fprintf('\n\n\nGurls 2.0\n');
-
+    
+    opt = gurls_defopt('');
+    
+    %check verbose-ness (default: true)
+    opt.newprop('verbose',1);
+    
     if numel(lst) == 1
-        opt = gurls_defopt('');
         opt.newprops(lst{1});
     elseif ~mod(numel(lst),2)
-        opt = gurls_defopt('');
         for i=1:numel(lst)/2
             if ~ischar(lst{2*i-1})
                 error('The %d-th option name is not a string', i);
@@ -64,6 +66,11 @@ fprintf('\n\n\nGurls 2.0\n');
         end
     else
         error('The option list is wrongly formatted');
+    end
+    
+    
+    if opt.verbose
+        fprintf('\n\n\nGurls 2.0\n');
     end
 end
 
@@ -125,7 +132,9 @@ function selectDatatype(X, opt)
     if ~isprop(opt,'datatype')
         fprintf('No datatype has been supplied by the user. ');
     end
-    fprintf('The selected datatype for the input is "%s"\n', opt.datatype);
+    if opt.verbose
+        fprintf('The selected datatype for the input is "%s"\n', opt.datatype);
+    end
 end
 
 function y = analyzeData(X, y, opt)
@@ -159,7 +168,10 @@ function y = analyzeData(X, y, opt)
         if max(max(abs(double(int32(y))-y))) > eps
             opt.problem ='regression'; 
         end
-        fprintf('The problem has been set to %s.\n', opt.problem);
+        
+        if opt.verbose
+            fprintf('The problem has been set to %s.\n', opt.problem);
+        end
     end
     
     if isequal(opt.problem, 'classification') && max(max(abs(double(int32(y))-y))) < eps
@@ -224,13 +236,18 @@ function kernel = selectKernel(opt, isLRLS)
     
     if isprop(opt, 'kernelfun')
         if ischar(opt.kernelfun)
-            if ~isequal('', unknelem('kernel', opt.kernelfun, '(linear|datatype|user-supplied|rbf|chisquared|quasiperiodic|string)', ''))
+            adstr = ')';
+            rtl = functions(str2func(['kernel_' opt.kernelfun]));
+            if ~isequal('', rtl.file)
+                adstr = ['|' opt.kernelfun ')'];
+            end
+            if ~isequal('', unknelem('kernel', opt.kernelfun, ['(linear|datatype|user-supplied|rbf|chisquared|quasiperiodic|string' adstr], ''))
                 switch opt.datatype
                     case 'vector'
                         if isLRLS
                             kernel = allowelem('kernel', 'vector datatype and lrls algorithm', opt.kernelfun, 'linear', 'linear');
                         else
-                            kernel = allowelem('kernel', 'vector datatype', opt.kernelfun, '(linear|rbf|chisquared|quasiperiodic)', 'rbf');
+                            kernel = allowelem('kernel', 'vector datatype', opt.kernelfun, ['(linear|rbf|chisquared|quasiperiodic' adstr], 'rbf');
                         end
                     case 'kernel'
                         kernel = allowelem('kernel', 'kernel datatype', opt.kernelfun, 'datatype', 'datatype');
@@ -264,7 +281,9 @@ function kernel = selectKernel(opt, isLRLS)
                 error('Kernel for unknown datatype must be explicitly provided');
         end
         if ~ok
-            fprintf('The selected kernel is "%s".\n', kernel);
+            if opt.verbose
+                fprintf('The selected kernel is "%s".\n', kernel);
+            end
         end
         opt.newprop('kernelfun', kernel);
     end
@@ -304,7 +323,9 @@ function algorithm = selectAlgo(opt)
                 algorithm = 'krls';
         end
         if ~ok
-            fprintf('The selected algorithm is "%s".\n',algorithm);
+            if opt.verbose
+                fprintf('The selected algorithm is "%s".\n',algorithm);
+            end
         end
         opt.newprop('algorithm', algorithm);
     end
@@ -362,27 +383,27 @@ function chooseMatches(opt)
     case regexp(algstr, '(lrls_randtikh_linear_primal|krls_randtikh_linear_primal)')
        algo = 'primalr';
        pname = 'primal';
-       algorithm = lrlsalg(algorithm);
+       algorithm = lrlsalg(algorithm,opt);
     case regexp(algstr, '(krls_randtikh_\w*_\w*|lrls_randtikh_linear_dual)')
        algo = 'dualr';
        pname = 'dual';
-       algorithm = krlsalg(algorithm);
+       algorithm = krlsalg(algorithm,opt);
     case regexp(algstr, '(lrls_land_linear_primal|krls_land_linear_primal)')
        algo = 'landweberprimal';
        pname = 'primal';
-       algorithm = lrlsalg(algorithm);
+       algorithm = lrlsalg(algorithm,opt);
     case regexp(algstr, '(krls_land_\w*_\w*|lrls_land_linear_dual)')
        algo = 'landweberdual';
        pname = 'dual';
-       algorithm = krlsalg(algorithm);
+       algorithm = krlsalg(algorithm,opt);
     case regexp(algstr, '(lrls_nu_linear_primal|krls_nu_linear_primal)')
        algo = 'nuprimal';
        pname = 'primal';
-       algorithm = lrlsalg(algorithm);
+       algorithm = lrlsalg(algorithm,opt);
     case regexp(algstr, '(krls_nu_\w*_\w*|lrls_nu_linear_dual)')
        algo = 'nudual';
        pname = 'dual';
-       algorithm = krlsalg(algorithm);
+       algorithm = krlsalg(algorithm,opt);
     case regexp(algstr, 'krlsrf_\w*_\w*_\w*')
        algo = 'randfeats';
        pname = 'randfeats';
@@ -391,7 +412,7 @@ function chooseMatches(opt)
     case regexp(algstr, '(lrls_\w*_\w*_primal|krls_\w*_linear_primal') % filter: tikhonov or not known 
        algo = 'primal';
        pname = 'primal';
-       algorithm = lrlsalg(algorithm);
+       algorithm = lrlsalg(algorithm,opt);
        sstr = sprintf('the algorithm "%s"', algorithm);
        filter = allowelem('filter', sstr, filter, '(tikh|randtikh|land|nu|user-supplied)', 'tikh');
     case regexp(algstr, 'user-supplied_\w*_\w*_\w*') % filter: tikhonov or not known
@@ -403,7 +424,7 @@ function chooseMatches(opt)
        algo = 'dual';
        pname = 'dual';
        if isequal(algorithm,'lrls')
-           algorithm = krlsalg(algorithm);
+           algorithm = krlsalg(algorithm,opt);
        else
            algorithm = unknelem('algorithm', algorithm, 'krls', 'krls');
        end
@@ -429,7 +450,9 @@ function chooseMatches(opt)
     opt.kernel.type = kernel;
     opt.setting.kernel = opt.kernel;
     
-    fprintf('Final choice: "%s" algorithm, with filter "%s" and kernel "%s".\n', algorithm, filter, kernel);
+    if opt.verbose
+        fprintf('Final choice: "%s" algorithm, with filter "%s" and kernel "%s".\n', algorithm, filter, kernel);
+    end
 end
 
 function chooseCVAlg(opt)
@@ -447,7 +470,9 @@ function chooseCVAlg(opt)
         opt.newprop('partuning','ho');
     end
     
-    fprintf('The selected cross-validation method is "%s".\n', opt.partuning);
+    if opt.verbose
+        fprintf('The selected cross-validation method is "%s".\n', opt.partuning);
+    end
     
     ok = false;
     if isprop(opt, 'perfm')
@@ -483,8 +508,12 @@ function chooseCVAlg(opt)
         end
     end
     
-    fprintf('The selected performance measure is "%s".\n', opt.perfm);
+    if opt.verbose
+        fprintf('The selected performance measure is "%s".\n', opt.perfm);
+    end
+    
 end
+
 
 function pars = selectPars(opt)
     ok = false;
@@ -529,13 +558,16 @@ function pars = selectPars(opt)
         end
         opt.newprop('pars', pars);
     end
-    switch pars
-        case 'reg'
-            disp('The regularization parameter will be chosen by cross-validation.');
-        case 'ker'
-            disp('The kernel parameter will be chosen by cross-validation.');
-        case 'all'
-            disp('Both the kernel and regularization parameters will be chosen by cross-validation.');
+    
+    if opt.verbose
+        switch pars
+            case 'reg'
+                disp('The regularization parameter will be chosen by cross-validation.');
+            case 'ker'
+                disp('The kernel parameter will be chosen by cross-validation.');
+            case 'all'
+                disp('Both the kernel and regularization parameters will be chosen by cross-validation.');
+        end
     end
 end
 
@@ -556,6 +588,7 @@ function modelselection(opt)
     
     if isprop(opt, 'regrange')
         opt.newprop('paramsel.guesses', opt.regrange);
+        opt.newprop('paramsel.regrange', opt.regrange);
     end
     
     if isprop(opt, 'kerrange')
@@ -692,19 +725,23 @@ function elem = allowelem(kind, where, elem, expr, newelem)
     end
 end
     
-function algorithm = lrlsalg(algorithm)
+function algorithm = lrlsalg(algorithm,opt)
     if ~isequal(algorithm,'lrls')
+        if opt.verbose
            fprintf(['The primal formulation is more efficient for this problem.'...
             ' Thus the "lrls" algorithm has been chosen\n']);
-           algorithm = 'lrls';
+        end
+        algorithm = 'lrls';
     end
 end
 
-function algorithm = krlsalg(algorithm)
+function algorithm = krlsalg(algorithm, opt)
     if ~isequal(algorithm,'krls')
+        if opt.verbose
            fprintf(['The dual formulation is more efficient for this problem.'...
             ' Thus the "krls" algorithm with linear kernel has been chosen\n']);
-           algorithm = 'krls';
+        end
+        algorithm = 'krls';
     end
 end
 

@@ -1,5 +1,5 @@
-function vout = paramsel_siglamho(X,y,opt)
-% paramsel_siglam(X,y, OPT)
+function vout = paramsel_siglamho(X, y, opt)
+% paramsel_siglamho(X, y, OPT)
 % Performs parameter selection when the dual formulation of RLS is used.
 % The hold-out approach is used.
 % It selects both the regularization parameter lambda and the kernel parameter sigma.
@@ -30,6 +30,11 @@ else
     opt.newprop('paramsel', struct());
 end
 
+% case: sigma was prev. set & paramsel_siglam is called to re-compute it
+if isfield(opt.paramsel, 'sigma')
+    opt.paramsel = rmfield(opt.paramsel, 'sigma');
+end
+
 [~,T]  = size(y);
 
 if ~isprop(opt,'kernel')
@@ -41,14 +46,21 @@ opt.kernel.init = 1;
 opt.kernel = kernel_rbf(X,y,opt);
 nsigma = numel(opt.kernel.kerrange);
 
-PERF = zeros(opt.nsigma,opt.nlambda,T);
+if ~isfield(vout, 'regrange')
+    tot = opt.nlambda;
+else
+    tot = numel(vout.regrange);
+end
+
+PERF = zeros(opt.nsigma,tot,T);
 
 for i = 1:nsigma
 	opt.paramsel.sigmanum = i;
 	opt.kernel = kernel_rbf(X,y,opt);
 	paramsel = paramsel_hodual(X,y,opt);
 	nh = numel(paramsel.perf);
-	PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',opt.nlambda*T,nh),2),T,opt.nlambda)';
+    nl = numel(paramsel.guesses{1});
+	PERF(i,:,:) = reshape(median(reshape(cell2mat(paramsel.perf')',nl*T,nh),2),T,nl)';
 	guesses(i,:) = median(cell2mat(paramsel.guesses'),1);
 end
 % The lambda axis is redefined each time but

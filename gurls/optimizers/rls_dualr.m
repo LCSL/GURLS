@@ -35,7 +35,7 @@ T = size(y,2);
 
 %fprintf('\tSolving dual RLS...(n = %d, % = %d)', n, T);
 
-K = opt.kernel.K + (n*lambda)*eye(n);
+K = opt.kernel.K;
 
 k = max(1,round(opt.eig_percentage*n/100));
 [Q,L,V] = tygert_svd(K,k);

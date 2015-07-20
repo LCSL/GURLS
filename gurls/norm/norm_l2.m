@@ -11,5 +11,7 @@ function [X] = norm_l2(X,y, opt)
 for j = 1:size(X,1)
 	X(j,:) = X(j,:)/(norm(X(j,:)) + eps);
 end
-fprintf('\tL2 Normalized\n');
+if opt.verbose
+    fprintf('\tL2 Normalized\n');
+end
 

@@ -62,5 +62,5 @@ end
 
 [dummy,idx] = max(ap,[],1);	
 vout.lambdas = 	guesses(idx);
-vout.perf = 	ap;
+vout.perf = ap;
 vout.guesses = 	guesses;

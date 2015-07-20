@@ -28,13 +28,13 @@ Xtr = Xtr_tot(1:n0,:);
 ytr = ytr_tot(1:n0,:);
 
 name = [resdir '/recursiveRLS'];
-opt = defopt(name);
+opt = gurls_defopt(name);
 opt.kernel.XtX = Xtr'*Xtr;
 opt.kernel.Xty = Xtr'*ytr;
 opt.kernel.n = size(ytr,1);
 opt.seq = {'split:ho','paramsel:hoprimal','rls:primalrecinit'};
 opt.process{1} = [2,2,2];
-opt = gurls (Xtr, ytr, opt,1);
+opt = gurls(Xtr, ytr, opt,1);
 
 Xva = Xtr(opt.split{1}.va,:);
 yva = ytr(opt.split{1}.va,:);
@@ -64,18 +64,18 @@ opt.perf = perf_macroavg(Xte, yte, opt);
 
 %% RETRAIN: retrain RLS and test
 
-optRetrained = defopt(name);
+optRetrained = gurls_defopt(name);
 optRetrained.kernel = opt.kernel;
 nva = size(yva,1);
-optRetrained.newprop( 'split', {});
+optRetrained.newprop('split', {});
 optRetrained.split{1}.tr = zeros(opt.kernel.n - nva , 1);
 optRetrained.split{1}.va = 1:nva;
 
 optRetrained.seq = {'paramsel:hoprimal','rls:primalrecinit','pred:primal','perf:macroavg'};
 optRetrained.process{1} = [2,2,0,0];
 optRetrained.process{2} = [3,3,2,2];
-optRetrained = gurls (Xva, yva, optRetrained,1);
-optRetrained = gurls (Xte, yte, optRetrained,2);
+optRetrained = gurls(Xva, yva, optRetrained,1);
+optRetrained = gurls(Xte, yte, optRetrained,2);
  
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
 disp('maximum difference between predicted Ys when using parameter chosen on the first batch or globally:')
