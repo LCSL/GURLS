@@ -46,7 +46,7 @@ opt.kernel.init = 1;
 opt.kernel = kernel_rbf(X,y,opt);
 nsigma = numel(opt.kernel.kerrange);
 
-if ~isfield(vout, 'regrange')
+if ~exist('vout','var') || ~isfield(vout, 'regrange')
     tot = opt.nlambda;
 else
     tot = numel(vout.regrange);
