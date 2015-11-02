@@ -1,6 +1,6 @@
 function [rls] = rls_randfeats (X,y, opt)
 
-% rls_primalRF(X, y, opt)
+% rls_randfeats(X, y, opt)
 % computes a classifier for the primal formulation of RLS using the Random
 % Features approach proposed in: 
 %   Ali Rahimi, Ben Recht;
