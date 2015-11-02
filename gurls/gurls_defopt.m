@@ -28,8 +28,8 @@ function opt = gurls_defopt(expname)
     opt.newprop('IterRLSMinIter', 5);
     opt.newprop('IterRLSStopTol', 0.001);
     opt.newprop('IterRLSSeriesType','geometric');
+    
     %% GD Options
-
     opt.newprop('gd', struct());
     opt.gd.method = 0; % standard gradient descent
     opt.gd.maxiter = 1000;
@@ -38,22 +38,19 @@ function opt = gurls_defopt(expname)
     opt.gd.nu = 1;
 
     %% CG Options
-
     opt.newprop('cg', struct());
     opt.cg.maxiter = 1000;
     opt.cg.singleiter = @median;
 
-
     %% Output options
     opt.newprop('hoperf', @perf_macroavg);
     opt.newprop('nholdouts', 1);
+    
     %% Data option
     opt.newprop( 'hoproportion', 0.2);
     opt.newprop( 'nlambda', 20);
     opt.newprop( 'nsigma', 25);
-
-
-
+    
     %% Quiet
     % Currenty either 0 or 1; levels of verbosity may be implemented later;
     opt.newprop( 'verbose', 1);
@@ -70,6 +67,10 @@ function opt = gurls_defopt(expname)
     opt.newprop( 'randfeats', struct());
     opt.randfeats.D = 500;
     opt.randfeats.samplesize = 100;
+
+    %% Nystrom options
+    opt.newprop( 'nystrom', struct());
+    opt.nystrom.m = 100;
     
     %% opt base
     opt.newprop( 'jobid', 1);
