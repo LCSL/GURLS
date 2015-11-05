@@ -1,8 +1,9 @@
 function [meanSideBySide, stdSideBySide] = summary_table(filestr, fields, nRuns, plotopt)
 
 for i = 1:numel(filestr)
-	res{i} = summarize(filestr{i}, fields, nRuns{i});
+	res{i} = summarize(filestr{i}, fields, nRuns(i));
 end	
+
 for f = 1:numel(fields)
 	meanSideBySide = [];
 	stdSideBySide = [];
