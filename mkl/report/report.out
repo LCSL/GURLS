@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.0.1}{Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.0.1.1}{Multiple Kernel Learning Problem}{section.0.1}% 2
+\BOOKMARK [2][-]{subsection.0.1.2}{Iterative Projection Algorithm}{section.0.1}% 3
+\BOOKMARK [2][-]{subsection.0.1.3}{Implementation Detail}{section.0.1}% 4
+\BOOKMARK [3][-]{subsubsection.0.1.3.1}{Choice of Stepsize}{subsection.0.1.3}% 5
+\BOOKMARK [3][-]{subsubsection.0.1.3.2}{Parallel}{subsection.0.1.3}% 6
+\BOOKMARK [3][-]{subsubsection.0.1.3.3}{Alternative Regularization through Early Stopping}{subsection.0.1.3}% 7
+\BOOKMARK [1][-]{section.0.2}{Software Structure and Usage}{}% 8
+\BOOKMARK [1][-]{section.0.3}{Example}{}% 9
