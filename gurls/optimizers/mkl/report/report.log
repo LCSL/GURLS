@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.4)  7 DEC 2015 22:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.11.4)  8 DEC 2015 15:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2200,114 +2200,123 @@ Class jmlr Warning: Obsolete command \bf detected on input line 185.
 
 Class jmlr Warning: Obsolete command \bf detected on input line 190.
 
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no “ in font cmr10!
 
-Class jmlr Warning: Obsolete command \bf detected on input line 191.
-
-
-Class jmlr Warning: Obsolete command \bf detected on input line 191.
-
-
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 190.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 192.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 193.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 193.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
 
 
-Class jmlr Warning: Obsolete command \tt detected on input line 202.
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
+
+
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
+
+
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
+
+
+Class jmlr Warning: Obsolete command \bf detected on input line 204.
+
+
+Class jmlr Warning: Obsolete command \tt detected on input line 204.
 
 [3]
 
-Class jmlr Warning: Obsolete command \bf detected on input line 209.
+Class jmlr Warning: Obsolete command \bf detected on input line 211.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 210.
+Class jmlr Warning: Obsolete command \bf detected on input line 212.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 210.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 221.
+Class jmlr Warning: Obsolete command \bf detected on input line 212.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\mu' on input line 221.
+(hyperref)                removing `math shift' on input line 223.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 221.
+(hyperref)                removing `\mu' on input line 223.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 228.
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 223.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 228.
+Class jmlr Warning: Obsolete command \bf detected on input line 230.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 243.
+Class jmlr Warning: Obsolete command \bf detected on input line 230.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 243.
+Class jmlr Warning: Obsolete command \bf detected on input line 245.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 243.
+Class jmlr Warning: Obsolete command \bf detected on input line 245.
 
 
-Class jmlr Warning: Obsolete command \bf detected on input line 243.
+Class jmlr Warning: Obsolete command \bf detected on input line 245.
+
+
+Class jmlr Warning: Obsolete command \bf detected on input line 245.
 
 Excluding 'comment' comment. Excluding 'comment' comment. [4] (./report.bbl
 Missing character: There is no â in font cmr10!
@@ -2317,16 +2326,16 @@ Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no “ in font cmr10!
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 981.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 983.
 
 
-Class jmlr Warning: Obsolete command \tt detected on input line 981.
+Class jmlr Warning: Obsolete command \tt detected on input line 983.
 
 [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 981.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 983.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 981.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 981.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 983.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 983.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 0E7949303819805245FB5175B05C8E1F;696.
  ) 
@@ -2359,7 +2368,7 @@ exlive/2015basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/loc
 al/texlive/2015basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/
 local/texlive/2015basic/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.p
 fb>
-Output written on report.pdf (5 pages, 217901 bytes).
+Output written on report.pdf (5 pages, 218065 bytes).
 PDF statistics:
  190 PDF objects out of 1000 (max. 8388607)
  162 compressed objects within 2 object streams

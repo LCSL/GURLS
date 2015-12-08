@@ -38,7 +38,7 @@ if ~isfield(kernel, 'kerrange')
     end
     if opt.sigmamax <= 0
         opt.sigmamax = eps;
-    end	
+    end
     q = (opt.sigmamax/opt.sigmamin)^(1/(opt.nsigma-1));
     kernel.kerrange = opt.sigmamin*(q.^(opt.nsigma:-1:0));
 end

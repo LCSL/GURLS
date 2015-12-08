@@ -1,0 +1,31 @@
+Matlab implementation of Infinite Kernel Learning and SimpleMKL
+
+1. Installation
+===============
+   Please read the file INSTALL for a step by step guide for 
+   installing the software. 
+
+2. SimpleMKL
+============
+   There is a matlab script "simplemkl_example" which contains an
+   example of how the code is used. Also try "help simplemkl" and 
+   check out the scripts run_demo32.sh and run_demo64.sh (the first one
+   for a 32bit machine, the latter for a 64bit machine)
+
+3. Infinite Kernel Learning
+===========================
+   There is a matlab script "ikl_example" with an example run of 
+   the algorithm. Also try "help IKLmain" and 
+   check out the scripts run_demo32.sh and run_demo64.sh (the first one
+   for a 32bit machine, the latter for a 64bit machine)
+
+4. Contact and References
+=========================
+   Email: pgehler@tuebingen.mpg.de
+   Webpage: http://www.kyb.mpg.de/bs/people/pgehler/ikl/index.html
+
+5. License:
+===========
+   The software is licensed under the BSD license. See BSD_LICENSE.txt for
+   details.
+

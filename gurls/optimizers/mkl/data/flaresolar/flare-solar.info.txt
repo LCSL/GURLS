@@ -1,0 +1,19 @@
+FLARE-SOLAR
+-----------
+
+data set information
+--------------------
+  number of train patterns          : 666
+  number of test patterns           : 400
+  input dimension                   : 9
+  output dimension                  : 1
+  number of realizations of the data: 100
+
+modifications of the original data
+----------------------------------
+  training data has now zero mean and standard deviation one
+  ...
+
+origin
+------
+  UCI Benchmark Repository (http://www.ics.uci.edu/~mlearn/MLSummary.html)

@@ -1,0 +1,1 @@
+-lpthread  -llapack -lblas -lm   -L/usr/lib/gcc/i486-linux-gnu/4.2.4 -L/usr/lib/gcc/i486-linux-gnu/4.2.4/../../../../lib -L/lib/../lib -L/usr/lib/../lib -L/usr/lib/gcc/i486-linux-gnu/4.2.4/../../.. -lgfortranbegin -lgfortran -lm -lgcc_s
