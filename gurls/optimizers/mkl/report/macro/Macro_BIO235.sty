@@ -1,0 +1,214 @@
+\usepackage{color}
+
+\def\VIF{\mbox{VIF}}
+\def\oxbar{\overline{\bx}_{\cdot}}
+\def\trace{\mbox{trace}}
+\def\rank{\mbox{rank}}
+\def\dim{\mbox{dim}}
+\def\smdim{\mbox{\scriptsize{dim}}}
+\def\fhxh{{\hat f}(x;h)}
+\def\txst{\textstyle}
+\def\MSE{\mbox{MSE}}
+\def\MISE{\mbox{MISE}}
+\def\fhh{{\hat f}(\cdot;h)}
+%\def\AMISE{\mbox{AMISE}}
+\def\bias{\mbox{bias}}
+\def\hamise{h_{\rm AMISE}}
+\def\hmise{h_{\rm MISE}}
+\def\suminfj{\sum_{j=-\infty}^{\infty}}
+
+
+\def\sgn{\mbox{\tiny sgn}}
+
+
+\def\cE{{\mathcal {E}}}
+\def\Eas{{\mathcal {E}}_{\alpha^{\ast}}}
+\def\Eo{{\mathcal {E}}_{0}}
+\def\aas{\alpha^{\ast}}
+\def\what{\widehat}
+\def\wtil{\widetilde}
+\def\ov{\overline}
+\def\pr{\mbox{pr}}
+\def\rct{{\sc rct }}
+%\def\cov{{\rm cov}}
+%\def\var{{\rm var}}
+\def\iid{{\sf iid}}
+%\def\A{{\sc aids }}
+%\def\hiv{{\sc hiv }}
+\def\fq{\begin{flushright} $\Box$\\ \end{flushright}}
+\def\Ex{{\rm E}}
+\def\dep{\Leftrightarrow}
+
+\def\sgn{\mbox{sgn}}
+
+%\def\bmu{\boldsymbol{\mu}}
+
+\def\sBB{{\mathfrak{\beta}}}
+\def\bn{\boldsymbol{\eta}}
+\def\bzer{\boldsymbol{0}}
+
+\newcommand{\myheading}[1]{{\bf #1}}
+\newcommand{\un}{\underline}
+\newcommand{\mh}[1]{{\bf #1}}
+\newcommand{\mhh}[1]{\begin{center}\bf #1\end{center}}
+
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{blue2}{rgb}{0.1,0,0.55}
+\definecolor{blue4}{rgb}{0,0,0.25}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{red2}{rgb}{0.7,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\definecolor{green2}{rgb}{0,0.4,0}
+\def\D{\mbox{\tiny D}}
+\def\C{{\bar{\mbox{\tiny D}}}}
+
+\definecolor{red2}{RGB}{200,000,000}
+\definecolor{red4}{RGB}{120,000,000}
+\definecolor{green}{RGB}{021,122,090}
+\definecolor{green2}{RGB}{000,122,000}
+\definecolor{green4}{RGB}{021,122,090}
+\definecolor{yellow}{RGB}{180,120,000}
+\definecolor{yellow2}{RGB}{180,120,000}
+\definecolor{yellow4}{RGB}{120,100,000}
+\definecolor{navy}{RGB}{000,000,090}
+\definecolor{blue2}{RGB}{000,000,200}
+\definecolor{blue4}{RGB}{000,000,120}
+\definecolor{purple4}{RGB}{000,100,220}
+\definecolor{cyan}{RGB}{024, 055, 155}
+\definecolor{pink}{RGB}{255, 105, 180}
+\definecolor{navy}{RGB}{000,000,090}
+
+\def\convprob{\overset{\Psc}{\longrightarrow}}
+\def\convdist{\overset{\Dsc}{\longrightarrow}}
+\def\itemtwo{\item[$\star$]}
+\def\itemthree{\item[$\sharp$]}
+
+\def\Abbb{{\mathbb{A}}}
+\def\Bbbb{{\mathbb{B}}}
+\def\Dbbb{{\mathbb{D}}}
+\def\Abbbhat{\widehat{\Abbb}}
+\def\Bbbbhat{\widehat{\Bbbb}}
+\def\Dbbbhat{\widehat{\Dbbb}}
+
+\def\Abb{{\mathbb{A}}}
+\def\Bbb{{\mathbb{B}}}
+\def\Cbb{\mathbb{C}}
+\def\Dbb{\mathbb{D}}
+\def\Hbb{\mathbb{H}}
+\def\Ibb{\mathbb{I}}
+\def\Rbb{\mathbb{R}}
+\def\Ubb{\mathbb{U}}
+\def\Vbb{\mathbb{V}}
+\def\Wbb{\mathbb{W}}
+\def\Xbb{\mathbb{X}}
+\def\Ybb{\mathbb{Y}}
+\def\Zbb{\mathbb{Z}}
+\def\Abbhat{\widehat{\Abb}}
+\def\Bbbhat{\widehat{\Bbb}}
+\def\Cbbhat{\widehat{\mathbb{C}}}
+\def\Dbbhat{\widehat{\Dbb}}
+\def\Wbbhat{\widehat{\mathbb{W}}}
+\def\Cbbtilde{\widetilde{\mathbb{C}}}
+
+\def\begread{\null\vskip2mm{\hrule height 1.5mm}\vskip0mm
+              \noindent{\sl READING}\vspace{.05in}}
+\def\endread{{\hrule height 1.5mm}\vskip4mm}
+\def\ARSE{{\rm ARSE}}
+\def\RSS{{\rm RSS}}
+\def\BIC{{\rm BIC}}
+\def\ASL{{\rm ASL}}
+\def\boot{{\rm \tiny boot}}
+\def\perm{{\rm \tiny perm}}
+%
+
+
+\def\bs{\begin{slide}}
+\def\es{\end{slide}}
+
+\def\itemtwo{\item[\color{red2} $\star$]}
+\def\itemthree{\item[\color{yellow2}$\sharp$]}
+
+\def\Small{\fontsize{9pt}{9pt}\selectfont}
+\def\Tiny{\fontsize{6pt}{6pt}\selectfont}
+\def\mini{\fontsize{3pt}{3pt}\selectfont}
+
+\def\BOOT{\mbox{\Tiny (BOOT)}}
+\def\GCV{\mbox{\Tiny (GCV)}}
+\def\AP{\mbox{\Tiny (AP)}}
+\def\CV{\mbox{\Tiny (CV)}}
+\def\PE{\mbox{PE}}
+\def\sPEhat{\widehat{\mbox{\Tiny PE}}}
+\def\PEhat{\widehat{\mbox{PE}}}
+\def\OOB{\mbox{\Tiny (OOB)}}
+\def\stt{\mbox{\Tiny (0.632)}}
+\def\sttp{\mbox{\Tiny (0.632+)}}
+
+\def\wfrakhat{\widehat{\wfrak}}
+
+\def\sumk{\sum_{k=1}^K}
+\def\cd{\Csc^{(1)}}
+\def\cc{\Csc^{(0)}}
+\def\crel{\Csc^{\mbox{\tiny rel}}}
+\def\dd{\Dsc^{(1)}}
+\def\dc{\Dsc^{(0)}}
+\def\dsum{\Dsc^{+}}
+\def\Pscun{\underline{\Psc}}
+\def\Pscbar{\bar{\Psc}}
+\def\para{\mbox{\tiny par}}
+\def\npar{\mbox{\tiny np}}
+\def\bBfrakz{\bBfrak_{z}}
+\def\bBfrakZ{\bBfrak_{Z}}
+\def\bBfrakZi{\bBfrak_{Z_k}}
+\def\hinv{h^{-1}}
+\def\SHFM{\mbox{\tiny SHFM}}
+\def\opt{\mbox{\Tiny opt}}
+\def\ODP{\mbox{\Tiny ODP}}
+\def\np{\mbox{\Tiny NP}}
+\def\sTP{\mbox{\Tiny TP}}
+\def\sFP{\mbox{\Tiny FP}}
+\def\sTN{\mbox{\Tiny TN}}
+\def\sFN{\mbox{\Tiny FN}}
+\def\TP{\mbox{\tiny TP}}
+\def\FP{\mbox{\tiny FP}}
+\def\TN{\mbox{\tiny TN}}
+\def\FN{\mbox{\tiny FN}}
+
+\setlength{\leftmargini}{0.05in}
+\def\bSig\mathbf{\Sigma}
+\def\sBB{{\mathfrak{\beta}}}
+\def\bn{\boldsymbol{\eta}}
+\def\bzer{\boldsymbol{0}}
+
+
+\def\Small{\fontsize{9pt}{9pt}\selectfont}
+\def\Tiny{\fontsize{6pt}{6pt}\selectfont}
+
+\def\Ybb{\mathbb{Y}}
+\def\Ybbhat{\widehat{\Ybb}}
+
+\setlength{\leftmargini}{0.05in}
+\def\bSig\mathbf{\Sigma}
+\def\sumjp{\sum_{j=1}^p}
+\def\what{\widehat{w}}
+\def\new{\mbox{\Tiny new}}
+\def\ini{\mbox{\Tiny ini}}
+
+
+\def\figurepath{../HighDimensionalRegression/Figures/}
+\def\sfbox{\mybox}
+\def\lfdr{\mbox{lfdr}}
+\newcommand{\1}{{\mathbf 1}}
+\newcommand{\Cor}{{\rm Cor}}
+\newcommand{\BF}[1]{{\bf #1:}\hspace{1em}\ignorespaces}
+
+\def\PCER{\mbox{PECR}}
+\def\FWER{\mbox{FWER}}
+\def\FDR{\mbox{FDR}}
+\def\ridge{\mbox{\Tiny ridge}}
+\def\ODP{\mbox{\Tiny ODP}}
+\def\OLS{\mbox{\Tiny OLS}}
+\def\lasso{\mbox{\Tiny LASSO}}
+\def\slasso{\mbox{\Tiny LASSO}}
+\def\LASSO{\mbox{\tiny LASSO}}
+\def\ALASSO{\mbox{\Tiny ALASSO}}
+\def\ols{\mbox{\mini OLS}}

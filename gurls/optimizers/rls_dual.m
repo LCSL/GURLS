@@ -28,7 +28,6 @@ function [cfr] = rls_dual (X,y, opt)
 
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
-
 n = size(opt.kernel.K,1);
 T = size(y,2);
 

@@ -1,0 +1,31 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bach et~al.(2004)Bach, Lanckriet, and Jordan]{jordan-mkl-2004}
+F~Bach, G~Lanckriet, and M~Jordan.
+\newblock Multiple kernel learning, conic duality, and the smo algorithm.
+\newblock \emph{ACM International Conference Proceeding Series}, 69, 2004.
+
+\bibitem[Barzilai and Borwein(1988)]{BB-1988}
+J~Barzilai and J~Borwein.
+\newblock Two-point step size gradient methods.
+\newblock \emph{IMA Journal of Numerical Analysis}, 8(1):\penalty0 141–148,
+  1988.
+
+\bibitem[Micchelli and Pontil(2005)]{micchelli-convex-2005}
+C~Micchelli and M~Pontil.
+\newblock Learning the kernel function via regularization.
+\newblock \emph{Journal of Machine Learning Research}, 6:\penalty0 1099–1125,
+  2005.
+
+\bibitem[Rosasco et~al.(2009)Rosasco, Mosci, Santoro, Verri, and
+  Villa]{rosasco-prox-2009}
+L~Rosasco, S~Mosci, M~Santoro, A~Verri, and S~Villa.
+\newblock Iterative projection methods for structured sparsity regularization.
+\newblock Technical report, MIT, 2009.
+
+\end{thebibliography}

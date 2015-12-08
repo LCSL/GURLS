@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.0.1}
+\contentsline {subsection}{\numberline {1.1}Multiple Kernel Learning Problem}{2}{subsection.0.1.1}
+\contentsline {subsection}{\numberline {1.2}Iterative PFBS Algorithm}{2}{subsection.0.1.2}
+\contentsline {subsection}{\numberline {1.3}Implementation Detail}{3}{subsection.0.1.3}
+\contentsline {subsubsection}{\numberline {1.3.1}Normalization}{3}{subsubsection.0.1.3.1}
+\contentsline {subsubsection}{\numberline {1.3.2}Choice of Stepsize}{3}{subsubsection.0.1.3.2}
+\contentsline {subsubsection}{\numberline {1.3.3}Choice of $\mu $}{4}{subsubsection.0.1.3.3}
+\contentsline {subsubsection}{\numberline {1.3.4}Parallel}{4}{subsubsection.0.1.3.4}
+\contentsline {section}{\numberline {2}Software Structure and Usage}{4}{section.0.2}
+\contentsline {section}{\numberline {3}Example}{4}{section.0.3}

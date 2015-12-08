@@ -140,7 +140,7 @@ end
 function y = analyzeData(X, y, opt)
     
     selectDatatype(X, opt);
-                
+                                  
     opt.newprop('n', -1);
     opt.newprop('d', -1);
     switch opt.datatype
@@ -216,6 +216,7 @@ function y = analyzeData(X, y, opt)
     opt.setting.d = opt.d;
     opt.setting.problem = opt.problem;
     opt.setting.numoutputs = opt.numoutputs;
+    
     if isprop(opt, 'labeldict')
         opt.setting.labeldict = opt.labeldict;
     end
