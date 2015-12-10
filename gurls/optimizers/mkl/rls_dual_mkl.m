@@ -17,6 +17,7 @@ function [cfr] = rls_dual_mkl (X,y, opt)
 % -W: empty matrix
 % -C: matrix of coefficient vectors of dual rls estimator for each class
 % -X: training samples used by the routine
+
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 

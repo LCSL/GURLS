@@ -3,22 +3,15 @@ cd('/Users/Jeremiah/GitHub/GURLS/gurls/optimizers/mkl/');
 % run('./utils/gurls_install.m'); savepath;
 addpath('./func/'); savepath;
 
-%%% 1. MNIST dataset. load data then sample 1000 obs
-images_train = loadMNISTImages('./data/MNIST/train-images-idx3-ubyte');
-labels_train = loadMNISTLabels('./data/MNIST/train-labels-idx1-ubyte');
-images_test = loadMNISTImages('./data/MNIST/t10k-images-idx3-ubyte');
-labels_test = loadMNISTLabels('./data/MNIST/t10k-labels-idx1-ubyte');
+%%% 1. read datasets
+filename = dir('./data/*.csv');
+filename = {filename.name};
 
-N = size(labels_train, 1);
-p = 50;
-n = 1000;
-rng(100); idx_train = randsample(N, n);
+X = csvread(['./data/', filename{1}]);
 
-X_train = images_train(:, idx_train)';
-y_train = labels_train(idx_train);
+y = X(:, 1);
+X(:, 1) = [];
 
-%display_network(images(:,1:100)); % Show the first 100 images
-%disp(labels(1:100));
 
 %%% 2. artificial example
 p = 50;
@@ -73,7 +66,7 @@ diag(A'*A)
 
 % Gaussian Kernel
 [e_list_trn3, e_list_tst3, A] = rls_dual_mkl_pfbs_s(...
-    K_train3, y_train, K_test3, y_test, 0.0001, 0.0001, 1000);
+    K_train3, y_train, K_test3, y_test, 0, 1e-6, 10000);
 
 plot(1:length(e_list_trn3), e_list_trn3, ...
     1:length(e_list_tst3), e_list_tst3)
@@ -82,9 +75,12 @@ diag(A'*A)
 
 %%% single kernel rbf using GURLS
 options = struct('datatype','vector', 'problem', 'regression', ...
-                  'algorithm', 'krls', 'kernelfun', 'rbf');
+    'algorithm', 'krls', 'kernelfun', 'rbf');
+options = {'datatype:vector', 'problem:regression', ...
+    'algorithm:krls', 'kernelfun:rbf'};
+
 model = gurls_train(X_train, y_train, options);
 model.paramsel
 ypredicted = gurls_test(model, X_test);
 
-sum((y_test - ypredicted).^2)/sum(y_test.^2)
+sum((y_test - ypredicted).^2)/sum(y_test.^2);

@@ -174,9 +174,6 @@ Above discussions lead to below algorithm:
 \end{algorithm}
 
 \subsection{Implementation Detail}
-\subsubsection{Normalization}
-
-
 
 \subsubsection{Choice of Stepsize}
 
@@ -187,7 +184,7 @@ In the context where  Q is square loss (i.e. $\nabla^2_{\textbf{f}} Q(\textbf{f}
 \sigma = \frac{1}{2}(a + b) + \mu
 \end{align*}
 
-Approximate eigenvalue of $\bK$ using the Perron–Frobenius upper bound, i.e. $\sigma_{max} \leq \sum_j \bK_{ij}$
+Approximate eigenvalue of $\bK$ using the Perron–Frobenius upper bound, i.e. $\sigma_{max} \leq \sum_j \bK_{ij}$.
 
 Approximate eigenvalue of $\bK$ using its upper bound 
 $\sigma = ||\bK|| \leq M*\sum_{m=1}^M ||\bK_m||$, since:
@@ -220,14 +217,15 @@ $\Delta \bg = u * (\balpha^p - \balpha^{p-1}) + \frac{1}{n} \bK(\balpha^p - \bal
 {\sum_{m=1}^M \Delta \bg_m^T \Delta \bg_m}
 \end{align*}
 
-\subsubsection{Choice of $\mu$}
+\subsubsection{Choice of $\mu$ and $\tau$}
 \citep{rosasco-prox-2009}
 
 
 Contraction mapping
 
-
 $||(1 - \frac{\mu}{\sigma})\bI - \frac{1}{\sigma n} \bK ||$
+
+Continuation strategy.
 
 \subsubsection{Parallel}
 
@@ -238,10 +236,9 @@ Notice that in (\ref{eq:PFBS}), $\Tsc_\sigma$ updates $\balpha$ by group, it is 
 \Tsc^p_{\sigma, j} &= 
 \textbf{S}_{\frac{\tau}{\sigma}}
 \Big(\bK, (1-\frac{\mu}{\sigma})\balpha^{p-1}_j - 
-\frac{1}{n} * \sum_{m=1}^M \bepsilon_{m}^{p-1}  )
+\frac{1}{n \sigma} * \bepsilon^{p-1}  )
 \Big) \qquad \mbox{where } 
-\bepsilon_{m}^{p-1}= 
-\frac{1}{\sigma} (\bK_m \balpha^{p-1}_m - y)
+\bepsilon^{p-1}= (\sum_{m=1}^M \bK_m \balpha^{p-1}_m - y)
 \end{align*}
 
 \begin{comment}
@@ -253,6 +250,8 @@ Notice that in (\ref{eq:PFBS}), $\Tsc_\sigma$ updates $\balpha$ by group, it is 
 
 \section{Example}
 
+\footnote{LIBSVM Data Repository:
+\url{'https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/binary.html'}}
 
 \begin{comment}
 \section*{Introduction}
