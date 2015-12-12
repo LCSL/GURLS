@@ -10,12 +10,6 @@ F~Bach, G~Lanckriet, and M~Jordan.
 \newblock Multiple kernel learning, conic duality, and the smo algorithm.
 \newblock \emph{ACM International Conference Proceeding Series}, 69, 2004.
 
-\bibitem[Barzilai and Borwein(1988)]{BB-1988}
-J~Barzilai and J~Borwein.
-\newblock Two-point step size gradient methods.
-\newblock \emph{IMA Journal of Numerical Analysis}, 8(1):\penalty0 141–148,
-  1988.
-
 \bibitem[Micchelli and Pontil(2005)]{micchelli-convex-2005}
 C~Micchelli and M~Pontil.
 \newblock Learning the kernel function via regularization.
@@ -27,5 +21,10 @@ C~Micchelli and M~Pontil.
 L~Rosasco, S~Mosci, M~Santoro, A~Verri, and S~Villa.
 \newblock Iterative projection methods for structured sparsity regularization.
 \newblock Technical report, MIT, 2009.
+
+\bibitem[Zou and Hastie(2005)]{Zou-2005}
+H~Zou and T~Hastie.
+\newblock Regularization and variable selection via the elastic net.
+\newblock \emph{J. R. Statist. Soc. B}, 67, Part 2:\penalty0 301–320, 2005.
 
 \end{thebibliography}

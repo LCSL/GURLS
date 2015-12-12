@@ -22,6 +22,7 @@ y_test = y((n+1):(n+n2));
 
 % initialization
 opt = gurls_defopt('mkl_test');
+opt.hoperf = @perf_rmsestd;
 opt.newprop('mkl', struct());
 
 % kernel step (add opt.type)
@@ -30,12 +31,16 @@ opt.mkl.type = ...
 opt.kernel = kernel_mkl(X, y, opt); 
 
 % split step (change opt.nholdouts 1 -> 10)
-opt.nholdouts = 10;
+opt.nholdouts = 5;
 opt.newprop('split', split_ho(X, y, opt)); 
 
-% paramsel step (add opt.mkl.L1range and opt.mkl.L2range)
-opt.mkl.L1range
-opt.mkl.L2range 
+% paramsel step 
+% (add opt.mkl.npar/opt.mkl.smallnumber or opt.mkl.parrange)
+opt.mkl.npar = {25, 5};
+opt.mkl.parrange = {10.^(-4:0), 0:0.01:0.1};
+opt.mkl.smallnumber = 1e-4;
+opt.mkl.verbose = true;
+
 
 
 
