@@ -11,7 +11,11 @@ function [cfr] = rls_insta (X, y, opt)
 %		- paramsel.lambdas (set by the paramsel_* routines)
 %   fields with default values set through the defopt function:
 %		- singlelambda
-% 
+%   fields that is optional
+%       - paramsel.insta_alpha (paramters for balancing l1-norm and l-2 norm. 1 for LASSO and 0 for ridge)
+%       - paramsel.niter (maximun number for iteration. Set to either negative number or inf for using threshold rule only)
+%       - paramsel.relthre (relative convergence threshold for iteration to stop)
+%
 %   For more information on standard OPT fields
 %   see also defopt
 % 
@@ -60,10 +64,14 @@ else
     Xty = X'*y; % d x T matrix.
 end
 
-% Determine Stop rule
 
+% redo OLR based on non-sparsy components
+% w = rls_insta_driver( XtX, Xty, n, lambda,insta_alpha,Niter,relthre,opt);
+% cfr.IndexFlag = ~~(w);
+% Xs=X(:,~~w);
+% cfr.W=zeros(size(w));
+% cfr.W(~~w) = rls_primal_driver(Xs'*Xs,Xs'*y,n,0);
 cfr.W = rls_insta_driver( XtX, Xty, n, lambda,insta_alpha,Niter,relthre,opt);
-cfr.IndexFlag = ~~(cfr.W);
 cfr.C = [];
 cfr.X = [];
 

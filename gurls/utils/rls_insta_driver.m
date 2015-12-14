@@ -35,7 +35,7 @@ function w=rls_insta_driver( XtX, Xty, n, lambda,inst_alpha,Niter,relthre,opt)
     
     % start insta
 
-    w2=XtX\Xty;
+    w2=rls_primal_driver(XtX, Xty, n, 0);
     w2(abs(w2)<lambda*inst_alpha*gamma)=0;
     w2=w2-sign(w2)*lambda*inst_alpha*gamma;
     w1=0*w2;
