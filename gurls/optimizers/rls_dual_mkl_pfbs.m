@@ -1,4 +1,4 @@
-function [A, epath_trn] = ...
+function [A, epath_trn, norm_path] = ...
     rls_dual_mkl_pfbs(...
     K_train, y_train, L1_cutoff, L2_ratio, ...
     A_init, eig_app, iter_max, crit, verbose)
@@ -19,15 +19,13 @@ function [A, epath_trn] = ...
 % OUTPUT: struct with the following fields:
 % -A: calculated MKL dual solution
 % -epath_trn: training error over epochs
-
+% -norm_path:     norm of A over epochs
 M = size(K_train, 3);
 n = size(K_train, 1);
 
 % 1.prepare data ===
 K = K_train;
 y = y_train;
-
-adapt = false;
 
 % 2. estimate stepsize sigma = a/2 + u ===
 
@@ -38,9 +36,8 @@ if isempty(eig_app)
     end
     eig_app = max(eig_list);
 end
-
-sigmas = eig_app/10 + u;
 u = (L2_ratio/(1 - L2_ratio)) * eig_app/2;
+sigmas = eig_app/10 + u;
 
 % 3. PFBS iteration ===
 if isempty(A_init) % n x M container for parameter
@@ -66,6 +63,7 @@ end
 
 yhat = zeros(n, 1); % in-sample prediction
 
+norm_list = zeros(M, iter_max + 1);
 e_list_trn = zeros(1, iter_max + 1); % in-sample prediction error
 e_list_trn(1) = sum(y.^2);
 
@@ -77,6 +75,8 @@ if verbose
     cpb.setText(sprintf('L1=%0.3f,L2=%0.3f', L1_cutoff, L2_ratio));
     cpb.start();
 end
+
+conv_stop = true;
 
 for iter = 2:(iter_max + 1)
     % 3.1 update a_m (n x 1) ---
@@ -95,21 +95,16 @@ for iter = 2:(iter_max + 1)
         yhat = yhat + K(:, :, m) * A(:, m);
     end
     e_list_trn(iter) = sum((yhat - y).^2)/sum(y.^2);
+    norm_list(:, iter) = diag(A' * A);
     
-    % 3.3 stepsize, progress bar update, stop condition ---
-    if adapt
-        da = A - A_prev;
-        dg = yhat - yhat_prev;
-        sigmas = (n/M) * sum(da' * dg)/(dg' * dg);
-    end
-    
+    % 3.3 stepsize, progress bar update, stop condition ---    
     if verbose
         %update progress bar
         cpb.setValue(iter-1);
     end
     
     % stopping condition
-    if (abs(e_list_trn(iter) - e_list_trn(iter-1)) < crit)
+    if conv_stop && (abs(e_list_trn(iter) - e_list_trn(iter-1)) < crit)
         break
     end
 end
@@ -120,11 +115,12 @@ if verbose
 end
 
 % clean up response
-if iter >= (iter_max + 1)
+if ~conv_stop && iter >= (iter_max + 1)
     warning('maximum iteration (%d) reached before convergence', iter_max)
 end
 
 epath_trn = e_list_trn(2:iter);
+norm_path = norm_list(:, 2:iter);
 
 %diag(A'*A) % A norm for each kernel
 %plot(1:length(epath_trn), epath_trn) %visualization

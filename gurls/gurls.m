@@ -35,7 +35,6 @@
 function [opt] = gurls(X, y, opt, jobid)
 	
 
-
 %% Enums
 IGN = 0; % Ignore
 CPT = 1; % Compute

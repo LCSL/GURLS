@@ -13,9 +13,10 @@ function [vout] = paramsel_homkl(X,y,opt)
 %       - mkl.parrange (1x2 cell: L1/L2 penality grid)
 %       or
 %       - mkl.npar (1x2 int cell: num of candidate penalty terms)
-%
+%   fields (mkl-related) that need to be set by defopt_mkl:
 %       - mkl.smallnumber: lower limit of non-zero L1/L2 penalty term
-%       - mkl.verbose: whether print progress bar
+%       - mkl.verbose: whether to print progress bar
+%       - mkl.strategy: whether to use continuation strategy in selection
 %
 %   fields with default values set through the defopt function:
 %		- smallnumber
@@ -24,7 +25,8 @@ function [vout] = paramsel_homkl(X,y,opt)
 %
 % OUTPUTS: structure vout (opt.paramsel) with the following fields:
 % -par_mkl: 2x1 cell of L1/L2 par that minimize empirical performance
-% -par_path: M x tot1 doubel of kernel parameter norm along L1 grid
+% -par_path: M x tot1 x tot2 x nh double of estimated dual norm 
+%            over L1/L2 grid
 
 if isprop(opt,'paramsel')
     vout = opt.paramsel; % lets not overwrite existing parameters.
@@ -36,15 +38,15 @@ vout.guesses_mkl = {};
 vout.path_mkl = {};
 vout.par_mkl = {};
 
-verbose = opt.mkl.verbose;
-
 % set the grid of L1/L2 penalty terms for elastic net
 n = size(opt.kernel.K_mkl, 1);
 M = size(opt.kernel.K_mkl, 3);
-eig_list = zeros(M, 1);
-for m = 1:M
-    eig_list(m) = eigs(opt.kernel.K_mkl(:, :, m), 1);
-end
+eig_list = opt.kernel.eig_mkl;
+
+verbose = opt.mkl.verbose.paramsel;
+iter_max = opt.mkl.iter_max.paramsel;
+crit = opt.mkl.crit.paramsel;
+cont_strategy = opt.mkl.strategy;
 
 if ~isfield(opt.mkl, 'parrange')
     % estimate grid parrange if not available
@@ -66,9 +68,11 @@ ho_path = ... % norm of solution A for each kernel
     zeros(tot1, tot2, M, opt.nholdouts);
 
 if isequal(opt.hoperf, @perf_rmsestd)
-    perf_null = 1;
+    perf_null = -1;
+    perf_best = -1;
 elseif isequal(opt.hoperf, @perf_macroavg)
     perf_null = 0;
+    perf_best = 0;
 else
     error('only ''rmsestd'' and ''macroavg'' are supported')
 end
@@ -102,7 +106,7 @@ for nh = 1:opt.nholdouts
         fprintf('\n');
         cpb = ConsoleProgressBar();
         cpb.setMinimum(0); cpb.setMaximum(tot1*tot2);
-        cpb.setText(sprintf('fold%d:initiating..', nh));
+        cpb.setText(sprintf('fold%d:initializing..', nh));
         cpb.start();
         cpb_id = 0;
     end
@@ -113,21 +117,27 @@ for nh = 1:opt.nholdouts
     end
     % for each L2 term, calculate L1 solution path
     for i2 = 1:tot2
-        opt.rls.C_mkl = zeros(ntr, M); % initiate A
-        for i1 = 1:tot1
-            % fit using continuation strategy
-            [opt.rls.C_mkl] = rls_dual_mkl_pfbs(...
+        C_mkl = zeros(ntr, M); % initiate C_mkl
+        for i1 = tot1:-1:1
+            % fit with/without continuation strategy
+            if ~cont_strategy
+                % if don't use continuation strategy
+                % then reset C_mkl
+                C_mkl = [];
+            end
+            [C_mkl] = rls_dual_mkl_pfbs(...
                 Ktr, ytr, guesses_L1(i1), guesses_L2(i2), ...
-                opt.rls.C_mkl, max(eig_list), 1e3, 1e-3, false);
+                C_mkl, max(eig_list), iter_max, crit, false);
             
             % prediction
+            opt.rls.C_mkl = C_mkl;
             opt.newprop('pred', pred_dual_mkl(X,yva,opt));
             opt.newprop('perf', opt.hoperf(X,yva,opt));
             
             % store result
             ho_perf(i1, i2, nh) = opt.perf.forho;
             ho_path(i1, i2, :, nh) = ...
-                diag(sqrt(opt.rls.C_mkl'*opt.rls.C_mkl));
+                diag(sqrt(C_mkl'*C_mkl));
             if verbose
                 %update progress bar
                 cpb_id = cpb_id + 1;
@@ -138,16 +148,14 @@ for nh = 1:opt.nholdouts
             end
             
             % refine L1/L2 grid
-            if i2 == 1 && opt.perf.forplot == perf_null
+            if i2 == 1 && opt.perf.forho == perf_null
                 % if null result even when result L2 = 0, break
                 % fprintf('\n L1 grid reduced: %d=>%d\n', tot1, i1 - 1);
                 tot1 = i1 - 1;                
-                break
-            elseif i1 == 1 && opt.perf.forplot == perf_null
+            elseif i1 == 1 && opt.perf.forho == perf_null
                 % if null result even when result L1 = 0, break
                 % fprintf('\n L2 grid reduced: %d=>%d\n', tot2, i2 - 1);
                 tot2 = i2 - 1;           
-                break
             end
         end
     end
@@ -161,13 +169,12 @@ end
 % refine output based on (possibly) modified tot1/tot2
 guesses_L1 = guesses_L1(1:tot1);
 guesses_L2 = guesses_L2(1:tot2);
-opt.mkl.parrange = {guesses_L1, guesses_L2};
 ho_perf = ho_perf(1:tot1, 1:tot2, :);
 ho_path = ho_path(1:tot1, 1:tot2, :, :);
 
 % summarize perf over holdout folds then select optimal L1/L2
 perf_sum = median(ho_perf, 3);
-path_sum = mean(ho_path, 4);
+path_sum = ho_path;
 
 [max_num, max_idx] = max(perf_sum(:));
 [i1_opt, i2_opt] = ...
@@ -175,7 +182,8 @@ path_sum = mean(ho_path, 4);
 
 % store result into paramsel.par_mkl
 vout.path_mkl = reshape(...
-    path_sum(1:tot1, i2_opt, :), tot1, M)';
+    path_sum(1:tot1, i2_opt, :, :), tot1, M, opt.nholdouts);
 vout.guesses_mkl = {guesses_L1, guesses_L2};
 vout.par_mkl = {guesses_L1(i1_opt), guesses_L2(i2_opt)};
+vout.cont_strategy = cont_strategy;
 end

@@ -119,7 +119,7 @@ from a prescribed (convex) set $\Ksc$ of basis kernels, for learning a real-valu
 2\tau \sum_{j=1}^M ||f_j||_\Hsc \Big\}
 \end{align}
 
-\subsection{Iterative PFBS Algorithm}
+\subsection{Iterative PFBS Algorithm} \label{sec:PFBS}
 By Theorem 1 of \citet{rosasco-prox-2009}, since the penalty function is lower semicontinuous, coercive, convex and one-homogenous,   solution to problem \ref{eq:primal} $f^*$ is the unique fixed point of the the contractive mapping with step size $\sigma$:
 \begin{align*}
 \Tsc_\sigma(f) &= (\bI - \pi_{\frac{\tau}{\sigma}K}) 
@@ -181,32 +181,46 @@ Above discussions lead to below algorithm:
 
 \subsection{Implementation Detail}
 
+\subsubsection{Block-wise Update}
+
+Notice that in (\ref{eq:PFBS}), $\Tsc_\sigma$ updates $\balpha$ by group, it is thus possible to write $\Tsc$ at $p^{th}$ step as:
+
+\begin{align*}
+\Tsc^p_\sigma &= [\Tsc^p_{\sigma, 1}, \Tsc^p_{\sigma, 2}, \dots, \Tsc^p_{\sigma, M}] 
+\qquad \mbox{with} \qquad
+\Tsc^p_{\sigma, j} = 
+\textbf{S}_{\frac{\tau}{\sigma}}
+\Big(K, \balpha_0 \Big)_j \\
+\balpha_0 &= 
+(1-\frac{\mu}{\sigma})\balpha^{p-1}_j - 
+\frac{1}{n \sigma} * \bepsilon^{p-1}  
+\qquad \mbox{where } 
+\bepsilon^{p-1}= (\sum_{j=1}^M \bK_j \balpha^{p-1}_j - y)
+\end{align*}
+by using above method we are able to avoid working directly with the $Mn \times Mn$ matrix $\bK$ (as defined earlier in section \ref{sec:PFBS}), which led to reduced memory cost \footnote{$O(Mn^2)$ instead of $O(M^2n^2)$} and reduced difficulty in selecting stepsize and regularization parameters.
+
 \subsubsection{Choice of Stepsize}
 
-The convergence of the aforementioned procedure is guaranteed by Banach Fixed Point theorem, given proper choice of $\sigma$. Based on \citet{jordan-mkl-2004}, it can be shown that a suitable choice of $\sigma$ is $\sigma = \frac{1}{4}(a*L_{min} + b*L_{max}) + \mu$, where $(b, a)$ denotes the lower/upper bound on the eigenvalue of $\bK$, and $(L_{min}, L_{max})$ denotes the lower/upper bound of $\nabla^2 Q(\textbf{f}, \by)$.
+Based on \citet{jordan-mkl-2004}, it can be shown that a suitable choice of $\sigma$ is $\sigma = \frac{1}{4}(a*L_{min} + b*L_{max}) + \mu$, where $(b, a)$ denotes the lower/upper bound on the eigenvalue of $\bK$, and $(L_{min}, L_{max})$ denotes the lower/upper bound of $\nabla^2 Q(\textbf{f}, \by)$.
 
 In the context where  Q is square loss (i.e. $\nabla^2_{\textbf{f}} Q(\textbf{f}, \by) = 2$), we have:
 \begin{align*}
 \sigma = \frac{1}{2}(a + b) + \mu
 \end{align*}
 
-Approximate eigenvalue of $\bK$ using the Perron–Frobenius upper bound, i.e. $\sigma_{max} \leq \sum_j \bK_{ij}$.
+A naive choice of $a$ would be the largest eigenvalue of $\bK_{nM \times nM}$, which not only is computationally expensive but also leads to overly slow convergence. In pactice, if denote the maximum eigenvalue of each kernel matrix $K_j$ to be $a_j$, it is found that setting $a$ to be $\underset{j \in \{1, .., M\}}{\max} (a_j)$ is suffice to guarantee convergence.  This is because the mapping $\balpha^{p-1} \mapsto \balpha_0^{p}$ can be written as:
+$$
+\balpha_0 = 
+(1-\frac{\mu}{\sigma})\balpha^{p-1}_j - 
+\frac{1}{n} * \sum_{j=1}^M \frac{1}{\sigma}
+(\bK_j \balpha^{p-1}_j - \frac{y}{n})
+$$
+As shown, in $\balpha^{p-1} \mapsto \balpha_0^{p}$ we actually updated $\balpha^{p-1}$ M times, with step size $\frac{1}{\sigma}(\bK_j \balpha^{p-1}_j - \frac{y}{n})$ in each step. It is thus sufficient to find a $a$ that properly scale the magnitude of all $||\bK||$, leading natually to the choice $a = \underset{j \in \{1, .., M\}}{\max} (a_j)$.
 
-Approximate eigenvalue of $\bK$ using its upper bound 
-$\sigma = ||\bK|| \leq M*\sum_{m=1}^M ||\bK_m||$, since:
-\begin{align*}
-||\bK|| &= \underset{\balpha \in \real^{Mn}}{argmax} \;
-\balpha^T \bK \balpha 
-= (\sum_{i=1}^M \balpha_i)^T 
-(\sum_{j=1}^M \bK_j \balpha_j) \\
-& \leq ||\sum_{i=1}^M \balpha_i|| * ||\sum_{j=1}^M \bK_j \balpha_j|| 
-\leq ||\sum_{j=1}^M \bK_j || * ||\sum_{i=1}^M  \balpha_j||^2 
-=  ||\bI_{n \times Mn}  \balpha||^2 * \sum_{j=1}^M  ||\bK_j || \\
-&\leq  ||\bI_{n \times Mn} ||^2  ||\balpha||^2 *\sum_{j=1}^M  ||\bK_j || \\
-& = M * \sum_{m=1}^j ||\bK_j||
-\end{align*}
 
-\subsubsection{Choice of $\mu$ and $\tau$}
+\subsubsection{Effect of $\mu$ and $\tau$}
+The convergence of the aforementioned procedure is guaranteed by Banach Fixed Point theorem, given proper choice of $\sigma$. 
+
 \citet{Zou-2005}
 
 \citet{rosasco-prox-2009}
@@ -220,24 +234,7 @@ Continuation strategy.
 
 $\frac{\tau}{\sigma}_{max} = \frac{||y||^2}{||\bK||}$
 
-\subsubsection{Parallel}
 
-Notice that in (\ref{eq:PFBS}), $\Tsc_\sigma$ updates $\balpha$ by group, it is thus possible to write $\Tsc$ at $p^{th}$ step as:
-
-\begin{align*}
-\Tsc^p_\sigma &= [\Tsc^p_{\sigma, 1}, \Tsc^p_{\sigma, 2}, \dots, \Tsc^p_{\sigma, M}] \qquad \mbox{with}\\
-\Tsc^p_{\sigma, j} &= 
-\textbf{S}_{\frac{\tau}{\sigma}}
-\Big(\bK, (1-\frac{\mu}{\sigma})\balpha^{p-1}_j - 
-\frac{1}{n \sigma} * \bepsilon^{p-1}  )
-\Big) \qquad \mbox{where } 
-\bepsilon^{p-1}= (\sum_{m=1}^M \bK_m \balpha^{p-1}_m - y)
-\end{align*}
-
-\begin{comment}
-\subsubsection{Alternative Regularization through Early Stopping}
-\citet{micchelli-convex-2005}
-\end{comment}
 
 \section{Software Structure and Usage}
 
@@ -304,6 +301,10 @@ Notice that in (\ref{eq:PFBS}), $\Tsc_\sigma$ updates $\balpha$ by group, it is 
 
 
 \begin{enumerate}
+\item Parameter Specification
+\begin{enumerate}
+\item [$\bullet$] {\tt util/gurls\_defopt\_mkl}
+\end{enumerate}
 \item Kernel Generation
 \begin{enumerate}
 \item [$\bullet$] {\tt kernel/kernel\_mkl}
@@ -318,9 +319,11 @@ Notice that in (\ref{eq:PFBS}), $\Tsc_\sigma$ updates $\balpha$ by group, it is 
 \item [$\bullet$] {\tt optimizers/rls\_dual\_mkl}
 \item [$\bullet$] {\tt optimizers/rls\_dual\_mkl\_pfbs}
 \item [$\bullet$] {\tt util/ConsoleProgressBar}
+\item [$\bullet$] {\tt summary/plot\_mkl\_L1path}
 \end{enumerate}
 \item Prediction
 \begin{enumerate}
+\item [$\bullet$] {\tt kernel/predkernel\_traintest}
 \item [$\bullet$] {\tt optimizers/pred\_dual\_mkl}
 \end{enumerate}
 \item Performance assessment
