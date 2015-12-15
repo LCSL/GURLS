@@ -12,9 +12,9 @@ function [cfr] = rls_insta (X, y, opt)
 %   fields with default values set through the defopt function:
 %		- singlelambda
 %   fields that is optional
-%       - paramsel.insta_alpha (paramters for balancing l1-norm and l-2 norm. 1 for LASSO and 0 for ridge)
-%       - paramsel.niter (maximun number for iteration. Set to either negative number or inf for using threshold rule only)
-%       - paramsel.relthre (relative convergence threshold for iteration to stop)
+%       - insta_alpha (paramters for balancing l1-norm and l-2 norm. 1 for LASSO and 0 for ridge)
+%       - niter (maximun number for iteration. Set to either negative number or inf for using threshold rule only)
+%       - relthre (relative convergence threshold for iteration to stop)
 %
 %   For more information on standard OPT fields
 %   see also defopt
@@ -29,26 +29,26 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 n = size(y,1);
 
 % load in parameters alpha
-if isfield(opt.paramsel, 'insta_alpha')
-    insta_alpha=opt.paramsel.insta_alpha;
-    if insta_alpha <= 0 || insta_alpha > 1
+if isprop(opt,'INSTAalpha')
+    INSTAalpha=opt.INSTAalpha;
+    if INSTAalpha <= 0 || INSTAalpha > 1
         error('Invalid alpha');
     end
 else
     if opt.verbose
-            warning('alpha not defined. Use default value alpha=1 for LASSO');
-            insta_alpha=1;
+            fprintf('\t...alpha not defined. Use default value alpha=1 for LASSO\n');
+            INSTAalpha=1;
     end
 end
 
 % load in number of iterations or relative tolerance
-Niter=-1;
+Niter=inf;
 relthre=1e-4;
-if isfield(opt.paramsel, 'niter')
-    Niter=opt.paramsel.niter;
+if isprop(opt, 'INSTAniter')
+    Niter=opt.INSTAniter;
 end
-if isfield(opt.paramsel, 'relthre')
-    relthre=opt.paramsel.relthre;
+if isprop(opt, 'INSTArelthre')
+    relthre=opt.INSTArelthre;
 end
 
 % check if matrices XtX and Xty have been previously computed during
@@ -65,13 +65,13 @@ else
 end
 
 
-% redo OLR based on non-sparsy components
-% w = rls_insta_driver( XtX, Xty, n, lambda,insta_alpha,Niter,relthre,opt);
-% cfr.IndexFlag = ~~(w);
-% Xs=X(:,~~w);
-% cfr.W=zeros(size(w));
-% cfr.W(~~w) = rls_primal_driver(Xs'*Xs,Xs'*y,n,0);
-cfr.W = rls_insta_driver( XtX, Xty, n, lambda,insta_alpha,Niter,relthre,opt);
+%redo OLR based on non-sparsy components
+w = rls_insta_driver( XtX, Xty, n, lambda,INSTAalpha,Niter,relthre,opt);
+cfr.IndexFlag = ~~(w);
+Xs=X(:,~~w);
+cfr.Wr=zeros(size(w));
+cfr.Wr(~~w) = rls_primal_driver(Xs'*Xs,Xs'*y,n,0);
+cfr.W = w;
 cfr.C = [];
 cfr.X = [];
 

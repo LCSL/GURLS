@@ -18,16 +18,16 @@ function w=rls_insta_driver( XtX, Xty, n, lambda,inst_alpha,Niter,relthre,opt)
     gamma = n/(2*eigs(XtX,1)+lambda*(1-inst_alpha)); %Step size
     
     % make sure Niter, retol are proper
-    if ~isinteger(Niter)
+    if (Niter-round(Niter))~=0 && ~isinf(Niter)
         if opt.verbose
-        warning('Interation number must be integer. Rounding opt.paramsel.niter');
+        fprintf('\t...Interation number must be integer. Rounding opt.paramsel.niter\n');
         end
         Niter = ceil(Niter);
     end
     if Niter<=0 && relthre<0
         if opt.verbose
-            warning(['Unvalid stopping rule for INSTA.',...
-            'Using default relative tolerance = 1e-4']);
+            fprintf(['\t...Unvalid stopping rule for INSTA.',...
+            'Using default relative tolerance = 1e-4\n']);
         end
         Niter = -1;
         relthre=1e-4;      
