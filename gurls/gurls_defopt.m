@@ -76,8 +76,10 @@ function opt = gurls_defopt(expname)
     opt.newprop( 'jobid', 1);
     opt.newprop( 'seq', {});
     opt.newprop( 'process', {});
-    %% INSTA options
+    %% ISTA options
     opt.newprop( 'INSTAalpha',1);
     opt.newprop( 'INSTAniter',inf);
     opt.newprop( 'INSTArelthre',1e-4);
+    opt.newprop( 'INSTASparsitylvl',inf);
+    opt.newprop( 'INSTASAccuReq',0);
 end

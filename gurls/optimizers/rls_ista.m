@@ -1,4 +1,4 @@
-function [cfr] = rls_insta (X, y, opt)
+function [cfr] = rls_ista (X, y, opt)
 
 % rls_insta(X,y,opt)
 % computes a classifier for elastic nerwork using ISTA.
@@ -11,7 +11,7 @@ function [cfr] = rls_insta (X, y, opt)
 %		- paramsel.lambdas (set by the paramsel_* routines)
 %   fields with default values set through the defopt function:
 %		- singlelambda
-%   fields that is optional
+%   fields with default values set through the defopt function:
 %       - insta_alpha (paramters for balancing l1-norm and l-2 norm. 1 for LASSO and 0 for ridge)
 %       - niter (maximun number for iteration. Set to either negative number or inf for using threshold rule only)
 %       - relthre (relative convergence threshold for iteration to stop)
@@ -66,12 +66,13 @@ end
 
 
 %redo OLR based on non-sparsy components
-w = rls_insta_driver( XtX, Xty, n, lambda,INSTAalpha,Niter,relthre,opt);
+w = rls_ista_driver( XtX, Xty, n, lambda,INSTAalpha,Niter,relthre,opt.verbose);
 cfr.IndexFlag = ~~(w);
-Xs=X(:,~~w);
-cfr.Wr=zeros(size(w));
-cfr.Wr(~~w) = rls_primal_driver(Xs'*Xs,Xs'*y,n,0);
+% Xs=X(:,~~w);
+% cfr.Wr=zeros(size(w));
+% cfr.Wr(~~w) = rls_primal_driver(Xs'*Xs,Xs'*y,n,0);
 cfr.W = w;
 cfr.C = [];
 cfr.X = [];
+plot(w)
 
