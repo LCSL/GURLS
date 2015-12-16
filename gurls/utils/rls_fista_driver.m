@@ -1,6 +1,6 @@
 function w=rls_fista_driver( XtX, Xty, n, lambda,inst_alpha,Niter,relthre,verbose)
-% rls_insta_driver( XtX, Xty, n, lambda,alpha,Niter,reltol,verbose)
-% Utility function used by rls_insta
+% rls_ista_driver( XtX, Xty, n, lambda,alpha,Niter,reltol,verbose)
+% Utility function used by rls_ista
 % 
 % INPUTS:
 % -XtX: symmetric dxd square matrix
@@ -26,7 +26,7 @@ function w=rls_fista_driver( XtX, Xty, n, lambda,inst_alpha,Niter,relthre,verbos
     end
     if Niter<=0 && relthre<0
         if verbose
-            fprintf(['\t...Unvalid stopping rule for INSTA.',...
+            fprintf(['\t...Unvalid stopping rule for ISTA.',...
             'Using default relative tolerance = 1e-4\n']);
         end
         Niter = -1;

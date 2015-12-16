@@ -1,7 +1,6 @@
 function [cfr] = rls_fista (X, y, opt)
-
-% rls_insta(X,y,opt)
-% computes a classifier for elastic nerwork using ISTA.
+% rls_fista(X,y,opt)
+% computes a classifier for elastic nerwork using FISTA.
 % The regularization parameter is set to the one found in opt.paramsel.
 % In case of multiclass problems, the regularizers need to be combined with the opt.singlelambda function.
 %
@@ -12,7 +11,7 @@ function [cfr] = rls_fista (X, y, opt)
 %   fields with default values set through the defopt function:
 %		- singlelambda
 %   fields with default values set through the defopt function:
-%       - insta_alpha (paramters for balancing l1-norm and l-2 norm. 1 for LASSO and 0 for ridge)
+%       - ISTAalpha (paramters for balancing l1-norm and l-2 norm. 1 for LASSO and 0 for ridge)
 %       - niter (maximun number for iteration. Set to either negative number or inf for using threshold rule only)
 %       - relthre (relative convergence threshold for iteration to stop)
 %
@@ -29,26 +28,26 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 n = size(y,1);
 
 % load in parameters alpha
-if isprop(opt,'INSTAalpha')
-    INSTAalpha=opt.INSTAalpha;
-    if INSTAalpha <= 0 || INSTAalpha > 1
+if isprop(opt,'ISTAalpha')
+    ISTAalpha=opt.ISTAalpha;
+    if ISTAalpha <= 0 || ISTAalpha > 1
         error('Invalid alpha');
     end
 else
     if opt.verbose
             fprintf('\t...alpha not defined. Use default value alpha=1 for LASSO\n');
-            INSTAalpha=1;
+            ISTAalpha=1;
     end
 end
 
 % load in number of iterations or relative tolerance
 Niter=inf;
 relthre=1e-4;
-if isprop(opt, 'INSTAniter')
-    Niter=opt.INSTAniter;
+if isprop(opt, 'ISTAniter')
+    Niter=opt.ISTAniter;
 end
-if isprop(opt, 'INSTArelthre')
-    relthre=opt.INSTArelthre;
+if isprop(opt, 'ISTArelthre')
+    relthre=opt.ISTArelthre;
 end
 
 % check if matrices XtX and Xty have been previously computed during
@@ -68,7 +67,7 @@ end
 %redo OLR based on non-sparsy components
 
 
-w = rls_fista_driver( XtX, Xty, n, lambda,INSTAalpha,Niter,relthre,opt.verbose);
+w = rls_fista_driver( XtX, Xty, n, lambda,ISTAalpha,Niter,relthre,opt.verbose);
 
 cfr.IndexFlag = ~~(w);
 % Xs=X(:,~~w);
