@@ -25,8 +25,9 @@ function [vout] = paramsel_homkl(X,y,opt)
 %
 % OUTPUTS: structure vout (opt.paramsel) with the following fields:
 % -par_mkl: 2x1 cell of L1/L2 par that minimize empirical performance
-% -par_path: M x tot1 x tot2 x nh double of estimated dual norm 
+% -norm_path: M x tot1 x tot2 x nh double of estimated dual norm 
 %            over L1/L2 grid
+% -perf_path: tot1 x tot2 double of estimated performance over L1/L2 grid
 
 if isprop(opt,'paramsel')
     vout = opt.paramsel; % lets not overwrite existing parameters.
@@ -35,8 +36,14 @@ else
     opt.newprop('paramsel', struct());
 end
 vout.guesses_mkl = {};
-vout.path_mkl = {};
+vout.norm_path = {};
+vout.perf_path = {};
 vout.par_mkl = {};
+
+if isfield(opt.mkl, 'par_mkl')
+    vout.par_mkl = opt.mkl.par_mkl;
+    return    
+end
 
 % set the grid of L1/L2 penalty terms for elastic net
 n = size(opt.kernel.K_mkl, 1);
@@ -53,8 +60,7 @@ if ~isfield(opt.mkl, 'parrange')
     % (this code should only be executed once)
     [tot1, tot2] = opt.mkl.npar{:};
     guesses_L1 = paramsel_L1ratioguesses(y, opt, eig_list, tot1);
-    guesses_L2 = [0, ...
-        exp(linspace(log(opt.mkl.smallnumber), log(0.1/n), tot2))];
+    guesses_L2 = [0 10.^(-4:-1)];
 else
     % set grid directly using parrange
     [guesses_L1, guesses_L2] = opt.mkl.parrange{:};
@@ -181,8 +187,9 @@ path_sum = ho_path;
     ind2sub(size(perf_sum), max_idx);
 
 % store result into paramsel.par_mkl
-vout.path_mkl = reshape(...
+vout.norm_path = reshape(...
     path_sum(1:tot1, i2_opt, :, :), tot1, M, opt.nholdouts);
+vout.perf_path = perf_sum;
 vout.guesses_mkl = {guesses_L1, guesses_L2};
 vout.par_mkl = {guesses_L1(i1_opt), guesses_L2(i2_opt)};
 vout.cont_strategy = cont_strategy;

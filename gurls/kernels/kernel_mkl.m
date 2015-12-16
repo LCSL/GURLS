@@ -59,9 +59,11 @@ kernel.type = 'mkl';
 kernel.K_mkl = K_list;
 kernel.eig_mkl = eig_list;
 
-if isfield(opt.paramsel, 'manual_sigma')
-    % clear opt.paramsel if it is defined by @set_sigma
-    opt.paramsel = struct();
+if isprop(opt, 'paramsel')
+    if isfield(opt.paramsel, 'manual_sigma')
+        % clear opt.paramsel if it is defined by @set_sigma
+        opt.paramsel = struct();
+    end
 end
 end
 

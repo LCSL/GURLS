@@ -19,8 +19,9 @@ function [guesses] = paramsel_L1ratioguesses(y, opt, eig_list, tot1)
 % -GUESSES: 1 x tot array of candidate values for the L1 ratio 
 
 eigK_app = max(eig_list);
+M = length(eig_list);
 
-lmax = 0.1 * norm(y)/(sqrt(eigK_app));
+lmax = (1/M) * norm(y)/(sqrt(eigK_app));
 lmin = opt.mkl.smallnumber;
 
 % calculate range

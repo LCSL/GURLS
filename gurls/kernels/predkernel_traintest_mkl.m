@@ -39,9 +39,10 @@ for idx = 1:length(mkl_type)
     % evaluate kernels: rbf case
     if strcmp(spec{1}, 'kernel_rbf')
         rbf_dist = square_distance(X_va', X_tr');
+        sigma_list = par_list.^2;
         for sigma_idx = 1:length(par_list)
             K_id = K_id + 1;
-            K_temp = exp(-rbf_dist/par_list(sigma_idx));
+            K_temp = exp(-rbf_dist/sigma_list(sigma_idx));
             K_list(:, :, K_id) = K_temp;
         end
     elseif strcmp(spec{1}, 'kernel_linear')

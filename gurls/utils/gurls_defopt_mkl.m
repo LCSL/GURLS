@@ -36,5 +36,5 @@ opt.mkl.smallnumber = 1e-4;
 opt.mkl.verbose = struct('paramsel', true, 'rls', true);
 opt.mkl.iter_max = struct('paramsel', 1e3, 'rls', 1e3);
 opt.mkl.crit = struct('paramsel', 1e-3, 'rls', 1e-5);
-opt.mkl.strategy = false;
+opt.mkl.strategy = true;
 end
