@@ -1,4 +1,4 @@
-function [cfr] = rls_ista (X, y, opt)
+function [cfr] = rls_fista (X, y, opt)
 
 % rls_insta(X,y,opt)
 % computes a classifier for elastic nerwork using ISTA.
@@ -64,9 +64,11 @@ else
     Xty = X'*y; % d x T matrix.
 end
 
+
 %redo OLR based on non-sparsy components
 
-w = rls_ista_driver( XtX, Xty, n, lambda,INSTAalpha,Niter,relthre,opt.verbose);
+
+w = rls_fista_driver( XtX, Xty, n, lambda,INSTAalpha,Niter,relthre,opt.verbose);
 
 cfr.IndexFlag = ~~(w);
 % Xs=X(:,~~w);
