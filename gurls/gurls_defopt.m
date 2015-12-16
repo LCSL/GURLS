@@ -72,6 +72,13 @@ function opt = gurls_defopt(expname)
     opt.newprop( 'nystrom', struct());
     opt.nystrom.m = 100;
     
+    %% Preprocessing / Dimensionality Reduction options
+    opt.newprop( 'preproc', struct() );
+    opt.preproc.kernel = struct;
+    opt.preproc.kernel.kernel = 'linear';
+    opt.preproc.center_data = true;
+    opt.preproc.n_dims = 5;
+    
     %% opt base
     opt.newprop( 'jobid', 1);
     opt.newprop( 'seq', {});

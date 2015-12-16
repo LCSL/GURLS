@@ -120,9 +120,17 @@ for i = 1:numel(process) % Go by the length of process.
 		fName = [reg{1} '_' reg{2}];
 		fun = str2func(fName);
 		tic;
-        opt.newprop(reg{1}, fun(X,y,opt));
-		opt.time{jobid} = setfield(opt.time{jobid},reg{1}, toc);
         
+        % This is hacky, but I can't figure out how to dynamically get the
+        % number of output arguments for a function.
+        if strcmp(reg{1},'preproc')
+            % Preprocessing code can change the data
+            [subopt,X,y] = fun(X,y,opt);
+        else
+            subopt = fun(X,y,opt);
+        end
+        opt.newprop(reg{1}, subopt);
+		opt.time{jobid} = setfield(opt.time{jobid},reg{1}, toc);
         if opt.verbose
     		fprintf('\tdone\n');
         end
@@ -165,7 +173,7 @@ if ~isequal(opt.name, '')
                 if opt.verbose
                     fprintf('\tsaving..\n');
                 end
-            otherwise
+            case DEL
                 if isprop(opt, reg{1})
                     opt.(reg{1}) = [];
                     if opt.verbose
