@@ -43,15 +43,10 @@ else
     [par_L1, par_L2] = opt.paramsel.par_mkl{:};
 end
 
-if isfield(cfr, 'C_init')
-    C_init = opt.rls.C_init;
-else
-    C_init = [];    
-end
 
 [cfr.C_mkl, cfr.epath_mkl] = rls_dual_mkl_pfbs(...
     opt.kernel.K_mkl, y, par_L1, par_L2, ...
-    C_init, eig_app, iter_max, crit, verbose);
+    [], eig_app, iter_max, crit, verbose);
 
 cfr.W = [];
 cfr.X = X;

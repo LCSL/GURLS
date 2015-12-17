@@ -1,11 +1,11 @@
 %%% set up work directory, install package
 % run('../utils/gurls_install.m'); savepath;
-
+addpath('./func/')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% MKL classification: ionosphere %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 2.1 read in ionosphere data ----
+% 1 read in ionosphere data ----
 dat = csvread('./data/ionosphere.csv');
 y = dat(:, 1);
 X = dat(:, 2:size(dat, 2));
@@ -19,7 +19,7 @@ y_tr = y(idx_tr);
 X_va = X(idx_va, :);
 y_va = y(idx_va);
 
-% 2.2 naive train/test under GURLS ---- 
+% 2 train/test pipeline under GURLS ---- 
 name = 'demo_mkl_class';
 opt = gurls_defopt(name);
 opt = gurls_defopt_mkl(opt);
@@ -46,23 +46,10 @@ opt.process{2} = [3,3,3,3,2,2,2];
 gurls(X_tr, y_tr, opt, 1);
 gurls(X_va, y_va, opt, 2);
 
-% 2.3 additional adjustment ----
-% determine important kernel using 
-% L1 regularization path
+% result summary/visualization
+
 plot_mkl_path(X_tr, y_tr, opt, 'norm');
 plot_mkl_path(X_tr, y_tr, opt, 'perf');
 
 sum(opt.paramsel.norm_path(:,:,1), 1);
 opt.perf
-
-% reset L1 parameter then re-select model
-opt.mkl.parrange = {[1e-4 * (8:15)], [0]};
-opt.mkl.strategy = false; %(don't use cont_strat)
-
-save(opt.savefile, 'opt', '-v7.3');
-
-opt.process{3} = [3,3,2,2,0,0,0];
-gurls (X_tr, y_tr, opt, 3);
-gurls (X_va, y_va, opt, 2);
-opt.perf % better performance 
-

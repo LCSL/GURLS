@@ -1,5 +1,6 @@
 %%% set up work directory, install package
 % run('../utils/gurls_install.m'); savepath;
+addpath('./func/')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% MKL regression on linear data %%%%%%%
@@ -13,8 +14,8 @@ n2 = 200;
 X_0 = normrnd(0, 1, n + n2, p);
 beta = normrnd(0, 1, p, 1);
 
-sigma = 10;
-K_0 = exp(-square_distance(X_0', X_0')/(2*sigma^2));
+sigma = 20;
+K_0 = exp(-square_distance(X_0', X_0')/(sigma^2));
 alpha = normrnd(0, 1, n + n2, 1);
 
 y_0 = X_0 * beta + K_0 * alpha;
@@ -25,7 +26,7 @@ y_tr = y_0(1:n);
 X_va = X_0((n+1):(n+n2), :);
 y_va = y_0((n+1):(n+n2));
 
-% 2 naive train/test under GURLS ----
+% 2 train/test pipeline under GURLS ----
 name = 'demo_mkl_reg';
 opt = gurls_defopt(name);
 opt = gurls_defopt_mkl(opt);
@@ -34,6 +35,7 @@ opt = gurls_defopt_mkl(opt);
 opt.mkl.type = ...
     {{'kernel_rbf', sqrt((1.2.^(0:49))/2)}, ...
     {'kernel_linear', 0}};
+opt.mkl.strategy = false;
 
 opt.seq = {...
     'split:ho', ...
@@ -49,69 +51,35 @@ opt.process{2} = [3,3,3,3,2,2,2];
 gurls(X_tr, y_tr, opt, 1);
 gurls(X_va, y_va, opt, 2);
 
+% result summary/visualization  
 plot_mkl_path(X_tr, y_tr, opt, 'norm');
 plot_mkl_path(X_tr, y_tr, opt, 'perf');
-opt.perf
+% kernel
+norm_summary = median(opt.paramsel.norm_path, 3);
+kernel_importance = sum(norm_summary, 1);
+[norm_value, norm_order] = ...
+    sort(kernel_importance, 'descend');
+[norm_order(1:5); norm_value(1:5)];
 
-% 2 naive train/test under GURLS ----
-name = 'demo_mkl_reg_noStrategy';
+% 3 train/test using true model  ----
+name = 'demo_mkl_reg_true';
 opt = gurls_defopt(name);
 opt = gurls_defopt_mkl(opt);
 % specify kernel type/parameter
 % (sigma for rbf, none for linear) 
 opt.mkl.type = ...
-    {{'kernel_rbf', sqrt((1.2.^(0:49))/2)}, ...
-    {'kernel_linear', 0}};
+    {{'kernel_rbf', 10}, {'kernel_linear', 0}};
+opt.mkl.par_mkl = {[0], [0]};
 
+% skip paramsel
 opt.seq = {...
     'split:ho', ...
     'kernel:mkl', ...    
-    'paramsel:homkl', ...
     'rls:dual_mkl', ...
     'predkernel:traintest_mkl', ...
     'pred:dual_mkl', ...
     'perf:rmsestd'};
-
-
-opt.process{1} = [2,2,2,2,0,0,0];
-opt.process{2} = [3,3,3,3,2,2,2];
-gurls(X_tr, y_tr, opt, 1);
-gurls(X_va, y_va, opt, 2);
-
-% 3 additional justification ----
-
-opt.mkl.strategy = false; %(don't use cont strategy)
-opt.process{1} = [2,2,2,2,0,0,0];
-opt.process{2} = [3,3,3,3,2,2,2];
-gurls(X_tr, y_tr, opt, 1);
-gurls(X_va, y_va, opt, 2);
-
-% reset L1 parameter then re-select model
-opt.mkl.parrange = {[1e-4 * (4:0.5:6)], [0]};
-opt.mkl.strategy = false; %(don't use cont strategy)
-save(opt.savefile, 'opt', '-v7.3');
-
-opt.process{3} = [3,3,2,2,0,0,0];
-gurls (X_tr, y_tr, opt, 3);
-gurls (X_va, y_va, opt, 2);
-opt.perf % slightly better performance 
-
-% 4 re-fit using optimal kernel ----
-name = 'demo_mkl_reg_linear';
-opt = gurls_defopt(name);
-opt = gurls_defopt_mkl(opt);
-% specify kernel type/parameter
-% (sigma for rbf, none for linear) 
-opt.mkl.type = {{'kernel_linear', 0}};
-opt.seq = {...
-    'split:ho', ...
-    'kernel:mkl', ...    
-    'paramsel:homkl', ...
-    'rls:dual_mkl', ...
-    'predkernel:traintest_mkl', ...
-    'pred:dual_mkl', ...
-    'perf:rmsestd'};
-opt.process{1} = [2,2,2,2,0,0,0];
-opt.process{2} = [3,3,3,3,2,2,2];
+opt.process{1} = [2,2,2,0,0,0];
+opt.process{2} = [3,3,3,2,2,2];
 gurls(X_tr, y_tr, opt, 1);
 gurls(X_va, y_va, opt, 2);
