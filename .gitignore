@@ -8,3 +8,5 @@ bgurls++/doc
 *.mat
 
 *.mat
+
+gurls/demo/demo_mkl_class.mat
