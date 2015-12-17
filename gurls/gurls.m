@@ -32,7 +32,7 @@
 % ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
 
-function [opt] = gurls(X, y, opt, jobid)
+function [opt,X,y] = gurls(X, y, opt, jobid)
 	
 
 

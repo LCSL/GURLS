@@ -3,16 +3,19 @@ function [preproc,X,y] = preproc_kpca_train(X,y,opt)
     preproc = opt.preproc;
    
     if strcmp(preproc.kernel.kernel,'linear')
+        % For the linear kernel, we just do PCA on the data.
+        % This is a lot faster and worth having a special case.
         if preproc.center_data
             mu = mean(X,1); % average along samples
             X2 = bsxfun(@minus,X,mu);
-            K = X2*X2';
+            K = X2'*X2;
         else
             K = X'*X;
         end
         preproc.V = do_eig(K);
     else
-        % Kernel matrix
+        % KPCA case.
+        % Get kernel matrix
         K = preproc_kernel_dispatch(preproc.kernel,X,X);
 
         % Kernel centering
@@ -20,9 +23,7 @@ function [preproc,X,y] = preproc_kpca_train(X,y,opt)
             ONE = ones(N,N)/N;
             K = K - ONE*K - K*ONE + ONE*K*ONE;
         end
-        K = K/trace(K); % Normalize eigenvalues
-
-
+        
         preproc.V = do_eig(K);
         preproc.X = X; % Required for computing the kernel on other data
     end
@@ -36,6 +37,6 @@ function [preproc,X,y] = preproc_kpca_train(X,y,opt)
         if preproc.n_dims > size(K,1)
             preproc.n_dims = size(K,1)
         end
-        [V,~] = eigs(K,preproc.n_dims,'LM',eig_opts);
+        [V,~] = eigs(K/trace(K),preproc.n_dims,'LM',eig_opts);
     end
 end

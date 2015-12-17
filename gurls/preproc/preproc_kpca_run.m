@@ -6,6 +6,6 @@ function [preproc,X,y] = preproc_kpca_run(X,y,opt)
         X = X*preproc.V;
     else
         K = preproc_kernel_dispatch(preproc.kernel,preproc.X,X);
-        X = K*preproc.V;
+        X = K'*preproc.V;
     end
 end
