@@ -1,5 +1,5 @@
 function path = gurls_root
 
-[a,b,c] = fileparts(mfilename('fullpath'));
-[a,b,c] = fileparts(a);
+a = fileparts(mfilename('fullpath'));
+a = fileparts(a);
 path = a;

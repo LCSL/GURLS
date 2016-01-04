@@ -1,10 +1,10 @@
 function [kernel] = kernel_linear(X, y, opt)
 % kernel_linear(OPT)
-% Computes the Kernel matrix for a linear model.		
+% Computes the Kernel matrix for a linear model.
 %
 % INPUTS:
 % -OPT: must contain the field X
-% 
+%
 % OUTPUT: struct with the following fields:
 % -type: 'linear'
 % -K: kernel matrix
@@ -16,7 +16,7 @@ function [kernel] = kernel_linear(X, y, opt)
 %     kernel = struct();
 % end
 
-if ~isprop(opt,'kernel')
+if ~isprop(opt, 'kernel')
     opt.newprop('kernel', struct());
 end
 
