@@ -1,11 +1,24 @@
+%% set datadir location (with Xtr.txt, ytr.txt) and to store results
+datadir = fullfile(gurls_root, 'test', 'data');
 if ~ischar(datadir)
     error('datadir is not a string')
 end
-if isempty(datadir)
-    error('datadir is empty')
+if ~isdir(datadir)
+    mkdir(datadir)
 end
 
 cd(datadir)
+%if isempty(datadir)
+%    error('datadir is empty')
+%end
+%% create dummy Xtr and ytr files from demo data, if not provided in datadir
+if ~exist('Xtr.txt','file') || ~exist('ytr.txt','file');
+    %load(fullfile(gurls_root, 'demo/data/quickanddirty_traindata.mat'));
+    load(fullfile(gurls_root, 'demo/data/yeast_data.mat'));
+    dlmwrite('Xtr.txt',Xtr);
+    dlmwrite('ytr.txt',ytr);
+end
+
 
 %% default options
 fid = fopen('singlelambda.txt','w');
@@ -151,13 +164,13 @@ test_driver('rls_dualr',dirname)
 dirname = 'predkernelchisquared';
 if ~exist(dirname,'dir'); mkdir(dirname); end
 copyfile('kernelchisquared/kernel-type.txt',dirname)
-copyfile('rlsdual_gauss/optimizer-X.txt',dirname) %va bene anche di un altro kernel, tanto prendo solo X
+copyfile('rlsdual_gauss/optimizer-X.txt',dirname) 
 test_driver('predkernel_traintest',dirname)
 
 dirname = 'predkernel_gauss';
 if ~exist(dirname,'dir'); mkdir(dirname); end
 copyfile('kernelgauss/kernel-type.txt',dirname)
-copyfile('rlsdual_gauss/optimizer-X.txt',dirname) %va bene anche di un altro kernel, tanto prendo solo X
+copyfile('rlsdual_gauss/optimizer-X.txt',dirname) 
 copyfile('paramselsiglam/paramsel-sigma.txt',dirname)
 test_driver('predkernel_traintest',dirname)
 
