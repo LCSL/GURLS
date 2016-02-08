@@ -1,14 +1,29 @@
 function model = gurls_train(X, y, varargin)
     opt = prodOptions(varargin);
+    
+    if isprop(opt,'Xval') && isprop(opt,'yval') 
+        
+        opt.newprop('partuning','ho');
+        opt.newprop('split_fixed_indices',1:size(X,1));
+        opt.newprop('notTrainOnValidation',true);
+        opt.newprop('nholdouts',1);
+        
+        X = [X; opt.Xval];
+        y = [y; opt.yval];
+        
+    end
+
     y = analyzeData(X, y, opt);
     chooseMatches(opt);
     chooseCVAlg(opt); 
     modelselection(opt);
     
     seq = {};
+     
     if isequal(opt.partuning,'ho') && ~isequal(opt.pars, 'none')
         seq = {'split:ho'};
     end
+    
     
     switch opt.pars
         case 'none'

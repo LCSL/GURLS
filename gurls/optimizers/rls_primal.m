@@ -24,19 +24,25 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 %fprintf('\tSolving primal RLS...\n');
 
-n = size(y,1);
+
+indices = 1:size(X,1);
+if isprop(opt,'split_fixed_indices') && isprop(opt,'notTrainOnValidation') && opt.notTrainOnValidation
+    indices = opt.split_fixed_indices;
+end
+
+n = numel(indices);
 
 % check if matrices XtX and Xty have been previously computed during
 % parameter selection
-if isfield(opt.paramsel,'XtX');
+if isfield(opt.paramsel,'XtX') && n == size(X,1);
     XtX = opt.paramsel.XtX;
 else
-    XtX = X'*X; % d x d matrix.
+    XtX = X(indices,:)'*X(indices,:); % d x d matrix.
 end
-if isfield(opt.paramsel,'XtX');
+if isfield(opt.paramsel,'XtX') && n == size(X,1);
     Xty = opt.paramsel.Xty;
 else
-    Xty = X'*y; % d x T matrix.
+    Xty = X(indices,:)'*y(indices,:); % d x T matrix.
 end
 cfr.W = rls_primal_driver( XtX, Xty, n, lambda );
 cfr.C = [];
