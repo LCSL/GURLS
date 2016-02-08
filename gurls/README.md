@@ -1,34 +1,69 @@
------------------------------------------------------------------
--------- GURLS - Grand Unified Regularized Least Squares --------
------------------------------------------------------------------
+# GURLS - Grand Unified Regularized Least Squares
 
 
-Table of Contents
-=================
+
+## Table of Contents
 
 - Introduction
 - Installation
+- Quickstart
 - Documentation
-- Quick and Dirty
+- Further Informations
 
-Introduction
-============
+
+
+## Introduction
 
 GURLS - (Grand Unified Regularized Least Squares) is a MATLAB software package for regression and 
 (multiclass) classifiers based on the Regularized Least Squares (RLS) loss function. 
 
-Installation
-============
+## Installation
 
 Open MATLAB and execute:
 
+```matlab
 >> run('PACKAGEROOT/gurls/utils/gurls_install.m');
+```
 
-where PACKAGEROOT is where you unzipped the GURLS package. This will add all the important directories 
+where `PACKAGEROOT` is where you unzipped the GURLS package. This will add all the important directories 
 to your path. Run 'savepath' if you want the installation to be permanent.
 
-Documentation
-=============
+
+
+
+## Quick start
+
+A straightforward example of GURLS usage can be found in gurls_helloworld.m, 
+which employs gurls_train and gurls_test functions. 
+The most important functionalities of the library can be controlled just
+by using gurls_train and gurls_test with the appropriate options.
+
+Below we describe more in details how to use them on your data.
+
+Put your training data in a n-by-d matrix X with each row being a data sample.
+Put the training labels in a y n-by-one vector. Let the labels go from 1 to T with T 
+being the number of classes.
+
+Run:
+
+```matlab
+>> model = gurls_train(X, y);
+```
+
+This will train a non-linear model based on a gaussian kernel and validated by hold out cross validation.
+
+Put your test data in a n-by-d matrix Xte like above and your test labels in 
+a n-by-one vector yte. Let the labels go from 1 to T with T being the number of classes.
+
+Run: 
+
+```matlab
+>> [ypred, acc] = gurls_test(model, Xte, yte)
+```
+
+This will compute the outputs predicted by the model with the associated accuracy. 
+
+## Further Informations
 
 - GURLS design is described here:
 	https://github.com/CBCL/GURLS/wiki/3-User-Manual#wiki-Design
@@ -55,32 +90,5 @@ Documentation
 	GURLS is designed for easy expansion. Give it a try!
 
 
-Quick start
-===========
-A straightforward example of GURLS usage can be found in gurls_helloworld.m, 
-which employs gurls_train and gurls_test functions. 
-The most important functionalities of the library can be controlled just
-by using gurls_train and gurls_test with the appropriate options.
-
-Below we describe more in details how to use them on your data.
-
-Put your training data in a n-by-d matrix X with each row being a data sample.
-Put the training labels in a y n-by-one vector. Let the labels go from 1 to T with T 
-being the number of classes.
-
-Run:
-
->> model = gurls_train(X, y);
-
-This will train a non-linear model based on a gaussian kernel and validated by hold out cross validation.
-
-Put your test data in a n-by-d matrix Xte like above and your test labels in 
-a n-by-one vector yte. Let the labels go from 1 to T with T being the number of classes.
-
-Run: 
-
->> [ypred, acc] = gurls_test(model, Xte, yte)
-
-This will compute the outputs predicted by the model with the associated accuracy. 
 
 
