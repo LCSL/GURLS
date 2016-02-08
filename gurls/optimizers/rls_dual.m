@@ -42,7 +42,7 @@ n = numel(indices);
 try
     R = chol(opt.kernel.K(indices,indices) + (n*lambda)*eye(n));
     
-    cfr.C = R\(R'\y(indices,1));
+    cfr.C = R\(R'\y(indices,:));
 catch
     [Q,L,~] = svd(opt.kernel.K(indices,indices));
     Q = double(Q);
