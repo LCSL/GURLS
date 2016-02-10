@@ -141,6 +141,7 @@ if `options` is defined in this way the second and the third signatures are equi
 * `'regpar'`: specific value for the regularization metaparameter.
 * `'kerpar'`: specific value for the kernel metaparameter.
 
+* `'verbose'`: (default `true`) print GURLS internal status during learning/prediction.
 
 ### `gurls_test`
 
