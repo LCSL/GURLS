@@ -27,7 +27,15 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 %fprintf('\tSolving primal RLS using Randomized SVD...\n');
 [n,d] = size(X);
 
-XtX = X'*X; % n\lambda is added in rls_eigen;
+
+indices = 1:size(X,1);
+if isprop(opt,'split_fixed_indices') && isprop(opt,'notTrainOnValidation') && opt.notTrainOnValidation
+    indices = opt.split_fixed_indices;
+end
+
+n = numel(indices);
+
+XtX = X(indices,:)'*X(indices,:); % n\lambda is added in rls_eigen;
 
 % tic;
 k = max(round(opt.eig_percentage*d/100),1);
@@ -36,7 +44,7 @@ k = max(round(opt.eig_percentage*d/100),1);
 Q = double(Q);
 L = double(diag(L));
 
-Xty = X'*y;
+Xty = X(indices,:)'*y(indices,:);
 
 if isprop(opt,'W0') 
 	Xty = Xty + opt.W0;

@@ -102,11 +102,11 @@ end
 function opt = addopt(opt,optfield,allfiles,dirname,typesfile)
 
     if strcmp(optfield,'rls'), 
-        filesin = allfiles(strmatch('optimizer',allfiles));
+        filesin = allfiles(strncmp('optimizer', allfiles, 9));
     else
-        filesin = allfiles(strmatch(optfield,allfiles));
+        filesin = allfiles(strncmp(optfield, allfiles, length(optfield)));
     end
-    if length(filesin)>0;
+    if ~isempty(filesin)
         if isfield(opt,optfield);
             optstruct = opt.(optfield);
         else

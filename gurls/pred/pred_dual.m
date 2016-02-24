@@ -1,4 +1,4 @@
-function [scores] = pred_dual(X,y, opt)
+function [scores] = pred_dual(X, y, opt)
 % pred_primal(X,y,opt)
 % computes the predictions of the classifier stored in opt.rls on 
 % the samples passed in the X matrix.

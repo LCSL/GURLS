@@ -47,9 +47,20 @@ if strcmp(outcome, 'norm')
         [0, max(norm_path(:, i1_opt))], ...
         'Color',[1,0,0], 'LineWidth', 2);
     %}
-    for m = 1:M
-        % solution path
-        plot((guesses_L1).^(1/3), norm_path(m, :));
+    
+    if isfield(opt.kernel, 'group_idx')
+        palette = {[0,0,0], [0.54,0,0], [0,0,1]};
+        for m = 1:M
+            % solution path
+            plot((guesses_L1).^(1/3), norm_path(m, :),...
+                'Color', palette{opt.kernel.group_idx(m)});
+        end
+    else
+        for m = 1:M
+            % solution path
+            plot((guesses_L1).^(1/3), norm_path(m, :),...
+                'Color', [0.54, 0, 0]);
+        end
     end
     hold off
 elseif  strcmp(outcome, 'perf')

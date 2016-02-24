@@ -1,29 +1,29 @@
-% This demo uses the yeast data. 
-% The data is already split into training and test set, and each set is 
-% in the form of an input data matrix and a output labels vector. 
-% Parameter selection and initial RLS estimation is carried out on a
+% This demo uses the yeast data:  Data is already split into training and 
+% test set, and each set is in the form of an input data matrix and a output 
+% labels vector. 
+% 
+% - Parameter selection and initial RLS estimation is carried out on a
 % first subset of the training set. 
-% Recursive RLS is run on the remainder of the training set, 
-% simulating online learning.
-% Finally the gurls testing process is run on the test set.
+%
+% - Recursive RLS is run on the remainder of the training set, simulating 
+% online learning.
+%
+% - GURLS testing process is run on the test set.
 
-clear all
-resdir = 'RESULTS';
-mkdir(resdir);
-addpath('utils')
-gurls_install
-
-n0 = 100; %size of first batch to be used for initialization
+clear 
+% addpath('utils')
+% gurls_install
+resdir = 'res_recursiveRLS';
+if ~isdir(resdir), mkdir(resdir); end
 
 load(fullfile(gurls_root,'demo/data/yeast_data.mat'));
 Xtr_tot = Xtr;
 ytr_tot = ytr;
 [ntr_tot,d] = size(Xtr_tot);
 
+n0 = 100; % size of first batch to be used for initialization
 
 %% TRAIN: use first batch for parameter selection and initialization
-
-
 Xtr = Xtr_tot(1:n0,:);
 ytr = ytr_tot(1:n0,:);
 
@@ -47,7 +47,6 @@ end
 opt.pred = pred_primal(Xte, yte, opt); 
 opt.perf = perf_macroavg(Xte, yte, opt); 
 
-
 %% compare with batch RLS
 name = [resdir '/standardRLSfixlambda'];
 optRLSfixlambda = gurls_defopt(name);
@@ -63,4 +62,3 @@ optRLSfixlambda = gurls(Xte, yte, optRLSfixlambda,2);
 disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
 disp('maximum difference between predicted Ys when using recursive and non recursive RLS:')
 disp(max(max(abs(opt.pred-optRLSfixlambda.pred))))
-

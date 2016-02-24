@@ -17,7 +17,7 @@ function [scores] = pred_dual_mkl(X, y, opt)
 % OUTPUT:
 % -scores: npred x 1 matrix of predicted labels
 
-if strcmp(opt.kernel.type, 'mkl')
+if strfind(opt.kernel.type, 'mkl')
     if isprop(opt, 'predkernel')
         npred = length(y);
         M = size(opt.rls.C_mkl, 2);
@@ -30,6 +30,6 @@ if strcmp(opt.kernel.type, 'mkl')
         error('Please provide a predkernel');
     end
 else
-    error('opt.kernel.type = ''%s'', expect ''mkl''', ...
+    error('opt.kernel.type = ''%s'', expect ''mkl_*''', ...
         opt.kernel.type);
 end

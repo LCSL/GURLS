@@ -1,8 +1,9 @@
-function [rls] = rls_landweberdual(X,y, opt)
-
-% rls_landweberdual(X, y, opt)
-% computes the regression function for landweber regularization in the dual space.
-% The regularization parameter (i.e. the number of iterations) is set to the one found in opt.paramsel.
+function [rls] = rls_landweberdual(X, y, opt)
+% rls_landweberdual(X, y, opt) computes the regression function for 
+% landweber regularization in the dual space. 
+% 
+% The regularization parameter (i.e. the number of iterations) is set to 
+% the one found in opt.paramsel.
 %
 % INPUTS:
 % -OPT: struct of options with the following fields:
@@ -15,9 +16,9 @@ function [rls] = rls_landweberdual(X,y, opt)
 %   see also defopt
 % 
 % OUTPUT: struct with the following fields:
-% -W: matrix of coefficient vectors of rls estimator for each class
-% -C: empty matrix
-% -X: empty matrix
+% -W: empty matrix 
+% -C: matrix of coefficient vectors of dual rls estimator 
+% -X: input data matrix
 
 Niter = ceil(opt.singlelambda(opt.paramsel.lambdas));
 
@@ -33,18 +34,17 @@ if isfield(opt.paramsel,'f0') && niter <= Niter;
     alpha = opt.paramsel.f0;
 else
     niter = 0;
-    alpha=zeros(n,T);
+    alpha = zeros(n,T);
 end
 
 if ~isfield(opt.paramsel,'Knorm');
     opt.paramsel.Knorm = norm(opt.kernel.K); 
 end
 
-tau=1/(2*opt.paramsel.Knorm); 
-
+tau = 1/(2*opt.paramsel.Knorm); 
 
 for i = niter:(Niter-1);
-    alpha = alpha + tau*(y- opt.kernel.K*alpha);
+    alpha = alpha + tau*(y - opt.kernel.K*alpha);
 end
 
 opt.paramsel.f0 = alpha;
@@ -54,5 +54,8 @@ rls.C = alpha;
 rls.X = X;
 rls.W = [];
 
-
-
+if strcmp(opt.kernel.type, 'linear')
+    rls.W = X'*rls.C;
+    % rls.C = [];
+    % rls.X = [];
+end

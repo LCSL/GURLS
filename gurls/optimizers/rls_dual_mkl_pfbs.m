@@ -37,7 +37,7 @@ if isempty(eig_app)
     eig_app = max(eig_list);
 end
 u = (L2_ratio/(1 - L2_ratio)) * eig_app/2;
-sigmas = eig_app/10 + u;
+sigmas = eig_app/2 + u; % step size
 
 % 3. PFBS iteration ===
 if isempty(A_init) % n x M container for parameter

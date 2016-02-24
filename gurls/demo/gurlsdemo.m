@@ -1,47 +1,72 @@
+clear; close all;
 load(fullfile(gurls_root, 'demo/data/yeast_data.mat'));
+% load(fullfile(gurls_root, 'demo/data/semi_data.mat'));
 res_root = fullfile(gurls_root, 'demo'); % location where res files are stored
 
-% This executes 5 times four different pipelines on the same dataset.
-% it then uses the summary routines to visualize precision and accuracy
-% for each class and globally for each pipeline.
+nTrials = 5;
+%% NOTES:
+% - Executes "nTrials" times 5 different pipelines on the same dataset.
+% - Uses the summary routines to visualize precision and accuracy per class
+% and globally for each pipeline.
 
-for r = 1:5
+for r = 1:nTrials
     
     % Linear kernel, primal formulation, Leave One Out cross validation to select lambda
-    name = ['linloo_' num2str(r)];
-    opt = defopt(name);
-    opt.seq = {'paramsel:loocvprimal','rls:primal','pred:primal','perf:precrec','perf:macroavg'};
+    name = fullfile(res_root, ['linloo_' num2str(r)]);
+    opt = gurls_defopt(name);
+    opt.seq = {'paramsel:loocvprimal','rls:primal','pred:primal', 'perf:macroavg', 'perf:precrec'};
     opt.process{1} = [2,2,0,0,0];
     opt.process{2} = [3,3,2,2,2];
     gurls(Xtr, ytr, opt, 1);
     gurls(Xte, yte, opt, 2);
     
-    % Gaussian kernel, (dual formulation), Leave One Out cross validation to select lambda and the Kernel width sigma
-    name = ['rbfloo_' num2str(r)];
-    opt = defopt(name);
-    opt.seq = {'paramsel:siglam', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
-    opt.process{1} = [2,2,2,0,0,0,0];
-    opt.process{2} = [3,3,3,2,2,2,2];
+    % plot_decision_boundaries(Xtr, ytr, opt);
+    
+    % Linear kernel, dual formulation, Leave One Out cross validation to select lambda
+    name = fullfile(res_root, ['lindloo_' num2str(r)]);
+    opt = gurls_defopt(name);
+    opt.seq = {'kernel:linear', 'paramsel:loocvdual', 'rls:dual', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
+    opt.process{1} = [2,2,2,0,0,0];
+    opt.process{2} = [3,3,3,2,2,2];
     gurls(Xtr, ytr, opt, 1);
     gurls(Xte, yte, opt, 2);
     
+    % plot_decision_boundaries(Xtr, ytr, opt);
+    
+    % Gaussian kernel, Leave One Out cross validation to select lambda and the Kernel width sigma
+    name = fullfile(res_root, ['rbfloo_' num2str(r)]);
+    opt = gurls_defopt(name);
+    opt.seq = {'paramsel:siglam', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
+    opt.process{1} = [2,2,2,0,0,0,0];
+    opt.process{2} = [3,3,3,2,2,2,2];
+    % opt.nsigma = 10;
+    % opt.nlambda = 10;
+    gurls(Xtr, ytr, opt, 1);
+    gurls(Xte, yte, opt, 2);
+        
+    % plot_decision_boundaries(Xtr, ytr, opt);
+    
     % Linear kernel, primal formulation, Hold Out cross validation to select lambda
-    name = ['linho_' num2str(r)];
-    opt = defopt(name);
+    name = fullfile(res_root, ['linho_' num2str(r)]);
+    opt = gurls_defopt(name);
     opt.seq = {'split:ho','paramsel:hoprimal','rls:primal','pred:primal','perf:macroavg','perf:precrec'};
     opt.process{1} = [2,2,2,0,0,0];
     opt.process{2} = [3,3,3,2,2,2];
     gurls(Xtr, ytr, opt, 1);
     gurls(Xte, yte, opt, 2);
     
-    % Gaussian kernel, (dual formulation), Hold Out cross validation to select lambda and the Kernel width sigma
-    name = ['rbfho_' num2str(r)];
-    opt = defopt(name);
+    % plot_decision_boundaries(Xtr, ytr, opt);
+    
+    % Gaussian kernel, Hold Out cross validation to select lambda and the Kernel width sigma
+    name = fullfile(res_root, ['rbfho_' num2str(r)]);
+    opt = gurls_defopt(name);
     opt.seq = {'split:ho', 'paramsel:siglamho', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
     opt.process{1} = [2,2,2,2,0,0,0,0];
     opt.process{2} = [3,3,3,3,2,2,2,2];
     gurls(Xtr, ytr, opt, 1);
     gurls(Xte, yte, opt, 2);
+    
+    % plot_decision_boundaries(Xtr, ytr, opt);
     
 end
 
@@ -51,8 +76,8 @@ end
 %	- fields: which fields of opt to display (as many plots as the elements of fields will be generated).
 %	- plotopt: a structure containing various text labels for the plots.
 
-filestr = {'linloo', 'rbfloo', 'linho', 'rbfho'};
-nRuns = [5,5,5,5];
+filestr = {'linloo', 'lindloo', 'rbfloo', 'linho', 'rbfho'};
+nRuns = nTrials*ones(1,5);
 fields = {'perf.ap', 'perf.acc'};
 plotopt.titles = {'Model Comparison - Accuracy', 'Model Comparison - Precision'};
 plotopt.class_names = {'CYT', 'NUC', 'MIT', 'ME3'};

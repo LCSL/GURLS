@@ -21,7 +21,7 @@ function [guesses] = paramsel_L1ratioguesses(y, opt, eig_list, tot1)
 eigK_app = max(eig_list);
 M = length(eig_list);
 
-lmax = (1/M) * norm(y)/(sqrt(eigK_app));
+lmax = (1/M) * norm(y)/(sqrt(eigK_app)) * 2;
 lmin = opt.mkl.smallnumber;
 
 % calculate range

@@ -14,6 +14,24 @@ function [splits] = split_ho(X,y, opt)
 %   -tr: indices of samples to be used for training
 %   -va: indices of samples to be used for testing
 
+
+
+% If a split has been provided by the user just use that
+if isprop(opt,'split_fixed_indices')
+    
+    splits = cell(1);
+    splits{1}.tr = opt.split_fixed_indices;
+
+    tmp_va = 1:size(X,1);
+    tmp_va(opt.split_fixed_indices)=[];
+    splits{1}.va = tmp_va;
+    
+    return;
+end
+
+
+
+
 nSplits = opt.nholdouts;
 fraction = 1-opt.hoproportion;
 

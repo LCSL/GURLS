@@ -30,25 +30,30 @@ function [cfr] = rls_dualr(X,y, opt)
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 
-n = size(opt.kernel.K,1);
+
+indices = 1:size(X,1);
+if isprop(opt,'split_fixed_indices') && isprop(opt,'notTrainOnValidation') && opt.notTrainOnValidation
+    indices = opt.split_fixed_indices;
+end
+
+n = numel(indices);
+
 T = size(y,2);
 
 %fprintf('\tSolving dual RLS...(n = %d, % = %d)', n, T);
 
-K = opt.kernel.K;
-
 k = max(1,round(opt.eig_percentage*n/100));
-[Q,L,V] = tygert_svd(K,k);
+[Q,L,~] = tygert_svd(opt.kernel.K(indices,indices),k);
 Q = double(Q);
 L = double(diag(L));
 
-cfr.C = rls_eigen(Q, L, Q'*y, lambda,n);
+cfr.C = rls_eigen(Q, L, Q'*y(indices,:), lambda,n);
 
 if strcmp(opt.kernel.type, 'linear')
-	cfr.W = X'*cfr.C;
+	cfr.W = X(indices,:)'*cfr.C;
 	cfr.C = [];
 	cfr.X = [];
 else
 	cfr.W = [];
-	cfr.X = X;
+	cfr.X = X(indices,:);
 end

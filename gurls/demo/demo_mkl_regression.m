@@ -33,8 +33,7 @@ opt = gurls_defopt_mkl(opt);
 % specify kernel type/parameter
 % (sigma for rbf, none for linear) 
 opt.mkl.type = ...
-    {{'kernel_rbf', sqrt((1.2.^(0:49))/2)}, ...
-    {'kernel_linear', 0}};
+    {{'kernel_rbf', sqrt((1.2.^(0:49))/2)}};
 opt.mkl.strategy = false;
 
 opt.seq = {...

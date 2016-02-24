@@ -32,7 +32,12 @@ lambda = opt.singlelambda(opt.paramsel.lambdas);
 
 %fprintf('\tSolving primal RLS...\n');
 
-n = size(X,1);
+indices = 1:size(X,1);
+if isprop(opt,'split_fixed_indices') && isprop(opt,'notTrainOnValidation') && opt.notTrainOnValidation
+    indices = opt.split_fixed_indices;
+end
+
+n = numel(indices);
 
 if or(opt.randfeats.samplesize < 0, opt.randfeats.samplesize > n)
     ni = n;
@@ -40,7 +45,7 @@ else
     ni = opt.randfeats.samplesize;
 end
 
-[XtX,Xty,rls.proj] = rp_factorize_large_real(X',y',opt.randfeats.D,'gaussian',ni);
+[XtX,Xty,rls.proj] = rp_factorize_large_real(X(indices,:)',y(indices,:)',opt.randfeats.D,'gaussian',ni);
 
 
 rls.W = rls_primal_driver( XtX, Xty, n, lambda );
