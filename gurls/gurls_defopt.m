@@ -62,6 +62,9 @@ function opt = gurls_defopt(expname)
     opt.newprop( 'epochs', 4);
     opt.newprop( 'subsize', 50);
     opt.newprop( 'calibfile', 'foo');
+    
+    %% Subgradient
+    opt.newprop( 'Niter', 100);
 
     %% Random features options
     opt.newprop( 'randfeats', struct());

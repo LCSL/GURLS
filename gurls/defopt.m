@@ -67,6 +67,9 @@ function opt = defopt(expname)
     opt.epochs = 4;
     opt.subsize = 50;
     opt.calibfile = 'foo';
+    
+    %% Subgradient
+    opt.Niter= 100;
 
     %% Random features options
     opt.randfeats = struct();
