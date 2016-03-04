@@ -1,9 +1,6 @@
 % DEMO OF THE SVM SUBGRADIENT METHOD COMPARED TO DUAL FORMULATION
 % adapted from gurlsdemo.m
 
-% Clear and close everything
-clear all; close all;
-
 % Use either the 'breastcancer' or 'yeast' datasets
 dataset = 'yeast';
 if strcmp(dataset,'breastcancer')

@@ -70,6 +70,7 @@ function opt = defopt(expname)
     
     %% Subgradient
     opt.Niter= 100;
+    opt.gammafunc = @(x) power(x,-1);
 
     %% Random features options
     opt.randfeats = struct();

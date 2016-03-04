@@ -65,6 +65,7 @@ function opt = gurls_defopt(expname)
     
     %% Subgradient
     opt.newprop( 'Niter', 100);
+    opt.newprop( 'gammafunc', @(x) power(x,-1));
 
     %% Random features options
     opt.newprop( 'randfeats', struct());

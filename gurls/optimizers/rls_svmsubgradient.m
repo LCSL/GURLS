@@ -11,6 +11,8 @@ function [rls] = rls_svmsubgradient(X,y, opt)
 %   fields with default values set through the defopt function:
 %		- singlelambda
 %       - Niter
+%       - gammafunc - the function that maps niter to step factor, gamma
+%                     the default is 1/niter --> [1, 1/2, 1/3, ... 1/Niter]
 % 
 %   For more information on standard OPT fields
 %   see also defopt
@@ -39,7 +41,7 @@ else
 end
 
 iter = niter:(Niter);
-gamma = 1./iter;
+gamma = opt.gammafunc(iter);
 
 for i = iter;
     yhat = opt.kernel.K*alpha;
