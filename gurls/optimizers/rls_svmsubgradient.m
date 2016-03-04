@@ -2,14 +2,15 @@ function [rls] = rls_svmsubgradient(X,y, opt)
 
 % rls_svmsubgradient(X, y, opt)
 % computes the regression function for svm subgradient method.
-% The regularization parameter (i.e. the number of iterations) is set to the one found in opt.paramsel.
-%
+% The regularization parameter is set to the one found in opt.paramsel (set by the paramsel_* routines)
+
 % INPUTS:
 % -OPT: struct of options with the following fields:
 %   fields that need to be set through previous gurls tasks:
 %		- paramsel.lambdas (set by the paramsel_* routines)
 %   fields with default values set through the defopt function:
 %		- singlelambda
+%       - Niter
 % 
 %   For more information on standard OPT fields
 %   see also defopt
