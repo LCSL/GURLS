@@ -11,7 +11,8 @@ elseif strcmp(dataset,'yeast')
 end
 
 % List the methods to use
-models = {'linsvmsub','rbfsvmsub','rbfho','rbfloo'};
+% models = {'linsvmsub','rbfsvmsub','rbfho','rbfloo'};
+models = {'linsvmsub','rbfsvmsub','rbfho'};
 
 % Number of trials to run each method
 n = 5;
