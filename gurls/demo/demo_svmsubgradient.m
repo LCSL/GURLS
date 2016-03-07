@@ -11,8 +11,8 @@ elseif strcmp(dataset,'yeast')
 end
 
 % List the methods to use
-% models = {'linsvmsub','rbfsvmsub','rbfho','rbfloo'};
-models = {'linsvmsub','rbfsvmsub','rbfho'};
+% pipelines = {'linsvmsub','rbfsvmsub','rbfho','rbfloo'};
+pipelines = {'linsvmsub','rbfsvmsub','rbfho'};
 
 % Number of trials to run each method
 n = 5;
@@ -20,10 +20,10 @@ n = 5;
 res_root = fullfile(gurls_root, 'demo'); % location where res files are stored
 
 for r = 1:n
-    strind = strmatch('linsvmsub',models);
+    strind = strmatch('linsvmsub',pipelines);
     if ~isempty(strind)
         % Gaussian kernel, SVM Subgradient, Hold Out cross validation to select lambda
-        name = [models{strind} '_' num2str(r)];
+        name = [pipelines{strind} '_' num2str(r)];
         opt = defopt(name);
         opt.seq = {'split:ho', 'kernel:linear', 'paramsel:hodual', 'rls:svmsubgradient', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
         opt.process{1} = [2,2,2,2,0,0,0];
@@ -34,10 +34,10 @@ for r = 1:n
         gurls(Xte, yte, opt, 2);
     end
 
-    strind = strmatch('rbfsvmsub',models);
+    strind = strmatch('rbfsvmsub',pipelines);
     if ~isempty(strind)
         % Gaussian kernel, SVM Subgradient, Hold Out cross validation to select lambda and the Kernel width sigma
-        name = [models{strind} '_' num2str(r)];
+        name = [pipelines{strind} '_' num2str(r)];
         opt = defopt(name);
         opt.seq = {'split:ho', 'paramsel:siglamho', 'kernel:rbf', 'rls:svmsubgradient', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
         opt.process{1} = [2,2,2,2,0,0,0,0];
@@ -48,10 +48,10 @@ for r = 1:n
         gurls(Xte, yte, opt, 2);
     end
 
-    strind = strmatch('rbfho',models);
+    strind = strmatch('rbfho',pipelines);
     if ~isempty(strind)
         % Gaussian kernel, (dual formulation), Hold Out cross validation to select lambda and the Kernel width sigma
-        name = [models{strind} '_' num2str(r)];
+        name = [pipelines{strind} '_' num2str(r)];
         opt = defopt(name);
         opt.seq = {'split:ho', 'paramsel:siglamho', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
         opt.process{1} = [2,2,2,2,0,0,0,0];
@@ -60,10 +60,10 @@ for r = 1:n
         gurls(Xte, yte, opt, 2); 
     end
     
-    strind = strmatch('rbfloo',models);
+    strind = strmatch('rbfloo',pipelines);
     if ~isempty(strind)
         % Gaussian kernel, (dual formulation), Leave One Out cross validation to select lambda and the Kernel width sigma
-        name = [models{strind} '_' num2str(r)];
+        name = [pipelines{strind} '_' num2str(r)];
         opt = defopt(name);
         opt.seq = {'paramsel:siglam', 'kernel:rbf', 'rls:dual', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
         opt.process{1} = [2,2,2,0,0,0,0];
@@ -79,7 +79,7 @@ end
 %	- fields: which fields of opt to display (as many plots as the elements of fields will be generated).
 %	- plotopt: a structure containing various text labels for the plots.
 
-nRuns = n*ones(1,size(models,2));
+nRuns = n*ones(1,size(pipelines,2));
 fields = {'perf.ap', 'perf.acc'};
 plotopt.titles = {'Model Comparison - Accuracy', 'Model Comparison - Precision'};
 
@@ -91,9 +91,9 @@ elseif strcmp(dataset,'yeast')
 end
 
 % Generates "per-class" plots
-summary_plot(models, fields, nRuns, plotopt, res_root)
+summary_plot(pipelines, fields, nRuns, plotopt, res_root)
 % Generates "global" plots
-summary_overall_plot(models, fields, nRuns, plotopt, res_root)
+summary_overall_plot(pipelines, fields, nRuns, plotopt, res_root)
 % Plots times taken by each step of the pipeline for performance reference.
-plot_times(models, nRuns, res_root)
+plot_times(pipelines, nRuns, res_root)
 
