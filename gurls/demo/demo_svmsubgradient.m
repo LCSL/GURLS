@@ -16,7 +16,7 @@ models = {'linsvmsub','rbfsvmsub','rbfho','rbfloo'};
 % Number of trials to run each method
 n = 5;
 
-res_root = fullfile(gurls_root, 'demo/demodata'); % location where res files are stored
+res_root = fullfile(gurls_root, 'demo'); % location where res files are stored
 
 for r = 1:n
     strind = strmatch('linsvmsub',models);
