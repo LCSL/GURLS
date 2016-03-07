@@ -10,10 +10,10 @@ elseif strcmp(dataset,'yeast')
     load(fullfile(gurls_root, 'demo/data/yeast_data.mat'));
 end
 
-% List the models to use
+% List the methods to use
 models = {'linsvmsub','rbfsvmsub','rbfho','rbfloo'};
 
-% Number of iterations
+% Number of trials to run each method
 n = 5;
 
 res_root = fullfile(gurls_root, 'demo/demodata'); % location where res files are stored
@@ -27,7 +27,8 @@ for r = 1:n
         opt.seq = {'split:ho', 'kernel:linear', 'paramsel:hodual', 'rls:svmsubgradient', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
         opt.process{1} = [2,2,2,2,0,0,0];
         opt.process{2} = [3,3,3,3,2,2,2];
-        opt.epochs = 100;
+        opt.Niter = 200;
+%         opt.gammafunc = @(x) power(x,-.5);
         gurls(Xtr, ytr, opt, 1);
         gurls(Xte, yte, opt, 2);
     end
@@ -40,7 +41,8 @@ for r = 1:n
         opt.seq = {'split:ho', 'paramsel:siglamho', 'kernel:rbf', 'rls:svmsubgradient', 'predkernel:traintest', 'pred:dual', 'perf:macroavg', 'perf:precrec'};
         opt.process{1} = [2,2,2,2,0,0,0,0];
         opt.process{2} = [3,3,3,3,2,2,2,2];
-        opt.epochs = 100;
+        opt.Niter = 200;
+%         opt.gammafunc = @(x) power(x,-.5);
         gurls(Xtr, ytr, opt, 1);
         gurls(Xte, yte, opt, 2);
     end
@@ -76,7 +78,7 @@ end
 %	- fields: which fields of opt to display (as many plots as the elements of fields will be generated).
 %	- plotopt: a structure containing various text labels for the plots.
 
-nRuns = n*ones(1,length(models));
+nRuns = n*ones(1,size(models,2));
 fields = {'perf.ap', 'perf.acc'};
 plotopt.titles = {'Model Comparison - Accuracy', 'Model Comparison - Precision'};
 
