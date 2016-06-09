@@ -60,13 +60,13 @@ int main(int argc, char* argv[])
 		{
 		//reading CSV with standard names from selected path
 			std::cout<<"Reading Xtr"<<std::endl;
-        Xtr.readCSV(std::string(argv[1]) + "/Xtr.csv");
+        Xtr.readCSV(std::string(argv[1]) + "/Xtr.txt");
 			std::cout<<"Reading ytr"<<std::endl;
-        ytr.readCSV(std::string(argv[1]) + "/Ytr.csv");
+        ytr.readCSV(std::string(argv[1]) + "/ytr.txt");
 			std::cout<<"Reading Xte"<<std::endl;
-        Xte.readCSV(std::string(argv[1]) + "/Xts.csv");
+        Xte.readCSV(std::string(argv[1]) + "/Xte.txt");
 			std::cout<<"Reading yte"<<std::endl;
-        yte.readCSV(std::string(argv[1]) + "/Yts.csv");
+        yte.readCSV(std::string(argv[1]) + "/yte.txt");
 		}
 
 		catch(gurls::gException &e)

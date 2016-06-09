@@ -1,12 +1,12 @@
 /*
  * The GURLS Package in C++
  *
- * Copyright (C) 2011-1013, IIT@MIT Lab
+ * Copyright (C) 2011-1013, LCSL, MIT/IIT Lab
  * All rights reserved.
  *
  * authors:  M. Santoro
  * email:   msantoro@mit.edu
- * website: http://cbcl.mit.edu/IIT@MIT/IIT@MIT.html
+ * website: http://lcsl.mit.edu
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
