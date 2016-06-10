@@ -57,6 +57,7 @@ for i = 1:nsigma
 	PERF(i,:,:) = paramsel.perf;
 	guesses(i,:) = paramsel.guesses;
 end
+
 % The lambda axis is redefined each time but
 % it is the same for all classes as it depends
 % only on K so we can still sum and minimize.

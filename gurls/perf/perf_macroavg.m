@@ -35,7 +35,7 @@ if size(y,2) == 1
 	p.forho = mean(predlab == ylab);
 	p.forplot = mean(predlab == ylab);
 else
-	%% Assumes single label prediction.
+	% Assumes single label prediction.
 	[dummy, predlab] = max(y_pred,[],2);
 	[dummy, truelab] = max(y_true,[],2);
 	[MacroAvg, PerClass] = macroavg(truelab, predlab);

@@ -30,12 +30,17 @@ function [cfr] = rls_dual (X, y, opt)
 
 lambda = opt.singlelambda(opt.paramsel.lambdas);
 
+<<<<<<< HEAD
+n = size(opt.kernel.K,1);
+T = size(y,2);
+=======
 indices = 1:size(X,1);
 if isprop(opt,'split_fixed_indices') && isprop(opt,'notTrainOnValidation') && opt.notTrainOnValidation
     indices = opt.split_fixed_indices;
 end
 
 n = numel(indices);
+>>>>>>> LCSL/master
 
 %fprintf('\tSolving dual RLS...(n = %d, % = %d)', n, T);
 

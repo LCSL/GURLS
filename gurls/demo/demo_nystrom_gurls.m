@@ -5,7 +5,10 @@ load(fullfile(gurls_root,'demo/data/breastcancer_data.mat'));
 
 name = 'nysrbfho';
 opt = gurls_defopt(name);
-opt.seq = {'split:ho', 'paramsel:siglamho_nystrom', 'kernel:rbf_nystrom', 'rls:dual_nystrom', 'predkernel:traintest_nystrom', 'pred:dual_nystrom', 'perf:rmse'};
+opt.seq = {'split:ho', 'paramsel:siglamho_nystrom', ...
+    'kernel:rbf_nystrom', 'rls:dual_nystrom', ...
+    'predkernel:traintest_nystrom', ...
+    'pred:dual_nystrom', 'perf:rmse'};
 opt.process{1} = [2,2,2,2,0,0,0];
 opt.process{2} = [3,3,3,3,2,2,2];
 
